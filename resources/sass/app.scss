@@ -1,0 +1,32 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+@import '~animate.css/animate.min.css';
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+.dot {
+  height: 15px;
+  width: 15px;
+
+  border-radius: 50%;
+  display: inline-block;
+}
+.pointer {
+  cursor:pointer
+}
+.letter-spaced-2 {
+  letter-spacing: 1em;
+}
+.letter-spaced-1 {
+  letter-spacing: 0.5em;
+}
