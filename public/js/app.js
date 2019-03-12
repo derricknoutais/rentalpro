@@ -39045,7 +39045,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("input", {
                   ref: "droit",
-                  attrs: { type: "file" },
+                  attrs: { type: "file", accept: "image/*", capture: "camera" },
                   on: {
                     change: function($event) {
                       return _vm.handleDroit()
@@ -39061,7 +39061,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("input", {
                   ref: "gauche",
-                  attrs: { type: "file" },
+                  attrs: { type: "file", accept: "image/*", capture: "camera" },
                   on: {
                     change: function($event) {
                       return _vm.handleGauche()
@@ -39077,7 +39077,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("input", {
                   ref: "arriere",
-                  attrs: { type: "file" },
+                  attrs: { type: "file", accept: "image/*", capture: "camera" },
                   on: {
                     change: function($event) {
                       return _vm.handleArriere()
@@ -39093,7 +39093,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("input", {
                   ref: "avant",
-                  attrs: { type: "file" },
+                  attrs: { type: "file", accept: "image/*", capture: "camera" },
                   on: {
                     change: function($event) {
                       return _vm.handleAvant()

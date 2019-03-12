@@ -12,26 +12,26 @@
                     <div class="row">
                         <div class="col">
                             <label>Coté Droit</label>
-                            <input type="file" ref="droit" @change="handleDroit()">
+                            <input type="file" ref="droit" @change="handleDroit()" accept="image/*" capture="camera">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col">
                             <label>Coté Gauche</label>
-                            <input type="file" ref="gauche" @change="handleGauche()">
+                            <input type="file" ref="gauche" @change="handleGauche()" accept="image/*" capture="camera">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <label>Arrière Voiture</label>
-                            <input type="file" ref="arriere" @change="handleArriere()">
+                            <input type="file" ref="arriere" @change="handleArriere()" accept="image/*" capture="camera">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
                             <label>Avant Voiture</label>
-                            <input type="file" ref="avant" @change="handleAvant()"/>
+                            <input type="file" ref="avant" @change="handleAvant()" accept="image/*" capture="camera"/>
                         </div>
                     </div>
                 </div>
