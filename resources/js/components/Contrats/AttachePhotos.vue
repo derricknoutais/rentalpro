@@ -26,7 +26,7 @@
                         <div class="col">
                             <label>Arrière Voiture</label>
                             <input type="file" ref="arriere" @change="handleArriere()" accept="image/*" capture="camera">
-                        </div>
+                        </div>o[]
                     </div>
                     <div class="row">
                         <div class="col">

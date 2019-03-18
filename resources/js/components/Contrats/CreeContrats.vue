@@ -71,8 +71,8 @@ export default {
             finalStep: false,
             step: 1,
             contrat : {
-                client : null,
-                voiture: null,
+                client : null, //this.prop_clients[0]
+                voiture: null, // this.prop_voitures[0]
                 check_out: null,
                 check_in: null,
                 nombre_jours: null,
@@ -235,7 +235,14 @@ export default {
             
             axios.post('http://facture.test/api/facture', this.data).then(response => {
                 var cashier_id = response.data.id
-                this.cashier_id = cashier_id          
+                this.cashier_id = cashier_id       
+                // if( cashier_id !== null ){
+                //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
+                //         console.log(response.data);
+                //     }).catch(error => {
+                //         console.log(error);
+                //     });
+                // }   
             }).catch(error => {
                 console.log(error);
             });
@@ -245,7 +252,9 @@ export default {
             this.contrat.documentString = this.documentString
             
             axios.post('/contrats/store', this.contrat).then(response => {
+                window.location = '/contrat/' + response.data.id
                 this.contrat_enregistré = response.data
+                
             }).catch(error => {
                 
             });

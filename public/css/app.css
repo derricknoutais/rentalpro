@@ -10525,3 +10525,8 @@ a.text-dark:focus {
   letter-spacing: 0.5em;
 }
 
+.overflow {
+  height: 150px;
+  overflow-y: scroll;
+}
+

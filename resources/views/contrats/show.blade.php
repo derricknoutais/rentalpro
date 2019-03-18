@@ -3,8 +3,11 @@
 
 @section('content')
     <div class="container">
-        <contrat-final :contrat="{{ $contrat }}" >
+        <contrat-show inline-template>
+            <contrat-final :contrat="{{ $contrat }}">
 
-        </contrat-final>
+            </contrat-final>
+        </contrat-show>
+        
     </div>
 @endsection

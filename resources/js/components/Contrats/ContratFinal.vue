@@ -87,9 +87,9 @@
                     <button type="button" class="btn btn-primary" @click="imprimer" v-if="contrat_enregistre !== null">Imprimer</button>
 
                     <!-- Button trigger modal -->
-                    <button v-if="contrat_enregistre !== null"  type="button" class="btn btn-primary" data-toggle="modal" data-target="#modelId">
+                    <a v-if="contrat_enregistre !== null"  class="btn btn-primary" :href="'/test-upload/' + contrat.id">
                       Attacher Photos
-                    </button>
+                    </a>
 
                     <a :href="'/contrat/' + this.contrat.id + '/voir-uploads'" class="btn btn-primary" v-if="contrat_enregistre !== null">Voir Photos</a>
                 </div>
@@ -202,7 +202,7 @@ export default {
     methods:{
         envoyerACashier(){
             this.$emit('envoyerACashier')
-            this.envoyéACashier = true
+            
         },
         enregistrer(){
             this.$emit('enregistrer')

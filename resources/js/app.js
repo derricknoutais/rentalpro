@@ -45,6 +45,7 @@ const app = new Vue({
     methods: {
         relocateTo(location){
             window.location = location
-        }
+        },
+        
     }
 });

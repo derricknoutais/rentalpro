@@ -11,7 +11,7 @@ export default {
         }
     },
     mounted(){
-
+        $('#ajoutVoiture').modal('show')
     }
 }
 </script>

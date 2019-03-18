@@ -1791,7 +1791,9 @@ __webpack_require__.r(__webpack_exports__);
       window.location = location;
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    $('#ajoutClient').modal('show');
+  }
 });
 
 /***/ }),
@@ -2110,7 +2112,6 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     envoyerACashier: function envoyerACashier() {
       this.$emit('envoyerACashier');
-      this.envoyéACashier = true;
     },
     enregistrer: function enregistrer() {
       this.$emit('enregistrer');
@@ -2140,6 +2141,51 @@ __webpack_require__.r(__webpack_exports__);
     document.getElementById('copie_client').style.visibility = 'hidden';
   },
   created: function created() {}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Contrats/ContratShow.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Contrats/ContratShow.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {};
+  },
+  methods: {
+    envoyerACashier: function envoyerACashier() {
+      var _this = this;
+
+      console.log('Hellooooo');
+      var data;
+      this.data = data = {
+        'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
+        'échéance': this.contrat.check_in,
+        'quantité': this.contrat.nombre_jours,
+        'description': 'Jours',
+        'prix_unitaire': this.contrat.prix_journalier
+      };
+      axios.post('http://facture.test/api/facture', this.data).then(function (response) {
+        var cashier_id = response.data.id;
+        _this.cashier_id = cashier_id; // if( cashier_id !== null ){
+        //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
+        //         console.log(response.data);
+        //     }).catch(error => {
+        //         console.log(error);
+        //     });
+        // }   
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  },
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -2765,7 +2811,9 @@ __webpack_require__.r(__webpack_exports__);
       step: 1,
       contrat: {
         client: null,
+        //this.prop_clients[0]
         voiture: null,
+        // this.prop_voitures[0]
         check_out: null,
         check_in: null,
         nombre_jours: null,
@@ -2940,7 +2988,13 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios.post('http://facture.test/api/facture', this.data).then(function (response) {
         var cashier_id = response.data.id;
-        _this2.cashier_id = cashier_id;
+        _this2.cashier_id = cashier_id; // if( cashier_id !== null ){
+        //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
+        //         console.log(response.data);
+        //     }).catch(error => {
+        //         console.log(error);
+        //     });
+        // }   
       }).catch(function (error) {
         console.log(error);
       });
@@ -2951,6 +3005,7 @@ __webpack_require__.r(__webpack_exports__);
       this.contrat.accessoireString = this.accessoireString;
       this.contrat.documentString = this.documentString;
       axios.post('/contrats/store', this.contrat).then(function (response) {
+        window.location = '/contrat/' + response.data.id;
         _this3.contrat_enregistré = response.data;
       }).catch(function (error) {});
     },
@@ -3450,7 +3505,9 @@ __webpack_require__.r(__webpack_exports__);
       window.location = '/voiture/' + id;
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    $('#ajoutVoiture').modal('show');
+  }
 });
 
 /***/ }),
@@ -39084,7 +39141,8 @@ var render = function() {
                     }
                   }
                 })
-              ])
+              ]),
+              _vm._v("o[]\n                ")
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
@@ -39317,14 +39375,10 @@ var render = function() {
               _vm._v(" "),
               _vm.contrat_enregistre !== null
                 ? _c(
-                    "button",
+                    "a",
                     {
                       staticClass: "btn btn-primary",
-                      attrs: {
-                        type: "button",
-                        "data-toggle": "modal",
-                        "data-target": "#modelId"
-                      }
+                      attrs: { href: "/test-upload/" + _vm.contrat.id }
                     },
                     [
                       _vm._v(
@@ -55225,6 +55279,7 @@ var map = {
 	"./components/Clients/ClientsIndex.vue": "./resources/js/components/Clients/ClientsIndex.vue",
 	"./components/Contrats/AttachePhotos.vue": "./resources/js/components/Contrats/AttachePhotos.vue",
 	"./components/Contrats/ContratFinal.vue": "./resources/js/components/Contrats/ContratFinal.vue",
+	"./components/Contrats/ContratShow.vue": "./resources/js/components/Contrats/ContratShow.vue",
 	"./components/Contrats/ContratsIndex.vue": "./resources/js/components/Contrats/ContratsIndex.vue",
 	"./components/Contrats/ControleDocumentsAccessoires.vue": "./resources/js/components/Contrats/ControleDocumentsAccessoires.vue",
 	"./components/Contrats/CreeContrats.vue": "./resources/js/components/Contrats/CreeContrats.vue",
@@ -55629,6 +55684,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContratFinal_vue_vue_type_template_id_8820bc52___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/Contrats/ContratShow.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/Contrats/ContratShow.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContratShow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContratShow.vue?vue&type=script&lang=js& */ "./resources/js/components/Contrats/ContratShow.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  _ContratShow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"],
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Contrats/ContratShow.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Contrats/ContratShow.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/Contrats/ContratShow.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContratShow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContratShow.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Contrats/ContratShow.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContratShow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

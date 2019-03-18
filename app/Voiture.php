@@ -21,6 +21,13 @@ class Voiture extends Model
         return $this->hasMany('App\Contrat');
     }
 
+
+    public static function compteVoitures($etat){
+        return Voiture::where('etat', $etat)->count();
+    }
+    public static function moinsPerformante(){
+        
+    }
     public function etat($etat){
         $this->update([
             'etat' => $etat
