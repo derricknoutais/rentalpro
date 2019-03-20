@@ -11,7 +11,7 @@ export default {
         }
     },
     mounted(){
-        $('#ajoutClient').modal('show')
+
     }
 }
 </script>

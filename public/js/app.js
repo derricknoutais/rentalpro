@@ -1791,9 +1791,7 @@ __webpack_require__.r(__webpack_exports__);
       window.location = location;
     }
   },
-  mounted: function mounted() {
-    $('#ajoutClient').modal('show');
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -3505,9 +3503,7 @@ __webpack_require__.r(__webpack_exports__);
       window.location = '/voiture/' + id;
     }
   },
-  mounted: function mounted() {
-    $('#ajoutVoiture').modal('show');
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),
