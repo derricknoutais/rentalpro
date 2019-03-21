@@ -62,7 +62,7 @@ Route::post( '/voiture/reception', 'VoitureController@reception');
 Route::get('/voiture/{voiture}/maintenance', 'VoitureController@maintenance');
 Route::post('/voitures/ajout-voiture', function(Request $request){
 
-    Voiture::create([
+    $voiture = Voiture::create([
         'immatriculation' => $request->immatriculation,
         'chassis' => $request->numero_chassis,
         'annee' => $request->annee,
@@ -71,6 +71,8 @@ Route::post('/voitures/ajout-voiture', function(Request $request){
         'etat' => 'disponible',
         'prix' => $request->prix
     ]);
+
+    return redirect('/voiture/' . $voiture->id);
 });
 
 // CLIENTS
