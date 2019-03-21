@@ -17,11 +17,11 @@ class CreateVoituresTable extends Migration
             $table->increments('id');
             $table->string('immatriculation');
             $table->string('chassis')->nullable();
-            $table->smallInteger('annee');
-            $table->string('marque');
-            $table->string('type');
-            $table->enum('etat', ['disponible', 'loué', 'maintenance']);
-            $table->double('prix');
+            $table->smallInteger('annee')->nullable();
+            $table->string('marque')->nullable();
+            $table->string('type')->nullable();
+            $table->enum('etat', ['disponible', 'loué', 'maintenance'])->nullable();
+            $table->double('prix')->nullable();
             $table->timestamps();
         });
     }
