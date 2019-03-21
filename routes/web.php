@@ -60,6 +60,18 @@ Route::get('/voiture/{voiture}', 'VoitureController@show');
 Route::post( '/voiture/reception', 'VoitureController@reception');
 // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');
 Route::get('/voiture/{voiture}/maintenance', 'VoitureController@maintenance');
+Route::post('/voitures/ajout-voiture', function(Request $request){
+
+    Voiture::create([
+        'immatriculation' => $request->immatriculation,
+        'chassis' => $request->numero_chassis,
+        'annee' => $request->annee,
+        'marque' => $request->marque,
+        'type' => $request->type,
+        'etat' => 'disponible',
+        'prix' => $request->prix
+    ]);
+});
 
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
