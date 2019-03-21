@@ -3501,6 +3501,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     relocateTo: function relocateTo(id) {
       window.location = '/voiture/' + id;
+    },
+    submitForm: function submitForm() {
+      document.getElementById("voitureForm").submit();
     }
   },
   mounted: function mounted() {}

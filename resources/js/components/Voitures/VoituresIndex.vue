@@ -8,6 +8,9 @@ export default {
     methods:{
         relocateTo(id){
             window.location = '/voiture/' + id
+        },
+        submitForm(){
+            document.getElementById("voitureForm").submit();
         }
     },
     mounted(){

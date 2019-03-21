@@ -113,7 +113,7 @@
 
 
             <!-- Modal -->
-            <div class="modal fade" id="ajoutVoiture" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal fade" id="ajoutVoiture" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" @keyup.enter="submitForm()">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -122,7 +122,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="/voitures/ajout-voiture" enctype="multipart/form-data" method="POST">
+                        <form action="/voitures/ajout-voiture" enctype="multipart/form-data" method="POST" id="voitureForm">
                             @csrf
                             <div class="modal-body">
                                 <div class="container-fluid">
