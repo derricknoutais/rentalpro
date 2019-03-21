@@ -36,7 +36,7 @@
                                 <h3 class="card-title mt-1">En Maintenance </h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-danger px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('disponible') }}</h6></span>
+                                <span class="badge badge-danger px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('maintenance') }}</h6></span>
                             </div>
                         </div>
 
@@ -60,7 +60,7 @@
                                 <h3 class="card-title mt-1">En Location </h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-warning px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('disponible') }}</h6></span>
+                                <span class="badge badge-warning px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('loué') }}</h6></span>
                             </div>
                         </div>
 
