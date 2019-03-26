@@ -235,7 +235,7 @@ export default {
                 'client': this.contrat.client.cashier_id 
             };
             
-            axios.post('http://facture.test/api/facture', this.data).then(response => {
+            axios.post('https://thecashier.ga/api/facture', this.data).then(response => {
                 var cashier_id = response.data.id
                 this.cashier_id = cashier_id       
                 // if( cashier_id !== null ){

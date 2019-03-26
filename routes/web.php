@@ -81,6 +81,7 @@ Route::get('/clients/{client}', 'ClientController@show');
 Route::post( '/clients/ajout-client', function(Request $request){
     $client = Client::create([
         'nom' => $request->nom,
+        'prenom' => $request->prenom,
         'adresse' => $request->addresse,
         'numero_permis' => $request->numero_permis,
         'phone1' => $request->numero_telephone,
@@ -88,6 +89,7 @@ Route::post( '/clients/ajout-client', function(Request $request){
         'ville' => $request->ville,
         'cashier_id' => $request->cashier_id
     ]);
+
     if($request->hasFile('permis')){
         $image = $request->file('permis');
         $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();

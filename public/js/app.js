@@ -1786,13 +1786,13 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       client: {
-        nom: 'sadsada',
-        prenom: 'sadsada',
-        numero_telephone: 'sadsada',
-        numero_permis: 'sadsada',
-        mail: 'sadsada',
-        ville: 'Port-Gentil',
-        addresse: 'sadsada',
+        nom: '',
+        prenom: '',
+        numero_telephone: '',
+        numero_permis: '',
+        mail: '',
+        ville: '',
+        addresse: '',
         cashier_id: ''
       }
     };
@@ -1804,7 +1804,7 @@ __webpack_require__.r(__webpack_exports__);
     enregistreClientDansCashier: function enregistreClientDansCashier() {
       var _this = this;
 
-      axios.post('http://facture.test/api/client/nouveau', this.client).then(function (response) {
+      axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(function (response) {
         console.log(response.data);
         _this.client.cashier_id = response.data.id;
         axios.post('/clients/ajout-client', _this.client).then(function (response) {
