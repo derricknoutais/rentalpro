@@ -52,7 +52,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         > 
-            <contrat-final @enregistrer="enregistrer" @envoyerACashier="envoyerACashier()" :contrat="this.contrat" :contrat_enregistre="this.contrat_enregistré" v-if=" this.step === 6">
+            <contrat-final @enregistrer="enregistrer" @cashier="envoieACashier" :contrat="this.contrat" :contrat_enregistre="this.contrat_enregistré" v-if=" this.step === 6">
                 
             </contrat-final>
         </transition>
@@ -223,14 +223,16 @@ export default {
             this.$forceUpdate()
             
         },
-        envoyerACashier(){
+        envoieACashier(){
+            console.log('Ceee')
             var data;
             this.data = data = {
                 'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
                 'échéance' : this.contrat.check_in,
                 'quantité' : this.contrat.nombre_jours,
                 'description' : 'Jours',
-                'prix_unitaire' : this.contrat.prix_journalier
+                'prix_unitaire' : this.contrat.prix_journalier,
+                'client': this.contrat.client.cashier_id 
             };
             
             axios.post('http://facture.test/api/facture', this.data).then(response => {

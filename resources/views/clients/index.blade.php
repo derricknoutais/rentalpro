@@ -106,7 +106,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="/clients/ajout-client" method="POST" enctype="multipart/form-data">
+                        <form action="/clients/ajout-client" method="POST" enctype="multipart/form-data" id="clientForm" @submit.prevent="enregistreClientDansCashier()">
                         <div class="modal-body">
                             <div class="container-fluid">
                                 
@@ -115,7 +115,13 @@
                                         <div class="col">
                                             <div class="form-group">
                                               <label for="">Nom Complet</label>
-                                              <input type="text" class="form-control" name="nom" id="" aria-describedby="helpId" placeholder="">
+                                              <input type="text" class="form-control" name="nom" v-model="client.nom">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                              <label for="">Nom Complet</label>
+                                              <input type="text" class="form-control" name="prenom" v-model="client.prenom">
                                             </div>
                                         </div>
 
@@ -124,27 +130,28 @@
                                         <div class="col">
                                             <div class="form-group">
                                               <label for="">Numéro Télephone</label>
-                                              <input type="text" class="form-control" name="numero_telephone" id="" aria-describedby="helpId" placeholder="">
+                                              <input type="text" class="form-control" name="numero_telephone" v-model="client.numero_telephone">
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-group">
                                               <label for="">Numéro Permis</label>
-                                              <input type="text" class="form-control" name="numero_permis" id="" aria-describedby="helpId" placeholder="">
+                                              <input type="text" class="form-control" name="numero_permis" v-model="client.numero_permis">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
-                                              <label for="">E-mai</label>
-                                              <input type="text" class="form-control" name="mail" id="" aria-describedby="helpId" placeholder="">
+                                              <label for="">E-mail</label>
+                                              <input type="text" class="form-control" name="mail" v-model="client.mail">
+                                              <input type="hidden" class="form-control" name="cashier_id" v-model="client.cashier_id">
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-group">
                                                 <label for="">Ville</label>
-                                                <select class="form-control" name="ville" id="">
+                                                <select class="form-control" name="ville" v-model="client.ville">
                                                     <option>Libreville</option>
                                                     <option>Port-Gentil</option>
                                                 </select>
@@ -155,7 +162,7 @@
                                         <div class="col">
                                             <div class="form-group">
                                               <label for="">Addresse</label>
-                                              <textarea class="form-control" name="addresse" id="" rows="3"></textarea>
+                                              <textarea class="form-control" name="addresse" v-model="client.addresse"></textarea>
                                             </div>
                                         </div>
                                     </div>

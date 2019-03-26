@@ -85,10 +85,9 @@ Route::post( '/clients/ajout-client', function(Request $request){
         'numero_permis' => $request->numero_permis,
         'phone1' => $request->numero_telephone,
         'mail' => $request->mail,
-        'ville' => $request->ville
+        'ville' => $request->ville,
+        'cashier_id' => $request->cashier_id
     ]);
-    
-
     if($request->hasFile('permis')){
         $image = $request->file('permis');
         $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
@@ -98,7 +97,8 @@ Route::post( '/clients/ajout-client', function(Request $request){
             'permis' => $nom
         ]);
     }
-    return redirect('/clients/' . $client->id);
+
+
 });
 
 // CONTRATS

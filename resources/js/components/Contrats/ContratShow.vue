@@ -6,18 +6,19 @@ export default {
         }
     },
     methods:{
-        envoyerACashier(){
-            console.log('Hellooooo')
+        envoieACashier(payload){
+            console.log(payload)
             var data;
-            this.data = data = {
-                'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
-                'échéance' : this.contrat.check_in,
-                'quantité' : this.contrat.nombre_jours,
+            data = {
+                'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
+                'échéance' : payload.check_in,
+                'quantité' : payload.nombre_jours,
                 'description' : 'Jours',
-                'prix_unitaire' : this.contrat.prix_journalier
+                'prix_unitaire' : payload.prix_journalier,
+                'client': payload.client.cashier_id 
             };
 
-            axios.post('http://facture.test/api/facture', this.data).then(response => {
+            axios.post('http://facture.test/api/facture', data).then(response => {
                 var cashier_id = response.data.id
                 this.cashier_id = cashier_id       
                 // if( cashier_id !== null ){

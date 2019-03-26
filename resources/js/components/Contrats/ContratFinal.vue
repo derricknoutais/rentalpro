@@ -201,7 +201,8 @@ export default {
     },
     methods:{
         envoyerACashier(){
-            this.$emit('envoyerACashier')
+            console.log('Beee')
+            this.$emit('cashier', this.contrat)
             
         },
         enregistrer(){

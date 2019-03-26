@@ -1784,11 +1784,37 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      client: {
+        nom: 'sadsada',
+        prenom: 'sadsada',
+        numero_telephone: 'sadsada',
+        numero_permis: 'sadsada',
+        mail: 'sadsada',
+        ville: 'Port-Gentil',
+        addresse: 'sadsada',
+        cashier_id: ''
+      }
+    };
   },
   methods: {
     relocateTo: function relocateTo(location) {
       window.location = location;
+    },
+    enregistreClientDansCashier: function enregistreClientDansCashier() {
+      var _this = this;
+
+      axios.post('http://facture.test/api/client/nouveau', this.client).then(function (response) {
+        console.log(response.data);
+        _this.client.cashier_id = response.data.id;
+        axios.post('/clients/ajout-client', _this.client).then(function (response) {
+          console.log(response.data);
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
     }
   },
   mounted: function mounted() {}
@@ -2109,7 +2135,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     envoyerACashier: function envoyerACashier() {
-      this.$emit('envoyerACashier');
+      console.log('Beee');
+      this.$emit('cashier', this.contrat);
     },
     enregistrer: function enregistrer() {
       this.$emit('enregistrer');
@@ -2157,19 +2184,20 @@ __webpack_require__.r(__webpack_exports__);
     return {};
   },
   methods: {
-    envoyerACashier: function envoyerACashier() {
+    envoieACashier: function envoieACashier(payload) {
       var _this = this;
 
-      console.log('Hellooooo');
+      console.log(payload);
       var data;
-      this.data = data = {
-        'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
-        'échéance': this.contrat.check_in,
-        'quantité': this.contrat.nombre_jours,
+      data = {
+        'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
+        'échéance': payload.check_in,
+        'quantité': payload.nombre_jours,
         'description': 'Jours',
-        'prix_unitaire': this.contrat.prix_journalier
+        'prix_unitaire': payload.prix_journalier,
+        'client': payload.client.cashier_id
       };
-      axios.post('http://facture.test/api/facture', this.data).then(function (response) {
+      axios.post('http://facture.test/api/facture', data).then(function (response) {
         var cashier_id = response.data.id;
         _this.cashier_id = cashier_id; // if( cashier_id !== null ){
         //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
@@ -2973,16 +3001,18 @@ __webpack_require__.r(__webpack_exports__);
       this.finalStep = true;
       this.$forceUpdate();
     },
-    envoyerACashier: function envoyerACashier() {
+    envoieACashier: function envoieACashier() {
       var _this2 = this;
 
+      console.log('Ceee');
       var data;
       this.data = data = {
         'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
         'échéance': this.contrat.check_in,
         'quantité': this.contrat.nombre_jours,
         'description': 'Jours',
-        'prix_unitaire': this.contrat.prix_journalier
+        'prix_unitaire': this.contrat.prix_journalier,
+        'client': this.contrat.client.cashier_id
       };
       axios.post('http://facture.test/api/facture', this.data).then(function (response) {
         var cashier_id = response.data.id;
@@ -41977,9 +42007,7 @@ var render = function() {
                 },
                 on: {
                   enregistrer: _vm.enregistrer,
-                  envoyerACashier: function($event) {
-                    return _vm.envoyerACashier()
-                  }
+                  cashier: _vm.envoieACashier
                 }
               })
             : _vm._e()
