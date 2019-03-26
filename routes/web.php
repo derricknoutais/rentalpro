@@ -89,6 +89,7 @@ Route::post( '/clients/ajout-client', function(Request $request){
         'ville' => $request->ville,
         'cashier_id' => $request->cashier_id
     ]);
+    return $request->all();
 
     if($request->hasFile('permis')){
         $image = $request->file('permis');
