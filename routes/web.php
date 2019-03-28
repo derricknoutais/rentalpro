@@ -105,7 +105,6 @@ Route::post( '/clients/ajout-client', function(Request $request){
 });
 
 // CONTRATS
-
 Route::get('/contrats/menu', 'ContratController@menu');
 Route::get('/contrats', 'ContratController@index');
 Route::get('/contrats/create', 'ContratController@create');
