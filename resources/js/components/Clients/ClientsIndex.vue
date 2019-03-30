@@ -23,12 +23,13 @@ export default {
             axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(response => {
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
-                axios.post('/clients/ajout-client', this.client).then(response => {
-                    console.log(response.data);
+                // axios.post('/clients/ajout-client', this.client).then(response => {
+                //     console.log(response.data);
                     
-                }).catch(error => {
-                    console.log(error);
-                });
+                // }).catch(error => {
+                //     console.log(error);
+                // });
+                document.getElementById('clientForm').submit();
             }).catch(error => {
                 console.log(error);
             });

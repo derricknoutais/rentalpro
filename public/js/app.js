@@ -1806,12 +1806,13 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(function (response) {
         console.log(response.data);
-        _this.client.cashier_id = response.data.id;
-        axios.post('/clients/ajout-client', _this.client).then(function (response) {
-          console.log(response.data);
-        }).catch(function (error) {
-          console.log(error);
-        });
+        _this.client.cashier_id = response.data.id; // axios.post('/clients/ajout-client', this.client).then(response => {
+        //     console.log(response.data);
+        // }).catch(error => {
+        //     console.log(error);
+        // });
+
+        document.getElementById('clientForm').submit();
       }).catch(function (error) {
         console.log(error);
       });
