@@ -2197,7 +2197,7 @@ __webpack_require__.r(__webpack_exports__);
         'prix_unitaire': payload.prix_journalier,
         'client': payload.client.cashier_id
       };
-      axios.post('http://facture.test/api/facture', data).then(function (response) {
+      axios.post('https://thecashier.ga/api/facture', data).then(function (response) {
         var cashier_id = response.data.id;
         _this.cashier_id = cashier_id; // if( cashier_id !== null ){
         //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
@@ -3014,7 +3014,7 @@ __webpack_require__.r(__webpack_exports__);
         'prix_unitaire': this.contrat.prix_journalier,
         'client': this.contrat.client.cashier_id
       };
-      axios.post('http://facture.test/api/facture', this.data).then(function (response) {
+      axios.post('https://thecashier.ga/api/facture', this.data).then(function (response) {
         var cashier_id = response.data.id;
         _this2.cashier_id = cashier_id; // if( cashier_id !== null ){
         //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
