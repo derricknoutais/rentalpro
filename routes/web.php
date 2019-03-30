@@ -92,7 +92,7 @@ Route::post( '/clients/ajout-client', function(Request $request){
 
     if($request->hasFile('permis')){
         $image = $request->file('permis');
-        return $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
+        $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
         $destinationPath = public_path('/uploads');
         $image->move($destinationPath, $nom);
         $client->update([
