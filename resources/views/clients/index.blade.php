@@ -106,7 +106,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="/clients/ajout-client" method="POST" enctype="multipart/form-data" id="clientForm" @submit.prevent="enregistreClientDansCashier()">
+                        <form action="/clients/ajout-client" method="POST"  enctype="multipart/form-data" id="clientForm" @submit.prevent="enregistreClientDansCashier()">
                         <div class="modal-body">
                             <div class="container-fluid">
                                 

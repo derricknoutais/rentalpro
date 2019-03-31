@@ -23,6 +23,8 @@ export default {
             axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(response => {
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
+                this.$forceUpdate()
+
                 // axios.post('/clients/ajout-client', this.client).then(response => {
                 //     console.log(response.data);
                     
