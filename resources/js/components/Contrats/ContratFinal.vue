@@ -182,7 +182,7 @@
             <div class="row mt-5">
                 <div class="col text-center" id="buttons2">
                     <button type="button" class="btn btn-primary" @click="enregistrer">Enregistrer</button>
-                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="! this.contrat.cashier_facture_id">Envoyer à Cashier</button>
+                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="this.contrat.cashier_facture_id === null">Envoyer à Cashier</button>
                     <button type="button" class="btn btn-primary" @click="imprimer">Imprimer</button>
                 </div>
             </div>

@@ -39599,7 +39599,7 @@ var render = function() {
                 [_vm._v("Enregistrer")]
               ),
               _vm._v(" "),
-              !this.contrat.cashier_facture_id
+              this.contrat.cashier_facture_id === null
                 ? _c(
                     "button",
                     {
