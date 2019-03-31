@@ -23,7 +23,7 @@ export default {
                 this.cashier_id = cashier_id       
                 if( cashier_id !== null ){
                     axios.post('/contrat/' + payload.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
-                        console.log(response.data);
+                        window.location.reload()
                     }).catch(error => {
                         console.log(error);
                     });

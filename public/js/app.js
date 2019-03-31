@@ -2210,7 +2210,7 @@ __webpack_require__.r(__webpack_exports__);
           axios.post('/contrat/' + payload.id + '/update-cashier-id', {
             cashier_id: _this.cashier_id
           }).then(function (response) {
-            console.log(response.data);
+            window.location.reload();
           }).catch(function (error) {
             console.log(error);
           });
@@ -39599,15 +39599,17 @@ var render = function() {
                 [_vm._v("Enregistrer")]
               ),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { type: "button" },
-                  on: { click: _vm.envoyerACashier }
-                },
-                [_vm._v("Envoyer à Cashier")]
-              ),
+              !this.contrat.cashier_facture_id
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: { click: _vm.envoyerACashier }
+                    },
+                    [_vm._v("Envoyer à Cashier")]
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "button",
