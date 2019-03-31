@@ -2141,7 +2141,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     envoyerACashier: function envoyerACashier() {
       console.log('Beee');
-      this.$emit('cashier', this.contrat);
+      this.$emit('cashier', this.contrat_enregistre);
     },
     enregistrer: function enregistrer() {
       this.$emit('enregistrer');
@@ -2207,7 +2207,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.cashier_id = cashier_id;
 
         if (cashier_id !== null) {
-          axios.post('/contrat/' + _this.contrat_enregistré.id + '/update-cashier-id', {
+          axios.post('/contrat/' + payload.id + '/update-cashier-id', {
             cashier_id: _this.cashier_id
           }).then(function (response) {
             console.log(response.data);

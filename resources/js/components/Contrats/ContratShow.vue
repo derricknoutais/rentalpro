@@ -22,7 +22,7 @@ export default {
                 var cashier_id = response.data.id
                 this.cashier_id = cashier_id       
                 if( cashier_id !== null ){
-                    axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
+                    axios.post('/contrat/' + payload.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
                         console.log(response.data);
                     }).catch(error => {
                         console.log(error);
