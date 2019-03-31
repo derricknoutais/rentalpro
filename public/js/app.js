@@ -2141,7 +2141,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     envoyerACashier: function envoyerACashier() {
       console.log('Beee');
-      this.$emit('cashier', this.contrat_enregistre);
+      this.$emit('cashier', this.contrat);
     },
     enregistrer: function enregistrer() {
       this.$emit('enregistrer');
