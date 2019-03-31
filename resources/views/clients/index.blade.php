@@ -145,7 +145,7 @@
                                             <div class="form-group">
                                               <label for="">E-mail</label>
                                               <input type="text" class="form-control" name="mail" v-model="client.mail">
-                                              <input type="hidden" class="form-control" name="cashier_id" v-model="client.cashier_id">
+                                              <input type="hidden" class="form-control" id="cashier_id" name="cashier_id" v-model="client.cashier_id">
                                             </div>
                                         </div>
                                         <div class="col">

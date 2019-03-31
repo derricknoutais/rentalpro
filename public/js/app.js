@@ -1807,6 +1807,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(function (response) {
         console.log(response.data);
         _this.client.cashier_id = response.data.id;
+        document.getElementById("cashier_id").value = response.data.id;
 
         _this.$forceUpdate(); // axios.post('/clients/ajout-client', this.client).then(response => {
         //     console.log(response.data);
