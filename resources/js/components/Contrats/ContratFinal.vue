@@ -83,7 +83,8 @@
                 <div class="col text-center" id="buttons">
                     
                     <button type="button" class="btn btn-primary" @click="enregistrer" v-if="contrat_enregistre === null">Enregistrer</button>
-                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null">Envoyer à Cashier</button>
+                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null">Envoyer à Cashier</button>
+                    <a :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-else>Voir Facture dans Cashier</a>
                     <button type="button" class="btn btn-primary" @click="imprimer" v-if="contrat_enregistre !== null">Imprimer</button>
 
                     <!-- Button trigger modal -->
@@ -182,7 +183,7 @@
             <div class="row mt-5">
                 <div class="col text-center" id="buttons2">
                     <button type="button" class="btn btn-primary" @click="enregistrer">Enregistrer</button>
-                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="this.contrat.cashier_facture_id === null">Envoyer à Cashier</button>
+                    <button type="button" class="btn btn-primary" @click="envoyerACashier">Envoyer à Cashier</button>
                     <button type="button" class="btn btn-primary" @click="imprimer">Imprimer</button>
                 </div>
             </div>

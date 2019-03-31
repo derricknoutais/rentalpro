@@ -114,13 +114,13 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
-                                              <label for="">Nom Complet</label>
+                                              <label for="">Nom</label>
                                               <input type="text" class="form-control" name="nom" v-model="client.nom">
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-group">
-                                              <label for="">Nom Complet</label>
+                                              <label for="">Prénom</label>
                                               <input type="text" class="form-control" name="prenom" v-model="client.prenom">
                                             </div>
                                         </div>

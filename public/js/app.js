@@ -2130,6 +2130,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre'],
   data: function data() {
@@ -39387,7 +39388,8 @@ var render = function() {
                   )
                 : _vm._e(),
               _vm._v(" "),
-              _vm.contrat_enregistre !== null
+              _vm.contrat_enregistre !== null &&
+              _vm.contrat.cashier_facture_id === null
                 ? _c(
                     "button",
                     {
@@ -39397,7 +39399,19 @@ var render = function() {
                     },
                     [_vm._v("Envoyer à Cashier")]
                   )
-                : _vm._e(),
+                : _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: {
+                        href:
+                          "https://thecashier.ga/STA/Facture/" +
+                          _vm.contrat.cashier_facture_id
+                      },
+                      on: { click: _vm.envoyerACashier }
+                    },
+                    [_vm._v("Voir Facture dans Cashier")]
+                  ),
               _vm._v(" "),
               _vm.contrat_enregistre !== null
                 ? _c(
@@ -39599,17 +39613,15 @@ var render = function() {
                 [_vm._v("Enregistrer")]
               ),
               _vm._v(" "),
-              this.contrat.cashier_facture_id === null
-                ? _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: { type: "button" },
-                      on: { click: _vm.envoyerACashier }
-                    },
-                    [_vm._v("Envoyer à Cashier")]
-                  )
-                : _vm._e(),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: { click: _vm.envoyerACashier }
+                },
+                [_vm._v("Envoyer à Cashier")]
+              ),
               _vm._v(" "),
               _c(
                 "button",
