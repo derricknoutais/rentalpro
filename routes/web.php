@@ -99,7 +99,7 @@ Route::post( '/clients/ajout-client', function(Request $request){
             'permis' => $nom
         ]);
     }
-
+    return redirect('/clients/' . $client->id);
 
 });
 
