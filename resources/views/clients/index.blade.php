@@ -85,7 +85,7 @@
                             <tbody>
                                 @foreach ($clients as $client)
                                     <tr class="pointer" @click="relocateTo('/clients/ {{ $client->id }}')">
-                                        <td scope="row">{{ $client->nom }}</td>
+                                        <td scope="row">{{ $client->nom . ' ' . $client->prenom }}</td>
                                         <td>{{ $client->phone1 }}</td>
                                         <td>{{ $client->nombreLocations() }}</td>
                                     </tr>
