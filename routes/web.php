@@ -17,8 +17,10 @@ use App\Client;
 */
 
 Route::get('/', function () {
-    $voitures = Voiture::all();
-    return view('welcome', compact('voitures'));
+    $voitures = Voiture::with('contrats')->get();
+    $contrats_en_cours = Contrat::where('check_in', '>' ,now())->get()->sortBy('check_in');
+    $contrats_en_retard = Contrat::where('check_in', '<', now())->whereNull('real_check_in')->get()->sortBy('check_in');
+    return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard'));
 });
 
 Route::get('/test-upload/{contrat}', function(Contrat $contrat){
@@ -85,6 +87,8 @@ Route::post( '/clients/ajout-client', function(Request $request){
         'adresse' => $request->addresse,
         'numero_permis' => $request->numero_permis,
         'phone1' => $request->numero_telephone,
+        'phone2' => $request->numero_telephone2,
+        'phone3' => $request->numero_telephone3,
         'mail' => $request->mail,
         'ville' => $request->ville,
         'cashier_id' => $request->cashier_id
@@ -102,6 +106,8 @@ Route::post( '/clients/ajout-client', function(Request $request){
     return redirect('/clients/' . $client->id);
 
 });
+Route::get('/clients/{client}/edit', 'ClientController@edit');
+Route::post('/clients/{client}/update', 'ClientController@update');
 
 // CONTRATS
 Route::get('/contrats/menu', 'ContratController@menu');

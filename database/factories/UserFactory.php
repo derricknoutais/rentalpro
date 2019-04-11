@@ -38,7 +38,8 @@ $factory->define(App\Voiture::class, function(Faker $faker){
 
 $factory->define(App\Client::class, function(Faker $faker){
     return [
-        'nom' => $faker->name,
+        'nom' => $faker->lastName,
+        'prenom' => $faker->firstName,
         'adresse' => $faker->streetAddress,
         'numero_permis' => strtoupper($faker->bothify('B0##?#??###?#')),
         'phone1' => $faker->phoneNumber,

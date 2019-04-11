@@ -6,6 +6,8 @@ export default {
                 nom: '',
                 prenom: '',
                 numero_telephone: '',
+                numero_telephone2: '',
+                numero_telephone3: '',
                 numero_permis: '',
                 mail: '',
                 ville: '',
@@ -19,8 +21,7 @@ export default {
             window.location = location
         },
         enregistreClientDansCashier(){
-
-            axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(response => {
+            axios.post('http://facture.test/api/client/nouveau', this.client).then(response => {
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
                 document.getElementById("cashier_id").value = response.data.id

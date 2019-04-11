@@ -80,6 +80,7 @@
                                     <th>Nom</th>
                                     <th>Numéro de Phone</th>
                                     <th>Nombre Locations</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,6 +89,11 @@
                                         <td scope="row">{{ $client->nom . ' ' . $client->prenom }}</td>
                                         <td>{{ $client->phone1 }}</td>
                                         <td>{{ $client->nombreLocations() }}</td>
+                                        <td>
+                                            <a href="/clients/{{ $client->id }}/edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -114,13 +120,13 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
-                                              <label for="">Nom</label>
+                                              <label for="">Nom <span class="text-danger">*</span></label>
                                               <input type="text" class="form-control" name="nom" v-model="client.nom">
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-group">
-                                              <label for="">Prénom</label>
+                                              <label for="">Prénom <span class="text-danger">*</span></label>
                                               <input type="text" class="form-control" name="prenom" v-model="client.prenom">
                                             </div>
                                         </div>
@@ -129,18 +135,30 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
-                                              <label for="">Numéro Télephone</label>
+                                              <label for="">Numéro Télephone <span class="text-danger">*</span></label>
                                               <input type="text" class="form-control" name="numero_telephone" v-model="client.numero_telephone">
                                             </div>
                                         </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                              <label for="">Numéro Télephone 2</label>
+                                              <input type="text" class="form-control" name="numero_telephone2" v-model="client.numero_telephone2">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                              <label for="">Numéro Télephone 3</label>
+                                              <input type="text" class="form-control" name="numero_telephone3" v-model="client.numero_telephone3">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col">
                                             <div class="form-group">
                                               <label for="">Numéro Permis</label>
                                               <input type="text" class="form-control" name="numero_permis" v-model="client.numero_permis">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col">
                                             <div class="form-group">
                                               <label for="">E-mail</label>

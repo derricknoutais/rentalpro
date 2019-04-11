@@ -1773,6 +1773,59 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Clients/ClientUpdate.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Clients/ClientUpdate.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['prop_client'],
+  data: function data() {
+    return {
+      client: {
+        nom: '',
+        prenom: '',
+        numero_telephone: '',
+        numero_telephone2: '',
+        numero_telephone3: '',
+        numero_permis: '',
+        mail: '',
+        ville: '',
+        addresse: '',
+        cashier_id: ''
+      }
+    };
+  },
+  methods: {
+    updateClient: function updateClient() {
+      axios.post('http://facture.test/api/client/' + this.prop_client.cashier_id + '/update', this.client).then(function (response) {
+        console.log(response.data);
+        document.getElementById('clientUpdateForm').submit();
+      }).catch(function (error) {
+        console.log(error);
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.client.nom = this.prop_client.nom;
+    this.client.prenom = this.prop_client.prenom;
+    this.client.numero_telephone = this.prop_client.phone1;
+    this.client.numero_telephone2 = this.prop_client.phone2;
+    this.client.numero_telephone3 = this.prop_client.phone3;
+    this.client.mail = this.prop_client.mail;
+    this.client.ville = this.prop_client.ville;
+    this.client.addresse = this.prop_client.addresse;
+    this.cashier_id = this.prop_client.cashier_id;
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Clients/ClientsIndex.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Clients/ClientsIndex.vue?vue&type=script&lang=js& ***!
@@ -1789,6 +1842,8 @@ __webpack_require__.r(__webpack_exports__);
         nom: '',
         prenom: '',
         numero_telephone: '',
+        numero_telephone2: '',
+        numero_telephone3: '',
         numero_permis: '',
         mail: '',
         ville: '',
@@ -1804,7 +1859,7 @@ __webpack_require__.r(__webpack_exports__);
     enregistreClientDansCashier: function enregistreClientDansCashier() {
       var _this = this;
 
-      axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(function (response) {
+      axios.post('http://facture.test/api/client/nouveau', this.client).then(function (response) {
         console.log(response.data);
         _this.client.cashier_id = response.data.id;
         document.getElementById("cashier_id").value = response.data.id;
@@ -2131,6 +2186,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre'],
   data: function data() {
@@ -2140,6 +2200,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    decrementStep: function decrementStep(event) {
+      this.$emit('decrementStep', this.voiture);
+    },
     envoyerACashier: function envoyerACashier() {
       console.log('Beee');
       this.$emit('cashier', this.contrat);
@@ -2980,6 +3043,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    decrementStep: function decrementStep() {
+      this.step -= 1;
+    },
     lanceEtape2: function lanceEtape2(value) {
       this.contrat.client = value;
       this.step = 2;
@@ -3214,6 +3280,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['list'],
   data: function data() {
@@ -3223,6 +3290,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    decrementStep: function decrementStep(event) {
+      this.$emit('decrementStep', this.voiture);
+    },
     passeAEtape3: function passeAEtape3(event) {
       this.$emit('passeAEtape3', this.voiture);
     }
@@ -3269,6 +3339,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['list'],
   data: function data() {
@@ -3281,6 +3352,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    decrementStep: function decrementStep(event) {
+      this.$emit('decrementStep', this.voiture);
+    },
     passeAEtape4: function passeAEtape4(event) {
       this.$emit('passeAEtape4', this.dates);
     }
@@ -3323,6 +3397,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['voiture'],
   data: function data() {
@@ -3334,6 +3409,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    decrementStep: function decrementStep(event) {
+      this.$emit('decrementStep', this.voiture);
+    },
     passeAEtape5: function passeAEtape5(event) {
       this.$emit('passeAEtape5', this.montants);
     }
@@ -3440,6 +3518,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['voiture'],
   data: function data() {
@@ -3451,6 +3530,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    decrementStep: function decrementStep(event) {
+      this.$emit('decrementStep', this.voiture);
+    },
     passeAEtape6: function passeAEtape6(event) {
       this.$emit('passeAEtape6');
     }
@@ -39380,6 +39462,21 @@ var render = function() {
                 ? _c(
                     "button",
                     {
+                      staticClass: "btn btn-secondary",
+                      on: {
+                        click: function($event) {
+                          return _vm.decrementStep()
+                        }
+                      }
+                    },
+                    [_vm._v("Retour")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.contrat_enregistre === null
+                ? _c(
+                    "button",
+                    {
                       staticClass: "btn btn-primary",
                       attrs: { type: "button" },
                       on: { click: _vm.enregistrer }
@@ -39399,7 +39496,11 @@ var render = function() {
                     },
                     [_vm._v("Envoyer à Cashier")]
                   )
-                : _c(
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.contrat_enregistre !== null &&
+              _vm.contrat.cashier_facture_id !== null
+                ? _c(
                     "a",
                     {
                       staticClass: "btn btn-primary",
@@ -39411,7 +39512,8 @@ var render = function() {
                       on: { click: _vm.envoyerACashier }
                     },
                     [_vm._v("Voir Facture dans Cashier")]
-                  ),
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _vm.contrat_enregistre !== null
                 ? _c(
@@ -39432,11 +39534,7 @@ var render = function() {
                       staticClass: "btn btn-primary",
                       attrs: { href: "/test-upload/" + _vm.contrat.id }
                     },
-                    [
-                      _vm._v(
-                        "\n                  Attacher Photos\n                "
-                      )
-                    ]
+                    [_vm._v("Attacher Photos")]
                   )
                 : _vm._e(),
               _vm._v(" "),
@@ -41940,7 +42038,12 @@ var render = function() {
               }
             ],
             attrs: { list: _vm.voitures },
-            on: { passeAEtape3: _vm.lanceEtape3 }
+            on: {
+              decrementStep: function($event) {
+                return _vm.decrementStep()
+              },
+              passeAEtape3: _vm.lanceEtape3
+            }
           })
         ],
         1
@@ -41966,7 +42069,12 @@ var render = function() {
               }
             ],
             attrs: { list: _vm.voitures },
-            on: { passeAEtape4: _vm.lanceEtape4 }
+            on: {
+              decrementStep: function($event) {
+                return _vm.decrementStep()
+              },
+              passeAEtape4: _vm.lanceEtape4
+            }
           })
         ],
         1
@@ -41985,7 +42093,12 @@ var render = function() {
           this.step === 4
             ? _c("step-4", {
                 attrs: { voiture: this.contrat.voiture },
-                on: { passeAEtape5: _vm.lanceEtape5 }
+                on: {
+                  decrementStep: function($event) {
+                    return _vm.decrementStep()
+                  },
+                  passeAEtape5: _vm.lanceEtape5
+                }
               })
             : _vm._e()
         ],
@@ -42005,7 +42118,12 @@ var render = function() {
           this.step === 5
             ? _c("step-5", {
                 attrs: { voiture: this.contrat.voiture },
-                on: { passeAEtape6: _vm.lanceEtape6 }
+                on: {
+                  decrementStep: function($event) {
+                    return _vm.decrementStep()
+                  },
+                  passeAEtape6: _vm.lanceEtape6
+                }
               })
             : _vm._e()
         ],
@@ -42030,7 +42148,10 @@ var render = function() {
                 },
                 on: {
                   enregistrer: _vm.enregistrer,
-                  cashier: _vm.envoieACashier
+                  cashier: _vm.envoieACashier,
+                  decrementStep: function($event) {
+                    return _vm.decrementStep()
+                  }
                 }
               })
             : _vm._e()
@@ -42331,9 +42452,27 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "row mt-5" }, [
         _c("div", { staticClass: "col text-center" }, [
-          _c("button", { staticClass: "btn btn-secondary" }, [
-            _vm._v("Annuler")
-          ]),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-secondary",
+              attrs: { href: "/contrats/menu" }
+            },
+            [_vm._v("Annuler")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-secondary",
+              on: {
+                click: function($event) {
+                  return _vm.decrementStep()
+                }
+              }
+            },
+            [_vm._v("Retour")]
+          ),
           _vm._v(" "),
           _c(
             "button",
@@ -42462,9 +42601,27 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "row mt-5" }, [
         _c("div", { staticClass: "col text-center" }, [
-          _c("button", { staticClass: "btn btn-secondary" }, [
-            _vm._v("Annuler")
-          ]),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-secondary",
+              attrs: { href: "/contrats/menu" }
+            },
+            [_vm._v("Annuler")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-secondary",
+              on: {
+                click: function($event) {
+                  return _vm.decrementStep()
+                }
+              }
+            },
+            [_vm._v("Retour")]
+          ),
           _vm._v(" "),
           _c(
             "button",
@@ -42594,9 +42751,27 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "row mt-5" }, [
         _c("div", { staticClass: "col text-center" }, [
-          _c("button", { staticClass: "btn btn-secondary" }, [
-            _vm._v("Annuler")
-          ]),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-secondary",
+              attrs: { href: "/contrats/menu" }
+            },
+            [_vm._v("Annuler")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-secondary",
+              on: {
+                click: function($event) {
+                  return _vm.decrementStep()
+                }
+              }
+            },
+            [_vm._v("Retour")]
+          ),
           _vm._v(" "),
           _c(
             "button",
@@ -42778,9 +42953,27 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "row mt-5" }, [
         _c("div", { staticClass: "col text-center" }, [
-          _c("button", { staticClass: "btn btn-secondary" }, [
-            _vm._v("Annuler")
-          ]),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-secondary",
+              attrs: { href: "/contrats/menu" }
+            },
+            [_vm._v("Annuler")]
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-secondary",
+              on: {
+                click: function($event) {
+                  return _vm.decrementStep()
+                }
+              }
+            },
+            [_vm._v("Retour")]
+          ),
           _vm._v(" "),
           _c(
             "button",
@@ -55326,6 +55519,7 @@ exports.defaults = defaults;
 
 var map = {
 	"./components/Clients/ClientShow.vue": "./resources/js/components/Clients/ClientShow.vue",
+	"./components/Clients/ClientUpdate.vue": "./resources/js/components/Clients/ClientUpdate.vue",
 	"./components/Clients/ClientsIndex.vue": "./resources/js/components/Clients/ClientsIndex.vue",
 	"./components/Contrats/AttachePhotos.vue": "./resources/js/components/Contrats/AttachePhotos.vue",
 	"./components/Contrats/ContratFinal.vue": "./resources/js/components/Contrats/ContratFinal.vue",
@@ -55528,6 +55722,56 @@ component.options.__file = "resources/js/components/Clients/ClientShow.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientShow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ClientShow.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Clients/ClientShow.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientShow_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Clients/ClientUpdate.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/Clients/ClientUpdate.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ClientUpdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ClientUpdate.vue?vue&type=script&lang=js& */ "./resources/js/components/Clients/ClientUpdate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  _ClientUpdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"],
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Clients/ClientUpdate.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Clients/ClientUpdate.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/Clients/ClientUpdate.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientUpdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ClientUpdate.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Clients/ClientUpdate.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ClientUpdate_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

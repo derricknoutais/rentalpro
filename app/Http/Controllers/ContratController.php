@@ -33,14 +33,15 @@ class ContratController extends Controller
         return view('contrats.create', compact('clients', 'voitures'));
     }
     public function store(Request $request){
-        
+
+        date_default_timezone_set( 'Africa/Libreville');
 
         $contrat = Contrat::create([
             'voiture_id'=> $request['voiture']['id'],
             'client_id'=> $request['client']['id'],
             'numéro' => Contrat::numéro(),
-            'check_out'=> $request['check_out'],
-            'check_in'=> $request['check_in'],
+            'check_out'=> $request['check_out'] . date('H:i:s'),
+            'check_in'=> $request['check_in'] . date('H:i:s'),
             'real_check_in' => NULL,
             'prix_journalier'=> $request['prix_journalier'],
             'caution' => $request['caution'],
@@ -51,9 +52,11 @@ class ContratController extends Controller
             'etat_documents' => $request[ 'documentString'],
             
         ]);
+
         Voiture::find( $request['voiture']['id'])->update([
             'etat' => 'loué'
         ]);
+
         return $contrat;
     }
     public function ajoutePhotos(Request $request, Contrat $contrat){

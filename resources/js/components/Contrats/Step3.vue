@@ -19,7 +19,8 @@
         </div>
         <div class="row mt-5">
             <div class="col text-center">
-                <button class="btn btn-secondary">Annuler</button>
+                <a class="btn btn-secondary" href="/contrats/menu">Annuler</a>
+                <button class="btn btn-secondary" @click="decrementStep()">Retour</button>
                 <button  class="btn btn-primary" :class="(dates.check_out && dates.check_in) ? '' : 'disabled'" @click="passeAEtape4()">Suivant</button>
             </div>
         </div>
@@ -39,6 +40,9 @@ export default {
         }
     },
     methods:{
+        decrementStep(event){
+            this.$emit('decrementStep', this.voiture)
+        },
         passeAEtape4(event){
             this.$emit('passeAEtape4', this.dates)
         }

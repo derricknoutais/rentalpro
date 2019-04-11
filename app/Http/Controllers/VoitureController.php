@@ -22,7 +22,8 @@ class VoitureController extends Controller
         $contrat = Contrat::find( $dernier_contrat_id);
         $contrat->update([
             'etat_accessoires_au_retour' => $request->accessoires,
-            'etat_documents_au_retour' => $request->documentsgdvefasgaergreg
+            'etat_documents_au_retour' => $request->documents,
+            'real_check_in' => now()
         ]);
         Voiture::find( $request->voiture['id'])->etat('disponible');
     }

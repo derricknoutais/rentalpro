@@ -82,19 +82,24 @@
             <div class="row mt-5 dashed">
                 <div class="col text-center" id="buttons">
                     
+                    <!-- Bouton Retour -->
+                    <button class="btn btn-secondary" @click="decrementStep()" v-if="contrat_enregistre === null">Retour</button>
+                    <!-- Bouton Enregistrer -->
                     <button type="button" class="btn btn-primary" @click="enregistrer" v-if="contrat_enregistre === null">Enregistrer</button>
+                    <!-- Bouton Envoyer a Cashier -->
                     <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null">Envoyer à Cashier</button>
-                    <a :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-else>Voir Facture dans Cashier</a>
+                    <!-- Bouton Voir Dans Cashier -->
+                    <a :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null">Voir Facture dans Cashier</a>
+                    <!-- Bouton Imprimer -->
                     <button type="button" class="btn btn-primary" @click="imprimer" v-if="contrat_enregistre !== null">Imprimer</button>
-
                     <!-- Button trigger modal -->
-                    <a v-if="contrat_enregistre !== null"  class="btn btn-primary" :href="'/test-upload/' + contrat.id">
-                      Attacher Photos
-                    </a>
-
+                    <a v-if="contrat_enregistre !== null"  class="btn btn-primary" :href="'/test-upload/' + contrat.id">Attacher Photos</a>
+                    <!-- Voir Photos -->
                     <a :href="'/contrat/' + this.contrat.id + '/voir-uploads'" class="btn btn-primary" v-if="contrat_enregistre !== null">Voir Photos</a>
                 </div>
             </div>
+
+
         </div>
         <attache-photos :contrat="contrat_enregistre" v-if="contrat_enregistre !== null"></attache-photos>
 
@@ -201,6 +206,9 @@ export default {
         }
     },
     methods:{
+        decrementStep(event){
+            this.$emit('decrementStep', this.voiture)
+        },
         envoyerACashier(){
             console.log('Beee')
             this.$emit('cashier', this.contrat)

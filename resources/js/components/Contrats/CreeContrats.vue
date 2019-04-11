@@ -8,7 +8,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         >
-            <step-2 :list="voitures" @passeAEtape3="lanceEtape3" v-show="this.step === 2"></step-2>
+            <step-2 :list="voitures" @decrementStep="decrementStep()" @passeAEtape3="lanceEtape3" v-show="this.step === 2"></step-2>
         </transition>
         
         <transition 
@@ -16,7 +16,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         >
-            <step-3 :list="voitures" @passeAEtape4="lanceEtape4" v-show="this.step === 3"></step-3>
+            <step-3 :list="voitures" @decrementStep="decrementStep()" @passeAEtape4="lanceEtape4" v-show="this.step === 3"></step-3>
         </transition>
 
         <transition 
@@ -24,7 +24,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         >
-            <step-4 :voiture="this.contrat.voiture" @passeAEtape5="lanceEtape5" v-if="this.step === 4"></step-4>
+            <step-4 :voiture="this.contrat.voiture" @decrementStep="decrementStep()" @passeAEtape5="lanceEtape5" v-if="this.step === 4"></step-4>
         </transition>
 
         <transition 
@@ -32,7 +32,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         >
-            <step-5 :voiture="this.contrat.voiture" @passeAEtape6="lanceEtape6" 
+            <step-5 :voiture="this.contrat.voiture" @decrementStep="decrementStep()" @passeAEtape6="lanceEtape6" 
                 v-if="this.step === 5"
             ></step-5>
         </transition>
@@ -52,7 +52,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         > 
-            <contrat-final @enregistrer="enregistrer" @cashier="envoieACashier" :contrat="this.contrat" :contrat_enregistre="this.contrat_enregistré" v-if=" this.step === 6">
+            <contrat-final @enregistrer="enregistrer" @cashier="envoieACashier" @decrementStep="decrementStep()" :contrat="this.contrat" :contrat_enregistre="this.contrat_enregistré" v-if=" this.step === 6">
                 
             </contrat-final>
         </transition>
@@ -191,6 +191,9 @@ export default {
         }
     },
     methods:{
+        decrementStep(){
+            this.step -= 1
+        },
         lanceEtape2(value){
             this.contrat.client = value  
             this.step = 2
