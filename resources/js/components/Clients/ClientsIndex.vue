@@ -21,18 +21,11 @@ export default {
             window.location = location
         },
         enregistreClientDansCashier(){
-            axios.post('http://facture.test/api/client/nouveau', this.client).then(response => {
+            axios.post('https://location.stapog.ga/api/client/nouveau', this.client).then(response => {
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
                 document.getElementById("cashier_id").value = response.data.id
                 this.$forceUpdate()
-
-                // axios.post('/clients/ajout-client', this.client).then(response => {
-                //     console.log(response.data);
-                    
-                // }).catch(error => {
-                //     console.log(error);
-                // });
                 document.getElementById('clientForm').submit();
             }).catch(error => {
                 console.log(error);
