@@ -1803,7 +1803,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     updateClient: function updateClient() {
-      axios.post('http://facture.test/api/client/' + this.prop_client.cashier_id + '/update', this.client).then(function (response) {
+      axios.post('http://thecashier.ga/api/client/' + this.prop_client.cashier_id + '/update', this.client).then(function (response) {
         console.log(response.data);
         document.getElementById('clientUpdateForm').submit();
       }).catch(function (error) {

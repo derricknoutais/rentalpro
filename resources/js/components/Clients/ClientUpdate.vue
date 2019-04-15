@@ -21,7 +21,7 @@ export default {
     },
     methods:{
         updateClient(){
-            axios.post('http://facture.test/api/client/' + this.prop_client.cashier_id + '/update', this.client ).then(response => {
+            axios.post('http://thecashier.ga/api/client/' + this.prop_client.cashier_id + '/update', this.client ).then(response => {
                 console.log(response.data);
                 document.getElementById('clientUpdateForm').submit();
             }).catch(error => {
