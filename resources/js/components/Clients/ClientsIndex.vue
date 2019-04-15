@@ -21,7 +21,7 @@ export default {
             window.location = location
         },
         enregistreClientDansCashier(){
-            axios.post('https://location.stapog.ga/api/client/nouveau', this.client).then(response => {
+            axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(response => {
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
                 document.getElementById("cashier_id").value = response.data.id

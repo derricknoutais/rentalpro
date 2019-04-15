@@ -1859,17 +1859,12 @@ __webpack_require__.r(__webpack_exports__);
     enregistreClientDansCashier: function enregistreClientDansCashier() {
       var _this = this;
 
-      axios.post('http://facture.test/api/client/nouveau', this.client).then(function (response) {
+      axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(function (response) {
         console.log(response.data);
         _this.client.cashier_id = response.data.id;
         document.getElementById("cashier_id").value = response.data.id;
 
-        _this.$forceUpdate(); // axios.post('/clients/ajout-client', this.client).then(response => {
-        //     console.log(response.data);
-        // }).catch(error => {
-        //     console.log(error);
-        // });
-
+        _this.$forceUpdate();
 
         document.getElementById('clientForm').submit();
       }).catch(function (error) {

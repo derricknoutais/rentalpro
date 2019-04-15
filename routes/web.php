@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Contrat;
 use App\Voiture;
 use App\Client;
+use GuzzleHttp\Client as Gzclient;
 
 /*
 |--------------------------------------------------------------------------
@@ -123,3 +124,27 @@ Route::post( '/contrat/{contrat}/update-cashier-id', function(Request $request, 
         'cashier_facture_id' => $request->cashier_id
     ]);
 });
+
+
+// CASHIER
+
+// Route::post( '/cashier/api/client/', function(Request $request){
+//     $request->all();
+//     $client = new Gzclient();
+//     return $response = $client->request('POST', 'http://facture.test/api/client/nouveau', [
+//         'form_params' => [
+//             'nom' => $request->nom,
+//             'prenom' => $request->prenom,
+//             'adresse' => $request->addresse,
+//             'numero_permis' => $request->numero_permis,
+//             'phone1' => $request->numero_telephone,
+//             'phone2' => $request->numero_telephone2,
+//             'phone3' => $request->numero_telephone3,
+//             'mail' => $request->mail,
+//             'ville' => $request->ville,
+//             'cashier_id' => $request->cashier_id
+//         ]
+//     ]);
+
+//     return $products['products'];
+// });
