@@ -39370,7 +39370,15 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-12 mt-3" }, [
-                        _c("p", [_vm._v(_vm._s(_vm.contrat.client.nom))])
+                        _c("p", [
+                          _vm._v(
+                            _vm._s(
+                              _vm.contrat.client.nom +
+                                " " +
+                                _vm.contrat.client.prenom
+                            )
+                          )
+                        ])
                       ])
                     ]),
                     _vm._v(" "),
@@ -42185,7 +42193,20 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container", staticStyle: { height: "95vh" } },
+    {
+      staticClass: "container",
+      staticStyle: { height: "95vh" },
+      on: {
+        click: function($event) {
+          if (
+            "keyCode" in $event &&
+            _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+          ) {
+            return null
+          }
+        }
+      }
+    },
     [
       _c("h1", { staticClass: "text-center mt-5" }, [
         _vm._v("Selectionne Client")

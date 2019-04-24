@@ -22,7 +22,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12 mt-3">
-                                            <p>{{ contrat.client.nom }}</p>
+                                            <p>{{ contrat.client.nom + ' ' + contrat.client.prenom  }}</p>
                                         </div>
                                     </div>
                                     

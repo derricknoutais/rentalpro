@@ -1,5 +1,5 @@
 <template>
-    <div class='container' style="height:95vh">
+    <div class='container' style="height:95vh" @click.enter="">
         <h1 class="text-center mt-5">Selectionne Client</h1>
         <!-- Informations Client Sélectionné -->
         <div>
