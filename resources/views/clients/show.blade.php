@@ -4,7 +4,7 @@
 @section('content')
     <client-show inline-template>
         <div class="container">
-            <h1 class="text-center mt-5">{{ $client->nom }}</h1>
+            <h1 class="text-center mt-5">{{ $client->nom . ' ' . $client->prenom }}</h1>
             <div class="row">
                 <div class="col">
                     <div class="row mt-5">
