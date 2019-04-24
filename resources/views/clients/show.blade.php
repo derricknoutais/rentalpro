@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-
 @section('content')
     <client-show inline-template>
         <div class="container">

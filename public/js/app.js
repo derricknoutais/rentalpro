@@ -3213,7 +3213,11 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('passeAEtape2', this.client);
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.list.forEach(function (element) {
+      element.nom_complet = element.nom + ' ' + element.prenom;
+    });
+  }
 });
 
 /***/ }),
@@ -42267,7 +42271,11 @@ var render = function() {
             _c(
               "multiselect",
               {
-                attrs: { value: _vm.value, options: _vm.list, label: "nom" },
+                attrs: {
+                  value: _vm.value,
+                  options: _vm.list,
+                  label: "nom_complet"
+                },
                 on: { change: _vm.show },
                 model: {
                   value: _vm.client,

@@ -37,7 +37,7 @@
         <div class="row mt-5">
             <div class="col">
                 <label for="">Selectionne Client</label>
-                <multiselect :value="value" :options="list" label="nom" v-model="client" @change="show">
+                <multiselect :value="value" :options="list" label="nom_complet" v-model="client" @change="show">
                     <template slot="noResult">
                         Cet utilisateur n'existe pas 
                     </template>
@@ -76,7 +76,9 @@ export default {
         }
     },
     mounted(){
-
+        this.list.forEach(element => {
+            element.nom_complet = element.nom + ' ' + element.prenom 
+        });
     }
 }
 </script>
