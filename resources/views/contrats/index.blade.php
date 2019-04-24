@@ -70,7 +70,7 @@
                     @foreach ($contrats as $contrat)
                         <tr class="pointer" @click="relocateTo('/contrat/{{ $contrat->id }}')">
                             <td scope="row">{{ $contrat->numéro }}</td>
-                            <td>{{ $contrat->client['nom'] }}</td>
+                            <td>{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</td>
                             <td>{{ $contrat->voiture->immatriculation }}</td>
                         </tr>
                     @endforeach
