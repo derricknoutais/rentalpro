@@ -5,6 +5,11 @@ use App\Contrat;
 use App\Voiture;
 use App\Client;
 use GuzzleHttp\Client as Gzclient;
+use Illuminate\Support\Facades\Auth;
+use App\Document;
+use App\Accessoire;
+use App\Panne;
+use App\Maintenance;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +21,7 @@ use GuzzleHttp\Client as Gzclient;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::loginUsingID(1);
 
 Route::get('/', function () {
     $voitures = Voiture::with('contrats')->get();
@@ -77,6 +83,19 @@ Route::post('/voitures/ajout-voiture', function(Request $request){
 
     return redirect('/voiture/' . $voiture->id);
 });
+Route::post('/voitures/{voiture}/ajoute-pannes', function ( Request $request, Voiture $voiture) {
+    for ($i=0; $i < $request->nombrePannes; $i++) { 
+        $data[] = [
+            'voiture_id' => $voiture->id,
+            'description' => $request['panne' . $i ],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+    Panne::insert($data);
+    return redirect()->back();
+    // return $request->all();
+});
 
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
@@ -125,26 +144,101 @@ Route::post( '/contrat/{contrat}/update-cashier-id', function(Request $request, 
     ]);
 });
 
+// Paramètres
+Route::get('/mes-paramètres', function(){
+    $documents = Document::all();
+    $accessoires = Accessoire::all();
+    $voitures = Voiture::with('documents', 'accessoires')->get();
+    return view( 'paramètres.index', compact('documents', 'accessoires', 'voitures'));
+});
+Route::post('/documents', function(Request $request){
+    $document = Document::create([
+        'type' => $request->type
+    ]);
+    if($document)
+        return redirect('/mes-paramètres');
+});
 
-// CASHIER
+Route::post('/accessoires', function ( Request $request) {
+    $accessoire = Accessoire::create([
+        'type' => $request->type
+    ]);
+    if ( $accessoire)
+        return redirect('/mes-paramètres');
+});
 
-// Route::post( '/cashier/api/client/', function(Request $request){
-//     $request->all();
-//     $client = new Gzclient();
-//     return $response = $client->request('POST', 'http://facture.test/api/client/nouveau', [
-//         'form_params' => [
-//             'nom' => $request->nom,
-//             'prenom' => $request->prenom,
-//             'adresse' => $request->addresse,
-//             'numero_permis' => $request->numero_permis,
-//             'phone1' => $request->numero_telephone,
-//             'phone2' => $request->numero_telephone2,
-//             'phone3' => $request->numero_telephone3,
-//             'mail' => $request->mail,
-//             'ville' => $request->ville,
-//             'cashier_id' => $request->cashier_id
-//         ]
-//     ]);
+Route::post( '/documents/{document}/destroy', function(Document $document){
+    $deleted = $document->delete();
+    if ( $deleted )
+        return redirect('/mes-paramètres');
+});
 
-//     return $products['products'];
-// });
+Route::post('/accessoires/{accessoire}/destroy', function (Accessoire $accessoire) {
+    $deleted = $accessoire->delete();
+    if ($deleted)
+        return redirect('/mes-paramètres');
+});
+
+Route::post('/documents/{document}/update', function(Document $document, Request $request){
+    $updated = $document->update([
+        'type' => $request->type
+    ]);
+    if ($updated)
+        return redirect('/mes-paramètres');
+});
+
+Route::post('/accessoires/{accessoire}/update', function ( Accessoire $accessoire, Request $request) {
+    $updated = $accessoire->update([
+        'type' => $request->type
+    ]);
+    if ($updated)
+        return redirect('/mes-paramètres');
+});
+
+Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $request, Voiture $voiture){
+    $documents = Document::all();
+    $docKeys = [];
+    $accessoires = Accessoire::all();
+    $accKeys = [];
+    foreach ($documents as  $document) {
+        array_push($docKeys, str_replace(' ', '', $document->type));
+    }
+    foreach ( $accessoires as  $accessoire) {
+        array_push( $accKeys, str_replace(' ', '', $accessoire->type));
+    }
+    // return $request;
+    for($i = 0; $i < sizeof($documents); $i++){
+        if(isset( $request[ $docKeys[$i] ]) && isset( $request['date' . $docKeys[$i]])){
+            DB::table('voiture_documents')->updateOrInsert(
+                ['voiture_id' => $voiture->id, 'document_id' => $request[$docKeys[$i]]],
+                [ 'voiture_id' => $voiture->id, 'document_id' => $request[$docKeys[$i]], 'date_expiration' => $request['date' . $docKeys[$i]]]
+            );
+        } else {
+            DB::table('voiture_documents')->where(['voiture_id' => $voiture->id, 'document_id' => $documents[$i]->id ])->delete();
+        }
+    }
+
+    for($i = 0; $i < sizeof($accessoires); $i++){
+        if(isset( $request[ $accKeys[$i]]) && isset( $request['quantité' . $accKeys [$i]] )) {
+            DB::table('voiture_accessoires')->updateOrInsert(
+                [ 'voiture_id' => $voiture->id, 'accessoire_id' => $request[ $accKeys[$i]] ],
+                [ 'voiture_id' => $voiture->id, 'accessoire_id' => $request[ $accKeys[$i]], 'quantité' => $request[ 'quantité' . $accKeys[$i]]]
+            );
+        } else {
+            DB::table( 'voiture_accessoires')->where(['voiture_id' => $voiture->id, 'accessoire_id' => $accessoires[$i]->id ])->delete();
+        }
+    }
+    return redirect()->back();
+    
+    
+    
+});
+
+Route::post('/maintenances/store', function(Request $request){
+    return $request->all();
+    $maintenance = Maintenance::create([
+        'voiture_id' => $request->voiture_id,
+
+    ]);
+    
+});

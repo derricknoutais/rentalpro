@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class VoitureDocuments extends Migration
+class CreatePannesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class VoitureDocuments extends Migration
      */
     public function up()
     {
-        Schema::create('voiture_documents', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('pannes', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('voiture_id');
-            $table->unsignedInteger('document_id');
-            $table->date('date_expiration')->nullable();
+            $table->string('description');
+            $table->enum('etat', ['non-résolue', 'résolue'])->default('non-résolue');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class VoitureDocuments extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('voiture_documents');
+        Schema::dropIfExists('pannes');
     }
 }

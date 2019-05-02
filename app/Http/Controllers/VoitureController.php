@@ -13,7 +13,7 @@ class VoitureController extends Controller
         return view('voitures.index', compact('voitures'));
     }
     public function show(Voiture $voiture){
-        $voiture->loadMissing('contrats', 'documents', 'accessoires');
+        $voiture->loadMissing('contrats', 'documents', 'accessoires', 'pannes');
         // return Contrat::where('voiture_id', $voiture->id)->get()->last();
         return view('voitures.show', compact('voiture'));
     }

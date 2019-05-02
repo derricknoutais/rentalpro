@@ -1,30 +1,29 @@
 
 <script>
 export default {
-	props: ['voiture'],
-    data(){
-    return {
-
-    }
-  },
-  methods:{
-    receptionnerVoiture(){
-		axios.get('/voiture/' + this.voiture.id + '/reception').then( response => {
-
-		}).catch(error => {
-
-		});
+	props: ["voiture"],
+	data() {
+		return {
+			nombrePannes: 1
+		};
 	},
-	envoyerEnMaintenance(){
-		axios.get('/voiture/' + this.voiture.id + '/maintenance').then(response => {
+	methods: {
+		incrementNombrePannes(){
+			this.nombrePannes += 1
+		},
+		receptionnerVoiture() {
+			axios.get("/voiture/" + this.voiture.id + "/reception").then(response => {
 
-		}).catch(error => {
-			console.log(error);
-		});
-	}
-  },
-  mounted(){
+			}).catch(error => {});
+		},
+		envoyerEnMaintenance() {
+			axios.get("/voiture/" + this.voiture.id + "/maintenance").then(response => {
 
-  }
-}
+			}).catch(error => {
+				console.log(error);
+			});
+		}
+	},
+  	mounted() {}
+};
 </script>

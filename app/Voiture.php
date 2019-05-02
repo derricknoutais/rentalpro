@@ -9,7 +9,7 @@ class Voiture extends Model
     protected $guarded = [];
     public function documents()
     {
-        return $this->belongsToMany('App\Document', 'voiture_documents', 'voiture_id', 'document_id');
+        return $this->belongsToMany('App\Document', 'voiture_documents', 'voiture_id', 'document_id')->withPivot('date_expiration');
     }
     public function accessoires()
     {
@@ -21,6 +21,10 @@ class Voiture extends Model
         return $this->hasMany('App\Contrat');
     }
 
+    public function pannes()
+    {
+        return $this->hasMany('App\Panne');
+    }
 
     public static function compteVoitures($etat){
         return Voiture::where('etat', $etat)->count();
