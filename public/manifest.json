@@ -14,7 +14,7 @@
     "orientation" : "portrait-primary",
     "background_color" : "#fff",
     "theme_color" : "#3F51B5",
-    "description": "Une application qui permet de compter les ruptures sur Vend",
+    "description": "Une application qui permet de gérer les parcs automobiles",
     "dir": "ltr",
     "lang": "en-US"
 }
