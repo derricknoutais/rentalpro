@@ -21,7 +21,7 @@ use App\Maintenance;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::loginUsingID(1);
+// Auth::loginUsingID(1);
 
 Route::get('/', function () {
     $voitures = Voiture::with('contrats')->get();
