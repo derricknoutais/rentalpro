@@ -2210,9 +2210,11 @@ __webpack_require__.r(__webpack_exports__);
       document.getElementById('buttons').style.visibility = 'hidden';
       document.getElementById('buttons2').style.visibility = 'hidden';
       window.print();
-      document.getElementById('copie_client').style.visibility = 'hidden';
-      document.getElementById('buttons').style.visibility = 'visible';
-      document.getElementById('buttons2').style.visibility = 'visible';
+      setTimeout(function () {
+        document.getElementById('copie_client').style.visibility = 'hidden';
+        document.getElementById('buttons').style.visibility = 'visible';
+        document.getElementById('buttons2').style.visibility = 'visible';
+      }, 5000);
     },
     //Utilitaires
     wn: function wn(number) {
@@ -3618,7 +3620,10 @@ __webpack_require__.r(__webpack_exports__);
   props: ["voiture"],
   data: function data() {
     return {
-      nombrePannes: 1
+      nombrePannes: 1,
+      technicien: null,
+      timer: 0,
+      interval: null
     };
   },
   methods: {
@@ -3632,6 +3637,28 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/voiture/" + this.voiture.id + "/maintenance").then(function (response) {}).catch(function (error) {
         console.log(error);
       });
+    },
+    decrementTimer: function decrementTimer() {
+      var _this = this;
+
+      this.interval = setInterval(function () {
+        if (_this.timer > 0) {
+          _this.timer -= 1;
+        } else {
+          clearInterval(_this.interval);
+          $('#pasDePannes').modal('hide');
+        }
+      }, 1000);
+    },
+    toggleMaintenanceModal: function toggleMaintenanceModal(voiture) {
+      if (voiture.pannes.length === 0) {
+        $('#pasDePannes').modal('show');
+        this.timer = 3;
+        this.decrementTimer();
+        $('#panneSignalisation').modal('show');
+      } else {
+        $('#envoieEnMaintenance').modal('show');
+      }
     }
   },
   mounted: function mounted() {}

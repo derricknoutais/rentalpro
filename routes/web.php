@@ -158,7 +158,6 @@ Route::post('/documents', function(Request $request){
     if($document)
         return redirect('/mes-paramètres');
 });
-
 Route::post('/accessoires', function ( Request $request) {
     $accessoire = Accessoire::create([
         'type' => $request->type
@@ -166,19 +165,16 @@ Route::post('/accessoires', function ( Request $request) {
     if ( $accessoire)
         return redirect('/mes-paramètres');
 });
-
 Route::post( '/documents/{document}/destroy', function(Document $document){
     $deleted = $document->delete();
     if ( $deleted )
         return redirect('/mes-paramètres');
 });
-
 Route::post('/accessoires/{accessoire}/destroy', function (Accessoire $accessoire) {
     $deleted = $accessoire->delete();
     if ($deleted)
         return redirect('/mes-paramètres');
 });
-
 Route::post('/documents/{document}/update', function(Document $document, Request $request){
     $updated = $document->update([
         'type' => $request->type
@@ -194,7 +190,6 @@ Route::post('/accessoires/{accessoire}/update', function ( Accessoire $accessoir
     if ($updated)
         return redirect('/mes-paramètres');
 });
-
 Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $request, Voiture $voiture){
     $documents = Document::all();
     $docKeys = [];
@@ -235,10 +230,20 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
 });
 
 Route::post('/maintenances/store', function(Request $request){
-    return $request->all();
-    $maintenance = Maintenance::create([
-        'voiture_id' => $request->voiture_id,
 
+    return $request->all();
+
+    $maintenance = Maintenance::create([
+        'voiture_id' => $request->voiture,
+        'technicien_id' => $request->technicien,
     ]);
+
+    for($i = 1; $i <= $request->nombrePannes; $i++){
+        Panne::find( $request['panne' . $i])->update([
+            'voiture_id' => $request->voiture,
+            'maintenance_id' => $maintenance->id
+        ]);
+    }
+    return redirect()->back();
     
 });

@@ -94,6 +94,12 @@
 
                     </tbody>
                 </table>
+                <div class="row">
+                    <div class="col d-flex justify-content-center">
+                        {{ $contrats->links() }}
+                    </div>
+                </div>
+                
             </div>
         </div>
     </contrats-index>

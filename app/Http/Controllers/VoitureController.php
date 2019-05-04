@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Voiture;
 use App\Contrat;
+use App\Technicien;
 
 class VoitureController extends Controller
 {
@@ -13,9 +14,9 @@ class VoitureController extends Controller
         return view('voitures.index', compact('voitures'));
     }
     public function show(Voiture $voiture){
+        $techniciens = Technicien::all();
         $voiture->loadMissing('contrats', 'documents', 'accessoires', 'pannes');
-        // return Contrat::where('voiture_id', $voiture->id)->get()->last();
-        return view('voitures.show', compact('voiture'));
+        return view('voitures.show', compact('voiture', 'techniciens'));
     }
     public function reception(Request $request){
         $dernier_contrat_id =  $request->voiture['contrats'][sizeof( $request->voiture['contrats']) - 1]['id'];

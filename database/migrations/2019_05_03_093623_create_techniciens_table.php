@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePannesTable extends Migration
+class CreateTechniciensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreatePannesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pannes', function (Blueprint $table) {
+        Schema::create('techniciens', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('voiture_id');
-            $table->unsignedInteger('maintenance_id')->nullable();
-            $table->string('description');
-            $table->enum('etat', ['non-résolue', 'résolue'])->default('non-résolue');
+            $table->string('nom');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ class CreatePannesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pannes');
+        Schema::dropIfExists('techniciens');
     }
 }

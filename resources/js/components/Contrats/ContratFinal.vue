@@ -222,9 +222,15 @@ export default {
             document.getElementById('buttons').style.visibility = 'hidden'
             document.getElementById('buttons2').style.visibility = 'hidden'
             window.print()
-            document.getElementById('copie_client').style.visibility = 'hidden'
-            document.getElementById('buttons').style.visibility = 'visible'
-            document.getElementById('buttons2').style.visibility = 'visible'
+
+            setTimeout(() => {
+                document.getElementById('copie_client').style.visibility = 'hidden'
+                document.getElementById('buttons').style.visibility = 'visible'
+                document.getElementById('buttons2').style.visibility = 'visible'
+            }, 5000);
+                       
+
+            
         },
 
 

@@ -34,7 +34,7 @@
                             
                             
                             {{-- Envoyer en Maintenance --}}
-                            <button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#envoieEnMaintenance"><i class="fas fa-tools text-danger mr-2"></i>Envoyer en Maintenance</button>
+                            <button type="button" class="btn btn-warning btn-block" @click="toggleMaintenanceModal({{ $voiture }})"><i class="fas fa-tools text-danger mr-2"></i>Envoyer en Maintenance</button>
                         
                         </div>
                             {{-- <button type="button" class="btn btn-primary">Voir Historique</button>
@@ -181,14 +181,19 @@
                                 @foreach ($voiture->pannes as $panne)
                                     <div class="form-check col-6">
                                       <label class="form-check-label">
-                                        <input type="checkbox" class="form-check-input" name="panne . {{ $loop->iteration }}" value="{{ $panne->id }}">
+                                        <input type="checkbox" class="form-check-input" name="panne{{ $loop->iteration }}" value="{{ $panne->id }}">
                                         {{ $panne->description }}
                                       </label>
                                     </div>
                                 @endforeach
+
                                 <div class="form-group mt-3">
-                                  <label for="">Technicien</label>
-                                  <input type="text" class="form-control" name="" id="" >
+                                    <label for="">Technicien</label>
+                                    <multiselect :options="{{ $techniciens }}" label="nom" v-model="technicien">
+                                    </multiselect>
+                                    <input type="hidden" :value="technicien.id" name="technicien" v-if="technicien">
+                                    <input type="hidden" value="{{ $voiture->id }}" name="voiture" >
+                                    <input type="hidden" value="{{ sizeof($voiture->pannes) }}" name="nombrePannes">
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -200,7 +205,28 @@
                     </div>
                 </div>
             </div>
-
+            
+            <!-- Modal -->
+            <div class="modal fade" id="pasDePannes" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <i class="fas fa-exclamation-triangle fa-2x text-danger float-right"></i>
+                            <h5 class="modal-title text-center">Erreur </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Aucune Panne Signalée. Veuillez Ajoutez une Panne.</p>
+                            <p>L'invite de Signalisation de Pannes s'ouvrira automatiquement dans @{{ timer }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </div>
         
