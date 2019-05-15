@@ -39589,6 +39589,7 @@ var render = function() {
                     {
                       staticClass: "btn btn-primary",
                       attrs: {
+                        target: "_blank",
                         href:
                           "https://thecashier.ga/STA/Facture/" +
                           _vm.contrat.cashier_facture_id
