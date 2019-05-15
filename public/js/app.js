@@ -39608,6 +39608,7 @@ var render = function() {
                     {
                       staticClass: "btn btn-primary",
                       attrs: {
+                        target: "_blank",
                         href:
                           "http://thecashier.test/Lesch%20Group/Facture/" +
                           _vm.contrat.cashier_facture_id
