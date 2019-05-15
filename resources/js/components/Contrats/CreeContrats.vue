@@ -52,7 +52,7 @@
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
         > 
-            <contrat-final @enregistrer="enregistrer" @cashier="envoieACashier" @decrementStep="decrementStep()" :contrat="this.contrat" :contrat_enregistre="this.contrat_enregistré" v-if=" this.step === 6">
+            <contrat-final :environment="environment" @enregistrer="enregistrer" @cashier="envoieACashier" @decrementStep="decrementStep()" :contrat="this.contrat" :contrat_enregistre="this.contrat_enregistré" v-if=" this.step === 6">
                 
             </contrat-final>
         </transition>
@@ -62,7 +62,7 @@
 </template>         
 <script>
 export default {
-    props: ['prop_clients', 'prop_voitures'],
+    props: ['prop_clients', 'prop_voitures', 'environment'],
     data(){
         return {
 
@@ -227,8 +227,8 @@ export default {
             
         },
         envoieACashier(){
-            console.log('Ceee')
             var data;
+            var link = 'https://thecashier.ga/api/facture';
             this.data = data = {
                 'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
                 'échéance' : this.contrat.check_in,
@@ -237,17 +237,14 @@ export default {
                 'prix_unitaire' : this.contrat.prix_journalier,
                 'client': this.contrat.client.cashier_id 
             };
+
+            if(this.environment === 'local'){
+                link = 'http://thecashier.test/api/facture'
+            }
             
-            axios.post('https://thecashier.ga/api/facture', this.data).then(response => {
+            axios.post(link, this.data).then(response => {
                 var cashier_id = response.data.id
-                this.cashier_id = cashier_id       
-                // if( cashier_id !== null ){
-                //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
-                //         console.log(response.data);
-                //     }).catch(error => {
-                //         console.log(error);
-                //     });
-                // }   
+                this.cashier_id = cashier_id         
             }).catch(error => {
                 console.log(error);
             });

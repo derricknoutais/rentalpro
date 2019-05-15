@@ -89,7 +89,10 @@
                     <!-- Bouton Envoyer a Cashier -->
                     <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null">Envoyer à Cashier</button>
                     <!-- Bouton Voir Dans Cashier -->
-                    <a :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null">Voir Facture dans Cashier</a>
+                    
+                    <a :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'production'" >Voir Facture dans Cashier</a>
+                    
+                    <a :href="'http://thecashier.test/Lesch%20Group/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'local'" >Voir Facture dans Cashier</a>
                     <!-- Bouton Imprimer -->
                     <button type="button" class="btn btn-primary" @click="imprimer" v-if="contrat_enregistre !== null">Imprimer</button>
                     <!-- Button trigger modal -->
@@ -198,7 +201,7 @@
 
 <script>
 export default {
-    props: ['contrat', 'contrat_enregistre'],
+    props: ['contrat', 'contrat_enregistre', 'environment'],
     data(){
         return {
             printing: false,

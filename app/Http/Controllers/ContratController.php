@@ -12,7 +12,7 @@ class ContratController extends Controller
         return view('contrats.menu');
     }
     public function index(){
-        $contrats = Contrat::with('client', 'voiture')->paginate(10);
+        $contrats = Contrat::with('client', 'voiture')->orderBy('id', 'desc')->paginate(20);
         return view('contrats.index', compact('contrats'));
     }
 

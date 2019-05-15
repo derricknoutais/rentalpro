@@ -16,6 +16,7 @@ export default {
 		},
 		receptionnerVoiture() {
 			axios.get("/voiture/" + this.voiture.id + "/reception").then(response => {
+				
 			}).catch(error => {});
 		},
 		envoyerEnMaintenance() {

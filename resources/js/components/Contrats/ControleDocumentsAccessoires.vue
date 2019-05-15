@@ -443,8 +443,12 @@ export default {
                 caution_retournée : this.caution_retournée,
                 carburant: this.carburant,
                 voiture: this.voiture
-            } ).then(response => {
-
+            }).then(response => {
+                $('#receptionvehicule').modal('hide')
+                setTimeout(() => {
+                    location.relaod();
+                }, 1000);
+                
             }).catch(error => {
             });
         },

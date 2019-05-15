@@ -2186,8 +2186,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['contrat', 'contrat_enregistre'],
+  props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
     return {
       printing: false,
@@ -2246,6 +2249,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['environment'],
   data: function data() {
     return {};
   },
@@ -2255,6 +2259,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log(payload);
       var data;
+      var link = 'https://thecashier.ga/api/facture';
       data = {
         'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
         'échéance': payload.check_in,
@@ -2263,15 +2268,20 @@ __webpack_require__.r(__webpack_exports__);
         'prix_unitaire': payload.prix_journalier,
         'client': payload.client.cashier_id
       };
-      axios.post('https://thecashier.ga/api/facture', data).then(function (response) {
+
+      if (this.environment === 'local') {
+        link = 'http://thecashier.test/api/facture';
+      }
+
+      axios.post(link, data).then(function (response) {
+        console.log(link);
         var cashier_id = response.data.id;
         _this.cashier_id = cashier_id;
 
         if (cashier_id !== null) {
           axios.post('/contrat/' + payload.id + '/update-cashier-id', {
             cashier_id: _this.cashier_id
-          }).then(function (response) {
-            window.location.reload();
+          }).then(function (response) {// window.location.reload()
           }).catch(function (error) {
             console.log(error);
           });
@@ -2795,7 +2805,12 @@ __webpack_require__.r(__webpack_exports__);
         caution_retournée: this.caution_retournée,
         carburant: this.carburant,
         voiture: this.voiture
-      }).then(function (response) {}).catch(function (error) {});
+      }).then(function (response) {
+        $('#receptionvehicule').modal('hide');
+        setTimeout(function () {
+          location.relaod();
+        }, 1000);
+      }).catch(function (error) {});
     }
   },
   mounted: function mounted() {
@@ -2928,7 +2943,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['prop_clients', 'prop_voitures'],
+  props: ['prop_clients', 'prop_voitures', 'environment'],
   data: function data() {
     return {
       clients: this.prop_clients,
@@ -3107,8 +3122,8 @@ __webpack_require__.r(__webpack_exports__);
     envoieACashier: function envoieACashier() {
       var _this2 = this;
 
-      console.log('Ceee');
       var data;
+      var link = 'https://thecashier.ga/api/facture';
       this.data = data = {
         'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
         'échéance': this.contrat.check_in,
@@ -3117,15 +3132,14 @@ __webpack_require__.r(__webpack_exports__);
         'prix_unitaire': this.contrat.prix_journalier,
         'client': this.contrat.client.cashier_id
       };
-      axios.post('https://thecashier.ga/api/facture', this.data).then(function (response) {
+
+      if (this.environment === 'local') {
+        link = 'http://thecashier.test/api/facture';
+      }
+
+      axios.post(link, this.data).then(function (response) {
         var cashier_id = response.data.id;
-        _this2.cashier_id = cashier_id; // if( cashier_id !== null ){
-        //     axios.post('/contrat/' + this.contrat_enregistré.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
-        //         console.log(response.data);
-        //     }).catch(error => {
-        //         console.log(error);
-        //     });
-        // }   
+        _this2.cashier_id = cashier_id;
       }).catch(function (error) {
         console.log(error);
       });
@@ -39568,7 +39582,8 @@ var render = function() {
                 : _vm._e(),
               _vm._v(" "),
               _vm.contrat_enregistre !== null &&
-              _vm.contrat.cashier_facture_id !== null
+              _vm.contrat.cashier_facture_id !== null &&
+              _vm.environment === "production"
                 ? _c(
                     "a",
                     {
@@ -39576,6 +39591,24 @@ var render = function() {
                       attrs: {
                         href:
                           "https://thecashier.ga/STA/Facture/" +
+                          _vm.contrat.cashier_facture_id
+                      },
+                      on: { click: _vm.envoyerACashier }
+                    },
+                    [_vm._v("Voir Facture dans Cashier")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.contrat_enregistre !== null &&
+              _vm.contrat.cashier_facture_id !== null &&
+              _vm.environment === "local"
+                ? _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: {
+                        href:
+                          "http://thecashier.test/Lesch%20Group/Facture/" +
                           _vm.contrat.cashier_facture_id
                       },
                       on: { click: _vm.envoyerACashier }
@@ -42212,6 +42245,7 @@ var render = function() {
           this.step === 6
             ? _c("contrat-final", {
                 attrs: {
+                  environment: _vm.environment,
                   contrat: this.contrat,
                   contrat_enregistre: this.contrat_enregistré
                 },
