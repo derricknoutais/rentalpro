@@ -83,7 +83,7 @@ class ContratController extends Controller
     }
 
     public function prolonger(Request $request, Contrat $contrat){
-        DB::transaction(function () {
+        DB::transaction(function () use ( $request, $contrat) {
             $nombre_jours = Carbon::parse($request->check_in)->endOfDay()->diffInDays($contrat->check_in->endOfDay());
 
             $nouveauContrat = Contrat::create([
@@ -113,16 +113,27 @@ class ContratController extends Controller
 
     public function changerVoiture( Request $request, Contrat $contrat){
 
-        $voiture = Voiture::find( $request->voiture );
+        DB::transaction(function () {
+            // Retrouve la voiture a remplacer
+            $voiture = Voiture::find( $request->voiture );
+
+            // 
+            $contrat->voiture->etat('disponible');
+
+
+            if( $voiture->etat === 'disponible' ){
+
+                $contrat->update([
+                    'voiture_id' => $request->voiture
+                ]);
+
+            }
+
+            $voiture->etat('loué');
+            return redirect()->back();
+        });
         
-        if( $voiture->etat === 'disponible'){
-
-            $contrat->update([
-                'voiture_id' => $request->voiture
-            ]);
-
-        }
-        return redirect()->back();
+        
 
     }
 
