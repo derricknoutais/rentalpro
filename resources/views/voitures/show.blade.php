@@ -90,7 +90,7 @@
                                 @foreach ($voiture->contrats as $contrat)
                                     <tr>
                                         <td scope="row"><a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a></td>
-                                        <td><a href="/">{{ $contrat->client->nom }}</a></td>
+                                        <td><a href="/clients/{{ $contrat->client->id }}">{{ $contrat->client->nom }}</a></td>
                                         <td>{{ $contrat->check_out->format('d-M-Y') }}</td>
                                         <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
                                     </tr>
