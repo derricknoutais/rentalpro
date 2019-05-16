@@ -145,7 +145,7 @@ Route::post( '/contrat/{contrat}/update-cashier-id', function(Request $request, 
 });
 Route::post('/contrats/{contrat}/prolonger', 'ContratController@prolonger');
 
-Route::post('/contrats/{contrat}/changer-voiuture', 'ContratController@changerVoiture');
+Route::post('/contrats/{contrat}/changer-voiture', 'ContratController@changerVoiture');
 
 // Paramètres
 Route::get('/mes-paramètres', function(){

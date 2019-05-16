@@ -7,6 +7,7 @@ use App\Contrat;
 use App\Client;
 use App\Voiture;
 use Carbon\Carbon;
+use DB;
 
 class ContratController extends Controller
 {
@@ -82,33 +83,38 @@ class ContratController extends Controller
     }
 
     public function prolonger(Request $request, Contrat $contrat){
-        $nombre_jours = Carbon::parse($request->check_in)->endOfDay()->diffInDays($contrat->check_in->endOfDay());
-        return $contrat;
-        $nouveauContrat = Contrat::create([
-            'voiture_id' => $contrat->voiture_id,
-            'client_id' => $contrat->client_id,
-            'numéro' => Contrat::numéro(),
-            'check_out' => $contrat->check_in,
-            'check_in' => $request->check_in,
-            'prix_journalier' => $contrat->prix_journalier,
-            'nombre_jours' => $nombre_jours,
-            "total" => $nombre_jours * $contrat->prix_journalier,
-            "caution" => $contrat->caution,
-            "etat_accessoires" => $contrat->etat_accessoires,
-            "lien_photo_avant" => $contrat->lien_photo_avant,
-            "lien_photo_arriere" => $contrat->lien_photo_arriere,
-            "lien_photo_droit" => $contrat->lien_photo_droit,
-            "lien_photo_gauche" => $contrat->lien_photo_gauche,
-        ]);
-        $contrat->update([
-            'real_check_in' => $contrat->check_in,
-            'prolongation_id' => $nouveauContrat->id
-        ]);
+        DB::transaction(function () {
+            $nombre_jours = Carbon::parse($request->check_in)->endOfDay()->diffInDays($contrat->check_in->endOfDay());
+
+            $nouveauContrat = Contrat::create([
+                'voiture_id' => $contrat->voiture_id,
+                'client_id' => $contrat->client_id,
+                'numéro' => Contrat::numéro(),
+                'check_out' => $contrat->check_in,
+                'check_in' => $request->check_in,
+                'prix_journalier' => $contrat->prix_journalier,
+                'nombre_jours' => $nombre_jours,
+                "total" => $nombre_jours * $contrat->prix_journalier,
+                "caution" => $contrat->caution,
+                "etat_accessoires" => $contrat->etat_accessoires,
+                "lien_photo_avant" => $contrat->lien_photo_avant,
+                "lien_photo_arriere" => $contrat->lien_photo_arriere,
+                "lien_photo_droit" => $contrat->lien_photo_droit,
+                "lien_photo_gauche" => $contrat->lien_photo_gauche,
+            ]);
+            $contrat->update([
+                'real_check_in' => $contrat->check_in,
+                'prolongation_id' => $nouveauContrat->id
+            ]);
+        });
+        
+        return redirect()->back();
     }
 
     public function changerVoiture( Request $request, Contrat $contrat){
 
         $voiture = Voiture::find( $request->voiture );
+        
         if( $voiture->etat === 'disponible'){
 
             $contrat->update([
@@ -116,7 +122,7 @@ class ContratController extends Controller
             ]);
 
         }
-        
+        return redirect()->back();
 
     }
 
