@@ -90,7 +90,7 @@
                                 @foreach ($voiture->contrats as $contrat)
                                     <tr>
                                         <td scope="row"><a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a></td>
-                                        <td>{{ $contrat->client->nom }}</td>
+                                        <td><a href="/">{{ $contrat->client->nom }}</a></td>
                                         <td>{{ $contrat->check_out->format('d-M-Y') }}</td>
                                         <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
                                     </tr>
@@ -103,8 +103,8 @@
 
                 {{-- Modal Reception Voiture --}}
                 @if(sizeof($voiture->contrats) > 0)
-                    <controle-documents-accessoires :voiture="{{ $voiture }}" :contrat="{{ $voiture->contrats[sizeof($voiture->contrats) - 1] }}">
-
+                    <controle-documents-accessoires :voiture="{{ $voiture }}" 
+                        :contrat="{{ $voiture->contrats[sizeof($voiture->contrats) - 1] }}">
                     </controle-documents-accessoires>
                 @endif           
 
