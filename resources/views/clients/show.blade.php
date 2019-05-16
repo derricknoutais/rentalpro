@@ -60,9 +60,8 @@
                                     <td>
                                         <a href="/voiture/{{ $contrat->voiture->id }}">{{ $contrat->voiture->immatriculation }}</a>
                                     </td>
-                                    <td>{{ $contrat->check_out }}</td>
-                                    <td>{{ $contrat->check_in }}</td>
-                                    
+                                    <td>{{ $contrat->check_out->format('d-M-Y')  }}</td>
+                                    <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
                                 </tr>
                             @endforeach
 
