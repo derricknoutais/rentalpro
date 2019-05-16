@@ -143,6 +143,9 @@ Route::post( '/contrat/{contrat}/update-cashier-id', function(Request $request, 
         'cashier_facture_id' => $request->cashier_id
     ]);
 });
+Route::post('/contrats/{contrat}/prolonger', 'ContratController@prolonger');
+
+Route::post('/contrats/{contrat}/changer-voiuture', 'ContratController@changerVoiture');
 
 // Paramètres
 Route::get('/mes-paramètres', function(){
@@ -182,7 +185,6 @@ Route::post('/documents/{document}/update', function(Document $document, Request
     if ($updated)
         return redirect('/mes-paramètres');
 });
-
 Route::post('/accessoires/{accessoire}/update', function ( Accessoire $accessoire, Request $request) {
     $updated = $accessoire->update([
         'type' => $request->type
@@ -231,7 +233,7 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
 
 Route::post('/maintenances/store', function(Request $request){
 
-    return $request->all();
+    // return $request->all();
 
     $maintenance = Maintenance::create([
         'voiture_id' => $request->voiture,
@@ -247,3 +249,5 @@ Route::post('/maintenances/store', function(Request $request){
     return redirect()->back();
     
 });
+
+

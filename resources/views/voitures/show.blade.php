@@ -88,8 +88,8 @@
                         <tbody>
                             @if($voiture->contrats)
                                 @foreach ($voiture->contrats as $contrat)
-                                    <tr class="pointer" @click="relocateTo('/contrat/{{ $contrat->id }}')">
-                                        <td scope="row">{{ $contrat->numéro }}</td>
+                                    <tr>
+                                        <td scope="row"><a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a></td>
                                         <td>{{ $contrat->client->nom }}</td>
                                         <td>{{ $contrat->check_out->format('d-M-Y') }}</td>
                                         <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
