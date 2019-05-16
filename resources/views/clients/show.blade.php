@@ -45,18 +45,24 @@
                         <thead>
                             <tr>
                                 <th>Contrat Nº</th>
+                                <th>Immatriculation</th>
                                 <th>Date du</th>
                                 <th>Date au</th>
-                                <th>Immatriculation</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($client->contrats as $contrat)
                                 <tr class="pointer" @click="relocateTo('/contrat/{{ $contrat->id }}')">
-                                    <td scope="row">{{ $contrat->numéro }}</td>
+                                    <td scope="row">
+                                        <a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="/voiture/{{ $contrat->voiture->id }}">{{ $contrat->voiture->immatriculation }}</a>
+                                    </td>
                                     <td>{{ $contrat->check_out }}</td>
                                     <td>{{ $contrat->check_in }}</td>
-                                    <td>{{ $contrat->voiture->immatriculation }}</td>
+                                    
                                 </tr>
                             @endforeach
 
