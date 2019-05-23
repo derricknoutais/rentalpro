@@ -19,8 +19,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     {{-- Font Awesome  --}}
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-        crossorigin="anonymous">
+    {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+        crossorigin="anonymous"> --}}
     <link rel="manifest" href="/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -43,13 +43,28 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item mx-3">
-                            <a href="/contrats/menu" class="nav-link">Contrats</a>
+                            <a href="/contrats/menu" class="nav-link">
+                                <i class="fas fa-file-contract"></i>
+                                Contrats
+                            </a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a href="/clients" class="nav-link">Clients</a>
+                            <a href="/clients" class="nav-link">
+                                <i class="fas fa-user-tie"></i>
+                                Clients
+                            </a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a href="/voitures" class="nav-link">Voitures</a>
+                            <a href="/voitures" class="nav-link">
+                                <i class="fas fa-car"></i>
+                                Voitures
+                            </a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a href="/maintenances" class="nav-link">
+                                <i class="fas fa-tools"></i>
+                                Maintenances
+                            </a>
                         </li>
                     </ul>
 
@@ -94,5 +109,6 @@
             @yield('content')
         </main>
     </div>
+    @yield('js')
 </body>
 </html>

@@ -26,6 +26,7 @@
         "vue-template-compiler": "^2.6.4"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.8.2",
         "animate.css": "^3.7.0",
         "vue-carousel": "^0.17.0",
         "vue-multiselect": "^2.1.3",

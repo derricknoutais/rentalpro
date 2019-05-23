@@ -14,9 +14,19 @@ class VoitureController extends Controller
         return view('voitures.index', compact('voitures'));
     }
     public function show(Voiture $voiture){
+
         $techniciens = Technicien::all();
-        $voiture->loadMissing('contrats', 'documents', 'accessoires', 'pannes');
-        return view('voitures.show', compact('voiture', 'techniciens'));
+
+        $voiture->loadMissing('contrats', 'documents', 'accessoires', 'pannes', 'maintenances');
+
+        $contrats = Contrat::where('voiture_id', $voiture->id)->paginate(1);
+
+        if(sizeof($voiture->maintenances)){
+            $dernier_contrat_id = $voiture->maintenances[sizeof($voiture->maintenances) - 1]->id ;
+            $derniere_maintenance = \App\Maintenance::where('id', $dernier_contrat_id)->with('pannes')->first();
+        }
+
+        return view('voitures.show', compact('voiture', 'techniciens', 'derniere_maintenance', 'contrats'));
     }
     public function reception(Request $request){
         $dernier_contrat_id =  $request->voiture['contrats'][sizeof( $request->voiture['contrats']) - 1]['id'];

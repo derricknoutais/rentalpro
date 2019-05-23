@@ -7,8 +7,14 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
-
 @import '~animate.css/animate.min.css';
+
+
+// Font Awesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/brands';
 
 .navbar-laravel {
   background-color: #fff;

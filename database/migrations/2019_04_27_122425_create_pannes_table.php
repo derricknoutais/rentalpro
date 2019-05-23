@@ -18,7 +18,7 @@ class CreatePannesTable extends Migration
             $table->unsignedInteger('voiture_id');
             $table->unsignedInteger('maintenance_id')->nullable();
             $table->string('description');
-            $table->enum('etat', ['non-résolue', 'résolue'])->default('non-résolue');
+            $table->enum('etat', ['non-résolue', 'résolue', 'en-maintenance'])->default('non-résolue');
             $table->timestamps();
         });
     }

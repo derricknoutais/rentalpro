@@ -3,11 +3,12 @@ export default {
     props: ['environment'],
     data(){
         return {
-
+            isLoading: false
         }
     },
     methods:{
         envoieACashier(payload){
+            
             console.log(payload)
             var data;
             var link = 'https://thecashier.ga/api/facture';
@@ -30,7 +31,8 @@ export default {
                 this.cashier_id = cashier_id       
                 if( cashier_id !== null ){
                     axios.post('/contrat/' + payload.id + '/update-cashier-id', { cashier_id: this.cashier_id }).then( response => {
-                        // window.location.reload()
+                        // window.location.href = '/contrat/' + payload.id
+                        location.reload()
                     }).catch(error => {
                         console.log(error);
                     });

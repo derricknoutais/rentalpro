@@ -2194,7 +2194,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       printing: false,
-      envoyéACashier: null
+      envoyéACashier: null,
+      isLoading: false
     };
   },
   methods: {
@@ -2203,7 +2204,15 @@ __webpack_require__.r(__webpack_exports__);
     },
     envoyerACashier: function envoyerACashier() {
       console.log('Beee');
-      this.$emit('cashier', this.contrat);
+
+      if (!this.isLoading) {
+        // setTimeout(() => {
+        this.$emit('cashier', this.contrat); // }, 5000);
+
+        this.isLoading = true;
+      } else {
+        alert('La patience est une grande vertue! ');
+      }
     },
     enregistrer: function enregistrer() {
       this.$emit('enregistrer');
@@ -2251,7 +2260,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['environment'],
   data: function data() {
-    return {};
+    return {
+      isLoading: false
+    };
   },
   methods: {
     envoieACashier: function envoieACashier(payload) {
@@ -2281,7 +2292,9 @@ __webpack_require__.r(__webpack_exports__);
         if (cashier_id !== null) {
           axios.post('/contrat/' + payload.id + '/update-cashier-id', {
             cashier_id: _this.cashier_id
-          }).then(function (response) {// window.location.reload()
+          }).then(function (response) {
+            // window.location.href = '/contrat/' + payload.id
+            location.reload();
           }).catch(function (error) {
             console.log(error);
           });
@@ -39577,7 +39590,12 @@ var render = function() {
                       attrs: { type: "button" },
                       on: { click: _vm.envoyerACashier }
                     },
-                    [_vm._v("Envoyer à Cashier")]
+                    [
+                      _vm.isLoading
+                        ? _c("i", { staticClass: "fas fa-spinner " })
+                        : _vm._e(),
+                      _vm._v(" Envoyer à Cashier")
+                    ]
                   )
                 : _vm._e(),
               _vm._v(" "),
@@ -55655,6 +55673,7 @@ var map = {
 	"./components/Contrats/Step4.vue": "./resources/js/components/Contrats/Step4.vue",
 	"./components/Contrats/Step5.vue": "./resources/js/components/Contrats/Step5.vue",
 	"./components/ExampleComponent.vue": "./resources/js/components/ExampleComponent.vue",
+	"./components/Maintenances/MaintenanceIndex.vue": "./resources/js/components/Maintenances/MaintenanceIndex.vue",
 	"./components/Voitures/VoitureShow.vue": "./resources/js/components/Voitures/VoitureShow.vue",
 	"./components/Voitures/VoituresIndex.vue": "./resources/js/components/Voitures/VoituresIndex.vue"
 };
@@ -56784,6 +56803,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/Maintenances/MaintenanceIndex.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Maintenances/MaintenanceIndex.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+var script = {}
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
+  script,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "resources/js/components/Maintenances/MaintenanceIndex.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 

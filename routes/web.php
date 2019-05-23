@@ -230,24 +230,59 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
     
     
 });
-
+Route::get('maintenances', function(){
+    $maintenances = Maintenance::with(['voiture', 'technicien'])->get();
+    return view('maintenances.index', compact('maintenances'));
+});
 Route::post('/maintenances/store', function(Request $request){
 
     // return $request->all();
+    DB::transaction(function() use ( $request ){
 
-    $maintenance = Maintenance::create([
-        'voiture_id' => $request->voiture,
-        'technicien_id' => $request->technicien,
-    ]);
-
-    for($i = 1; $i <= $request->nombrePannes; $i++){
-        Panne::find( $request['panne' . $i])->update([
+        // Crée une nouvelle maintenance
+        $maintenance = Maintenance::create([
             'voiture_id' => $request->voiture,
-            'maintenance_id' => $maintenance->id
+            'technicien_id' => $request->technicien,
         ]);
-    }
+        
+        // Attache les pannes sélectionnées a la maintenance créée
+
+        for($i = 0; $i < sizeof($request->panne); $i++){
+
+            Panne::find( $request->panne[$i])->update([
+                'voiture_id' => $request->voiture,
+                'maintenance_id' => $maintenance->id,
+                'etat' => 'en-maintenance'
+            ]);
+
+        }
+
+        // Change l'état du véhicule en maintenance
+
+        Voiture::find($request->voiture)->etat('maintenance');
+
+    });
     return redirect()->back();
     
+
 });
+
+Route::post( '/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
+    // return $request->all();
+    foreach ($request->pannes as $panne) {
+        $panne = Panne::find($panne);
+        $panne->update([
+            'etat' => 'résolue'
+        ]);
+    }
+    $maintenance->update([
+        'coût' => $request->montant
+    ]);
+    $maintenance->loadMissing('voiture');
+
+    $maintenance->voiture->etat('disponible');
+    
+    return redirect()->back();
+}); 
 
 

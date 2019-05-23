@@ -87,7 +87,7 @@
                     <!-- Bouton Enregistrer -->
                     <button type="button" class="btn btn-primary" @click="enregistrer" v-if="contrat_enregistre === null">Enregistrer</button>
                     <!-- Bouton Envoyer a Cashier -->
-                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null">Envoyer à Cashier</button>
+                    <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null"> <i v-if="isLoading" class="fas fa-spinner "></i> Envoyer à Cashier</button>
                     <!-- Bouton Voir Dans Cashier -->
                     
                     <a target="_blank" :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'production'" >Voir Facture dans Cashier</a>
@@ -102,7 +102,7 @@
                 </div>
             </div>
 
-
+            
         </div>
         <attache-photos :contrat="contrat_enregistre" v-if="contrat_enregistre !== null"></attache-photos>
 
@@ -205,7 +205,8 @@ export default {
     data(){
         return {
             printing: false,
-            envoyéACashier: null
+            envoyéACashier: null,
+            isLoading : false
         }
     },
     methods:{
@@ -214,7 +215,16 @@ export default {
         },
         envoyerACashier(){
             console.log('Beee')
-            this.$emit('cashier', this.contrat)
+            if(! this.isLoading){
+                // setTimeout(() => {
+                    this.$emit('cashier', this.contrat) 
+                // }, 5000);
+                this.isLoading = true
+            } else {
+                alert('La patience est une grande vertue! ')
+            }
+            
+            
             
         },
         enregistrer(){
