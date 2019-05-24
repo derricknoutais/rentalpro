@@ -81,7 +81,7 @@
                                 </p>
                                 <p class=" d-inline-block display-6 col-6">
                                     <i class="fas fa-clock    "></i>
-                                    Coût de Maintenance: @{{ coûtDeMaintenance() }}
+                                    Coût de Maintenances: @{{ coûtDeMaintenance() }}
                                 </p>
                             </div>
                             <div class="row">
