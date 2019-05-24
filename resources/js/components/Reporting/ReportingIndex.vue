@@ -76,13 +76,13 @@ export default {
             if(this.voiture_selectionée){
                 seuil = this.voiture_selectionée.douane + 
                     this.voiture_selectionée.prix_achat + 
-                    this.voiture_selectionée.transport + this.montantTotalDeMaintenance()
+                    this.voiture_selectionée.transport + this.coûtDeMaintenance()
 
             }
             return seuil;
         },
         coutsVariables(){
-            return this.montantTotalDeMaintenance();
+            return this.coûtDeMaintenance();
         }, 
         marge(){
             return this.chiffreDAffaires() - this.coutsVariables()

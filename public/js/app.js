@@ -3721,13 +3721,13 @@ __webpack_require__.r(__webpack_exports__);
       var seuil = 0;
 
       if (this.voiture_selectionée) {
-        seuil = this.voiture_selectionée.douane + this.voiture_selectionée.prix_achat + this.voiture_selectionée.transport + this.montantTotalDeMaintenance();
+        seuil = this.voiture_selectionée.douane + this.voiture_selectionée.prix_achat + this.voiture_selectionée.transport + this.coûtDeMaintenance();
       }
 
       return seuil;
     },
     coutsVariables: function coutsVariables() {
-      return this.montantTotalDeMaintenance();
+      return this.coûtDeMaintenance();
     },
     marge: function marge() {
       return this.chiffreDAffaires() - this.coutsVariables();
