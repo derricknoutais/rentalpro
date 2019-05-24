@@ -26,7 +26,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Rental Pro">
     <link rel="apple-touch-icon" href="/images/icons/app-icon-256x256.png" size="256x256">
-        
+    <script src="vue-google-charts/dist/vue-google-charts.browser.js"></script>
 </head>
 <body>
     <div id="app">
@@ -64,6 +64,12 @@
                             <a href="/maintenances" class="nav-link">
                                 <i class="fas fa-tools"></i>
                                 Maintenances
+                            </a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a href="/reporting" class="nav-link">
+                                <i class="fas fa-chart-bar"></i>
+                                Reporting
                             </a>
                         </li>
                     </ul>

@@ -31,8 +31,11 @@ $factory->define(App\Voiture::class, function(Faker $faker){
         'annee' => $faker->numberBetween($min = 2010, $max = 2018),
         'marque' => 'Toyota',
         'type' => $faker->randomElement($array = array ('Corolla ZZE120', 'Corolla ZZE140', 'Rav4 IV', 'Rav4 III')),
-        'etat' => $faker->randomElement($array = array ('Disponible', 'Loué', 'Maintenance')),
-        'prix' => $faker->randomElement($array = array (30000, 60000, 45000))
+        'etat' => 'Loué', //$faker->randomElement($array = array ('Disponible', 'Loué', 'Maintenance')),
+        'prix' => $faker->randomElement($array = array (30000, 60000, 45000)),
+        'douane' => $faker->randomElement($array = array(1000000, 500000, 200000, 800000)),
+        'prix_achat' => $faker->randomElement($array = array(10000000, 5000000, 2000000, 8000000)),
+        'transport' => $faker->randomElement($array = array(400000, 900000, 300000, 700000)),
     ];
 });
 
@@ -49,13 +52,30 @@ $factory->define(App\Client::class, function(Faker $faker){
 });
 
 $factory->define(App\Contrat::class, function(Faker $faker){
+    $prix_journalier = $faker->randomElement($array = array(30000, 60000, 45000));
+    $nombre_jours = rand(1, 30);
      return [
         'numéro' => strtoupper($faker->bothify('CL###/##/2019')), 
         'check_out' => $faker->dateTimeInInterval($startDate = '-10 days', $interval = '+ 5 days', $timezone = null),
         'check_in' => $faker->dateTimeInInterval($startDate = '-10 days', $interval = '+ 5 days', $timezone = null),
-        'prix_journalier' => $faker->randomElement($array = array(30000, 60000, 45000)),
-        'nombre_jours' => 5,
+        'prix_journalier' => $prix_journalier,
+        'nombre_jours' => $nombre_jours,
         'caution' => 100000,
-        'total' => 150000
+        'total' => $prix_journalier * $nombre_jours,
+        'created_at' => $faker->dateTimeThisYear($max = 'now', $timezone = 'Africa/Libreville')
+    ];
+});
+
+$factory->define(App\Maintenance::class, function (Faker $faker) {
+    return [
+        'voiture_id' => rand(1, 10),
+        'technicien_id' => rand(1,3),
+        'coût' => $faker->randomElement($array = array(50000, 75000, 90000))
+    ];
+});
+
+$factory->define(App\Technicien::class, function (Faker $faker) {
+    return [
+        'nom' => $faker->firstName,
     ];
 });

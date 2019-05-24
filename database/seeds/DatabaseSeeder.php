@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         factory(App\Voiture::class, 10)->create()->each(function($voiture) use ($accessoires, $documents){
             if($voiture->etat == 'Loué'){
-                factory(App\Contrat::class, 1)->create([
+                factory(App\Contrat::class, 10)->create([
                     'voiture_id' => $voiture->id,
                     'client_id' => rand(0,9)
                 ]);
@@ -44,7 +44,8 @@ class DatabaseSeeder extends Seeder
             }
             
         });
-        
+        factory(App\Technicien::class, 3)->create();
+        factory(App\Maintenance::class, 100)->create();
 
         
 

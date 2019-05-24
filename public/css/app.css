@@ -16307,3 +16307,46 @@ readers do not read off random characters that represent icons */
   overflow-y: scroll;
 }
 
+.display-5 {
+  font-size: 1.25rem;
+}
+
+.display-6 {
+  font-size: 1rem;
+}
+
+.bg-purple-gradient {
+  background: #e570e7;
+  /* Old browsers */
+  /* FF3.6-15 */
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(135deg, #e570e7 0%, #c85ec7 45%, #a849a3 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#e570e7", endColorstr="#a849a3",GradientType=1 );
+  /* IE6-9 fallback on horizontal gradient */
+}
+
+.bg-light-blue-gradient {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3b679e+0,2b88d9+50,207cca+51,7db9e8+100;Blue+Gloss+%232 */
+  background: #3b679e;
+  /* Old browsers */
+  /* FF3.6-15 */
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(45deg, #3b679e 0%, #2b88d9 50%, #207cca 51%, #7db9e8 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#3b679e", endColorstr="#7db9e8",GradientType=1 );
+  /* IE6-9 fallback on horizontal gradient */
+}
+
+.bg-dark-gradient {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#959595+0,0d0d0d+46,010101+50,0a0a0a+53,4e4e4e+76,383838+87,1b1b1b+100;Black+Gloss+Pipe */
+  background: #959595;
+  /* Old browsers */
+  /* FF3.6-15 */
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(45deg, #959595 0%, #0d0d0d 46%, #010101 50%, #0a0a0a 53%, #4e4e4e 76%, #383838 87%, #1b1b1b 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#959595", endColorstr="#1b1b1b",GradientType=1 );
+  /* IE6-9 fallback on horizontal gradient */
+}
+

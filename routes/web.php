@@ -10,6 +10,7 @@ use App\Document;
 use App\Accessoire;
 use App\Panne;
 use App\Maintenance;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -284,5 +285,31 @@ Route::post( '/maintenances/{maintenance}/reception-véhicule', function(Request
     
     return redirect()->back();
 }); 
+
+Route::get('/reporting', function(){
+    $voitures = Voiture::with(['contrats', 'maintenances'])->get();
+
+    $contrats =  Contrat::all()->sortBy('created_at')->groupBy(function ($contrat){
+        return Carbon::parse($contrat->created_at)->format('m');
+    });
+    $contrat_ordered_by_month = [];
+    for($i = 1; $i < 13; $i++){
+        if($i < 10){
+            $j = '0' . $i;
+        }
+        array_push($contrat_ordered_by_month, $contrats[$j]);
+    }
+    $chiffre_DAffaire_Annuel = [];
+    foreach ( $contrat_ordered_by_month as $contrats_in_month) {
+        $chiffre_DAffaire_Mensuel = 0;
+        foreach($contrats_in_month as $contrat){
+            $chiffre_DAffaire_Mensuel += $contrat->total;
+        }
+        array_push($chiffre_DAffaire_Annuel, $chiffre_DAffaire_Mensuel);
+    }
+     $chiffre_DAffaire_Annuel;
+
+    return view('reporting.index', compact('voitures', 'chiffre_DAffaire_Annuel'));
+});
 
 
