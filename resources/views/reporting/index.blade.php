@@ -29,7 +29,7 @@
             </div>
 
             {{-- KPI Cards --}}
-            <div class="row mt-5" v-if="voiture_selectionée">
+            {{-- <div class="row mt-5" v-if="voiture_selectionée">
                 <div class="col-4">
 
                     <div class="card text-white bg-purple-gradient">
@@ -129,7 +129,7 @@
                     </div>
                     
                 </div>
-            </div>
+            </div> --}}
 {{-- 
             <div class="row">
                 <div class="col">
