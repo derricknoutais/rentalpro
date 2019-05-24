@@ -297,7 +297,9 @@ Route::get('/reporting', function(){
         if($i < 10){
             $j = '0' . $i;
         }
-        array_push($contrat_ordered_by_month, $contrats[$j]);
+        if(isset( $contrats[$j])){
+            array_push($contrat_ordered_by_month, $contrats[$j]);
+        }
     }
     $chiffre_DAffaire_Annuel = [];
     foreach ( $contrat_ordered_by_month as $contrats_in_month) {
