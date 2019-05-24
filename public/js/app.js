@@ -3705,7 +3705,7 @@ __webpack_require__.r(__webpack_exports__);
       return total;
     },
     // Maintenance
-    montantTotalDeMaintenance: function montantTotalDeMaintenance() {
+    coûtDeMaintenance: function coTDeMaintenance() {
       var total = 0;
 
       if (this.voiture_selectionée) {

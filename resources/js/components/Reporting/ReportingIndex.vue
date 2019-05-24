@@ -60,7 +60,7 @@ export default {
 
         // Maintenance
 
-        montantTotalDeMaintenance(){
+        coûtDeMaintenance(){
             var total = 0;
             if(this.voiture_selectionée){
                 this.voiture_selectionée.maintenances.forEach( maintenance => {

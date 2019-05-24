@@ -68,6 +68,7 @@
                     </div>
                     
                 </div>
+
                 <div class="col-4">
 
                     <div class="card text-white bg-dark-gradient" >
@@ -76,11 +77,11 @@
                             <div class="row mt-5">
                                 <p class="d-inline-block display-6 col-6">
                                     <i class="fas fa-tools    "></i>
-                                    @{{ voiture_selectionée.maintenances.length }} Maintenances:</p>
+                                    @{{ voiture_selectionée.maintenances.length }} Maintenances</p>
                                 </p>
                                 <p class=" d-inline-block display-6 col-6">
                                     <i class="fas fa-clock    "></i>
-                                    @{{ joursDeLocation() }} Jours de Location
+                                    Coût de Maintenance: @{{ coûtDeMaintenance() }}
                                 </p>
                             </div>
                             <div class="row">
