@@ -231,6 +231,8 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
     
     
 });
+
+// Maintenances 
 Route::get('maintenances', function(){
     $maintenances = Maintenance::with(['voiture', 'technicien'])->get();
     return view('maintenances.index', compact('maintenances'));
