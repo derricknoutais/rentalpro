@@ -52,7 +52,7 @@
                     </div>
 
                     {{-- Information Voiture --}}
-                    <div class="col-md-8 col-12 offset-md-1">
+                    <div class="col-md-8 col-12 offset-md-1 display-5">
                         <div class="row mt-5 text-danger">
                             <div class="col-4">Marque:</div>
                             <div class="col-4">Type:</div>
@@ -81,34 +81,40 @@
             </div>
 
             <div class="container-fluid">
-                <div class="row mt-5">
-                    <div class="col-12 col-lg-6">
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Contrat Nº</th>
-                                    <th>Client</th>
-                                    <th>Date du</th>
-                                    <th>Date au</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                                    @foreach ($contrats as $contrat)
-                                        <tr>
-                                            <td scope="row"><a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a></td>
-                                            <td><a href="/clients/{{ $contrat->client->id }}">{{ $contrat->client->nom . ' ' . $contrat->client->prenom  }}</a></td>
-                                            <td>{{ $contrat->check_out->format('d-M-Y') }}</td>
-                                            <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
-                                        </tr>
-                                    @endforeach
-                                        <tr>
-                                            <td colspan="4" class="text-center">{{ $contrats->links() }}</td>
-                                        </tr>
-                            </tbody>
-                        </table>
+                <div class="row mt-5 display-5">
+                    @if ( sizeof($contrats) > 0)
+                        <div class="col-12 col-lg-6" >
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Contrat Nº</th>
+                                        <th>Client</th>
+                                        <th>Date du</th>
+                                        <th>Date au</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                    </div>
+                                        @foreach ($contrats as $contrat)
+                                            @if ($contrat->client)
+                                                <tr>
+                                                    <td scope="row"><a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a></td>
+                                                    <td><a href="/clients/{{ $contrat->client->id }}">{{ $contrat->client->nom . ' ' . $contrat->client->prenom  }}</a></td>
+                                                    <td>{{ $contrat->check_out->format('d-M-Y') }}</td>
+                                                    <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
+                                                </tr>
+                                            @endif
+                                            
+                                        @endforeach
+                                            <tr>
+                                                <td colspan="4" class="text-center">{{ $contrats->links() }}</td>
+                                            </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    @endif
+                    
 
                     <div class="col-12  col-lg-6">
                         <div class="card text-center">
@@ -194,6 +200,7 @@
                 </div>
                 
             </div>
+
             <div class="container-fluid">
                 <div class="row mt-5">
 

@@ -22,7 +22,7 @@ use Carbon\Carbon;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Auth::loginUsingID(1);
+Auth::loginUsingID(1);
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
