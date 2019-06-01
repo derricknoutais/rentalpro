@@ -23,6 +23,10 @@ use Carbon\Carbon;
 |
 */
 // Auth::loginUsingID(1);
+Auth::routes();
+
+Route::group(['middleware' => ['auth']], function () {
+    
 
 Route::get('/', function () {
     $voitures = Voiture::with('contrats')->get();
@@ -59,7 +63,7 @@ Route::post('/upload', function(Request $request){
      
 });
 
-Auth::routes();
+
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -321,4 +325,4 @@ Route::get('/reporting', function(){
     return view('reporting.index', compact('contrats'));
 });
 
-
+});
