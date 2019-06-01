@@ -7,7 +7,7 @@
             <div class="row mt-5">
                 <div class="col">
                     <h1 class="text-center jumbotron" >
-                    @if({{ Auth::check() }})
+                    @if( Auth::check() )
                         Bienvenue sur Rental Pro {{ Auth::user()->compagnie->nom }}
                     @endif
                         
