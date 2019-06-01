@@ -42844,7 +42844,7 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "row mt-5" }, [
-        _c("div", { staticClass: "col" }, [
+        _c("div", { staticClass: "col-3 offset-3" }, [
           _c("input", {
             directives: [
               {
@@ -42868,7 +42868,7 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col" }, [
+        _c("div", { staticClass: "col-3" }, [
           _c("input", {
             directives: [
               {
