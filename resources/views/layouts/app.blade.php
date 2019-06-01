@@ -40,47 +40,50 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item mx-3">
-                            <a href="/contrats/menu" class="nav-link">
-                                <i class="fas fa-file-contract"></i>
-                                Contrats
-                            </a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a href="/clients" class="nav-link">
-                                <i class="fas fa-user-tie"></i>
-                                Clients
-                            </a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a href="/voitures" class="nav-link">
-                                <i class="fas fa-car"></i>
-                                Voitures
-                            </a>
-                        </li>
-                        <li class="nav-item mx-3">
-                            <a href="/maintenances" class="nav-link">
-                                <i class="fas fa-tools"></i>
-                                Maintenances
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown mx-3">
-                            <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown">
-                                <i class="fas fa-chart-bar"></i>
-                                Reporting
-                                <span class="caret"></span>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="/reporting">General
+                    @auth
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item mx-3">
+                                <a href="/contrats/menu" class="nav-link">
+                                    <i class="fas fa-file-contract"></i>
+                                    Contrats
                                 </a>
-                                <a href="/reporting/voitures" class="dropdown-item">Par Voiture</a>
-                                <a href="/reporting/par-client/reporting/par-voiture/reporting/par-voiture" class="dropdown-item">Par Client</a>
-                            </div>
+                            </li>
+                            <li class="nav-item mx-3">
+                                <a href="/clients" class="nav-link">
+                                    <i class="fas fa-user-tie"></i>
+                                    Clients
+                                </a>
+                            </li>
+                            <li class="nav-item mx-3">
+                                <a href="/voitures" class="nav-link">
+                                    <i class="fas fa-car"></i>
+                                    Voitures
+                                </a>
+                            </li>
+                            <li class="nav-item mx-3">
+                                <a href="/maintenances" class="nav-link">
+                                    <i class="fas fa-tools"></i>
+                                    Maintenances
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown mx-3">
+                                <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Reporting
+                                    <span class="caret"></span>
+                                </a>
 
-                        </li>
-                    </ul>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/reporting">General
+                                    </a>
+                                    <a href="/reporting/voitures" class="dropdown-item">Par Voiture</a>
+                                    <a href="/reporting/par-client/reporting/par-voiture/reporting/par-voiture" class="dropdown-item">Par Client</a>
+                                </div>
+
+                            </li>
+                        </ul>
+                    @endauth
+                    
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
