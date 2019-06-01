@@ -2,10 +2,10 @@
     <div class='container' style="height:95vh">
         <h1 class="text-center mt-5">Selectionne Dates</h1>
         <div class="row mt-5">
-            <div class="col">
+            <div class="col-3 offset-3">
                 <label>Dates du</label>
             </div>
-            <div class="col">
+            <div class="col-3">
                 <label>Dates au</label>
             </div>
         </div>

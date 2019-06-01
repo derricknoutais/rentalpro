@@ -39,28 +39,36 @@ class ContratController extends Controller
     public function store(Request $request){
 
         date_default_timezone_set( 'Africa/Libreville');
-        $contrat = Contrat::create([
-            'voiture_id'=> $request['voiture']['id'],
-            'client_id'=> $request['client']['id'],
-            'numéro' => Contrat::numéro(),
-            'compagnie_id' => Auth::user()->compagnie->id,
-            'check_out'=> $request['check_out'] . date('H:i:s'),
-            'check_in'=> $request['check_in'] . date('H:i:s'),
-            'real_check_in' => NULL,
-            'prix_journalier'=> $request['prix_journalier'],
-            'caution' => $request['caution'],
-            'nombre_jours'=> $request['nombre_jours'],
-            'total'=> $request['prix_journalier'] * $request['nombre_jours'],
-            'cashier_facture_id' => $request['cashier_id'],
-            'etat_accessoires' => $request[ 'accessoireString'],
-            'etat_documents' => $request[ 'documentString'],
-        ]);
-        
-        Voiture::find( $request['voiture']['id'])->update([
-            'etat' => 'loué'
-        ]);
+        $contrat = DB::transaction(function () use ($request){
+            $contrat = Contrat::create([
+                'voiture_id'=> $request['voiture']['id'],
+                'client_id'=> $request['client']['id'],
+                'numéro' => Contrat::numéro(),
+                'compagnie_id' => Auth::user()->compagnie->id,
+                'check_out'=> $request['check_out'] . date('H:i:s'),
+                'check_in'=> $request['check_in'] . date('H:i:s'),
+                'real_check_in' => NULL,
+                'prix_journalier'=> $request['prix_journalier'],
+                'caution' => $request['caution'],
+                'nombre_jours'=> $request['nombre_jours'],
+                'total'=> $request['prix_journalier'] * $request['nombre_jours'],
+                'cashier_facture_id' => $request['cashier_id'],
+                'etat_accessoires' => $request[ 'accessoireString'],
+                'etat_documents' => $request[ 'documentString'],
+            ]);
 
-        return $contrat;
+            Voiture::find( $request['voiture']['id'])->update([
+                'etat' => 'loué'
+            ]);
+            if($contrat){
+                return $contrat;
+            }
+        });
+        if($contrat){
+            return $contrat;
+        }
+        
+        
     }
     public function ajoutePhotos(Request $request, Contrat $contrat){
         $path_droit = \Storage::disk('public_uploads')->put("/", $request->file('droit'));
