@@ -3,7 +3,15 @@
 
 @section('content')
     @if(sizeof($voitures) > 0)
-        <div class="container">
+        <div class="container-fluid">
+            <div class="row mt-5">
+                <div class="col">
+                    <h1 class="text-center jumbotron">
+                        Bienvenue sur Rental Pro {{ Auth::user()->compagnie->nom }}
+                    </h1>
+                </div>
+            </div>
+
             <div class="row mt-5" >
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                     <div class="card " style="height: 100%" >
@@ -13,7 +21,7 @@
                                 <h3 class="card-title mt-1">Disponible</h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-success px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('disponible') }}</h6></span>
+                                <span class="badge badge-success px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('disponible') }}</h6></span>
                             </div>
                         </div>
 
@@ -36,7 +44,7 @@
                                 <h3 class="card-title mt-1">En Maintenance </h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-danger px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('maintenance') }}</h6></span>
+                                <span class="badge badge-danger px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('maintenance') }}</h6></span>
                             </div>
                         </div>
 
@@ -60,7 +68,7 @@
                                 <h3 class="card-title mt-1">En Location </h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-warning px-3"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('loué') }}</h6></span>
+                                <span class="badge badge-warning px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('loué') }}</h6></span>
                             </div>
                         </div>
 
@@ -77,6 +85,7 @@
                 </div>
                 
             </div>
+            
             {{-- <div class="row mt-5">
                 <div class="col">
                     <a name="" id="" class="" href="/contrats/create" role="button">
@@ -94,6 +103,7 @@
                     <a name="" id="" class="" href="#" role="button">Voir les maintenances</a>
                 </div>
             </div> --}}
+
             <div class="row mt-5" >
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                     <div class="card " style="height: 100%" >
@@ -103,7 +113,7 @@
                                 <h3 class="card-title mt-1">Prochaines Arrivées</h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-success px-3"><h6 class="mt-2">{{ sizeof($contrats_en_cours) }}</h6></span>
+                                <span class="badge badge-success px-2"><h6 class="mt-2">{{ sizeof($contrats_en_cours) }}</h6></span>
                             </div>
                         </div>
 
@@ -123,7 +133,7 @@
                                 <h3 class="card-title mt-1">En Retard</h3>
                             </div>
                             <div class="col-2 ">
-                                <span class="badge badge-danger px-3"><h6 class="mt-2">{{ sizeof($contrats_en_retard) }}</h6></span>
+                                <span class="badge badge-danger px-2"><h6 class="mt-2">{{ sizeof($contrats_en_retard) }}</h6></span>
                             </div>
                         </div>
 
@@ -136,6 +146,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     @else
         <div class="container">

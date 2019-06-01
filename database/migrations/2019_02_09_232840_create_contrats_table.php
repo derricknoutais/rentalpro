@@ -17,6 +17,7 @@ class CreateContratsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('voiture_id');
             $table->unsignedInteger('client_id');
+            $table->unsignedInteger('compagnie_id');
             $table->string('numéro');
             $table->dateTime('check_out')->nullable();
             $table->dateTime('check_in')->nullable();
@@ -36,6 +37,8 @@ class CreateContratsTable extends Migration
             $table->unsignedInteger('cashier_facture_id')->nullable();
             $table->unsignedInteger('prolongation_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

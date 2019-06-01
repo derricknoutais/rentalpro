@@ -14,15 +14,19 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         $documents = ['Carte Grise', 'Visite Technique', 'Assurance', 'Carte Extincteur'];
         $accessoires = ['Crick', 'Triangle', 'Manivelle', 'Calle Métallique', 'Pneu Secours', 'Extincteur', 'Gilet', 'Trousse Secours'];
+
+        factory(App\Compagnie::class, 10)->create();
         
         foreach ($documents as $document) {
             App\Document::create([
-                'type' => $document
+                'type' => $document,
+                'compagnie_id' => 1
             ]);
         }
         foreach ($accessoires as $accessoire) {
             App\Accessoire::create([
-                'type' => $accessoire
+                'type' => $accessoire,
+                'compagnie_id' => 1
             ]);
         }
         factory(App\Client::class, 10)->create();
@@ -44,11 +48,12 @@ class DatabaseSeeder extends Seeder
             }
             
         });
+
         factory(App\Technicien::class, 3)->create();
+
         factory(App\Maintenance::class, 100)->create();
 
         
 
-        
     }
 }

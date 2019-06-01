@@ -19,6 +19,8 @@ class VoitureAccessoires extends Migration
             $table->unsignedInteger('accessoire_id');
             $table->unsignedInteger('quantité');
             $table->timestamps();
+
+            
         });
     }
 

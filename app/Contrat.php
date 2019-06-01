@@ -3,11 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
+use Auth;
+use Illuminate\Support\Facades\DB;
 
 class Contrat extends Model
 {
     protected $guarded = [];
-    protected $dates = ['check_out', 'check_in', 'created_at', 'updated_at'];
+    protected $dates = ['check_out', 'check_in'];
+
+    // Relationships
     public function client()
     {
         return $this->belongsTo('App\Client');
@@ -18,16 +23,54 @@ class Contrat extends Model
     }
 
     // Methods
-    protected static function numéro(){
-        $nombre_contrats = Contrat::count() + 1;
-        if($nombre_contrats < 10){
-            $numéro_contrat = '00' . $nombre_contrats;
-        } else if( $nombre_contrats >= 10 && $nombre_contrats < 100 ){
-            $numéro_contrat = '0' . $nombre_contrats;
-        } else {
-            $numéro_contrat = $nombre_contrats;
-        }
+    // protected static function numéro(){
+    //     $numero_contrat = Contrat::count() + 1;
+    //     if($numero_contrat < 10){
+    //         $numéro = '00' . $numero_contrat;
+    //     } else if( $numero_contrat >= 10 && $numero_contrat < 100 ){
+    //         $numéro = '0' . $numero_contrat;
+    //     } else {
+    //         $numéro = $numero_contrat;
+    //     }
+    //     return $nouveau_numéro = 'CL' . $numéro . '/' . date('m') . '/' . date('Y');
+    // }
+
+    public static function numéro(){
+
+        $numéro = '';
+        $numéro =  DB::transaction(function () use ($numéro) {
+            $contrats_du_mois = Contrat::where('compagnie_id', Auth::user()->compagnie->id)->whereMonth( 'created_at', Carbon::now()->month )->whereYear( 'created_at', Carbon::now()->year )->get();
+
+            // Si nous sommes le premier du mois ...
+
+            if( Carbon::today()->isSameDay(new Carbon('first day of this month')) ) {
+
+                // ... & aucun contrat n'est établi 
+
+                if( sizeof( $contrats_du_mois )  === 0){
+
+                    // reinitialise la numérotation du contrat a 1
+
+                    Auth::user()->compagnie->update([
+                        'numero_contrat' => 1
+                    ]);
+                }
+            };
+            // Récupérer le numero de contrat actuel
+            $numero_contrat = Auth::user()->compagnie->numero_contrat;
             
-        return $nouveau_numéro = 'CL' . $numéro_contrat . '/' . date('m') . '/' . date('Y');
+            if($numero_contrat < 10){
+                $numéro = '00' . $numero_contrat;
+            } else if( $numero_contrat >= 10 && $numero_contrat < 100 ){
+                $numéro = '0' . $numero_contrat;
+            } else {
+                $numéro = $numero_contrat;
+            }
+            Auth::user()->compagnie->increment('numero_contrat');
+
+            return $numéro;
+        });
+
+        return $nouveau_numéro = 'CL' . $numéro . '/' . date('m') . '/' . date('Y');
     }
 }

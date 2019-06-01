@@ -15,8 +15,11 @@ class CreateTechniciensTable extends Migration
     {
         Schema::create('techniciens', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('compagnie_id');
             $table->string('nom');
             $table->timestamps();
+
+            $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

@@ -1,10 +1,11 @@
+
 <?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccessoiresTable extends Migration
+class CreateCompagniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +14,14 @@ class CreateAccessoiresTable extends Migration
      */
     public function up()
     {
-        Schema::create('accessoires', function (Blueprint $table) {
+        Schema::create('compagnies', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('compagnie_id');
-            $table->string('type');
+            $table->unsignedInteger('numero_contrat');
+            $table->string('nom');
             $table->timestamps();
 
-            $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
+            
+
         });
     }
 
@@ -30,6 +32,6 @@ class CreateAccessoiresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('accessoires');
+        Schema::dropIfExists('compagnies');
     }
 }

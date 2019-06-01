@@ -15,6 +15,7 @@ class CreateVoituresTable extends Migration
     {
         Schema::create('voitures', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('compagnie_id');
             $table->string('immatriculation');
             $table->string('chassis')->nullable();
             $table->smallInteger('annee')->nullable();
@@ -25,6 +26,7 @@ class CreateVoituresTable extends Migration
             $table->double('prix_achat')->nullable();
             $table->double('douane')->nullable();
             $table->double('transport')->nullable();
+            $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

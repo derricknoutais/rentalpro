@@ -2319,8 +2319,13 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['contrats'],
   data: function data() {
-    return {};
+    return {
+      search: {
+        etat: 'En Cours'
+      }
+    };
   },
   methods: {
     relocateTo: function relocateTo(location) {
@@ -2357,7 +2362,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mounted: function mounted() {}
+  watch: {
+    'search.etat': function searchEtat(newVal, oldVal) {}
+  }
 });
 
 /***/ }),

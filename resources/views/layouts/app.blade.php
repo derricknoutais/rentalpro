@@ -26,7 +26,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Rental Pro">
     <link rel="apple-touch-icon" href="/images/icons/app-icon-256x256.png" size="256x256">
-    <script src="vue-google-charts/dist/vue-google-charts.browser.js"></script>
 </head>
 <body>
     <div id="app">
@@ -66,11 +65,20 @@
                                 Maintenances
                             </a>
                         </li>
-                        <li class="nav-item mx-3">
-                            <a href="/reporting" class="nav-link">
+                        <li class="nav-item dropdown mx-3">
+                            <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown">
                                 <i class="fas fa-chart-bar"></i>
                                 Reporting
+                                <span class="caret"></span>
                             </a>
+
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="/reporting">General
+                                </a>
+                                <a href="/reporting/voitures" class="dropdown-item">Par Voiture</a>
+                                <a href="/reporting/par-client/reporting/par-voiture/reporting/par-voiture" class="dropdown-item">Par Client</a>
+                            </div>
+
                         </li>
                     </ul>
 

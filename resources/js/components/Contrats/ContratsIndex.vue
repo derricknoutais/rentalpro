@@ -1,8 +1,11 @@
 <script>
 export default {
+    props: ['contrats'],
     data(){
         return {
-
+            search : {
+                etat: 'En Cours'
+            }
         }
     },
     methods:{
@@ -36,8 +39,10 @@ export default {
             });
         }
     },
-    mounted(){
-
+    watch : {
+        'search.etat' : function(newVal, oldVal){
+            
+        }
     }
 }
 </script>

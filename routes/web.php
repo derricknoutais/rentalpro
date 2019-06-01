@@ -22,7 +22,7 @@ use Carbon\Carbon;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Auth::loginUsingID(1);
+Auth::loginUsingID(1);
 
 Route::get('/', function () {
     $voitures = Voiture::with('contrats')->get();
@@ -286,7 +286,7 @@ Route::post( '/maintenances/{maintenance}/reception-véhicule', function(Request
     return redirect()->back();
 }); 
 
-Route::get('/reporting', function(){
+Route::get('/reporting/voitures', function(){
     $voitures = Voiture::with(['contrats', 'maintenances'])->get();
 
     $contrats =  Contrat::all()->sortBy('created_at')->groupBy(function ($contrat){
@@ -311,7 +311,12 @@ Route::get('/reporting', function(){
     }
      $chiffre_DAffaire_Annuel;
 
-    return view('reporting.index', compact('voitures', 'chiffre_DAffaire_Annuel'));
+    return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
+});
+
+Route::get('/reporting', function(){
+    $contrats = Contrat::all();
+    return view('reporting.index', compact('contrats'));
 });
 
 

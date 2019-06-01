@@ -8,6 +8,7 @@ use App\Client;
 use App\Voiture;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class ContratController extends Controller
 {
@@ -15,11 +16,11 @@ class ContratController extends Controller
         return view('contrats.menu');
     }
     public function index(){
+        
         $contrats = Contrat::with('client', 'voiture')->orderBy('id', 'desc')->paginate(20);
         $voitures = Voiture::all();
         return view('contrats.index', compact(['contrats', 'voitures']));
     }
-
     public function show(Contrat $contrat){
         $contrat->loadMissing('client', 'voiture');
         $check_in = $contrat->check_in->format('d-M-Y');
@@ -28,7 +29,6 @@ class ContratController extends Controller
     public function voirUploads(Contrat $contrat){
         return view('contrats.uploads', compact('contrat'));
     }
-
     public function create(){
         $clients = Client::all();
         $clients->toArray();
@@ -39,11 +39,11 @@ class ContratController extends Controller
     public function store(Request $request){
 
         date_default_timezone_set( 'Africa/Libreville');
-
         $contrat = Contrat::create([
             'voiture_id'=> $request['voiture']['id'],
             'client_id'=> $request['client']['id'],
             'numéro' => Contrat::numéro(),
+            'compagnie_id' => Auth::user()->compagnie->id,
             'check_out'=> $request['check_out'] . date('H:i:s'),
             'check_in'=> $request['check_in'] . date('H:i:s'),
             'real_check_in' => NULL,
@@ -54,9 +54,8 @@ class ContratController extends Controller
             'cashier_facture_id' => $request['cashier_id'],
             'etat_accessoires' => $request[ 'accessoireString'],
             'etat_documents' => $request[ 'documentString'],
-            
         ]);
-
+        
         Voiture::find( $request['voiture']['id'])->update([
             'etat' => 'loué'
         ]);
@@ -81,7 +80,6 @@ class ContratController extends Controller
             'cashier_facture_id' => $request->id
         ]);
     }
-
     public function prolonger(Request $request, Contrat $contrat){
         DB::transaction(function () use ( $request, $contrat) {
             $nombre_jours = Carbon::parse($request->check_in)->endOfDay()->diffInDays($contrat->check_in->endOfDay());
@@ -110,7 +108,6 @@ class ContratController extends Controller
         
         return redirect()->back();
     }
-
     public function changerVoiture( Request $request, Contrat $contrat){
 
         DB::transaction(function () {
