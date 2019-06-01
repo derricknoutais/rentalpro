@@ -2188,7 +2188,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -39768,8 +39767,7 @@ var render = function() {
                         href:
                           "https://thecashier.ga/STA/Facture/" +
                           _vm.contrat.cashier_facture_id
-                      },
-                      on: { click: _vm.envoyerACashier }
+                      }
                     },
                     [_vm._v("Voir Facture dans Cashier")]
                   )
@@ -39787,8 +39785,7 @@ var render = function() {
                         href:
                           "http://thecashier.test/Lesch%20Group/Facture/" +
                           _vm.contrat.cashier_facture_id
-                      },
-                      on: { click: _vm.envoyerACashier }
+                      }
                     },
                     [_vm._v("Voir Facture dans Cashier")]
                   )
@@ -42945,9 +42942,11 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row mt-5" }, [
-      _c("div", { staticClass: "col" }, [_c("label", [_vm._v("Dates du")])]),
+      _c("div", { staticClass: "col-3 offset-3" }, [
+        _c("label", [_vm._v("Dates du")])
+      ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col" }, [_c("label", [_vm._v("Dates au")])])
+      _c("div", { staticClass: "col-3" }, [_c("label", [_vm._v("Dates au")])])
     ])
   }
 ]
