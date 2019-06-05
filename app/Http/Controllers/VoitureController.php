@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Voiture;
 use App\Contrat;
 use App\Technicien;
+use App\Panne;
+use Illuminate\Support\Facades\Auth;
 
 class VoitureController extends Controller
 {
@@ -40,5 +42,35 @@ class VoitureController extends Controller
     }
     public function maintenance(Voiture $voiture){
         $voiture->etat('maintenance');
+    }
+    public function store(Request $request){
+
+        $voiture = Voiture::create([
+            'immatriculation' => $request->immatriculation,
+            'compagnie_id' => Auth::user()->compagnie_id,
+            'chassis' => $request->numero_chassis,
+            'annee' => $request->annee,
+            'marque' => $request->marque,
+            'type' => $request->type,
+            'etat' => 'disponible',
+            'prix' => $request->prix
+        ]);
+
+        return redirect('/voiture/' . $voiture->id);
+    }
+    public function ajouterPannes(Request $request, Voiture $voiture){
+
+        for ($i=0; $i < $request->nombrePannes; $i++) { 
+            $data[] = [
+                'voiture_id' => $voiture->id,
+                'description' => $request['panne' . $i ],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        Panne::insert($data);
+
+        return redirect()->back();
+
     }
 }

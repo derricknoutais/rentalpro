@@ -3639,6 +3639,136 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Reporting/ReportingGeneral.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Reporting/ReportingGeneral.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_google_charts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-google-charts */ "./node_modules/vue-google-charts/index.js");
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    'gchart': vue_google_charts__WEBPACK_IMPORTED_MODULE_0__["GChart"]
+  },
+  props: ['contrats'],
+  data: function data() {
+    return {
+      localContrats: null,
+      reporting_annuel: {
+        show: false,
+        nombre_locations: [],
+        nombre_locations_options: {},
+        revenus: [],
+        revenus_options: {}
+      },
+      chartOptions: null
+    };
+  },
+  methods: {
+    selectMonthlyContracts: function selectMonthlyContracts() {
+      var date = new Date();
+      this.localContrats = this.contrats.filter(function (contrat) {
+        return Date.parse(contrat.created_at) > Date.parse(new Date(date.getFullYear(), date.getMonth(), 1));
+      });
+    },
+    selectWeeklyContracts: function selectWeeklyContracts() {
+      var _this = this;
+
+      // Instancier un nouvelle date avec la date du jour
+      var today = new Date(); // Déterminer la date du 1er (Lundi) et 7eme (Dimanche) jour de la semaine
+
+      var firstDayOfWeek = today.getDate() - today.getDay() + 1;
+      var lastDayOfWeek = firstDayOfWeek + 6; // Instancier les dates correspondants au 1er et Dernier Jour de la semaine
+
+      var firstDateOfWeek = new Date(today.setDate(firstDayOfWeek));
+      var lastDateOfWeek = new Date(today.setDate(lastDayOfWeek)); // On parse ces dates
+
+      var firstDateParsed = Date.parse(firstDateOfWeek);
+      var lastDateParsed = Date.parse(lastDateOfWeek);
+      console.log('First Day: ' + firstDayOfWeek); // On retourne les contrats ayant été créés pendant la semaine actuelle
+
+      this.localContrats = this.contrats.filter(function (contrat) {
+        var contractDateParsed = Date.parse(contrat.created_at);
+        return contractDateParsed > firstDateParsed && contractDateParsed < lastDateParsed;
+      });
+      console.log('Date : ' + new Date(Date.parse(this.localContrats[1].created_at)).getDate()); // Je crée un tableau contenant les 7 jours de la semaine
+
+      var contrats_classés_par_jours = new Array();
+
+      for (var i = 0; i < 7; i++) {
+        contrats_classés_par_jours[i] = new Array();
+      }
+
+      this.localContrats.forEach(function (contrat) {
+        var date = new Date(Date.parse(_this.localContrats[1].created_at)).getDate();
+        index = date - firstDayOfWeek; // contrats_classés_par_jours[index] = 
+      });
+    },
+    selectYearlyContracts: function selectYearlyContracts() {
+      // Instancie une nouvelle date
+      var date = new Date(); // Retourne les contrats de l'année
+
+      this.localContrats = this.contrats.filter(function (contrat) {
+        return Date.parse(contrat.created_at) > Date.parse(new Date(date.getFullYear(), 0, 1));
+      }); // Instancie un nouveau tableau 
+
+      var contract_per_month = []; // Instancie 12 array
+
+      for (var _index = 0; _index < 12; _index++) {
+        contract_per_month[_index] = new Array();
+      } // Classe chaque contrat par mois dans contract_per_months
+
+
+      this.localContrats.forEach(function (contract) {
+        var month_index = new Date(contract.created_at).getMonth();
+        contract_per_month[month_index].push(contract);
+      }); // Crée des tableaux contenant le mois et le nombre de contrat par mois 
+
+      var nombre_locations = [['Mois', 'Nombre de Locations']];
+      var mois = new Array("Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
+
+      for (var _index2 = 0; _index2 < contract_per_month.length; _index2++) {
+        nombre_locations[_index2 + 1] = [mois[_index2], contract_per_month[_index2].length];
+      }
+
+      this.reporting_annuel.nombre_locations = nombre_locations;
+      this.reporting_annuel.nombre_locations_options = {
+        title: 'Performance Locations ' + date.getFullYear(),
+        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        height: 600
+      };
+      this.reporting_annuel.revenus_options = {
+        title: 'Revenus Locations ' + date.getFullYear(),
+        height: 600,
+        colors: ['#ffcc00']
+      };
+      var revenus_locations = [['Mois', 'Revenus Location']];
+
+      for (var _index3 = 0; _index3 < contract_per_month.length; _index3++) {
+        var total = 0;
+
+        contract_per_month[_index3].forEach(function (contrat) {
+          console.log(contrat.total);
+          total += contrat.total;
+        });
+
+        revenus_locations.push([mois[_index3], total]);
+      }
+
+      this.reporting_annuel.revenus = revenus_locations;
+      this.reporting_annuel.show = true;
+    }
+  },
+  mounted: function mounted() {}
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Reporting/ReportingIndex.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Reporting/ReportingIndex.vue?vue&type=script&lang=js& ***!
@@ -55830,6 +55960,7 @@ var map = {
 	"./components/Contrats/Step5.vue": "./resources/js/components/Contrats/Step5.vue",
 	"./components/ExampleComponent.vue": "./resources/js/components/ExampleComponent.vue",
 	"./components/Maintenances/MaintenanceIndex.vue": "./resources/js/components/Maintenances/MaintenanceIndex.vue",
+	"./components/Reporting/ReportingGeneral.vue": "./resources/js/components/Reporting/ReportingGeneral.vue",
 	"./components/Reporting/ReportingIndex.vue": "./resources/js/components/Reporting/ReportingIndex.vue",
 	"./components/Voitures/VoitureShow.vue": "./resources/js/components/Voitures/VoitureShow.vue",
 	"./components/Voitures/VoituresIndex.vue": "./resources/js/components/Voitures/VoituresIndex.vue"
@@ -56981,6 +57112,56 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 component.options.__file = "resources/js/components/Maintenances/MaintenanceIndex.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Reporting/ReportingGeneral.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/Reporting/ReportingGeneral.vue ***!
+  \****************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ReportingGeneral_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReportingGeneral.vue?vue&type=script&lang=js& */ "./resources/js/components/Reporting/ReportingGeneral.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  _ReportingGeneral_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"],
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Reporting/ReportingGeneral.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Reporting/ReportingGeneral.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/Reporting/ReportingGeneral.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportingGeneral_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ReportingGeneral.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Reporting/ReportingGeneral.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReportingGeneral_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

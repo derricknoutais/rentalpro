@@ -28,12 +28,8 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
     
 
-Route::get('/', function () {
-    $voitures = Voiture::with('contrats')->get();
-    $contrats_en_cours = Contrat::where('check_in', '>' ,now())->get()->sortBy('check_in');
-    $contrats_en_retard = Contrat::where('check_in', '<', now())->whereNull('real_check_in')->get()->sortBy('check_in');
-    return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard'));
-});
+    Route::get('/', 'HomeController@welcome');
+    Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/test-upload/{contrat}', function(Contrat $contrat){
     return view('test', compact('contrat'));
@@ -63,74 +59,19 @@ Route::post('/upload', function(Request $request){
      
 });
 
-
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-
 // VOITURES
 Route::get('/voitures', 'VoitureController@index');
 Route::get('/voiture/{voiture}', 'VoitureController@show');
 Route::post( '/voiture/reception', 'VoitureController@reception');
 // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');
 Route::get('/voiture/{voiture}/maintenance', 'VoitureController@maintenance');
-Route::post('/voitures/ajout-voiture', function(Request $request){
-
-    $voiture = Voiture::create([
-        'immatriculation' => $request->immatriculation,
-        'chassis' => $request->numero_chassis,
-        'annee' => $request->annee,
-        'marque' => $request->marque,
-        'type' => $request->type,
-        'etat' => 'disponible',
-        'prix' => $request->prix
-    ]);
-
-    return redirect('/voiture/' . $voiture->id);
-});
-Route::post('/voitures/{voiture}/ajoute-pannes', function ( Request $request, Voiture $voiture) {
-    for ($i=0; $i < $request->nombrePannes; $i++) { 
-        $data[] = [
-            'voiture_id' => $voiture->id,
-            'description' => $request['panne' . $i ],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-    }
-    Panne::insert($data);
-    return redirect()->back();
-    // return $request->all();
-});
+Route::post('/voitures/ajout-voiture', 'VoitureController@store');
+Route::post('/voitures/{voiture}/ajoute-pannes', 'VoitureController@ajouterPannes');
 
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
 Route::get('/clients/{client}', 'ClientController@show');
-Route::post( '/clients/ajout-client', function(Request $request){
-    $client = Client::create([
-        'nom' => $request->nom,
-        'prenom' => $request->prenom,
-        'adresse' => $request->addresse,
-        'numero_permis' => $request->numero_permis,
-        'phone1' => $request->numero_telephone,
-        'phone2' => $request->numero_telephone2,
-        'phone3' => $request->numero_telephone3,
-        'mail' => $request->mail,
-        'ville' => $request->ville,
-        'cashier_id' => $request->cashier_id
-    ]);
-
-    if($request->hasFile('permis')){
-        $image = $request->file('permis');
-        $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
-        $destinationPath = public_path('/uploads');
-        $image->move($destinationPath, $nom);
-        $client->update([
-            'permis' => $nom
-        ]);
-    }
-    return redirect('/clients/' . $client->id);
-
-});
+Route::post( '/clients/ajout-client', 'ClientController@store');
 Route::get('/clients/{client}/edit', 'ClientController@edit');
 Route::post('/clients/{client}/update', 'ClientController@update');
 
@@ -143,13 +84,8 @@ Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
 Route::post('/contrats/{contrat}/ajoute-photos', 'ContratController@ajoutePhotos')->where('contrat', '[0-9]+' );
 Route::post('/contrats/{contrat}/update-cashier', 'ContratController@updateCashier')->where( 'contrat', '[0-9]+');
 Route::post('/contrats/store', 'ContratController@store');
-Route::post( '/contrat/{contrat}/update-cashier-id', function(Request $request, Contrat $contrat){
-    $contrat->update([
-        'cashier_facture_id' => $request->cashier_id
-    ]);
-});
+Route::post( '/contrat/{contrat}/update-cashier-id', 'ContratController@updateCashierId');
 Route::post('/contrats/{contrat}/prolonger', 'ContratController@prolonger');
-
 Route::post('/contrats/{contrat}/changer-voiture', 'ContratController@changerVoiture');
 
 // Paramètres
@@ -159,28 +95,20 @@ Route::get('/mes-paramètres', function(){
     $voitures = Voiture::with('documents', 'accessoires')->get();
     return view( 'paramètres.index', compact('documents', 'accessoires', 'voitures'));
 });
+
+
 Route::post('/documents', function(Request $request){
     $document = Document::create([
         'type' => $request->type
     ]);
-    if($document)
+
+    if($document){
         return redirect('/mes-paramètres');
-});
-Route::post('/accessoires', function ( Request $request) {
-    $accessoire = Accessoire::create([
-        'type' => $request->type
-    ]);
-    if ( $accessoire)
-        return redirect('/mes-paramètres');
+    }
 });
 Route::post( '/documents/{document}/destroy', function(Document $document){
     $deleted = $document->delete();
     if ( $deleted )
-        return redirect('/mes-paramètres');
-});
-Route::post('/accessoires/{accessoire}/destroy', function (Accessoire $accessoire) {
-    $deleted = $accessoire->delete();
-    if ($deleted)
         return redirect('/mes-paramètres');
 });
 Route::post('/documents/{document}/update', function(Document $document, Request $request){
@@ -190,7 +118,23 @@ Route::post('/documents/{document}/update', function(Document $document, Request
     if ($updated)
         return redirect('/mes-paramètres');
 });
-Route::post('/accessoires/{accessoire}/update', function ( Accessoire $accessoire, Request $request) {
+
+
+Route::post('/accessoires', function (Request $request) {
+    $accessoire = Accessoire::create([
+        'type' => $request->type
+    ]);
+    if ( $accessoire)
+        return redirect('/mes-paramètres');
+});
+
+Route::post('/accessoires/{accessoire}/destroy', function (Accessoire $accessoire) {
+    $deleted = $accessoire->delete();
+    if ($deleted)
+        return redirect('/mes-paramètres');
+});
+
+Route::post('/accessoires/{accessoire}/update', function (Accessoire $accessoire, Request $request) {
     $updated = $accessoire->update([
         'type' => $request->type
     ]);
@@ -273,8 +217,7 @@ Route::post('/maintenances/store', function(Request $request){
     
 
 });
-
-Route::post( '/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
+Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
     // return $request->all();
     foreach ($request->pannes as $panne) {
         $panne = Panne::find($panne);
@@ -290,8 +233,7 @@ Route::post( '/maintenances/{maintenance}/reception-véhicule', function(Request
     $maintenance->voiture->etat('disponible');
     
     return redirect()->back();
-}); 
-
+});
 Route::get('/reporting/voitures', function(){
     $voitures = Voiture::with(['contrats', 'maintenances'])->get();
 
@@ -319,7 +261,6 @@ Route::get('/reporting/voitures', function(){
 
     return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
 });
-
 Route::get('/reporting', function(){
     $contrats = Contrat::all();
     return view('reporting.index', compact('contrats'));

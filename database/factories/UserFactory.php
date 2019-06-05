@@ -66,13 +66,13 @@ $factory->define(App\Contrat::class, function(Faker $faker){
      return [
         'numéro' => strtoupper($faker->bothify('CL###/##/2019')),
         'compagnie_id' => 1, 
-        'check_out' => $faker->dateTimeInInterval($startDate = '-10 days', $interval = '+ 5 days', $timezone = null),
-        'check_in' => $faker->dateTimeInInterval($startDate = '-10 days', $interval = '+ 5 days', $timezone = null),
+        'check_out' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
+        'check_in' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
         'prix_journalier' => $prix_journalier,
         'nombre_jours' => $nombre_jours,
         'caution' => 100000,
         'total' => $prix_journalier * $nombre_jours,
-        'created_at' => $faker->dateTimeThisYear($max = 'now', $timezone = 'Africa/Libreville')
+        'created_at' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
     ];
 });
 

@@ -8,7 +8,7 @@
                 <div class="col">
                     <h1 class="text-center jumbotron" >
                     @if( Auth::check() )
-                        Bienvenue sur Rental Pro {{ Auth::user()->compagnie->nom }}
+                        Systeme de Location de Véhicule
                     @endif
                         
                     </h1>

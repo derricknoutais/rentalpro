@@ -141,5 +141,10 @@ class ContratController extends Controller
         
 
     }
+    public function updateCashierId(Request $request, Contrat $contrat){
+        $contrat->update([
+            'cashier_facture_id' => $request->cashier_id
+        ]);
+    }
 
 }
