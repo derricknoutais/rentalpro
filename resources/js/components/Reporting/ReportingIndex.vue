@@ -88,7 +88,7 @@ export default {
             return this.chiffreDAffaires() - this.coutsVariables()
         },
         pointMort(){
-            return Math.ceil(this.seuilDeRentabilité() / this.prixMoyenDeLocation())
+            return Math.ceil( (this.seuilDeRentabilité() - this.chiffreDAffaires() ) / this.prixMoyenDeLocation())
         },
         chart(){
             // var date = new Date();

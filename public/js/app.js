@@ -3685,6 +3685,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     selectMonthlyContracts: function selectMonthlyContracts() {
+      // Instancie une nouvelle dta
       var date = new Date();
       this.localContrats = this.contrats.filter(function (contrat) {
         return Date.parse(contrat.created_at) > Date.parse(new Date(date.getFullYear(), date.getMonth(), 1));
@@ -3903,7 +3904,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.chiffreDAffaires() - this.coutsVariables();
     },
     pointMort: function pointMort() {
-      return Math.ceil(this.seuilDeRentabilité() / this.prixMoyenDeLocation());
+      return Math.ceil((this.seuilDeRentabilité() - this.chiffreDAffaires()) / this.prixMoyenDeLocation());
     },
     chart: function chart() {// var date = new Date();
       // this.dates = this.voiture_selectionée.contrats.filter( contrat => {

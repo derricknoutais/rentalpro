@@ -37,7 +37,9 @@ export default {
     },
     methods:{
         selectMonthlyContracts(){
+            // Instancie une nouvelle dta
             var date = new Date();
+            
             this.localContrats = this.contrats.filter(contrat => {
                 return Date.parse(contrat.created_at) > Date.parse(new Date(date.getFullYear(), date.getMonth(), 1))
             })
