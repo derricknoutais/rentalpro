@@ -3659,6 +3659,20 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       localContrats: null,
+      reporting_hebdomadaire: {
+        show: false,
+        nombre_locations: [],
+        nombre_locations_options: {},
+        revenus: [],
+        revenus_options: {}
+      },
+      reporting_mensuel: {
+        show: false,
+        nombre_locations: [],
+        nombre_locations_options: {},
+        revenus: [],
+        revenus_options: {}
+      },
       reporting_annuel: {
         show: false,
         nombre_locations: [],
@@ -3677,9 +3691,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     selectWeeklyContracts: function selectWeeklyContracts() {
-      var _this = this;
+      this.reporting_annuel.show = false;
+      this.reporting_mensuel.show = false; // Instancier un nouvelle date avec la date du jour
 
-      // Instancier un nouvelle date avec la date du jour
       var today = new Date(); // Déterminer la date du 1er (Lundi) et 7eme (Dimanche) jour de la semaine
 
       var firstDayOfWeek = today.getDate() - today.getDay() + 1;
@@ -3705,12 +3719,32 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.localContrats.forEach(function (contrat) {
-        var date = new Date(Date.parse(_this.localContrats[1].created_at)).getDate();
-        index = date - firstDayOfWeek; // contrats_classés_par_jours[index] = 
+        var date = new Date(Date.parse(contrat.created_at)).getDate();
+        var index = date - firstDayOfWeek;
+        contrats_classés_par_jours[index].push(contrat);
       });
+      var nombre_locations = [['Jour', 'Nombre De Contrats']];
+
+      for (var index = 1; index < 8; index++) {
+        nombre_locations[index] = new Array();
+      }
+
+      var jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+      contrats_classés_par_jours.forEach(function (jour, index) {
+        nombre_locations[index + 1] = [jours[index], jour.length];
+      });
+      this.reporting_hebdomadaire.nombre_locations = nombre_locations;
+      this.reporting_hebdomadaire.nombre_locations_options = {
+        title: 'Performance Locations ',
+        subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        height: 600
+      };
+      this.reporting_hebdomadaire.show = true;
     },
     selectYearlyContracts: function selectYearlyContracts() {
-      // Instancie une nouvelle date
+      this.reporting_hebdomadaire.show = false;
+      this.reporting_mensuel.show = false; // Instancie une nouvelle date
+
       var date = new Date(); // Retourne les contrats de l'année
 
       this.localContrats = this.contrats.filter(function (contrat) {
@@ -3719,8 +3753,8 @@ __webpack_require__.r(__webpack_exports__);
 
       var contract_per_month = []; // Instancie 12 array
 
-      for (var _index = 0; _index < 12; _index++) {
-        contract_per_month[_index] = new Array();
+      for (var index = 0; index < 12; index++) {
+        contract_per_month[index] = new Array();
       } // Classe chaque contrat par mois dans contract_per_months
 
 
@@ -3732,8 +3766,8 @@ __webpack_require__.r(__webpack_exports__);
       var nombre_locations = [['Mois', 'Nombre de Locations']];
       var mois = new Array("Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
 
-      for (var _index2 = 0; _index2 < contract_per_month.length; _index2++) {
-        nombre_locations[_index2 + 1] = [mois[_index2], contract_per_month[_index2].length];
+      for (var _index = 0; _index < contract_per_month.length; _index++) {
+        nombre_locations[_index + 1] = [mois[_index], contract_per_month[_index].length];
       }
 
       this.reporting_annuel.nombre_locations = nombre_locations;
@@ -3749,15 +3783,15 @@ __webpack_require__.r(__webpack_exports__);
       };
       var revenus_locations = [['Mois', 'Revenus Location']];
 
-      for (var _index3 = 0; _index3 < contract_per_month.length; _index3++) {
+      for (var _index2 = 0; _index2 < contract_per_month.length; _index2++) {
         var total = 0;
 
-        contract_per_month[_index3].forEach(function (contrat) {
+        contract_per_month[_index2].forEach(function (contrat) {
           console.log(contrat.total);
           total += contrat.total;
         });
 
-        revenus_locations.push([mois[_index3], total]);
+        revenus_locations.push([mois[_index2], total]);
       }
 
       this.reporting_annuel.revenus = revenus_locations;

@@ -10,6 +10,20 @@ export default {
     data(){
         return {
             localContrats: null,
+            reporting_hebdomadaire: {
+                show: false,
+                nombre_locations: [],
+                nombre_locations_options: {},
+                revenus: [],
+                revenus_options : {}
+            },
+            reporting_mensuel: {
+                show: false,
+                nombre_locations: [],
+                nombre_locations_options: {},
+                revenus: [],
+                revenus_options : {}
+            },
             reporting_annuel: {
                 show: false,
                 nombre_locations: [],
@@ -17,6 +31,7 @@ export default {
                 revenus: [],
                 revenus_options : {}
             },
+            
             chartOptions: null
         }
     },
@@ -29,6 +44,8 @@ export default {
             
         },
         selectWeeklyContracts(){
+            this.reporting_annuel.show = false;
+            this.reporting_mensuel.show = false;
             // Instancier un nouvelle date avec la date du jour
             var today = new Date();
 
@@ -60,13 +77,31 @@ export default {
                 contrats_classés_par_jours[i] = new Array();
             }
             this.localContrats.forEach( contrat => {
-                var date = (new Date(Date.parse(this.localContrats[1].created_at))).getDate()
-                index = date - firstDayOfWeek
-                // contrats_classés_par_jours[index] = 
+                var date = (new Date(Date.parse(contrat.created_at))).getDate()
+                var index = date - firstDayOfWeek
+                contrats_classés_par_jours[index].push(contrat)
             });
+            
+            var nombre_locations = [['Jour', 'Nombre De Contrats']];
+            for (let index = 1; index < 8; index++) {
+                nombre_locations[index] = new Array()
+            }
+            var jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+            contrats_classés_par_jours.forEach( (jour, index) => {
+                nombre_locations[index + 1] = [ jours[index], jour.length ]
+            })
+            this.reporting_hebdomadaire.nombre_locations = nombre_locations
 
+            this.reporting_hebdomadaire.nombre_locations_options = {
+                title: 'Performance Locations ',
+                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+                height: 600,
+            }
+            this.reporting_hebdomadaire.show = true
         },
         selectYearlyContracts(){
+            this.reporting_hebdomadaire.show = false;
+            this.reporting_mensuel.show = false;
             // Instancie une nouvelle date
             var date = new Date();
 

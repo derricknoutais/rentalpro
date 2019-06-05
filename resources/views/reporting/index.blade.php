@@ -16,29 +16,25 @@
                     <div class="col-12">
                         <ul class="nav nav-pills nav-justified">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#mensuel" @click="selectMonthlyContracts()" >Reproting Mensuel</a>
+                                <a class="nav-link" data-toggle="tab" href="#hebdomadaire" @click="selectWeeklyContracts()">Reporting Hebdomadaire</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#hebdomadaire" @click="selectWeeklyContracts()">Reporting Hebdomadaire</a>
+                                <a class="nav-link active" data-toggle="tab" href="#mensuel" @click="selectMonthlyContracts()" >Reporting Mensuel</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link"  href="#annuel" data-toggle="tab" @click="selectYearlyContracts()">Reporting Annuel</a>
                             </li>
                         </ul>
-                        {{-- <div class="row">
-                            <div class="col-12">
-                                <GChart type="ColumnChart" :data="reporting_annuel.nombre_locations" :options="reporting_annuel.nombre_locations_options"
-                                v-if="reporting_annuel.nombre_locations" />
-                            </div>
-                            
-                        </div> --}}
-                            <div class="row tab-pane fade" id="annuel" role="tabpanel" v-if="reporting_annuel.show">
+                        {{-- 
+                            <div class="row">
                                 <div class="col-12">
-                                    <GChart type="ColumnChart" :data="reporting_annuel.nombre_locations" :options="reporting_annuel.nombre_locations_options"
-                                    v-if="reporting_annuel.nombre_locations" />
+                                    <GChart type="ColumnChart" :data="reporting_annuel.nombre_locations" :options="reporting_annuel.nombre_locations_options" v-if="reporting_annuel.nombre_locations" />
                                 </div>
+                            </div> 
+                        --}}
+                            <div class="row tab-pane fade" id="hebdomadaire" role="tabpanel" v-if="reporting_hebdomadaire.show">
                                 <div class="col-12">
-                                    <GChart type="ColumnChart" :data="reporting_annuel.revenus" :options="reporting_annuel.revenus_options" v-if="reporting_annuel.revenus" />
+                                    <GChart type="ColumnChart" :data="reporting_hebdomadaire.nombre_locations" :options="reporting_hebdomadaire.nombre_locations_options" />
                                 </div>
                             </div>
                             <div class="row tab-pane fade show active" id="mensuel" role="tabpanel">
@@ -46,11 +42,16 @@
                                     Mensuel
                                 </div>
                             </div>
-                            <div class="row tab-pane fade" id="hebdomadaire" role="tabpanel" >
+                            <div class="row tab-pane fade" id="annuel" role="tabpanel" v-if="reporting_annuel.show">
                                 <div class="col-12">
-                                    Mensuel
+                                    <GChart type="ColumnChart" :data="reporting_annuel.nombre_locations" :options="reporting_annuel.nombre_locations_options"/>
+                                </div>
+                                <div class="col-12">
+                                    <GChart type="ColumnChart" :data="reporting_annuel.revenus" :options="reporting_annuel.revenus_options" />
                                 </div>
                             </div>
+                            
+                            
                     </div>
 
                 </div>
