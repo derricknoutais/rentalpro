@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Client;
 use App\Contrat;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
