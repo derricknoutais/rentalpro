@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Client;
 use App\Contrat;
+use DB;
 
 class ClientController extends Controller
 {
