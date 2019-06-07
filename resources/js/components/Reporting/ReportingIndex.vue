@@ -97,8 +97,6 @@ export default {
             //     return Date.parse(contrat.created_at) > new Date(date.getFullYear(), date.getMonth(), 1)
                 
             // })
-
-            
             
         }
 
