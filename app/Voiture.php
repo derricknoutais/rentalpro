@@ -43,7 +43,7 @@ class Voiture extends Model
         ]);
     }
     public function pannesActuelles(){
-        return Panne::where(['etat' => 'non-résolue' , 'etat' => 'en-maintenance' ,'voiture_id' => $this->id])->get();
+        return Panne::where(['etat' => 'non-résolue' ,'voiture_id' => $this->id])->orWhere(['etat' => 'en-maintenance', 'voiture_id' => $this->id])->get();
     }
 
     public function pannesNonResolues(){
