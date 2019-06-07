@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Panne;
+use App\Voiture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
