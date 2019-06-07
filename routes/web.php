@@ -181,7 +181,6 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
 });
 
 // PANNES
-
 Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
 
 // Maintenances 
