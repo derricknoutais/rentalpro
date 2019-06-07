@@ -66,7 +66,7 @@ Route::post( '/voiture/reception', 'VoitureController@reception');
 // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');
 Route::get('/voiture/{voiture}/maintenance', 'VoitureController@maintenance');
 Route::post('/voitures/ajout-voiture', 'VoitureController@store');
-Route::post('/voitures/{voiture}/ajoute-pannes', 'VoitureController@ajouterPannes');
+
 
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
@@ -179,6 +179,10 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
     
     
 });
+
+// PANNES
+
+Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
 
 // Maintenances 
 Route::get('maintenances', function(){

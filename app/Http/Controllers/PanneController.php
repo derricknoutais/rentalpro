@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Panne;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PanneController extends Controller
 {
@@ -27,15 +28,21 @@ class PanneController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request, Voiture $voiture){
+
+        for ($i=0; $i < $request->nombrePannes; $i++) { 
+            $data[] = [
+                'voiture_id' => $voiture->id,
+                'compagnie_id' => Auth::user()->compagnie_id,
+                'description' => $request['panne' . $i ],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        Panne::insert($data);
+
+        return redirect()->back();
+
     }
 
     /**

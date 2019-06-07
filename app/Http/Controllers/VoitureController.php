@@ -58,19 +58,5 @@ class VoitureController extends Controller
 
         return redirect('/voiture/' . $voiture->id);
     }
-    public function ajouterPannes(Request $request, Voiture $voiture){
-
-        for ($i=0; $i < $request->nombrePannes; $i++) { 
-            $data[] = [
-                'voiture_id' => $voiture->id,
-                'description' => $request['panne' . $i ],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
-        Panne::insert($data);
-
-        return redirect()->back();
-
-    }
+    
 }
