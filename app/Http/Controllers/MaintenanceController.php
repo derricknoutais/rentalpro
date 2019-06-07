@@ -14,7 +14,8 @@ class MaintenanceController extends Controller
      */
     public function index()
     {
-        //
+        $maintenances = Maintenance::with(['voiture', 'technicien'])->get();
+        return view('maintenances.index', compact('maintenances'));
     }
 
     /**

@@ -9,10 +9,13 @@
             <h1 class="text-center mt-5">
                 
                 {{  $voiture->immatriculation }}
+
                 @if (sizeof($voiture->pannesActuelles()) > 0 )
                     <i class="fas fa-exclamation-triangle text-danger"></i>
                 @endif
+
             </h1>
+
             {{-- Bouttons de Fonctionnalité & Infos Voitures --}}
             <div class="container-fluid">
                 <div class="row">
@@ -278,8 +281,8 @@
                 </div>
             </div>
 
-            <!-- Modal Maintenance -->
-            <div class="modal fade" id="envoieEnMaintenance" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <!-- Modal Envoie Maintenance -->
+            <div class="modal fade" id="envoieEnMaintenance">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -323,7 +326,7 @@
             </div>
             
             <!-- Modal -->
-            <div class="modal fade" id="pasDePannes" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal fade" id="pasDePannes">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -367,8 +370,12 @@
 
                                     </ul>
                                     <div class="form-group mt-3">
-                                    <label for="">Montant Maintenance</label>
-                                    <input type="number" class="form-control" name="montant">
+                                        <label for="">Coût Maintenance</label>
+                                        <input type="number" class="form-control" name="montant">
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label for="">Coût Pièces Détachées</label>
+                                        <input type="number" class="form-control" name="coût_pièces">
                                     </div>
                                 </div>
                                 <div class="modal-footer">

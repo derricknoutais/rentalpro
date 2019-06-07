@@ -19,6 +19,7 @@ class CreateMaintenancesTable extends Migration
             $table-> unsignedInteger('technicien_id')->nullable();
             $table->unsignedInteger('compagnie_id');
             $table->double('coût')->nullable();
+            $table->double('coût_pièces')->nullable();
             $table->foreign('voiture_id')->references('id')->on('voitures')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('technicien_id')->references('id')->on('techniciens')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

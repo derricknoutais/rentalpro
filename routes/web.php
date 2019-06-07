@@ -184,10 +184,7 @@ Route::post( '/{voiture}/voiture-documents-accessoires', function(Request $reque
 Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
 
 // Maintenances 
-Route::get('maintenances', function(){
-    $maintenances = Maintenance::with(['voiture', 'technicien'])->get();
-    return view('maintenances.index', compact('maintenances'));
-});
+Route::get('maintenances', 'MaintenanceController@index');
 Route::post('/maintenances/store', function(Request $request){
 
     // return $request->all();
@@ -229,7 +226,8 @@ Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request 
         ]);
     }
     $maintenance->update([
-        'coût' => $request->montant
+        'coût' => $request->montant,
+        'coût_pièces' => $request->pièces_détachées
     ]);
     $maintenance->loadMissing('voiture');
 
