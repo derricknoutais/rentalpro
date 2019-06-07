@@ -102,8 +102,8 @@
                                         <span class="dot bg-danger"></span>    
                                     @endif
                                     {{ $voiture->etat }}
-                                    @if($voiture->pannesActuelles())
-                                        <i class="fas fa-exclamation-triangle    "></i>
+                                    @if(sizeof($voiture->pannesActuelles()) > 0)
+                                        <i class="fas fa-exclamation-triangle text-danger"></i>
                                     @endif
                                 </td>
                             </tr>
