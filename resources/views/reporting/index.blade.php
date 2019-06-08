@@ -49,8 +49,7 @@
                                 <div class="col-12">
                                     <GChart type="ColumnChart" :data="reporting_annuel.revenus" :options="reporting_annuel.revenus_options" />
                                 </div>
-                            </div>
-                            
+                            </div>  
                             
                     </div>
 
