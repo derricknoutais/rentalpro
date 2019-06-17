@@ -185,38 +185,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Maintenances 
     Route::get('maintenances', 'MaintenanceController@index');
-    Route::post('/maintenances/store', function(Request $request){
-
-        // return $request->all();
-        DB::transaction(function() use ( $request ){
-
-            // Crée une nouvelle maintenance
-            $maintenance = Maintenance::create([
-                'voiture_id' => $request->voiture,
-                'technicien_id' => $request->technicien,
-            ]);
-            
-            // Attache les pannes sélectionnées a la maintenance créée
-
-            for($i = 0; $i < sizeof($request->panne); $i++){
-
-                Panne::find( $request->panne[$i])->update([
-                    'voiture_id' => $request->voiture,
-                    'maintenance_id' => $maintenance->id,
-                    'etat' => 'en-maintenance'
-                ]);
-
-            }
-
-            // Change l'état du véhicule en maintenance
-
-            Voiture::find($request->voiture)->etat('maintenance');
-
-        });
-        return redirect()->back();
-        
-
-    });
+    Route::post('/maintenances/store', 'MaintenanceController@store');
     Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
         // return $request->all();
         foreach ($request->pannes as $panne) {

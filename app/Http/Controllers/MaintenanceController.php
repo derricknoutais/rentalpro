@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Maintenance;
+use App\Panne;
+use App\Voiture;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class MaintenanceController extends Controller
 {
@@ -36,7 +40,36 @@ class MaintenanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        DB::transaction(function() use ( $request ){
+
+            // Crée une nouvelle maintenance
+            $maintenance = Maintenance::create([
+                'voiture_id' => $request->voiture,
+                'technicien_id' => $request->technicien,
+                'compagnie_id' => Auth::user()->compagnie_id
+            ]);
+
+            // Attache les pannes sélectionnées a la maintenance créée
+
+            for($i = 0; $i < sizeof($request->panne); $i++){
+
+                Panne::find( $request->panne[$i])->update([
+                    'voiture_id' => $request->voiture,
+                    'maintenance_id' => $maintenance->id,
+                    'etat' => 'en-maintenance'
+                ]);
+
+            }
+
+            // Change l'état du véhicule en maintenance
+
+            Voiture::find($request->voiture)->etat('maintenance');
+
+        });
+        return redirect()->back();
+
+
     }
 
     /**
