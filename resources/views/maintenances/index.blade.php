@@ -26,7 +26,7 @@
                                         <div class="card-header" role="tab" id="section1HeaderId" >
                                             <h5 class="mb-0">
                                                 <a data-toggle="collapse" data-parent="#accordianId" href="#content{{ $maintenance->id }}" aria-expanded="true" aria-controls="section1ContentId">
-                                                    {{ $maintenance->titre }}
+                                                    {{ $maintenance->voiture->immatriculation }}
                                                 </a>
                                             </h5>
                                         </div>
