@@ -39,11 +39,10 @@
                 </div>
             </div>
             
-
             <!-- INFORMATION VOITURE -->
             <div class="row mt-3">
                 <p>
-                    Location Véhicule de Marque <i>{{ contrat.voiture.marque }} {{ contrat.voiture.type }}  {{ contrat.voiture.annee }} </i> immatriculé <i>{{ contrat.voiture.immatriculation }}</i>
+                    Location Véhicule de Marque <i>{{ contrat.voiture.marque }} {{ contrat.voiture.type }}  {{ contrat.voiture.annee }} </i> immatriculé <i> <a href="">{{ contrat.voiture.immatriculation }}</a></i>
                 </p>
             
             </div>

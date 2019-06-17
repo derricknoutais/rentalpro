@@ -51,7 +51,11 @@ class DatabaseSeeder extends Seeder
 
         factory(App\Technicien::class, 3)->create();
 
-        factory(App\Maintenance::class, 100)->create();
+        factory(App\Maintenance::class, 100)->create()->each(function($maintenance) {
+            factory(App\Panne::class, 10)->create([
+                'maintenance_id' => $maintenance->id
+            ]);
+        });
 
         
 

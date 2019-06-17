@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Technicien;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TechnicienController extends Controller
 {
@@ -35,7 +36,14 @@ class TechnicienController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $technicien = Technicien::create([
+            'nom' => $request->nom,
+            'compagnie_id' => Auth::user()->compagnie_id
+            
+        ]);
+        if($technicien){
+            return redirect()->back();
+        }
     }
 
     /**

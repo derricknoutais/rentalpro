@@ -11,8 +11,13 @@ use Illuminate\Support\Facades\Auth;
 class ClientController extends Controller
 {
     public function index(){
-        $clients = Client::all()->sortBy('nom');
-        return view('clients.index', compact('clients'));
+        if( isset(Auth::user()->compagnie)){
+            $clients = Auth::user()->compagnie->clients;
+            return view('clients.index', compact('clients'));
+        } else {
+            return redirect('/compagnies/create');
+        }
+        
     }
     public function show(Client $client){
         $client->loadMissing('contrats');

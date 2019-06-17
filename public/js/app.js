@@ -2187,7 +2187,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -39828,7 +39827,11 @@ var render = function() {
               )
             ]),
             _vm._v(" immatriculé "),
-            _c("i", [_vm._v(_vm._s(_vm.contrat.voiture.immatriculation))])
+            _c("i", [
+              _c("a", { attrs: { href: "" } }, [
+                _vm._v(_vm._s(_vm.contrat.voiture.immatriculation))
+              ])
+            ])
           ])
         ]),
         _vm._v(" "),

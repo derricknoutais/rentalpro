@@ -78,6 +78,7 @@ $factory->define(App\Contrat::class, function(Faker $faker){
 
 $factory->define(App\Maintenance::class, function (Faker $faker) {
     return [
+        'titre' => $faker->text,
         'compagnie_id' => 1,
         'voiture_id' => rand(1, 10),
         'technicien_id' => rand(1,3),
@@ -89,5 +90,14 @@ $factory->define(App\Technicien::class, function (Faker $faker) {
     return [
         'compagnie_id' => 1,
         'nom' => $faker->firstName,
+    ];
+});
+
+$factory->define(App\Panne::class, function (Faker $faker){
+    return [
+        'compagnie_id' => 1,
+        'voiture_id' => rand(1,10),
+        'description' => $faker->sentence,
+        'etat' => $faker->randomElement($array = array( 'non-résolue', 'résolue', 'en-maintenance'))
     ];
 });
