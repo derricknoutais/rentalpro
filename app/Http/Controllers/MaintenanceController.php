@@ -45,6 +45,7 @@ class MaintenanceController extends Controller
 
             // Crée une nouvelle maintenance
             $maintenance = Maintenance::create([
+                'titre' => $request->titre,
                 'voiture_id' => $request->voiture,
                 'technicien_id' => $request->technicien,
                 'compagnie_id' => Auth::user()->compagnie_id

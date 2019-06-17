@@ -314,6 +314,10 @@
                                     <input type="hidden" value="{{ $voiture->id }}" name="voiture" >
                                     <input type="hidden" value="{{ sizeof($voiture->pannes) }}" name="nombrePannes">
                                 </div>
+                                <div class="form-group">
+                                  <label for="">Titre (Description)</label>
+                                  <input type="text" class="form-control" name="titre" >
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
