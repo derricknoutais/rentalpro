@@ -101,6 +101,7 @@ class ContratController extends Controller
                 'voiture_id' => $contrat->voiture_id,
                 'client_id' => $contrat->client_id,
                 'numéro' => Contrat::numéro(),
+                'compagnie_id' => Auth::user()->compagnie->id,
                 'check_out' => $contrat->check_in ,
                 'check_in' => $request->check_in . $contrat->check_in->format('H:i:s'),
                 'prix_journalier' => $contrat->prix_journalier,
