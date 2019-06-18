@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Voiture;
 use App\Contrat;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContratCréé;
 
 class HomeController extends Controller
 {
@@ -18,11 +20,11 @@ class HomeController extends Controller
         return view('home');
     }
     public function welcome(){
-
+        
         $voitures = Voiture::with('contrats')->get();
         $contrats_en_cours = Contrat::where('check_in', '>' ,now())->get()->sortBy('check_in');
         $contrats_en_retard = Contrat::where('check_in', '<', now())->whereNull('real_check_in')->get()->sortBy('check_in');
-
+        Mail::to($request->user())->send(new ContratCréé($contrats_en_cours[0]));
         return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard'));
     }
 }
