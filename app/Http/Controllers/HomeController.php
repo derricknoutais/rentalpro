@@ -24,7 +24,7 @@ class HomeController extends Controller
         $voitures = Voiture::with('contrats')->get();
         $contrats_en_cours = Contrat::where('check_in', '>' ,now())->get()->sortBy('check_in');
         $contrats_en_retard = Contrat::where('check_in', '<', now())->whereNull('real_check_in')->get()->sortBy('check_in');
-        Mail::to('derricknoutais@gmail.com')->send(new ContratCréé($contrats_en_cours[0]));
+        Mail::to('derricknoutais@gmail.com')->from('Hello')->send(new ContratCréé($contrats_en_cours[0]));
         return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard'));
     }
 }
