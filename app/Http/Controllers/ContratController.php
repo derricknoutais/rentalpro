@@ -9,6 +9,8 @@ use App\Voiture;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContratCréé;
 
 class ContratController extends Controller
 {
@@ -65,8 +67,11 @@ class ContratController extends Controller
             }
         });
         if($contrat){
+            $contrat->loadMissing('voiture', 'client');
+            Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
             return $contrat;
         }
+        
         
         
     }
@@ -89,7 +94,7 @@ class ContratController extends Controller
         ]);
     }
     public function prolonger(Request $request, Contrat $contrat){
-        DB::transaction(function () use ( $request, $contrat) {
+        $contrat = DB::transaction(function () use ( $request, $contrat) {
             $nombre_jours = Carbon::parse($request->check_in)->endOfDay()->diffInDays($contrat->check_in->endOfDay());
 
             $nouveauContrat = Contrat::create([
@@ -112,8 +117,10 @@ class ContratController extends Controller
                 'real_check_in' => $contrat->check_in,
                 'prolongation_id' => $nouveauContrat->id
             ]);
+            return $nouveauContrat;
         });
-        
+        $contrat->loadMissing('voiture', 'client');
+        Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
         return redirect()->back();
     }
     public function changerVoiture( Request $request, Contrat $contrat){
