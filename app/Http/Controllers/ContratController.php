@@ -136,7 +136,7 @@ class ContratController extends Controller
     }
     public function changerVoiture( Request $request, Contrat $contrat){
 
-        DB::transaction(function () {
+        DB::transaction(function () use ($request, $contrat){
             // Retrouve la voiture a remplacer
             $voiture = Voiture::find( $request->voiture );
 
