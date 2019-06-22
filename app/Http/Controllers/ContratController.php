@@ -11,6 +11,7 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContratCréé;
+use Nexmo\Laravel\Facade\Nexmo;
 
 class ContratController extends Controller
 {
@@ -20,7 +21,11 @@ class ContratController extends Controller
     public function index(){
         
         $contrats = Contrat::with('client', 'voiture')->orderBy('id', 'desc')->paginate(20);
+        $contrat = $contrats[0];
         $voitures = Voiture::all();
+        return $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location pour la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
+        . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre confiance.'; 
+
         return view('contrats.index', compact(['contrats', 'voitures']));
     }
     public function show(Contrat $contrat){
@@ -69,11 +74,16 @@ class ContratController extends Controller
         if($contrat){
             $contrat->loadMissing('voiture', 'client');
             Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
+            $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
+                . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.'; 
+
+            Nexmo::message()->send([
+                'to'   => '24107158215',
+                'from' => 'STA',
+                'text' => $message
+            ]);
             return $contrat;
         }
-        
-        
-        
     }
     public function ajoutePhotos(Request $request, Contrat $contrat){
         $path_droit = \Storage::disk('public_uploads')->put("/", $request->file('droit'));

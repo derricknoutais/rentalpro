@@ -105,9 +105,9 @@
                                             <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2 " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
                                                 <i class="fas fa-clock"></i> Prolonger Contrat
                                             </button>
-                                            {{-- <button type="button" class="btn btn-secondary btn-sm px-1 py-0" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
+                                            <button type="button" class="btn btn-secondary btn-sm px-1 py-0" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
                                                 <i class="fas fa-exchange-alt mr-1"></i> Changer Voiture 
-                                            </button> --}}
+                                            </button>
                                             <span class="badge badge-pill badge-warning mr-2">En Location</span>
                                         @endif
 
