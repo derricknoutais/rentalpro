@@ -22,7 +22,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-12 mt-3">
-                                            <p>{{ contrat.client.nom + ' ' + contrat.client.prenom  }}</p>
+                                            <p>
+                                                <a :href="'/clients/' + contrat.client.id ">{{ contrat.client.nom + ' ' + contrat.client.prenom  }}</a></p>
                                         </div>
                                     </div>
                                     
