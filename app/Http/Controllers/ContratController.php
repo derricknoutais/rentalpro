@@ -23,8 +23,8 @@ class ContratController extends Controller
         $contrats = Contrat::with('client', 'voiture')->orderBy('id', 'desc')->paginate(20);
         $contrat = $contrats[0];
         $voitures = Voiture::all();
-        return $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location pour la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
-        . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre confiance.'; 
+        // return $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location pour la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
+        // . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre confiance.'; 
 
         return view('contrats.index', compact(['contrats', 'voitures']));
     }
@@ -77,11 +77,11 @@ class ContratController extends Controller
             $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
                 . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.'; 
 
-            Nexmo::message()->send([
-                'to'   => '24107158215',
-                'from' => 'STA',
-                'text' => $message
-            ]);
+            // Nexmo::message()->send([
+            //     'to'   => '24107158215',
+            //     'from' => 'STA',
+            //     'text' => $message
+            // ]);
             return $contrat;
         }
     }
