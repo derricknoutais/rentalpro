@@ -153,9 +153,9 @@ class ContratController extends Controller
             }
 
             $voiture->etat('loué');
-            return redirect()->back();
+            
         });
-        
+        return redirect()->back();
         
 
     }

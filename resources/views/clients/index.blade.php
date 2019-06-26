@@ -220,7 +220,10 @@
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i v-if="isLoading" class="fas fa-spinner fa-spin"></i>
+                                    Enregistrer
+                                </button>
                             </div>
                         </form>
                     </div>

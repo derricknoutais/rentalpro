@@ -1849,7 +1849,8 @@ __webpack_require__.r(__webpack_exports__);
         ville: '',
         addresse: '',
         cashier_id: ''
-      }
+      },
+      isLoading: false
     };
   },
   methods: {
@@ -1859,6 +1860,8 @@ __webpack_require__.r(__webpack_exports__);
     enregistreClientDansCashier: function enregistreClientDansCashier() {
       var _this = this;
 
+      this.isLoading = true;
+      this.$forceUpdate();
       axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(function (response) {
         console.log(response.data);
         _this.client.cashier_id = response.data.id;
@@ -1988,6 +1991,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -39780,12 +39786,22 @@ var render = function() {
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-12 mt-3" }, [
                         _c("p", [
-                          _vm._v(
-                            _vm._s(
-                              _vm.contrat.client.nom +
-                                " " +
-                                _vm.contrat.client.prenom
-                            )
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: "/clients/" + _vm.contrat.client.id
+                              }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.contrat.client.nom +
+                                    " " +
+                                    _vm.contrat.client.prenom
+                                )
+                              )
+                            ]
                           )
                         ])
                       ])
@@ -39828,9 +39844,11 @@ var render = function() {
             ]),
             _vm._v(" immatriculé "),
             _c("i", [
-              _c("a", { attrs: { href: "" } }, [
-                _vm._v(_vm._s(_vm.contrat.voiture.immatriculation))
-              ])
+              _c(
+                "a",
+                { attrs: { href: "/voiture/" + _vm.contrat.voiture.id } },
+                [_vm._v(_vm._s(_vm.contrat.voiture.immatriculation))]
+              )
             ])
           ])
         ]),
@@ -39916,9 +39934,9 @@ var render = function() {
                     },
                     [
                       _vm.isLoading
-                        ? _c("i", { staticClass: "fas fa-spinner " })
+                        ? _c("i", { staticClass: "fas fa-spinner fa-spin" })
                         : _vm._e(),
-                      _vm._v(" Envoyer à Cashier")
+                      _vm._v(" Envoyer à Cashier\n                ")
                     ]
                   )
                 : _vm._e(),

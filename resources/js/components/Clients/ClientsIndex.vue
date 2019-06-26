@@ -13,7 +13,8 @@ export default {
                 ville: '',
                 addresse: '',
                 cashier_id: ''
-            }
+            },
+            isLoading: false
         }
     },
     methods:{
@@ -21,7 +22,10 @@ export default {
             window.location = location
         },
         enregistreClientDansCashier(){
+            this.isLoading = true;
+            this.$forceUpdate()
             axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(response => {
+                
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
                 document.getElementById("cashier_id").value = response.data.id
