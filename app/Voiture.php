@@ -18,7 +18,7 @@ class Voiture extends Model
 
     public function contrats()
     {
-        return $this->hasMany('App\Contrat');
+        return $this->hasMany('App\Contrat')->orderBy('id', 'desc');
     }
 
     public function pannes()

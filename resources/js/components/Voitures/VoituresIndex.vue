@@ -2,7 +2,8 @@
 export default {
     data(){
         return {
-            yo: 'jkdhj'
+            yo: 'jkdhj',
+            isLoading: false
         }
     },
     methods:{
@@ -10,6 +11,7 @@ export default {
             window.location = '/voiture/' + id
         },
         submitForm(){
+            this.isLoading = true
             document.getElementById("voitureForm").submit();
         }
     },

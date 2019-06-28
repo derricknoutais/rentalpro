@@ -32,7 +32,8 @@ export default {
                 this.$forceUpdate()
                 document.getElementById('clientForm').submit();
             }).catch(error => {
-                console.log(error);
+                alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance")
+                window.location.reload()
             });
 
 

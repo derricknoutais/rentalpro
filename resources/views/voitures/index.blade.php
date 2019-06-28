@@ -125,7 +125,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form action="/voitures/ajout-voiture" enctype="multipart/form-data" method="POST" id="voitureForm">
+                        <form action="/voitures/ajout-voiture" enctype="multipart/form-data" method="POST" id="voitureForm" @submit.prevent="submitForm()">
                             @csrf
                             <div class="modal-body">
                                 <div class="container-fluid">
@@ -172,8 +172,11 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i v-if="isLoading" class="fas fa-spinner fa-spin"></i>
+                                    Enregistrer
+                                </button>
                             </div>
                         </form>
                     </div>

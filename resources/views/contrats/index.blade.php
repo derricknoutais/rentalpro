@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}">
+    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}">
         <div>
             <div class="container">
                 <h1 class="text-left my-5">Contrat</h1>
@@ -84,7 +84,14 @@
                                         @if (! $contrat->cashier_facture_id)
                                                 <button class="btn btn-primary btn-sm px-1 py-0 mr-2" role="button" @click="envoieACashier( {{ $contrat }} )">Envoyer à Cashier</button>
                                         @else
-                                                <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button" href="https://thecashier.ga/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir dans Cashier</a>
+                                            @if (config('app.env') !== 'local')
+                                                <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button"
+                                                    href="https://thecashier.ga/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>
+                                            @else
+                                                <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button"
+                                                    href="http://thecashier.test/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>
+                                            @endif
+                                                
                                         @endif
                                         
                                         <!-- Si le contrat n'est plus en cours -->

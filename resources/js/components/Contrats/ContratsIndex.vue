@@ -1,6 +1,6 @@
 <script>
 export default {
-    props: ['contrats'],
+    props: ['contrats', 'env'],
     data(){
         return {
             search : {
@@ -23,8 +23,11 @@ export default {
                 'prix_unitaire' : payload.prix_journalier,
                 'client': payload.client.cashier_id 
             };
-            
-            axios.post('https://thecashier.ga/api/facture', data).then(response => {
+            var link = 'https://thecashier.ga/api/facture'
+            if(this.env === 'local'){
+                link = 'http://thecashier.test/api/facture'
+            }
+            axios.post(link, data).then(response => {
                 var cashier_id = response.data.id
                 this.cashier_id = cashier_id       
                 if( cashier_id !== null ){

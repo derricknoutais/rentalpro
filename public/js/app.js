@@ -1871,7 +1871,8 @@ __webpack_require__.r(__webpack_exports__);
 
         document.getElementById('clientForm').submit();
       }).catch(function (error) {
-        console.log(error);
+        alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance");
+        window.location.reload();
       });
     }
   },
@@ -2323,7 +2324,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['contrats'],
+  props: ['contrats', 'env'],
   data: function data() {
     return {
       search: {
@@ -2348,7 +2349,13 @@ __webpack_require__.r(__webpack_exports__);
         'prix_unitaire': payload.prix_journalier,
         'client': payload.client.cashier_id
       };
-      axios.post('https://thecashier.ga/api/facture', data).then(function (response) {
+      var link = 'https://thecashier.ga/api/facture';
+
+      if (this.env === 'local') {
+        link = 'http://thecashier.test/api/facture';
+      }
+
+      axios.post(link, data).then(function (response) {
         var cashier_id = response.data.id;
         _this.cashier_id = cashier_id;
 
@@ -4001,7 +4008,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      yo: 'jkdhj'
+      yo: 'jkdhj',
+      isLoading: false
     };
   },
   methods: {
@@ -4009,6 +4017,7 @@ __webpack_require__.r(__webpack_exports__);
       window.location = '/voiture/' + id;
     },
     submitForm: function submitForm() {
+      this.isLoading = true;
       document.getElementById("voitureForm").submit();
     }
   },
