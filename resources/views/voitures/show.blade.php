@@ -10,7 +10,7 @@
                 
                 {{  $voiture->immatriculation }}
 
-                @if (sizeof($voiture->pannesActuelles()) > 0 )
+                @if (sizeof($voiture->pannesNonResolues()) > 0 )
                     <i class="fas fa-exclamation-triangle text-danger"></i>
                 @endif
 
