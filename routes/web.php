@@ -102,10 +102,8 @@ Route::group(['middleware' => ['auth']], function () {
                     ->orWhere('phone1', 'like', '%' . $request->client . '%')
                     ->orWhere('phone2', 'like', '%' . $request->client . '%')
                     ->orWhere('phone3', 'like', '%' . $request->client . '%')
-                    ->get();
-                foreach ($clients as $client) {
-                    $query->where('client_id', $client->id);
-                }
+                    ->pluck('id');
+                $query->whereIn('client_id', $clients);
                 
             }
             // Date du 
