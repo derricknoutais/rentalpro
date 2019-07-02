@@ -124,7 +124,7 @@ Route::group(['middleware' => ['auth']], function () {
                 $query->whereNotNull('real_check_in');
             } 
             return $query;
-        })->paginate(20);
+        })->orderBy('id', 'desc')->paginate(20);
         $voitures = Voiture::all();
         return view('contrats.index', compact(['contrats', 'voitures']));
     });
