@@ -23,6 +23,7 @@
             name="fade" 
             enter-active-class="animated fadeIn"
             leave-active-class="animated fadeOut"
+            
         >
             <step-4 :voiture="this.contrat.voiture" @decrementStep="decrementStep()" @passeAEtape5="lanceEtape5" v-if="this.step === 4"></step-4>
         </transition>

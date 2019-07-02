@@ -89,6 +89,44 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contrats/{contrat}/prolonger', 'ContratController@prolonger');
     Route::post('/contrats/{contrat}/changer-voiture', 'ContratController@changerVoiture');
 
+    Route::get('/contrats/recherche', function(Request $request){
+        $contrats = Contrat::when($request, function($query,  $request){
+            // Contrat
+            if($request->contrat){
+                $query->where('numéro', 'like', '%'. $request->contrat . '%');
+            }
+            // Client
+            if($request->client){
+                $client = Client::where('nom', 'like', '%'. $request->client . '%')
+                    ->orWhere('prenom', 'like', '%' . $request->client . '%')
+                    ->orWhere('phone1', 'like', '%' . $request->client . '%')
+                    ->orWhere('phone2', 'like', '%' . $request->client . '%')
+                    ->orWhere('phone3', 'like', '%' . $request->client . '%')
+                    ->first();
+                $query->where('client_id', $client->id);
+            }
+            // Date du 
+            if($request->check_out){
+                $query->where('check_out', 'like',  $request->check_out . '%' );
+            }
+
+            // Date au
+            if($request->check_in){
+                $query->where('check_in', 'like',  $request->check_in . '%' );
+            }
+
+            // Etat
+            if($request->etat === 'en-cours'){
+                $query->whereNull('real_check_in');
+            } else {
+                $query->whereNotNull('real_check_in');
+            }
+            return $query;
+        })->paginate(20);
+        $voitures = Voiture::all();
+        return view('contrats.index', compact(['contrats', 'voitures']));
+    });
+
     // Paramètres
     Route::get('/mes-paramètres', function(){
         $documents = Document::all();

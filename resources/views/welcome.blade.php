@@ -6,12 +6,19 @@
         <div class="container-fluid">
             <div class="row mt-5">
                 <div class="col">
-                    <h1 class="text-center jumbotron" >
-                    @if( Auth::check() )
-                        Systeme de Location de Véhicule
-                    @endif
-                        
-                    </h1>
+                    <transition 
+                        name="fade" 
+                        enter-active-class="animated tada"
+                        leave-active-class="animated fadeOut"
+                        :duration="{ enter: 50000, leave: 800 }"
+                    >
+                        <h1 class="text-center jumbotron" v-show="test">
+                            @if( Auth::check() )
+                                Bienvenue sur Rental Pro
+                            @endif
+                        </h1>
+                    </transition>
+                    
                 </div>
             </div>
 

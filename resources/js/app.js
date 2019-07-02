@@ -16,8 +16,6 @@ Vue.use(VueCurrencyFilter, {
     symbolSpacing: true
 });
 
-
-
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect)
 
@@ -25,11 +23,12 @@ Vue.component('multiselect', Multiselect)
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-
 
 const app = new Vue({
     el: '#app',
+    data: {
+        test: false
+    },
     methods: {
         relocateTo(location){
             window.location = location
@@ -60,5 +59,11 @@ const app = new Vue({
                 console.log(error);
             });
         },
-    }
+    },
+    mounted() {
+            this.test = true
+
+
+        
+    },
 });

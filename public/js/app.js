@@ -2973,6 +2973,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['prop_clients', 'prop_voitures', 'environment'],
   data: function data() {
@@ -56088,9 +56089,11 @@ var files = __webpack_require__("./resources/js sync recursive \\.vue$/");
 files.keys().map(function (key) {
   return Vue.component(key.split('/').pop().split('.')[0], files(key).default);
 });
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
 var app = new Vue({
   el: '#app',
+  data: {
+    test: false
+  },
   methods: {
     relocateTo: function relocateTo(location) {
       window.location = location;
@@ -56125,6 +56128,9 @@ var app = new Vue({
         console.log(error);
       });
     }
+  },
+  mounted: function mounted() {
+    this.test = true;
   }
 });
 
