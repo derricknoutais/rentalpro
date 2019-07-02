@@ -98,7 +98,9 @@ Route::group(['middleware' => ['auth']], function () {
             // Client
             if($request->client){
                 $client = Client::where('nom', 'like', '%'. $request->client . '%')
+                    ->orWhere('nom', 'like', $request->client . '%')
                     ->orWhere('prenom', 'like', '%' . $request->client . '%')
+                    ->orWhere('prenom', 'like', $request->client . '%')
                     ->orWhere('phone1', 'like', '%' . $request->client . '%')
                     ->orWhere('phone2', 'like', '%' . $request->client . '%')
                     ->orWhere('phone3', 'like', '%' . $request->client . '%')

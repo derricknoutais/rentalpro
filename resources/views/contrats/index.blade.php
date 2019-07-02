@@ -10,12 +10,9 @@
                 leave-active-class="animated fadeOut"
             >
                 <div class="container">
-                    <h1 class="text-left my-5">Contrat</h1>
+                    <h1 class="text-center  my-5">Contrat</h1>
                 </div>
             </transition>
-            <div class="container">
-                <h1 class="text-left my-5">Contrat</h1>
-            </div>
 
             <div class="container-fluid bg-warning py-5">
                 <form action="/contrats/recherche" method="GET">
