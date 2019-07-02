@@ -52,6 +52,7 @@
                                 <div class="form-group">
                                     <label for="">État</label>
                                     <select class="form-control" name="etat">
+                                        <option value="tout">Tout</option>
                                         <option value="en-cours">En Cours</option>
                                         <option value="terminé">Terminé</option>
                                     </select>

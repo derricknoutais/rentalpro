@@ -118,9 +118,9 @@ Route::group(['middleware' => ['auth']], function () {
             // Etat
             if($request->etat === 'en-cours'){
                 $query->whereNull('real_check_in');
-            } else {
+            } else if( $request->etat === 'terminé') {
                 $query->whereNotNull('real_check_in');
-            }
+            } 
             return $query;
         })->paginate(20);
         $voitures = Voiture::all();
