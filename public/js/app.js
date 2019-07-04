@@ -2158,12 +2158,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -57452,24 +57446,9 @@ var render = function() {
             ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _vm.contrat.caution > 0
-          ? _c("p", [
-              _vm._m(5),
-              _vm._v(
-                " " + _vm._s(_vm.contrat.caution) + " F C FA\n                "
-              )
-            ])
-          : _c("p", { staticClass: "text-danger" }, [
-              _vm._v(
-                "Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:"
-              )
-            ])
-      ]),
+      _vm._m(5),
       _vm._v(" "),
       _vm._m(6),
-      _vm._v(" "),
-      _vm._m(7),
       _vm._v(" "),
       _c("h4", { staticClass: "mt-3" }, [
         _vm._v(
@@ -57610,10 +57589,10 @@ var render = function() {
     _vm.printing
       ? _c("div", { attrs: { id: "copie_client" } }, [
           _c("div", { staticClass: "row mt-3" }, [
-            _vm._m(8),
+            _vm._m(7),
             _vm._v(" "),
             _c("div", { staticClass: "col-3 mt-4 border" }, [
-              _vm._m(9),
+              _vm._m(8),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-12 mt-3" }, [
@@ -57653,7 +57632,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "row mt-3" }, [
             _c("p", [
-              _vm._m(10),
+              _vm._m(9),
               _vm._v(" Location "),
               _c("i", [
                 _vm._v(
@@ -57728,9 +57707,9 @@ var render = function() {
                 ])
           ]),
           _vm._v(" "),
-          _vm._m(11),
+          _vm._m(10),
           _vm._v(" "),
-          _vm._m(12),
+          _vm._m(11),
           _vm._v(" "),
           _c("h4", { staticClass: "mt-3" }, [
             _vm._v(
@@ -57771,12 +57750,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("u", [_c("strong", [_vm._v("Période:")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("u", [_c("strong", [_vm._v("Caution:")])])
   },
   function() {
     var _vm = this
