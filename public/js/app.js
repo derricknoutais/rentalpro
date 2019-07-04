@@ -57436,7 +57436,9 @@ var render = function() {
           ? _c("p", [
               _vm._m(4),
               _vm._v(
-                " " + _vm._s(_vm.contrat.caution) + " F C FA\n                "
+                " " +
+                  _vm._s(_vm.contrat.caution) +
+                  " F C FA. N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:\n                "
               )
             ])
           : _c("p", { staticClass: "text-danger" }, [

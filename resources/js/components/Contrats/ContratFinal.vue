@@ -39,7 +39,7 @@
                 </div>
                 <div class="row">
                     <p v-if="contrat.caution > 0">
-                        <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA
+                        <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA. N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:
                     </p>
                     <p class="text-danger" v-else>Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:</p>
                 </div>
