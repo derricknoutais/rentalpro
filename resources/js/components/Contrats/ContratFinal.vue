@@ -43,6 +43,12 @@
                     </p>
                     <p class="text-danger" v-else>Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:</p>
                 </div>
+                <div class="row">
+                    <p v-if="contrat.caution > 0">
+                        <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA
+                    </p>
+                    <p class="text-danger" v-else>Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:</p>
+                </div>
                 <div class="row mt-1">
                     <ol>
                         <li>Le Véhicule sera restitué à l'heure indiquée sur le contrat.</li>
