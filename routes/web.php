@@ -104,7 +104,6 @@ Route::group(['middleware' => ['auth']], function () {
                     ->orWhere('phone3', 'like', '%' . $request->client . '%')
                     ->pluck('id');
                 $query->whereIn('client_id', $clients);
-                
             }
             // Date du 
             if($request->check_out){

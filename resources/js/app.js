@@ -16,6 +16,13 @@ Vue.use(VueCurrencyFilter, {
     symbolSpacing: true
 });
 
+const moment = require('moment')
+require('moment/locale/fr')
+
+Vue.use(require('vue-moment'), {
+    moment
+})
+
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect)
 
