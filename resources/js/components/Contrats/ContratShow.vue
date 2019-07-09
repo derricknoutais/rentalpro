@@ -43,13 +43,13 @@ export default {
         ajouterPaiement(payload){
             var data;
             var link = 'https://thecashier.ga/api/paiement';
-            location.reload()
+            
             if(this.environment === 'local'){
                 link = 'http://thecashier.test/api/paiement'
             }
             axios.post(link,  payload).then( response => {
                 console.log(response.data);
-                
+                location.reload()
             }).catch(error => {
                 console.log(error);
             });

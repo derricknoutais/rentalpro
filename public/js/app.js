@@ -2332,7 +2332,6 @@ __webpack_require__.r(__webpack_exports__);
     ajouterPaiement: function ajouterPaiement(payload) {
       var data;
       var link = 'https://thecashier.ga/api/paiement';
-      location.reload();
 
       if (this.environment === 'local') {
         link = 'http://thecashier.test/api/paiement';
@@ -2340,6 +2339,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post(link, payload).then(function (response) {
         console.log(response.data);
+        location.reload();
       }).catch(function (error) {
         console.log(error);
       });
