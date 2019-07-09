@@ -38,8 +38,12 @@
                     </p>
                 </div>
                 <div class="row">
-                    <p>
-                        <u><strong>Montant Versé:</strong></u> {{  }}
+                    <p v-if="totalPaiement">
+                        <u ><strong>Montant Versé:</strong></u> <span>{{ totalPaiement }} F CFA</span>
+                        
+                    </p>
+                    <p v-else>
+                        <i class="fas fa-spinner fa-spin"></i>
                     </p>
                 </div>
                 <div class="row">
@@ -213,7 +217,9 @@ export default {
             paiement : {
                 facture_id: null,
                 montant: null
-            }
+            },
+            paiements: null,
+            totalPaiement: null
         }
     },
     methods:{
@@ -238,13 +244,12 @@ export default {
             }
         },
         getPaiements(){
-            var link = 'https://thecashier.ga/api/get-paiement';
+            var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
             if(this.environment === 'local'){
-                link = 'http://thecashier.test/api/get-paiement'
+                link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
             }
-            axios.get(link, ).then(response => {
-                console.log(response.data);
-                
+            axios.get(link).then(response => {
+                this.paiements = response.data
             }).catch(error => {
                 console.log(error);
             });
@@ -281,6 +286,16 @@ export default {
         },
     },
     mounted(){
+        this.getPaiements()
+        var total = 0
+        setTimeout(() => {
+            this.paiements.forEach(paiement => {
+                total += paiement.montant
+            });
+            console.log("Le total est " + total)
+            this.totalPaiement = total
+            this.$forceUpdate()
+        },1000);
         
     }
 }

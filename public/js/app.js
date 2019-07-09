@@ -2196,6 +2196,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -2206,7 +2210,9 @@ __webpack_require__.r(__webpack_exports__);
       paiement: {
         facture_id: null,
         montant: null
-      }
+      },
+      paiements: null,
+      totalPaiement: null
     };
   },
   methods: {
@@ -2232,14 +2238,16 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     getPaiements: function getPaiements() {
-      var link = 'https://thecashier.ga/api/get-paiement';
+      var _this = this;
+
+      var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id;
 
       if (this.environment === 'local') {
-        link = 'http://thecashier.test/api/get-paiement';
+        link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
       }
 
       axios.get(link).then(function (response) {
-        console.log(response.data);
+        _this.paiements = response.data;
       }).catch(function (error) {
         console.log(error);
       });
@@ -2248,14 +2256,14 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('enregistrer');
     },
     imprimer: function imprimer() {
-      var _this = this;
+      var _this2 = this;
 
       this.printing = true;
       setTimeout(function () {
         window.print();
       }, 1000);
       setTimeout(function () {
-        _this.printing = false;
+        _this2.printing = false;
       }, 5000);
     },
     //Utilitaires
@@ -2270,7 +2278,22 @@ __webpack_require__.r(__webpack_exports__);
       }).join('-');
     }
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    var _this3 = this;
+
+    this.getPaiements();
+    var total = 0;
+    setTimeout(function () {
+      _this3.paiements.forEach(function (paiement) {
+        total += paiement.montant;
+      });
+
+      console.log("Le total est " + total);
+      _this3.totalPaiement = total;
+
+      _this3.$forceUpdate();
+    }, 1000);
+  }
 });
 
 /***/ }),
@@ -57521,7 +57544,13 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
-        _c("p", [_vm._m(4), _vm._v(" " + _vm._s() + "\n                ")])
+        _vm.totalPaiement
+          ? _c("p", [
+              _vm._m(4),
+              _vm._v(" "),
+              _c("span", [_vm._v(_vm._s(_vm.totalPaiement) + " F CFA")])
+            ])
+          : _c("p", [_c("i", { staticClass: "fas fa-spinner fa-spin" })])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
