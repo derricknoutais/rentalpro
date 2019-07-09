@@ -141,7 +141,6 @@ Route::group(['middleware' => ['auth']], function () {
         $document = Document::create([
             'type' => $request->type,
             'compagnie_id' => Auth::user()->compagnie_id
-
         ]);
 
         if($document){
