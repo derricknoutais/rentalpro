@@ -1988,9 +1988,290 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Contrats/ContratFinal.vue?vue&type=script&lang=js& ***!
   \********************************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /Users/derricknoutais/Sites/rentalpro/resources/js/components/Contrats/ContratFinal.vue: Unexpected token, expected \",\" (252:8)\n\n\u001b[0m \u001b[90m 250 | \u001b[39m            })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 251 | \u001b[39m        }\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 252 | \u001b[39m        enregistrer(){\u001b[0m\n\u001b[0m \u001b[90m     | \u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 253 | \u001b[39m            \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39m$emit(\u001b[32m'enregistrer'\u001b[39m)\u001b[0m\n\u001b[0m \u001b[90m 254 | \u001b[39m        }\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 255 | \u001b[39m        imprimer(){\u001b[0m\n    at Parser.raise (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:3831:17)\n    at Parser.unexpected (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5143:16)\n    at Parser.expect (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5135:28)\n    at Parser.parseObj (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:6600:14)\n    at Parser.parseExprAtom (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:6229:21)\n    at Parser.parseExprSubscripts (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5862:23)\n    at Parser.parseMaybeUnary (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5842:21)\n    at Parser.parseExprOps (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5729:23)\n    at Parser.parseMaybeConditional (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5702:23)\n    at Parser.parseMaybeAssign (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5647:21)\n    at Parser.parseObjectProperty (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:6730:101)\n    at Parser.parseObjPropValue (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:6755:101)\n    at Parser.parseObj (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:6670:12)\n    at Parser.parseExprAtom (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:6229:21)\n    at Parser.parseExprSubscripts (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5862:23)\n    at Parser.parseMaybeUnary (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5842:21)\n    at Parser.parseExprOps (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5729:23)\n    at Parser.parseMaybeConditional (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5702:23)\n    at Parser.parseMaybeAssign (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:5647:21)\n    at Parser.parseExportDefaultExpression (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:8407:24)\n    at Parser.parseExport (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:8301:31)\n    at Parser.parseStatementContent (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:7344:27)\n    at Parser.parseStatement (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:7248:17)\n    at Parser.parseBlockOrModuleBlockBody (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:7812:25)\n    at Parser.parseBlockBody (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:7799:10)\n    at Parser.parseTopLevel (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:7181:10)\n    at Parser.parse (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:8660:17)\n    at parse (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/parser/lib/index.js:10643:38)\n    at parser (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/core/lib/transformation/normalize-file.js:170:34)\n    at normalizeFile (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/core/lib/transformation/normalize-file.js:138:11)\n    at runSync (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/core/lib/transformation/index.js:44:43)\n    at runAsync (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/core/lib/transformation/index.js:35:14)\n    at process.nextTick (/Users/derricknoutais/Sites/rentalpro/node_modules/@babel/core/lib/transform.js:34:34)\n    at process.internalTickCallback (internal/process/next_tick.js:70:11)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['contrat', 'contrat_enregistre', 'environment'],
+  data: function data() {
+    return {
+      printing: false,
+      envoyéACashier: null,
+      isLoading: false,
+      paiement: {
+        facture_id: null,
+        montant: null
+      }
+    };
+  },
+  methods: {
+    decrementStep: function decrementStep(event) {
+      this.$emit('decrementStep', this.voiture);
+    },
+    envoyerACashier: function envoyerACashier() {
+      if (!this.isLoading) {
+        this.$emit('cashier', this.contrat);
+        this.isLoading = true;
+      } else {
+        alert('La patience est une grande vertue! ');
+      }
+    },
+    ajouterUnPaiement: function ajouterUnPaiement() {
+      this.paiement.facture_id = this.contrat.cashier_facture_id;
+
+      if (!this.isLoading) {
+        this.$emit('paiement', this.paiement);
+        this.isLoading = true;
+      } else {
+        alert('La patience est une grande vertue! ');
+      }
+    },
+    getPaiements: function getPaiements() {
+      var link = 'https://thecashier.ga/api/get-paiement';
+
+      if (this.environment === 'local') {
+        link = 'http://thecashier.test/api/get-paiement';
+      }
+
+      axios.get(link).then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    enregistrer: function enregistrer() {
+      this.$emit('enregistrer');
+    },
+    imprimer: function imprimer() {
+      var _this = this;
+
+      this.printing = true;
+      setTimeout(function () {
+        window.print();
+      }, 1000);
+      setTimeout(function () {
+        _this.printing = false;
+      }, 5000);
+    },
+    //Utilitaires
+    wn: function wn(number) {
+      return this.toUpper(writtenNumber(number));
+    },
+    toUpper: function toUpper(str) {
+      return str.toLowerCase().split(' ').map(function (word) {
+        return word[0].toUpperCase() + word.substr(1);
+      }).join(' ').split('-').map(function (word) {
+        return word[0].toUpperCase() + word.substr(1);
+      }).join('-');
+    }
+  },
+  mounted: function mounted() {}
+});
 
 /***/ }),
 

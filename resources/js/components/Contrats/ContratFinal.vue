@@ -248,7 +248,7 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
-        }
+        },
         enregistrer(){
             this.$emit('enregistrer')
         },
