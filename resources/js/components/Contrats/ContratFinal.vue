@@ -38,6 +38,11 @@
                     </p>
                 </div>
                 <div class="row">
+                    <p>
+                        <u><strong>Montant Versé:</strong></u> {{  }}
+                    </p>
+                </div>
+                <div class="row">
                     <p v-if="contrat.caution > 0">
                         <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA. <strong>N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:</strong>
                     </p>
@@ -232,27 +237,30 @@ export default {
                 alert('La patience est une grande vertue! ')
             }
         },
+        getPaiements(){
+            var link = 'https://thecashier.ga/api/get-paiement';
+            if(this.environment === 'local'){
+                link = 'http://thecashier.test/api/get-paiement'
+            }
+            axios.get(link, ).then(response => {
+                console.log(response.data);
+                
+            }).catch(error => {
+                console.log(error);
+            });
+        }
         enregistrer(){
             this.$emit('enregistrer')
         },
         imprimer(){
-
             this.printing = true
             setTimeout(() => {
                 window.print()
             }, 1000);
-            
-
             setTimeout(() => {
                 this.printing = false
-            }, 5000);
-                       
-
-            
+            }, 5000); 
         },
-
-
-
         //Utilitaires
         wn(number){
             return this.toUpper(writtenNumber(number))
@@ -271,6 +279,9 @@ export default {
                 })
                 .join('-');
         },
+    },
+    mounted(){
+        
     }
 }
 </script>

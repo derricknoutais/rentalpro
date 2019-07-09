@@ -139,7 +139,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/documents', function(Request $request){
         $document = Document::create([
-            'type' => $request->type
+            'type' => $request->type,
+            'compagnie_id' => Auth::user()->compagnie_id
+
         ]);
 
         if($document){
@@ -162,7 +164,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/accessoires', function (Request $request) {
         $accessoire = Accessoire::create([
-            'type' => $request->type
+            'type' => $request->type,
+            'compagnie_id' => Auth::user()->compagnie_id
         ]);
         if ( $accessoire)
             return redirect('/mes-paramètres');
