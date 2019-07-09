@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Accessoire extends Model
 {
-    protected $fillable = ['type'];
+    protected $fillable = ['type', 'compagnie_id'];
     
     public function voitures()
     {
