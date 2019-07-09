@@ -172,7 +172,11 @@
                                                             <div class="form-group">
                                                                 <label for="">Nouvelle Date Prolongation</label>
                                                                 <input type="date" class="form-control" name="check_in">
-                                                            {{-- </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="">Montant</label>
+                                                                <input type="number" step=5000 class="form-control" name="prix_journalier" value="{{ $contrat->prix_journalier }}">
+                                                            </div>
                                                             <div class="form-group">
                                                                 <label for="">Sélectionner Voiture</label>
                                                                 <select class="custom-select" name="voiture">
@@ -183,7 +187,7 @@
                                                                         @endif
                                                                     @endforeach
                                                                 </select>
-                                                            </div> --}}
+                                                            </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

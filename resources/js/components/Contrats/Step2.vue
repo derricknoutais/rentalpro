@@ -54,6 +54,7 @@ export default {
         return {
             voiture: null,
             value: [],
+            error: null
         }
     },
     methods:{
@@ -61,11 +62,14 @@ export default {
             this.$emit('decrementStep', this.voiture)
         },
         passeAEtape3(event){
-            this.$emit('passeAEtape3', this.voiture)
+            if(this.voiture)
+                this.$emit('passeAEtape3', this.voiture)
+            else
+            this.error = "S'il vous plaît, veuillez sélectionner un client"
         }
     },
-    mounted(){
-
-    }
+    created() {
+        window.addEventListener('keyup', this.passeAEtape3)
+    },
 }
 </script>

@@ -1,8 +1,8 @@
-<template>
-    <div class='container' style="height:95vh" @click.enter="">
+<template >
+    <div class='container' style="height:95vh"  >
         <h1 class="text-center mt-5">Selectionne Client</h1>
         <!-- Informations Client Sélectionné -->
-        <div>
+        <div @keyup.enter="show()">
             <div class="row mt-5">
                 <div class="col">Nom:</div>
                 <div class="col">Numéro Phone 1:</div>
@@ -34,15 +34,21 @@
             </transition>
         </div>
         <!-- V-Select Element -->
-        <div class="row mt-5">
+        <div class="row mt-5" @keyup.enter="show()">
             <div class="col">
                 <label for="">Selectionne Client</label>
-                <multiselect :value="value" :options="list" label="nom_complet" v-model="client" @change="show">
+                <multiselect :value="value" :options="list" label="nom_complet" v-model="client">
                     <template slot="noResult">
                         Cet utilisateur n'existe pas 
                     </template>
                 </multiselect>
             </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <small class="text-danger">{{ error }}</small>
+            </div>
+            
         </div>
         <!-- Boutons de Validation -->
         <div class="row mt-5">
@@ -63,22 +69,29 @@ export default {
         return {
             client: null,
             value: [],
+            error : null
         }
     },
     watch: {
     },
     methods:{
         show(){
-            console.log('dfdsfsd')
+            console.log('dfdsfsd ')
         },
         passeAEtape2(event){
-            this.$emit('passeAEtape2', this.client)
+            if(this.client)
+                this.$emit('passeAEtape2', this.client)
+            else
+                this.error = "S'il vous plaît, veuillez sélectionner un client"
         }
     },
     mounted(){
         this.list.forEach(element => {
             element.nom_complet = element.nom + ' ' + element.prenom 
         });
-    }
+    },
+    created() {
+        window.addEventListener('keyup', this.passeAEtape2)
+    },
 }
 </script>

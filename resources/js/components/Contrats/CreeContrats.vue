@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid" >
 
-        <step-1 :list="clients" @passeAEtape2="lanceEtape2" v-show="this.step === 1"></step-1>
+        <step-1 :list="clients" @passeAEtape2="lanceEtape2" v-show="this.step === 1" ></step-1>
 
         <transition 
             name="fade" 

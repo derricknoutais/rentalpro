@@ -39,7 +39,7 @@
                 </div>
                 <div class="row">
                     <p v-if="contrat.caution > 0">
-                        <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA. N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:
+                        <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA. <strong>N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:</strong>
                     </p>
                     <p class="text-danger" v-else>Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:</p>
                 </div>
@@ -81,7 +81,13 @@
                         <!-- Bouton Voir Dans Cashier -->
                         <a target="_blank" :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'production'" >Voir Facture dans Cashier</a>
 
-                        <a target="_blank" :href="'http://thecashier.test/Lesch%20Group/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'local'" >Voir Facture dans Cashier</a>
+                        <a target="_blank" :href="'http://thecashier.test/Heaney%20LLC/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'local'" >Voir Facture dans Cashier</a>
+
+                        <!-- Bouton Ajouter Paiement -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutPaiement" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null"> 
+                            <i v-if="isLoading" class="fas fa-spinner fa-spin"></i> Ajouter un Paiement
+                        </button>
+
                         <!-- Bouton Imprimer -->
                         <button type="button" class="btn btn-primary" @click="imprimer" v-if="contrat_enregistre !== null">Imprimer</button>
                         <!-- Button trigger modal -->
@@ -93,7 +99,34 @@
 
                 <!-- <attache-photos :contrat="contrat_enregistre" v-if="contrat_enregistre !== null"></attache-photos> -->
             </div>
-                
+            <!-- Modal -->
+            <div class="modal fade" id="ajoutPaiement" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ajouter un Paiement</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                              <label for="">Montant</label>
+                              <input type="text" class="form-control" v-model="paiement.montant">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" @click="ajouterUnPaiement">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
             <div id="copie_client" class="" v-if="printing">
                 <div class="row mt-3">
                     <div class="col">
@@ -171,7 +204,11 @@ export default {
         return {
             printing: false,
             envoyéACashier: null,
-            isLoading : false
+            isLoading : false,
+            paiement : {
+                facture_id: null,
+                montant: null
+            }
         }
     },
     methods:{
@@ -179,18 +216,21 @@ export default {
             this.$emit('decrementStep', this.voiture)
         },
         envoyerACashier(){
-            console.log('Beee')
             if(! this.isLoading){
-                // setTimeout(() => {
                     this.$emit('cashier', this.contrat) 
-                // }, 5000);
                 this.isLoading = true
             } else {
                 alert('La patience est une grande vertue! ')
             }
-            
-            
-            
+        },
+        ajouterUnPaiement(){
+            this.paiement.facture_id = this.contrat.cashier_facture_id
+            if(! this.isLoading){
+                this.$emit('paiement', this.paiement) 
+                this.isLoading = true
+            } else {
+                alert('La patience est une grande vertue! ')
+            }
         },
         enregistrer(){
             this.$emit('enregistrer')

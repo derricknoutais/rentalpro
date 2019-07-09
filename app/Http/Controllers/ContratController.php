@@ -108,13 +108,13 @@ class ContratController extends Controller
             $nombre_jours = Carbon::parse($request->check_in)->endOfDay()->diffInDays($contrat->check_in->endOfDay());
 
             $nouveauContrat = Contrat::create([
-                'voiture_id' => $contrat->voiture_id,
+                'voiture_id' => $request->voiture,
                 'client_id' => $contrat->client_id,
                 'numéro' => Contrat::numéro(),
                 'compagnie_id' => Auth::user()->compagnie->id,
                 'check_out' => $contrat->check_in ,
                 'check_in' => $request->check_in . $contrat->check_in->format('H:i:s'),
-                'prix_journalier' => $contrat->prix_journalier,
+                'prix_journalier' => $request->prix_journalier,
                 'nombre_jours' => $nombre_jours,
                 "total" => $nombre_jours * $contrat->prix_journalier,
                 "caution" => $contrat->caution,
@@ -128,6 +128,10 @@ class ContratController extends Controller
                 'real_check_in' => $contrat->check_in,
                 'prolongation_id' => $nouveauContrat->id
             ]);
+            if($contrat->voiture->id !== $request->voiture){
+                $contrat->voiture->etat('disponible');
+                Voiture::find( $request->voiture )->etat('loué');
+            }
             return $nouveauContrat;
         });
         $contrat->loadMissing('voiture', 'client');

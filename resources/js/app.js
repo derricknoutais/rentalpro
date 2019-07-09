@@ -69,8 +69,7 @@ const app = new Vue({
     },
     mounted() {
             this.test = true
-
-
         
     },
+    
 });

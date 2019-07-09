@@ -2158,13 +2158,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
     return {
       printing: false,
       envoyéACashier: null,
-      isLoading: false
+      isLoading: false,
+      paiement: {
+        facture_id: null,
+        montant: null
+      }
     };
   },
   methods: {
@@ -2172,12 +2209,18 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('decrementStep', this.voiture);
     },
     envoyerACashier: function envoyerACashier() {
-      console.log('Beee');
+      if (!this.isLoading) {
+        this.$emit('cashier', this.contrat);
+        this.isLoading = true;
+      } else {
+        alert('La patience est une grande vertue! ');
+      }
+    },
+    ajouterUnPaiement: function ajouterUnPaiement() {
+      this.paiement.facture_id = this.contrat.cashier_facture_id;
 
       if (!this.isLoading) {
-        // setTimeout(() => {
-        this.$emit('cashier', this.contrat); // }, 5000);
-
+        this.$emit('paiement', this.paiement);
         this.isLoading = true;
       } else {
         alert('La patience est une grande vertue! ');
@@ -2233,7 +2276,6 @@ __webpack_require__.r(__webpack_exports__);
     envoieACashier: function envoieACashier(payload) {
       var _this = this;
 
-      console.log(payload);
       var data;
       var link = 'https://thecashier.ga/api/facture';
       data = {
@@ -2264,6 +2306,20 @@ __webpack_require__.r(__webpack_exports__);
             console.log(error);
           });
         }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    ajouterPaiement: function ajouterPaiement(payload) {
+      var data;
+      var link = 'https://thecashier.ga/api/paiement';
+
+      if (this.environment === 'local') {
+        link = 'http://thecashier.test/api/paiement';
+      }
+
+      axios.post(link, payload).then(function (response) {
+        console.log(response.data);
       }).catch(function (error) {
         console.log(error);
       });
@@ -3234,27 +3290,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['list'],
   data: function data() {
     return {
       client: null,
-      value: []
+      value: [],
+      error: null
     };
   },
   watch: {},
   methods: {
     show: function show() {
-      console.log('dfdsfsd');
+      console.log('dfdsfsd ');
     },
     passeAEtape2: function passeAEtape2(event) {
-      this.$emit('passeAEtape2', this.client);
+      if (this.client) this.$emit('passeAEtape2', this.client);else this.error = "S'il vous plaît, veuillez sélectionner un client";
     }
   },
   mounted: function mounted() {
     this.list.forEach(function (element) {
       element.nom_complet = element.nom + ' ' + element.prenom;
     });
+  },
+  created: function created() {
+    window.addEventListener('keyup', this.passeAEtape2);
   }
 });
 
@@ -3323,7 +3389,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       voiture: null,
-      value: []
+      value: [],
+      error: null
     };
   },
   methods: {
@@ -3331,10 +3398,12 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('decrementStep', this.voiture);
     },
     passeAEtape3: function passeAEtape3(event) {
-      this.$emit('passeAEtape3', this.voiture);
+      if (this.voiture) this.$emit('passeAEtape3', this.voiture);else this.error = "S'il vous plaît, veuillez sélectionner un client";
     }
   },
-  mounted: function mounted() {}
+  created: function created() {
+    window.addEventListener('keyup', this.passeAEtape3);
+  }
 });
 
 /***/ }),
@@ -57435,11 +57504,12 @@ var render = function() {
         _vm.contrat.caution > 0
           ? _c("p", [
               _vm._m(4),
-              _vm._v(
-                " " +
-                  _vm._s(_vm.contrat.caution) +
-                  " F C FA. N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:\n                "
-              )
+              _vm._v(" " + _vm._s(_vm.contrat.caution) + " F C FA. "),
+              _c("strong", [
+                _vm._v(
+                  "N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:"
+                )
+              ])
             ])
           : _c("p", { staticClass: "text-danger" }, [
               _vm._v(
@@ -57539,11 +57609,32 @@ var render = function() {
                         attrs: {
                           target: "_blank",
                           href:
-                            "http://thecashier.test/Lesch%20Group/Facture/" +
+                            "http://thecashier.test/Heaney%20LLC/Facture/" +
                             _vm.contrat.cashier_facture_id
                         }
                       },
                       [_vm._v("Voir Facture dans Cashier")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.contrat_enregistre !== null &&
+                _vm.contrat.cashier_facture_id !== null
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        attrs: {
+                          type: "button",
+                          "data-toggle": "modal",
+                          "data-target": "#ajoutPaiement"
+                        }
+                      },
+                      [
+                        _vm.isLoading
+                          ? _c("i", { staticClass: "fas fa-spinner fa-spin" })
+                          : _vm._e(),
+                        _vm._v(" Ajouter un Paiement\n                    ")
+                      ]
                     )
                   : _vm._e(),
                 _vm._v(" "),
@@ -57588,13 +57679,87 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "ajoutPaiement",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "modelTitleId",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(7),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", { attrs: { for: "" } }, [_vm._v("Montant")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.paiement.montant,
+                        expression: "paiement.montant"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text" },
+                    domProps: { value: _vm.paiement.montant },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.paiement, "montant", $event.target.value)
+                      }
+                    }
+                  })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: { click: _vm.ajouterUnPaiement }
+                  },
+                  [_vm._v("Save")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
     _vm.printing
       ? _c("div", { attrs: { id: "copie_client" } }, [
           _c("div", { staticClass: "row mt-3" }, [
-            _vm._m(7),
+            _vm._m(8),
             _vm._v(" "),
             _c("div", { staticClass: "col-3 mt-4 border" }, [
-              _vm._m(8),
+              _vm._m(9),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-12 mt-3" }, [
@@ -57634,7 +57799,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "row mt-3" }, [
             _c("p", [
-              _vm._m(9),
+              _vm._m(10),
               _vm._v(" Location "),
               _c("i", [
                 _vm._v(
@@ -57709,9 +57874,9 @@ var render = function() {
                 ])
           ]),
           _vm._v(" "),
-          _vm._m(10),
-          _vm._v(" "),
           _vm._m(11),
+          _vm._v(" "),
+          _vm._m(12),
           _vm._v(" "),
           _c("h4", { staticClass: "mt-3" }, [
             _vm._v(
@@ -57817,6 +57982,27 @@ var staticRenderFns = [
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col" }, [_c("p", [_vm._v("Le Responsable")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [_vm._v("Ajouter un Paiement")]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   },
   function() {
@@ -60203,20 +60389,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      staticClass: "container",
-      staticStyle: { height: "95vh" },
-      on: {
-        click: function($event) {
-          if (
-            "keyCode" in $event &&
-            _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-          ) {
-            return null
-          }
-        }
-      }
-    },
+    { staticClass: "container", staticStyle: { height: "95vh" } },
     [
       _c("h1", { staticClass: "text-center mt-5" }, [
         _vm._v("Selectionne Client")
@@ -60224,6 +60397,19 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
+        {
+          on: {
+            keyup: function($event) {
+              if (
+                "keyCode" in $event &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              return _vm.show()
+            }
+          }
+        },
         [
           _vm._m(0),
           _vm._v(" "),
@@ -60292,42 +60478,68 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "row mt-5" }, [
-        _c(
-          "div",
-          { staticClass: "col" },
-          [
-            _c("label", { attrs: { for: "" } }, [_vm._v("Selectionne Client")]),
-            _vm._v(" "),
-            _c(
-              "multiselect",
-              {
-                attrs: {
-                  value: _vm.value,
-                  options: _vm.list,
-                  label: "nom_complet"
-                },
-                on: { change: _vm.show },
-                model: {
-                  value: _vm.client,
-                  callback: function($$v) {
-                    _vm.client = $$v
+      _c(
+        "div",
+        {
+          staticClass: "row mt-5",
+          on: {
+            keyup: function($event) {
+              if (
+                "keyCode" in $event &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              return _vm.show()
+            }
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "col" },
+            [
+              _c("label", { attrs: { for: "" } }, [
+                _vm._v("Selectionne Client")
+              ]),
+              _vm._v(" "),
+              _c(
+                "multiselect",
+                {
+                  attrs: {
+                    value: _vm.value,
+                    options: _vm.list,
+                    label: "nom_complet"
                   },
-                  expression: "client"
-                }
-              },
-              [
-                _c("template", { slot: "noResult" }, [
-                  _vm._v(
-                    "\n                    Cet utilisateur n'existe pas \n                "
-                  )
-                ])
-              ],
-              2
-            )
-          ],
-          1
-        )
+                  model: {
+                    value: _vm.client,
+                    callback: function($$v) {
+                      _vm.client = $$v
+                    },
+                    expression: "client"
+                  }
+                },
+                [
+                  _c("template", { slot: "noResult" }, [
+                    _vm._v(
+                      "\n                    Cet utilisateur n'existe pas \n                "
+                    )
+                  ])
+                ],
+                2
+              )
+            ],
+            1
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col" }, [
+          _c("small", { staticClass: "text-danger" }, [
+            _vm._v(_vm._s(_vm.error))
+          ])
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "row mt-5" }, [

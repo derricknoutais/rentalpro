@@ -9,7 +9,6 @@ export default {
     methods:{
         envoieACashier(payload){
             
-            console.log(payload)
             var data;
             var link = 'https://thecashier.ga/api/facture';
             data = {
@@ -41,6 +40,20 @@ export default {
                 console.log(error);
             });
         },
+        ajouterPaiement(payload){
+            var data;
+            var link = 'https://thecashier.ga/api/paiement';
+            
+            if(this.environment === 'local'){
+                link = 'http://thecashier.test/api/paiement'
+            }
+            axios.post(link,  payload).then( response => {
+                console.log(response.data);
+                
+            }).catch(error => {
+                console.log(error);
+            });
+        }
     },
     mounted(){
 
