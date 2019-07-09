@@ -2313,6 +2313,7 @@ __webpack_require__.r(__webpack_exports__);
     ajouterPaiement: function ajouterPaiement(payload) {
       var data;
       var link = 'https://thecashier.ga/api/paiement';
+      location.reload();
 
       if (this.environment === 'local') {
         link = 'http://thecashier.test/api/paiement';
@@ -57630,10 +57631,9 @@ var render = function() {
                         }
                       },
                       [
-                        _vm.isLoading
-                          ? _c("i", { staticClass: "fas fa-spinner fa-spin" })
-                          : _vm._e(),
-                        _vm._v(" Ajouter un Paiement\n                    ")
+                        _vm._v(
+                          " \n                        Ajouter un Paiement\n                    "
+                        )
                       ]
                     )
                   : _vm._e(),
@@ -57734,7 +57734,7 @@ var render = function() {
                     staticClass: "btn btn-secondary",
                     attrs: { type: "button", "data-dismiss": "modal" }
                   },
-                  [_vm._v("Close")]
+                  [_vm._v("Fermer")]
                 ),
                 _vm._v(" "),
                 _c(
@@ -57744,7 +57744,12 @@ var render = function() {
                     attrs: { type: "button" },
                     on: { click: _vm.ajouterUnPaiement }
                   },
-                  [_vm._v("Save")]
+                  [
+                    _vm.isLoading
+                      ? _c("i", { staticClass: "fas fa-spinner fa-spin" })
+                      : _vm._e(),
+                    _vm._v("Payer")
+                  ]
                 )
               ])
             ])

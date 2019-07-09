@@ -43,7 +43,7 @@ export default {
         ajouterPaiement(payload){
             var data;
             var link = 'https://thecashier.ga/api/paiement';
-            
+            location.reload()
             if(this.environment === 'local'){
                 link = 'http://thecashier.test/api/paiement'
             }

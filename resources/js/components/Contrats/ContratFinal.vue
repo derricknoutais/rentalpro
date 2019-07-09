@@ -85,7 +85,7 @@
 
                         <!-- Bouton Ajouter Paiement -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutPaiement" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null"> 
-                            <i v-if="isLoading" class="fas fa-spinner fa-spin"></i> Ajouter un Paiement
+                            Ajouter un Paiement
                         </button>
 
                         <!-- Bouton Imprimer -->
@@ -116,8 +116,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" @click="ajouterUnPaiement">Save</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-primary" @click="ajouterUnPaiement"><i v-if="isLoading" class="fas fa-spinner fa-spin"></i>Payer</button>
                         </div>
                     </div>
                 </div>
