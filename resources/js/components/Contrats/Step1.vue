@@ -2,7 +2,7 @@
     <div class='container' style="height:95vh"  >
         <h1 class="text-center mt-5">Selectionne Client</h1>
         <!-- Informations Client Sélectionné -->
-        <div @keyup.enter="show()">
+        <div>
             <div class="row mt-5">
                 <div class="col">Nom:</div>
                 <div class="col">Numéro Phone 1:</div>
@@ -34,7 +34,7 @@
             </transition>
         </div>
         <!-- V-Select Element -->
-        <div class="row mt-5" @keyup.enter="show()">
+        <div class="row mt-5">
             <div class="col">
                 <label for="">Selectionne Client</label>
                 <multiselect :value="value" :options="list" label="nom_complet" v-model="client">
@@ -89,9 +89,6 @@ export default {
         this.list.forEach(element => {
             element.nom_complet = element.nom + ' ' + element.prenom 
         });
-    },
-    created() {
-        window.addEventListener('keyup', this.passeAEtape2)
     },
 }
 </script>

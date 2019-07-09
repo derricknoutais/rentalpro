@@ -69,7 +69,6 @@ export default {
         }
     },
     created() {
-        window.addEventListener('keyup', this.passeAEtape3)
     },
 }
 </script>

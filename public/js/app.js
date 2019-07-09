@@ -3361,9 +3361,6 @@ __webpack_require__.r(__webpack_exports__);
     this.list.forEach(function (element) {
       element.nom_complet = element.nom + ' ' + element.prenom;
     });
-  },
-  created: function created() {
-    window.addEventListener('keyup', this.passeAEtape2);
   }
 });
 
@@ -3444,9 +3441,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.voiture) this.$emit('passeAEtape3', this.voiture);else this.error = "S'il vous plaît, veuillez sélectionner un client";
     }
   },
-  created: function created() {
-    window.addEventListener('keyup', this.passeAEtape3);
-  }
+  created: function created() {}
 });
 
 /***/ }),
@@ -60460,19 +60455,6 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        {
-          on: {
-            keyup: function($event) {
-              if (
-                "keyCode" in $event &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.show()
-            }
-          }
-        },
         [
           _vm._m(0),
           _vm._v(" "),
@@ -60541,61 +60523,42 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "row mt-5",
-          on: {
-            keyup: function($event) {
-              if (
-                "keyCode" in $event &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return _vm.show()
-            }
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "col" },
-            [
-              _c("label", { attrs: { for: "" } }, [
-                _vm._v("Selectionne Client")
-              ]),
-              _vm._v(" "),
-              _c(
-                "multiselect",
-                {
-                  attrs: {
-                    value: _vm.value,
-                    options: _vm.list,
-                    label: "nom_complet"
-                  },
-                  model: {
-                    value: _vm.client,
-                    callback: function($$v) {
-                      _vm.client = $$v
-                    },
-                    expression: "client"
-                  }
+      _c("div", { staticClass: "row mt-5" }, [
+        _c(
+          "div",
+          { staticClass: "col" },
+          [
+            _c("label", { attrs: { for: "" } }, [_vm._v("Selectionne Client")]),
+            _vm._v(" "),
+            _c(
+              "multiselect",
+              {
+                attrs: {
+                  value: _vm.value,
+                  options: _vm.list,
+                  label: "nom_complet"
                 },
-                [
-                  _c("template", { slot: "noResult" }, [
-                    _vm._v(
-                      "\n                    Cet utilisateur n'existe pas \n                "
-                    )
-                  ])
-                ],
-                2
-              )
-            ],
-            1
-          )
-        ]
-      ),
+                model: {
+                  value: _vm.client,
+                  callback: function($$v) {
+                    _vm.client = $$v
+                  },
+                  expression: "client"
+                }
+              },
+              [
+                _c("template", { slot: "noResult" }, [
+                  _vm._v(
+                    "\n                    Cet utilisateur n'existe pas \n                "
+                  )
+                ])
+              ],
+              2
+            )
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col" }, [
