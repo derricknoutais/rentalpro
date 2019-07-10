@@ -2197,9 +2197,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -2240,17 +2237,19 @@ __webpack_require__.r(__webpack_exports__);
     getPaiements: function getPaiements() {
       var _this = this;
 
-      var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id;
+      if (this.contrat.cashier_facture_id) {
+        var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id;
 
-      if (this.environment === 'local') {
-        link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
+        if (this.environment === 'local') {
+          link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
+        }
+
+        axios.get(link).then(function (response) {
+          _this.paiements = response.data;
+        }).catch(function (error) {
+          console.log(error);
+        });
       }
-
-      axios.get(link).then(function (response) {
-        _this.paiements = response.data;
-      }).catch(function (error) {
-        console.log(error);
-      });
     },
     enregistrer: function enregistrer() {
       this.$emit('enregistrer');
@@ -2284,12 +2283,15 @@ __webpack_require__.r(__webpack_exports__);
     this.getPaiements();
     var total = 0;
     setTimeout(function () {
-      _this3.paiements.forEach(function (paiement) {
-        total += paiement.montant;
-      });
+      if (_this3.paiements) {
+        _this3.paiements.forEach(function (paiement) {
+          total += paiement.montant;
+        });
 
-      console.log("Le total est " + total);
-      _this3.totalPaiement = total;
+        _this3.totalPaiement = total;
+      } else {
+        _this3.totalPaiement = -1;
+      }
 
       _this3.$forceUpdate();
     }, 1000);
@@ -2970,6 +2972,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -57539,19 +57544,21 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
-        _vm.totalPaiement
+        _vm.totalPaiement !== -1
           ? _c("p", [
               _vm._m(4),
               _vm._v(" "),
               _c("span", [_vm._v(_vm._s(_vm.totalPaiement) + " F CFA")])
             ])
+          : _vm.totalPaiement === -1
+          ? _c("p", [_vm._m(5), _c("i", { staticClass: "fas fa-sync ml-3" })])
           : _c("p", [_c("i", { staticClass: "fas fa-spinner fa-spin" })])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _vm.contrat.caution > 0
           ? _c("p", [
-              _vm._m(5),
+              _vm._m(6),
               _vm._v(" " + _vm._s(_vm.contrat.caution) + " F C FA. "),
               _c("strong", [
                 _vm._v(
@@ -57566,9 +57573,9 @@ var render = function() {
             ])
       ]),
       _vm._v(" "),
-      _vm._m(6),
-      _vm._v(" "),
       _vm._m(7),
+      _vm._v(" "),
+      _vm._m(8),
       _vm._v(" "),
       _c("h4", { staticClass: "mt-3" }, [
         _vm._v(
@@ -57744,7 +57751,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(8),
+              _vm._m(9),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "form-group" }, [
@@ -57808,10 +57815,10 @@ var render = function() {
     _vm.printing
       ? _c("div", { attrs: { id: "copie_client" } }, [
           _c("div", { staticClass: "row mt-3" }, [
-            _vm._m(9),
+            _vm._m(10),
             _vm._v(" "),
             _c("div", { staticClass: "col-3 mt-4 border" }, [
-              _vm._m(10),
+              _vm._m(11),
               _vm._v(" "),
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col-12 mt-3" }, [
@@ -57851,7 +57858,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "row mt-3" }, [
             _c("p", [
-              _vm._m(11),
+              _vm._m(12),
               _vm._v(" Location "),
               _c("i", [
                 _vm._v(
@@ -57926,9 +57933,9 @@ var render = function() {
                 ])
           ]),
           _vm._v(" "),
-          _vm._m(12),
-          _vm._v(" "),
           _vm._m(13),
+          _vm._v(" "),
+          _vm._m(14),
           _vm._v(" "),
           _c("h4", { staticClass: "mt-3" }, [
             _vm._v(
@@ -57969,6 +57976,12 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("u", [_c("strong", [_vm._v("Période:")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("u", [_c("strong", [_vm._v("Montant Versé:")])])
   },
   function() {
     var _vm = this
@@ -60265,6 +60278,18 @@ var render = function() {
     "div",
     { staticClass: "container-fluid" },
     [
+      _c("div", { staticClass: "row mt-1" }, [
+        _c(
+          "progress",
+          {
+            staticClass: "col-12",
+            attrs: { max: "100" },
+            domProps: { value: (this.step / 6) * 100 }
+          },
+          [_vm._v("50%")]
+        )
+      ]),
+      _vm._v(" "),
       _c("step-1", {
         directives: [
           {

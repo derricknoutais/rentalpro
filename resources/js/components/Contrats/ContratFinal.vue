@@ -38,9 +38,11 @@
                     </p>
                 </div>
                 <div class="row">
-                    <p v-if="totalPaiement">
+                    <p v-if="totalPaiement !== -1">
                         <u ><strong>Montant Versé:</strong></u> <span>{{ totalPaiement }} F CFA</span>
-                        
+                    </p>
+                    <p v-else-if="totalPaiement === -1">
+                        <u ><strong>Montant Versé:</strong></u><i class="fas fa-sync ml-3"></i>
                     </p>
                     <p v-else>
                         <i class="fas fa-spinner fa-spin"></i>
@@ -78,7 +80,6 @@
 
                 <div class="row mt-5 dashed">
                     <div class="col text-center" id="buttons" v-if=" ! printing">
-                        
                         <!-- Bouton Retour -->
                         <button class="btn btn-secondary" @click="decrementStep()" v-if="contrat_enregistre === null">Retour</button>
                         <!-- Bouton Enregistrer -->
@@ -131,10 +132,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
 
             <div id="copie_client" class="" v-if="printing">
                 <div class="row mt-3">
@@ -244,15 +241,18 @@ export default {
             }
         },
         getPaiements(){
-            var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
-            if(this.environment === 'local'){
-                link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
+            if(this.contrat.cashier_facture_id ){
+                var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
+                if(this.environment === 'local'){
+                    link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
+                }
+                axios.get(link).then(response => {
+                    this.paiements = response.data
+                }).catch(error => {
+                    console.log(error);
+                });
             }
-            axios.get(link).then(response => {
-                this.paiements = response.data
-            }).catch(error => {
-                console.log(error);
-            });
+            
         },
         enregistrer(){
             this.$emit('enregistrer')
@@ -289,11 +289,16 @@ export default {
         this.getPaiements()
         var total = 0
         setTimeout(() => {
-            this.paiements.forEach(paiement => {
-                total += paiement.montant
-            });
-            console.log("Le total est " + total)
-            this.totalPaiement = total
+            if(this.paiements){
+                this.paiements.forEach(paiement => {
+                    total += paiement.montant
+                });
+                this.totalPaiement = total
+                
+            } else {
+                this.totalPaiement = -1
+            }
+            
             this.$forceUpdate()
         },1000);
         

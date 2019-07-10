@@ -1,6 +1,8 @@
 <template>
     <div class="container-fluid" >
-
+        <div class="row mt-1">
+            <progress class="col-12" :value="(this.step / 6) * 100" max="100">50%</progress>
+        </div>
         <step-1 :list="clients" @passeAEtape2="lanceEtape2" v-show="this.step === 1" ></step-1>
 
         <transition 
@@ -57,6 +59,7 @@
                 
             </contrat-final>
         </transition>
+        
         
         <!--  -->
     </div>
