@@ -31,7 +31,6 @@
             {{-- KPI Cards --}}
             <div class="row mt-5" v-if="voiture_selectionée">
                 <div class="col-4">
-
                     <div class="card text-white bg-purple-gradient">
                         <div class="card-body">
                             <h4 class="card-title text-center">Reporting Location</h4>
@@ -68,9 +67,7 @@
                     </div>
                     
                 </div>
-
                 <div class="col-4">
-
                     <div class="card text-white bg-dark-gradient" >
                         <div class="card-body">
                             <h4 class="card-title text-center">Reporting Maintenance & Entretien</h4>
@@ -119,9 +116,8 @@
                                 </p>
                             </div>
                             <div class="row">
-                                
                                 <p class="d-inline-block display-6 col-12">
-                                    <i class="fas fa-money-bill    "></i>
+                                    <i class="fas fa-balance-scale"></i>
                                     @{{ pointMort() }} Jours de location avant le point mort
                                 </p>
                             </div>
@@ -131,8 +127,7 @@
                     
                 </div>
             </div>
-{{-- 
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col">
                     <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
                 </div>
