@@ -444,9 +444,10 @@ export default {
                 carburant: this.carburant,
                 voiture: this.voiture
             }).then(response => {
+                console.log(response.data)
                 $('#receptionvehicule').modal('hide')
                 setTimeout(() => {
-                    location.relaod();
+                    location.reload();
                 }, 1000);
                 
             }).catch(error => {

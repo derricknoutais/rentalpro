@@ -2898,9 +2898,10 @@ __webpack_require__.r(__webpack_exports__);
         carburant: this.carburant,
         voiture: this.voiture
       }).then(function (response) {
+        console.log(response.data);
         $('#receptionvehicule').modal('hide');
         setTimeout(function () {
-          location.relaod();
+          location.reload();
         }, 1000);
       }).catch(function (error) {});
     }
@@ -4034,7 +4035,9 @@ __webpack_require__.r(__webpack_exports__);
       this.nombrePannes += 1;
     },
     receptionnerVoiture: function receptionnerVoiture() {
-      axios.get("/voiture/" + this.voiture.id + "/reception").then(function (response) {}).catch(function (error) {});
+      axios.get("/voiture/" + this.voiture.id + "/reception").then(function (response) {
+        console.log(response.data);
+      }).catch(function (error) {});
     },
     envoyerEnMaintenance: function envoyerEnMaintenance() {
       axios.get("/voiture/" + this.voiture.id + "/maintenance").then(function (response) {}).catch(function (error) {

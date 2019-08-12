@@ -371,7 +371,6 @@
                                                 {{ $panne->description }}
                                             </li>
                                         @endforeach
-
                                     </ul>
                                     <div class="form-group mt-3">
                                         <label for="">Coût Maintenance</label>
