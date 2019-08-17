@@ -13,7 +13,8 @@ class VoitureController extends Controller
 {
     public function index(){
         $voitures = Voiture::all()->sortBy('immatriculation');
-        return view('voitures.index', compact('voitures'));
+        $contrats = Contrat::with('voiture')->get();
+        return view('voitures.index', compact('voitures', 'contrats'));
     }
     public function show(Voiture $voiture){
 

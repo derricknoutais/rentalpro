@@ -28,8 +28,12 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.8.2",
         "animate.css": "^3.7.0",
+        "laravel-echo": "^1.5.4",
+        "pusher-js": "^5.0.0",
+        "vue-alertify": "^1.1.0",
         "vue-carousel": "^0.17.0",
         "vue-currency-filter": "^3.4.2",
+        "vue-fullcalendar": "^1.0.9",
         "vue-google-charts": "^0.3.2",
         "vue-moment": "^4.0.0",
         "vue-multiselect": "^2.1.3",

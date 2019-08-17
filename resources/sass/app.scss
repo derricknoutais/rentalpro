@@ -76,3 +76,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3b679e', end
 .font-bold {
   font-weight: bold;
 }
+
+.fa-stack[data-count]:after{
+  position:absolute;
+  left:50%;
+  top:1%;
+  content: attr(data-count);
+  font-size:30%;
+  padding:.1em;
+  padding-top:.6em;
+  padding-bottom:.6em;
+  border-radius:999px;
+  line-height:.5em;
+  color: white;
+  background:rgba(255,0,0,.85);
+  text-align:center;
+  min-width:2em;
+  font-weight:bold;
+}

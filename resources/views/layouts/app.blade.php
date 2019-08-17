@@ -98,11 +98,29 @@
                                 </li>
                             @endif
                         @else
+                        
+                            <li class="nav-item dropdown mr-3">
+                                <a id="navbarDropdown" class="nav-link fa-stack" href="#" role="button" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                    <span class="fa-stack has-badge" :data-count="notifications.length">
+                                      <i class="fa  fa-stack-2x"></i>
+                                      <i class="fa fa-bell fa-stack-1x"></i>
+                                    </span>
+                                </a>
+                            
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a :href="notif.lien" class="dropdown-item" v-for="notif in notifications">@{{ notif.message }}</a>
+                                </div>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->name }}
+                                    
+                                    <span class="caret">
+                                        
+                                    </span>
                                 </a>
-
+                                
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -123,6 +141,7 @@
         </nav>
 
         <main>
+            
             @yield('content')
         </main>
     </div>

@@ -161,6 +161,7 @@
     @else
         <div class="container">
             
+            
             <div class="row mt-5">
                 <div class="col text-center">
                     <img src="https://requestreduce.org/images/car-clipart-image-17.png" width="30%"/>

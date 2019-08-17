@@ -16,6 +16,10 @@ Vue.use(VueCurrencyFilter, {
     symbolSpacing: true
 });
 
+import fullCalendar from 'vue-fullcalendar'
+
+Vue.component('full-calendar', fullCalendar)
+
 const moment = require('moment')
 require('moment/locale/fr')
 
@@ -26,6 +30,8 @@ Vue.use(require('vue-moment'), {
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect)
 
+import VueAlertify from 'vue-alertify';
+Vue.use(VueAlertify);
 
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
@@ -34,7 +40,13 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 const app = new Vue({
     el: '#app',
     data: {
-        test: false
+        test: false,
+        notifications: [],
+        fcEvents: {
+          title : 'Sunny Out of Office',
+          start : '2019-08-25',
+          end : '2020-07-27'
+        }
     },
     methods: {
         relocateTo(location){
@@ -71,5 +83,17 @@ const app = new Vue({
             this.test = true
         
     },
+    created(){
+        window.Echo.channel('contrats').listen('ContratCree', e => {
+            this.$alertify.success('Contrat créé');
+            console.log(e)
+            this.notifications.push({
+                message: 'Nouveau Contrat Créé ' + e.contrat.numéro,
+                lien: '/contrat/' + e.contrat.id
+            })
+        })
+    }
+
     
 });
+

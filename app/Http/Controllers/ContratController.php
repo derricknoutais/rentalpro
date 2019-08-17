@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Contrat;
 use App\Client;
+use App\Events\ContratCree;
 use App\Voiture;
 use Carbon\Carbon;
 use DB;
@@ -82,6 +83,10 @@ class ContratController extends Controller
             //     'from' => 'STA',
             //     'text' => $message
             // ]);
+            
+            
+            
+
             return $contrat;
         }
     }

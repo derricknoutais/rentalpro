@@ -8,6 +8,7 @@ use GuzzleHttp\Client as Gzclient;
 use Illuminate\Support\Facades\Auth;
 use App\Document;
 use App\Accessoire;
+use App\Events\ContratCree;
 use App\Panne;
 use App\Maintenance;
 use Carbon\Carbon;
@@ -28,6 +29,10 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     
+    Route::get('/test', function(){
+        $contrat = Contrat::find(1);
+        event(new ContratCree( $contrat )); 
+    });
 
     Route::get('/', 'HomeController@welcome');
     Route::get('/home', 'HomeController@index')->name('home');

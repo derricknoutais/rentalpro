@@ -134,6 +134,7 @@
             </div>
 
             <div id="copie_client" class="" v-if="printing">
+                <!-- EN TETE -->
                 <div class="row mt-3">
                     <div class="col">
                         <img src="/img/logosta.png"/>
@@ -166,12 +167,25 @@
                 </div>
                 <div class="row">
                     <p>
-                        Ce contrat est valable à partir du <i class="text-primary">{{ contrat.check_out | moment("Do MMMM YYYY, h:mm ") }}</i> jusqu'au <i class="text-primary">{{ contrat.check_in | moment("Do MMMM YYYY, h:mm ")  }}</i> soit pour une durée de {{ contrat.nombre_jours }} jours ({{ contrat.nombre_jours* 24 }} heures)
+                        <u><strong>Période:</strong></u> <i class="text-primary">{{ contrat.check_out | moment("Do MMMM YYYY, h:mm ") }}</i> - <i class="text-primary">{{ contrat.check_in | moment("Do MMMM YYYY, h:mm ")  }}</i> ({{ contrat.nombre_jours }} jours)
                     </p>
                 </div>
                 <div class="row">
-                    <p v-if="contrat.caution > 0">Une caution de {{ contrat.caution }} F a été versée et ne sera restitué entièrement qu'en cas de respect des clauses suivantes:</p>
-                    <p v-else>Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:</p>
+                    <p v-if="totalPaiement !== -1">
+                        <u ><strong>Montant Versé:</strong></u> <span>{{ totalPaiement }} F CFA</span>
+                    </p>
+                    <p v-else-if="totalPaiement === -1">
+                        <u ><strong>Montant Versé:</strong></u><i class="fas fa-sync ml-3"></i>
+                    </p>
+                    <p v-else>
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </p>
+                </div>
+                <div class="row">
+                    <p v-if="contrat.caution > 0">
+                        <u><strong>Caution:</strong></u> {{ contrat.caution }} F C FA. <strong>N.B: La caution ne sera restituée entièrement qu'en cas de respect des clauses suivantes:</strong>
+                    </p>
+                    <p class="text-danger" v-else>Aucune caution n'a été versé. De ce fait, le client s'engage à endosser toutes conséquences liées au non-respect des clauses suivantes:</p>
                 </div>
                 <div class="row mt-1">
                     <ol>
@@ -196,8 +210,6 @@
                 </div>
 
                 <h4 class="mt-3">{{ wn( contrat.prix_journalier * contrat.nombre_jours ) }} Francs CFA</h4>
-
-                
             </div>
     </div>
     
