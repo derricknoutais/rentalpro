@@ -7347,8 +7347,8 @@ __webpack_require__.r(__webpack_exports__);
       this.contrats.forEach(function (contrat) {
         _this.fcEvents.push({
           title: contrat.voiture.immatriculation,
-          start: contrat.check_out,
-          end: contrat.check_in,
+          start: contrat.check_out.slice(0, 10),
+          end: contrat.check_in.slice(0, 10),
           cssClass: "bg-warning"
         });
       });
