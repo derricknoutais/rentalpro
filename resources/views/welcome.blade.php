@@ -2,7 +2,10 @@
 @extends('layouts.app')
 
 @section('content')
+<example-component inline-template>
+    
     @if(sizeof($voitures) > 0)
+
         <div class="container-fluid">
             <div class="row mt-5">
                 <div class="col">
@@ -18,11 +21,11 @@
                             @endif
                         </h1>
                     </transition>
-                    
+
                 </div>
             </div>
-
-            <div class="row mt-5" >
+            <full-calendar :events="fcEvents" locale="en"></full-calendar>
+            <div class="row mt-7" >
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                     <div class="card " style="height: 100%" >
                     <div class="card-body">
@@ -93,9 +96,9 @@
                     </div>
                     </div>
                 </div>
-                
+
             </div>
-            
+
             {{-- <div class="row mt-5">
                 <div class="col">
                     <a name="" id="" class="" href="/contrats/create" role="button">
@@ -160,8 +163,8 @@
         </div>
     @else
         <div class="container">
-            
-            
+
+
             <div class="row mt-5">
                 <div class="col text-center">
                     <img src="https://requestreduce.org/images/car-clipart-image-17.png" width="30%"/>
@@ -172,8 +175,11 @@
                     Aucune voiture n'est enregistrée. Veuillez enregistrer une voiture
                 </div>
             </div>
-            
+
         </div>
     @endif
+
+</example-component>
+    
     
 @endsection

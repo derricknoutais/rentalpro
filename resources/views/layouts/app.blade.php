@@ -108,7 +108,7 @@
                                     </span>
                                 </a>
                             
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" v-if="notifications">
                                     <a :href="notif.lien" class="dropdown-item" v-for="notif in notifications">@{{ notif.message }}</a>
                                 </div>
                             </li>

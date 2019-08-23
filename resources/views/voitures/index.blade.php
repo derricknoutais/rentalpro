@@ -4,7 +4,7 @@
 @section('content')
     <voitures-index inline-template :contrats="{{ $contrats }}">
         <div>
-            <full-calendar :events="fcEvents" locale="en"></full-calendar>
+            
             <div class="container">
                 <h1 class="text-left my-5">Voitures</h1>
             </div>
