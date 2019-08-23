@@ -24,6 +24,7 @@ class HomeController extends Controller
     public function welcome(){
         
         $voitures = Voiture::with('contrats')->get();
+        $contrats = Contrat::with('voiture', 'client')->get();
         $contrats_en_cours = Contrat::where('check_in', '>' ,now())->get()->sortBy('check_in');
         $contrats_en_retard = Contrat::where('check_in', '<', now())->whereNull('real_check_in')->get()->sortBy('check_in');
         // Nexmo::message()->send([
@@ -31,7 +32,7 @@ class HomeController extends Controller
         //     'from' => 'STA',
         //     'text' => 'Bienvenue sur Rental Pro ' . Auth::user()->name 
         // ]);
-        return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard'));
+        return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard', 'contrats'));
         
     }
 }

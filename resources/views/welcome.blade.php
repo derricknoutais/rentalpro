@@ -2,7 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-<example-component inline-template>
+<example-component inline-template :contrats="{{ $contrats }}">
     
     @if(sizeof($voitures) > 0)
 
