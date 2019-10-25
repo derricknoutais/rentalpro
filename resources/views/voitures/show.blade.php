@@ -218,7 +218,7 @@
                 {{-- Modal Reception Voiture --}}
                 @if(sizeof($voiture->contrats) > 0)
                     <controle-documents-accessoires :voiture="{{ $voiture }}" 
-                        :contrat="{{ $voiture->contrats[sizeof($voiture->contrats) - 1] }}">
+                        :contrat="{{ $voiture->contrats[0] }}">
                     </controle-documents-accessoires>
                 @endif           
 

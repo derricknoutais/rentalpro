@@ -15,6 +15,7 @@ class ContratCree implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $contrat;
+    
     public function __construct($contrat)
     {
         $this->contrat = $contrat;

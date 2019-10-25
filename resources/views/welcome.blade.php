@@ -24,7 +24,6 @@
 
                 </div>
             </div>
-            <full-calendar :events="fcEvents" locale="en"></full-calendar>
             <div class="row mt-7" >
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4">
                     <div class="card " style="height: 100%" >

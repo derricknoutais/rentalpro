@@ -23,7 +23,7 @@ class VoitureController extends Controller
         $voiture->loadMissing('documents', 'accessoires', 'pannes', 'maintenances');
 
         $contrats = Contrat::where('voiture_id', $voiture->id)->orderBy('id', 'desc')->paginate(10);
-
+        $derniere_maintenance = null;
         if(sizeof($voiture->maintenances)){
             $dernier_contrat_id = $voiture->maintenances[sizeof($voiture->maintenances) - 1]->id ;
             $derniere_maintenance = \App\Maintenance::where('id', $dernier_contrat_id)->with('pannes')->first();
