@@ -83,7 +83,10 @@
                         <!-- Bouton Retour -->
                         <button class="btn btn-secondary" @click="decrementStep()" v-if="contrat_enregistre === null">Retour</button>
                         <!-- Bouton Enregistrer -->
-                        <button type="button" class="btn btn-primary" @click="enregistrer" v-if="contrat_enregistre === null">Enregistrer</button>
+                        <button type="button" class="btn btn-primary" @click="enregistrer" v-if="contrat_enregistre === null">
+                            <i v-if="isSaving" class="fas fa-spinner fa-spin"></i>
+                            Enregistrer
+                            </button>
                         <!-- Bouton Envoyer a Cashier -->
                         <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null"> 
                         <i v-if="isLoading" class="fas fa-spinner fa-spin"></i> Envoyer à Cashier
@@ -223,6 +226,7 @@ export default {
             printing: false,
             envoyéACashier: null,
             isLoading : false,
+            isSaving : false,
             paiement : {
                 facture_id: null,
                 montant: null
@@ -267,6 +271,7 @@ export default {
             
         },
         enregistrer(){
+            this.isSaving = true;
             this.$emit('enregistrer')
         },
         imprimer(){

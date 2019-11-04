@@ -5828,6 +5828,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -5835,6 +5838,7 @@ __webpack_require__.r(__webpack_exports__);
       printing: false,
       envoyéACashier: null,
       isLoading: false,
+      isSaving: false,
       paiement: {
         facture_id: null,
         montant: null
@@ -5883,6 +5887,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     enregistrer: function enregistrer() {
+      this.isSaving = true;
       this.$emit('enregistrer');
     },
     imprimer: function imprimer() {
@@ -62739,7 +62744,14 @@ var render = function() {
                         attrs: { type: "button" },
                         on: { click: _vm.enregistrer }
                       },
-                      [_vm._v("Enregistrer")]
+                      [
+                        _vm.isSaving
+                          ? _c("i", { staticClass: "fas fa-spinner fa-spin" })
+                          : _vm._e(),
+                        _vm._v(
+                          "\n                        Enregistrer\n                        "
+                        )
+                      ]
                     )
                   : _vm._e(),
                 _vm._v(" "),

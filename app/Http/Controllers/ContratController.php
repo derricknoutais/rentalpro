@@ -133,6 +133,7 @@ class ContratController extends Controller
                 'real_check_in' => $contrat->check_in,
                 'prolongation_id' => $nouveauContrat->id
             ]);
+            
             if($contrat->voiture->id !== $request->voiture){
                 $contrat->voiture->etat('disponible');
                 Voiture::find( $request->voiture )->etat('loué');
