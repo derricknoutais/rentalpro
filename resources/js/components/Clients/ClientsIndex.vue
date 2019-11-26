@@ -2,6 +2,9 @@
 export default {
     data(){
         return {
+            fields :[
+                
+            ],
             client: {
                 nom: '',
                 prenom: '',

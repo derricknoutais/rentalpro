@@ -15,7 +15,7 @@
                         leave-active-class="animated fadeOut"
                         :duration="{ enter: 50000, leave: 800 }"
                     >
-                        <h1 class="text-center jumbotron" v-show="test">
+                        <h1 class="text-center jumbotron">
                             @if( Auth::check() )
                                 Bienvenue sur Rental Pro
                             @endif
@@ -24,140 +24,155 @@
 
                 </div>
             </div>
-            <div class="row mt-7" >
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                    <div class="card " style="height: 100%" >
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-10">
-                                <h3 class="card-title mt-1">Disponible</h3>
+            <div class="container">
+                <div class="row mt-5" >
+                    {{-- Disponible --}}
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                        <div class="card " style="height: 100%" >
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h3 class="card-title mt-1">Disponible</h3>
+                                </div>
+                                <div class="col-2 ">
+                                    <span class="badge badge-success px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('disponible') }}</h6></span>
+                                </div>
                             </div>
-                            <div class="col-2 ">
-                                <span class="badge badge-success px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('disponible') }}</h6></span>
+
+                            <div class="list-group mt-3 overflow-auto" style="height: 20vh">
+                                @foreach ($voitures as $voiture)
+                                    @if ($voiture->etat == 'disponible')
+                                        <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }}</a>
+                                    @endif
+                                @endforeach    
                             </div>
                         </div>
-
-                        <div class="list-group mt-3 overflow-auto" style="height: 20vh">
-                            @foreach ($voitures as $voiture)
-                                @if ($voiture->etat == 'disponible')
-                                    <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }}</a>
-                                @endif
-                            @endforeach    
                         </div>
                     </div>
+
+                    {{-- En Maintenance --}}
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                        <div class="card " style="height: 100%">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h3 class="card-title mt-1">En Maintenance </h3>
+                                </div>
+                                <div class="col-2 ">
+                                    <span class="badge badge-danger px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('maintenance') }}</h6></span>
+                                </div>
+                            </div>
+
+                            <div class="list-group mt-3 overflow-auto" style="height: 20vh">
+                                @foreach ($voitures as $voiture)
+                                    @if ($voiture->etat == 'maintenance')
+                                        <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }}</a>
+                                    @endif
+                                @endforeach
+
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    {{-- En Location --}}
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                        <div class="card" >
+                        <div class="card-body" style="height:100%">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h3 class="card-title mt-1">En Location </h3>
+                                </div>
+                                <div class="col-2 ">
+                                    <span class="badge badge-warning px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('loué') }}</h6></span>
+                                </div>
+                            </div>
+
+                            <div class="list-group mt-3 overflow-auto" style="height:20vh">
+                                @foreach ($voitures as $voiture)
+                                    @if ($voiture->etat == 'loué')
+                                        <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }} <span class="pl-5">{{ $voiture->contrats[0]->check_in->format('d-M-Y') }}</span></a>
+                                    @endif
+                                @endforeach
+
+                            </div>
+                        </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                    <div class="card " style="height: 100%">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-10">
-                                <h3 class="card-title mt-1">En Maintenance </h3>
+                {{-- <div class="row mt-5">
+                    <div class="col">
+                        <a name="" id="" class="" href="/contrats/create" role="button">
+                            <h4>Créer un Nouveau Contrat</h4>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a name="" id="" class="" href="#" role="button">
+                            <h4x c >Réceptionner un véhicule</h4>
+                        </a>
+                    </div>
+
+                    <div class="col">
+                        <a name="" id="" class="" href="#" role="button">Voir les maintenances</a>
+                    </div>
+                </div> --}}
+
+                <div class="row mt-5" >
+
+                    {{-- Prochaines Arrivées --}}
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                        <div class="card " style="height: 100%" >
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h3 class="card-title mt-1">Prochaines Arrivées</h3>
+                                </div>
+                                <div class="col-2 ">
+                                    <span class="badge badge-success px-2"><h6 class="mt-2">{{ sizeof($contrats_en_cours) }}</h6></span>
+                                </div>
                             </div>
-                            <div class="col-2 ">
-                                <span class="badge badge-danger px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('maintenance') }}</h6></span>
+
+                            <div class="list-group mt-3 overflow-auto" style="height: 20vh">
+                                @foreach ($contrats_en_cours as $contrat)
+                                    <a href="/contrat/{{ $contrat->id }}" class="list-group-item list-group-item-action">{{ $contrat->check_in }}</a>
+                                @endforeach    
                             </div>
                         </div>
-
-                        <div class="list-group mt-3 overflow-auto" style="height: 20vh">
-                            @foreach ($voitures as $voiture)
-                                @if ($voiture->etat == 'maintenance')
-                                    <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }}</a>
-                                @endif
-                            @endforeach
-
                         </div>
                     </div>
+
+                    {{-- En Retard --}}
+                    <div class="col-12 col-sm-12 col-md-6 col-lg-4">
+                        <div class="card " style="height: 100%" >
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <h3 class="card-title mt-1">En Retard</h3>
+                                    </div>
+                                    <div class="col-2">
+                                        <span class="badge badge-danger px-2"><h6 class="mt-2">{{ sizeof($contrats_en_retard) }}</h6></span>
+                                    </div>
+                                </div>
+                                <div class="list-group mt-3 overflow-auto" style="height: 20vh">
+                                    @foreach ($contrats_en_retard as $contrat)
+                                        <a href="/contrat/{{ $contrat->id }}" class="list-group-item list-group-item-action">
+                                            {{ $contrat->check_in->format('d-M-Y') }} | 
+                                            <span >
+                                                {{ $contrat->voiture->immatriculation }}
+                                            </span>
+
+                                        </a>
+                                    @endforeach    
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
-
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                    <div class="card" >
-                    <div class="card-body" style="height:100%">
-                        <div class="row">
-                            <div class="col-10">
-                                <h3 class="card-title mt-1">En Location </h3>
-                            </div>
-                            <div class="col-2 ">
-                                <span class="badge badge-warning px-2"><h6 class="mt-2">{{ $voitures[0]->compteVoitures('loué') }}</h6></span>
-                            </div>
-                        </div>
-
-                        <div class="list-group mt-3 overflow-auto" style="height:20vh">
-                            @foreach ($voitures as $voiture)
-                                @if ($voiture->etat == 'loué')
-                                    <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }} <span class="pl-5">{{ $voiture->contrats[sizeof($voiture->contrats) -1]->check_in->format('d-M-Y') }}</span></a>
-                                @endif
-                            @endforeach
-
-                        </div>
-                    </div>
-                    </div>
-                </div>
-
             </div>
-
-            {{-- <div class="row mt-5">
-                <div class="col">
-                    <a name="" id="" class="" href="/contrats/create" role="button">
-                        <h4>Créer un Nouveau Contrat</h4>
-                    </a>
-                </div>
-
-                <div class="col">
-                    <a name="" id="" class="" href="#" role="button">
-                        <h4x c >Réceptionner un véhicule</h4>
-                    </a>
-                </div>
-
-                <div class="col">
-                    <a name="" id="" class="" href="#" role="button">Voir les maintenances</a>
-                </div>
-            </div> --}}
-
-            <div class="row mt-5" >
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                    <div class="card " style="height: 100%" >
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-10">
-                                <h3 class="card-title mt-1">Prochaines Arrivées</h3>
-                            </div>
-                            <div class="col-2 ">
-                                <span class="badge badge-success px-2"><h6 class="mt-2">{{ sizeof($contrats_en_cours) }}</h6></span>
-                            </div>
-                        </div>
-
-                        <div class="list-group mt-3 overflow-auto" style="height: 20vh">
-                            @foreach ($contrats_en_cours as $contrat)
-                                <a href="/contrat/{{ $contrat->id }}" class="list-group-item list-group-item-action">{{ $contrat->check_in }}</a>
-                            @endforeach    
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-12 col-md-6 col-lg-4">
-                    <div class="card " style="height: 100%" >
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-10">
-                                <h3 class="card-title mt-1">En Retard</h3>
-                            </div>
-                            <div class="col-2 ">
-                                <span class="badge badge-danger px-2"><h6 class="mt-2">{{ sizeof($contrats_en_retard) }}</h6></span>
-                            </div>
-                        </div>
-
-                        <div class="list-group mt-3 overflow-auto" style="height: 20vh">
-                            @foreach ($contrats_en_retard as $contrat)
-                                <a href="/contrat/{{ $contrat->id }}" class="list-group-item list-group-item-action">{{ $contrat->check_in->format('d-M-Y') }}</a>
-                            @endforeach    
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </div>
+            
 
         </div>
     @else

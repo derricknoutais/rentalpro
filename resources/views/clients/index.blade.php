@@ -84,7 +84,11 @@
                     <div class="col">
 
                         {{-- Tableau des clients --}}
-
+                        {{-- <vuetable
+                            :fields="['nom', 'phone1', 'phone2']"
+                            :data="{{ $clients }}"
+                            :api-mode="false"
+                        ></vuetable> --}}
                         <table class="table table-hover">
                             <thead>
                                 <tr>
