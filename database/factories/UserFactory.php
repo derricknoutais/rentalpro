@@ -39,7 +39,7 @@ $factory->define(App\Voiture::class, function(Faker $faker){
         'annee' => $faker->numberBetween($min = 2010, $max = 2018),
         'marque' => 'Toyota',
         'type' => $faker->randomElement($array = array ('Corolla ZZE120', 'Corolla ZZE140', 'Rav4 IV', 'Rav4 III')),
-        'etat' => 'Disponible', //$faker->randomElement($array = array ('Disponible', 'Loué', 'Maintenance')),
+        'etat' =>  $faker->randomElement($array = array ('Disponible', 'Loué', 'Maintenance')), //'Disponible',
         'prix' => $faker->randomElement($array = array (30000, 60000, 45000)),
         'douane' => $faker->randomElement($array = array(1000000, 500000, 200000, 800000)),
         'prix_achat' => $faker->randomElement($array = array(10000000, 5000000, 2000000, 8000000)),
@@ -73,6 +73,7 @@ $factory->define(App\Contrat::class, function(Faker $faker){
         'caution' => 100000,
         'total' => $prix_journalier * $nombre_jours,
         'created_at' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
+        'cashier_facture_id' => rand(1,10)
     ];
 });
 

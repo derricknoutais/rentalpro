@@ -25,6 +25,25 @@
                 </div>
             </div>
             <div class="container">
+                <div class="col-12">
+                    <table class="table table-responsive">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Immatriculation</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($voitures as $voiture)
+                                <tr>
+                                    <td scope="row">{{ $voiture->immatriculation }}</td>
+                                    
+                                </tr> 
+                            @endforeach
+                            
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row mt-5" >
                     {{-- Disponible --}}
                     <div class="col-12 col-sm-12 col-md-6 col-lg-4">

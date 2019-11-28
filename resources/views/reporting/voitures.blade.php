@@ -47,7 +47,7 @@
                             <div class="row">
                                 <p class="d-inline-block display-6 col-6">
                                     <i class="fas fa-money-bill    "></i>
-                                    @{{ chiffreDAffaires() | currency }}
+                                    @{{ paiementPercu | currency }} / @{{ chiffreDAffaires() | currency }}
                                 </p>
                                 <p class="d-inline-block display-6 col-6">
                                     <i class="fas fa-money-bill    "></i>

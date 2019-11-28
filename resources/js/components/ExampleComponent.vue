@@ -4,8 +4,18 @@ export default {
 props: ["contrats"],
 data() {
 	return {
-	fcEvents: []
+		fcEvents: [],
+		today: new Date().toISOString().substr(0, 10),
+		weekDays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+		week: []
 	};
+	
+},
+computed: {
+	week(){
+		todayDay = this.today.getDay()
+		
+	}
 },
 mounted() {
 	if (this.contrats) {

@@ -7358,8 +7358,16 @@ __webpack_require__.r(__webpack_exports__);
   props: ["contrats"],
   data: function data() {
     return {
-      fcEvents: []
+      fcEvents: [],
+      today: new Date().toISOString().substr(0, 10),
+      weekDays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+      week: []
     };
+  },
+  computed: {
+    week: function week() {
+      todayDay = this.today.getDay();
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -7571,12 +7579,16 @@ __webpack_require__.r(__webpack_exports__);
           title: 'Company Performance',
           subtitle: 'Sales, Expenses, and Profit: 2014-2017'
         }
-      }
+      },
+      totalPercu: null,
+      paiementPercu: 0
     };
   },
   watch: {
     voiture_selectionée: function voiture_selectionE() {
+      console.log;
       this.chart();
+      this.paiementsPercus();
     }
   },
   methods: {
@@ -7614,6 +7626,48 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return total;
+    },
+    getPaiements: function getPaiements(cashier_id) {
+      var _this = this;
+
+      if (cashier_id) {
+        // var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id ;
+        // if(this.environment === 'local'){
+        var link = 'http://thecashier.test/api/get-paiements/' + cashier_id; // }
+
+        var paiements = null;
+        axios.get(link).then(function (response) {
+          paiements = response.data;
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
+
+      setTimeout(function () {
+        var total = 0;
+
+        if (paiements) {
+          paiements.forEach(function (paiement) {
+            total += paiement.montant;
+            console.log('Je suis un paiement de la somme de ' + paiement.montant);
+          });
+          console.log('Je suis un total de ' + total);
+          _this.paiementPercu += total;
+        } else {
+          total = -1;
+        }
+      }, 1000);
+    },
+    paiementsPercus: function paiementsPercus() {
+      var _this2 = this;
+
+      this.paiementPercu = 0;
+
+      if (this.voiture_selectionée) {
+        this.voiture_selectionée.contrats.forEach(function (contrat) {
+          _this2.getPaiements(contrat.cashier_facture_id);
+        });
+      }
     },
     // Maintenance
     coûtDeMaintenance: function coTDeMaintenance() {
@@ -7653,11 +7707,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    var _this = this;
+    var _this3 = this;
 
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     months.forEach(function (month, index) {
-      _this.chartData.push([month, _this.chiffre[index]]);
+      _this3.chartData.push([month, _this3.chiffre[index]]);
     });
   }
 });

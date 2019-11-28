@@ -19,12 +19,16 @@ export default {
                 title: 'Company Performance',
                 subtitle: 'Sales, Expenses, and Profit: 2014-2017',
               }
-            }
+            },
+            totalPercu: null,
+            paiementPercu: 0
         }
     },
     watch : {
         voiture_selectionée(){
+            console.log
             this.chart()
+            this.paiementsPercus()
         }
     },
     methods:{
@@ -55,9 +59,48 @@ export default {
                     total += contrat.total
                 });
             }
+            
             return total;
         },
+        getPaiements(cashier_id){
+            if( cashier_id ){
+                // var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id ;
+                // if(this.environment === 'local'){
+                    var link = 'http://thecashier.test/api/get-paiements/' + cashier_id;
+                // }
+                var paiements = null;
+                axios.get(link).then(response => {
+                    paiements = response.data
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+             
+            setTimeout(() => {
+                var total = 0;
+                if(paiements){
+                    paiements.forEach(paiement => {
+                        total += paiement.montant
+                        console.log('Je suis un paiement de la somme de ' + paiement.montant)
+                    });
+                    console.log('Je suis un total de ' + total)
+                    this.paiementPercu += total
+                } else {
+                    total = -1
+                }
+            },1000);
+        },
+        paiementsPercus(){
+            this.paiementPercu = 0
+            if(this.voiture_selectionée){
+                this.voiture_selectionée.contrats.forEach( contrat => {
+                    this.getPaiements(contrat.cashier_facture_id)
+                });
+                
+            }
+        },
 
+        
         // Maintenance
 
         coûtDeMaintenance(){
