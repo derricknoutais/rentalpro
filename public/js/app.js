@@ -7568,7 +7568,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'gchart': vue_google_charts__WEBPACK_IMPORTED_MODULE_0__["GChart"]
   },
-  props: ['voitures', 'chiffre'],
+  props: ['voitures', 'chiffre', 'environnement'],
   data: function data() {
     return {
       voiture_selectionée: this.voitures[0],
@@ -7631,9 +7631,11 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       if (cashier_id) {
-        // var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id ;
-        // if(this.environment === 'local'){
-        var link = 'http://thecashier.test/api/get-paiements/' + cashier_id; // }
+        var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id;
+
+        if (this.environment === 'local') {
+          var link = 'http://thecashier.test/api/get-paiements/' + cashier_id;
+        }
 
         var paiements = null;
         axios.get(link).then(function (response) {

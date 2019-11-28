@@ -6,7 +6,7 @@ export default {
     components: {
       'gchart' : GChart
     },
-    props: ['voitures', 'chiffre'],
+    props: ['voitures', 'chiffre', 'environnement'],
     data(){
         return {
             voiture_selectionée: this.voitures[0],
@@ -64,10 +64,10 @@ export default {
         },
         getPaiements(cashier_id){
             if( cashier_id ){
-                // var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id ;
-                // if(this.environment === 'local'){
+                var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id ;
+                if(this.environment === 'local'){
                     var link = 'http://thecashier.test/api/get-paiements/' + cashier_id;
-                // }
+                }
                 var paiements = null;
                 axios.get(link).then(response => {
                     paiements = response.data

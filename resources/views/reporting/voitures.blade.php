@@ -2,7 +2,7 @@
 
 
 @section('content')
-<reporting-index inline-template :chiffre="{{ json_encode($chiffre_DAffaire_Annuel, TRUE) }}" :voitures="{{ json_encode($voitures) }}">
+<reporting-index inline-template :chiffre="{{ json_encode($chiffre_DAffaire_Annuel, TRUE) }}" :voitures="{{ json_encode($voitures) }}" :environnement="{{ config('app.env') }}">
     <div>
         {{-- En-tête --}}
         <div class="container">
