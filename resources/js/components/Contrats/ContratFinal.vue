@@ -39,10 +39,10 @@
                 </div>
                 <div class="row">
                     <p v-if="totalPaiement !== -1">
-                        <u ><strong>Montant Versé:</strong></u> <span>{{ totalPaiement }} F CFA</span>
+                        <u ><strong>Montant Versé:</strong></u><span>{{ totalPaiement }} F CFA</span>
                     </p>
                     <p v-else-if="totalPaiement === -1">
-                        <u ><strong>Montant Versé:</strong></u><i class="fas fa-sync ml-3"></i>
+                        <u ><strong>Montant Versé:</strong></u><i class="fas fa-sync ml-3 pointer" @click="getPaiements()"></i>
                     </p>
                     <p v-else>
                         <i class="fas fa-spinner fa-spin"></i>
@@ -181,7 +181,7 @@
                         <u ><strong>Montant Versé:</strong></u><i class="fas fa-sync ml-3"></i>
                     </p>
                     <p v-else>
-                        <i class="fas fa-spinner fa-spin"></i>
+                        <i class="fas fa-spinner fa-spin" ></i>
                     </p>
                 </div>
                 <div class="row">
@@ -268,6 +268,20 @@ export default {
                     console.log(error);
                 });
             }
+            var total = 0
+            setTimeout(() => {
+                if(this.paiements){
+                    this.paiements.forEach(paiement => {
+                        total += paiement.montant
+                    });
+                    this.totalPaiement = total
+
+                } else {
+                    this.totalPaiement = -1
+                }
+
+                this.$forceUpdate()
+            },1000);
             
         },
         enregistrer(){

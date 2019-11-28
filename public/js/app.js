@@ -5886,6 +5886,21 @@ __webpack_require__.r(__webpack_exports__);
           console.log(error);
         });
       }
+
+      var total = 0;
+      setTimeout(function () {
+        if (_this.paiements) {
+          _this.paiements.forEach(function (paiement) {
+            total += paiement.montant;
+          });
+
+          _this.totalPaiement = total;
+        } else {
+          _this.totalPaiement = -1;
+        }
+
+        _this.$forceUpdate();
+      }, 1000);
     },
     enregistrer: function enregistrer() {
       this.isSaving = true;
@@ -72928,11 +72943,20 @@ var render = function() {
         _vm.totalPaiement !== -1
           ? _c("p", [
               _vm._m(4),
-              _vm._v(" "),
               _c("span", [_vm._v(_vm._s(_vm.totalPaiement) + " F CFA")])
             ])
           : _vm.totalPaiement === -1
-          ? _c("p", [_vm._m(5), _c("i", { staticClass: "fas fa-sync ml-3" })])
+          ? _c("p", [
+              _vm._m(5),
+              _c("i", {
+                staticClass: "fas fa-sync ml-3 pointer",
+                on: {
+                  click: function($event) {
+                    return _vm.getPaiements()
+                  }
+                }
+              })
+            ])
           : _c("p", [_c("i", { staticClass: "fas fa-spinner fa-spin" })])
       ]),
       _vm._v(" "),
