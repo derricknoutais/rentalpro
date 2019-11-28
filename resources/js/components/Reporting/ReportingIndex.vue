@@ -6,7 +6,7 @@ export default {
     components: {
       'gchart' : GChart
     },
-    props: ['voitures', 'chiffre', 'environnement'],
+    props: ['voitures', 'chiffre', 'environment'],
     data(){
         return {
             voiture_selectionée: this.voitures[0],

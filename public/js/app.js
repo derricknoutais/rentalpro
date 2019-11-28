@@ -7568,7 +7568,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     'gchart': vue_google_charts__WEBPACK_IMPORTED_MODULE_0__["GChart"]
   },
-  props: ['voitures', 'chiffre', 'environnement'],
+  props: ['voitures', 'chiffre', 'environment'],
   data: function data() {
     return {
       voiture_selectionée: this.voitures[0],
