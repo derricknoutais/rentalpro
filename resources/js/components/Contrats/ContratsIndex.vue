@@ -23,7 +23,7 @@ export default {
                 'prix_unitaire' : payload.prix_journalier,
                 'client': payload.client.cashier_id 
             };
-            var link = 'https://cashier.azimuts.ga/api/facture'
+            var link = 'http://cashier.azimuts.ga/api/facture'
             if(this.env === 'local'){
                 link = 'http://thecashier.test/api/facture'
             }
