@@ -258,7 +258,7 @@ export default {
         },
         getPaiements(){
             if(this.contrat.cashier_facture_id ){
-                var link = 'https://thecashier.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
+                var link = 'http://cashier.azimuts.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
                 if(this.environment === 'local'){
                     link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
                 }
