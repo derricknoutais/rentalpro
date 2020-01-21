@@ -8,7 +8,6 @@ export default {
     },
     methods:{
         envoieACashier(payload){
-            
             var data;
             var link = 'http://cashier.azimuts.ga/api/facture';
             data = {
@@ -22,7 +21,6 @@ export default {
             if(this.environment === 'local'){
                 link = 'http://thecashier.test/api/facture'
             }
-                
 
             axios.post(link, data).then(response => {
                 console.log(link)
