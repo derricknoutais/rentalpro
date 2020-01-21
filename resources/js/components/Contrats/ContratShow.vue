@@ -10,7 +10,7 @@ export default {
         envoieACashier(payload){
             
             var data;
-            var link = 'https://thecashier.ga/api/facture';
+            var link = 'https://cashier.azimuts.ga/api/facture';
             data = {
                 'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
                 'échéance' : payload.check_in,
@@ -42,7 +42,7 @@ export default {
         },
         ajouterPaiement(payload){
             var data;
-            var link = 'https://thecashier.ga/api/paiement';
+            var link = 'https://cashier.azimuts.ga/api/paiement';
             
             if(this.environment === 'local'){
                 link = 'http://thecashier.test/api/paiement'
