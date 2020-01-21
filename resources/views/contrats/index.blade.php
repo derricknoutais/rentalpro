@@ -93,7 +93,7 @@
                                         @else
                                             @if (config('app.env') !== 'local')
                                                 <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button"
-                                                    href="https://thecashier.ga/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>
+                                                    href="http://cashier.azimuts.ga/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>
                                             @else
                                                 <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button"
                                                     href="http://thecashier.test/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>

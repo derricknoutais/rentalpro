@@ -92,7 +92,7 @@
                         <i v-if="isLoading" class="fas fa-spinner fa-spin"></i> Envoyer à Cashier
                         </button>
                         <!-- Bouton Voir Dans Cashier -->
-                        <a target="_blank" :href="'https://thecashier.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'production'" >Voir Facture dans Cashier</a>
+                        <a target="_blank" :href="'http://cashier.azimuts.ga/STA/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'production'" >Voir Facture dans Cashier</a>
 
                         <a target="_blank" :href="'http://thecashier.test/Heaney%20LLC/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'local'" >Voir Facture dans Cashier</a>
 
