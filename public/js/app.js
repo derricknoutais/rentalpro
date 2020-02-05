@@ -5478,15 +5478,20 @@ __webpack_require__.r(__webpack_exports__);
       window.location = location;
     },
     enregistreClientDansCashier: function enregistreClientDansCashier() {
+      var _this = this;
+
       // Affiche le Spinner
       this.isLoading = true;
       this.$forceUpdate(); // Créee un nouveau client
 
-      axios.post('https://cashier.azimuts.ga/api/client/nouveau', this.client).then(function (response) {
-        console.log(response.data); // this.client.cashier_id = response.data.id
-        // document.getElementById("cashier_id").value = response.data.id
-        // this.$forceUpdate()
-        // document.getElementById('clientForm').submit();
+      axios.post('http://cashier.azimuts.ga/api/client/nouveau', this.client).then(function (response) {
+        console.log(response.data);
+        _this.client.cashier_id = response.data.id;
+        document.getElementById("cashier_id").value = response.data.id;
+
+        _this.$forceUpdate();
+
+        document.getElementById('clientForm').submit();
       }).catch(function (error) {
         alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance");
         window.location.reload();
