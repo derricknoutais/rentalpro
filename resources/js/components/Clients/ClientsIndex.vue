@@ -25,15 +25,19 @@ export default {
             window.location = location
         },
         enregistreClientDansCashier(){
+
+            // Affiche le Spinner
             this.isLoading = true;
             this.$forceUpdate()
-            axios.post('https://thecashier.ga/api/client/nouveau', this.client).then(response => {
+
+            // Créee un nouveau client
+            axios.post('https://cashier.azimuts.ga/api/client/nouveau', this.client).then(response => {
                 
                 console.log(response.data);
-                this.client.cashier_id = response.data.id
-                document.getElementById("cashier_id").value = response.data.id
-                this.$forceUpdate()
-                document.getElementById('clientForm').submit();
+                // this.client.cashier_id = response.data.id
+                // document.getElementById("cashier_id").value = response.data.id
+                // this.$forceUpdate()
+                // document.getElementById('clientForm').submit();
             }).catch(error => {
                 alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance")
                 window.location.reload()

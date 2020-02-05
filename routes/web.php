@@ -80,7 +80,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post( '/clients/ajout-client', 'ClientController@store');
     Route::get('/clients/{client}/edit', 'ClientController@edit');
     Route::post('/clients/{client}/update', 'ClientController@update');
-
+    
     // CONTRATS
     Route::get('/contrats/menu', 'ContratController@menu');
     Route::get('/contrats', 'ContratController@index');
