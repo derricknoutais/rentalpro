@@ -5493,8 +5493,7 @@ __webpack_require__.r(__webpack_exports__);
 
         document.getElementById('clientForm').submit();
       }).catch(function (error) {
-        alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance");
-        window.location.reload();
+        alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance"); // window.location.reload()
       });
     }
   },

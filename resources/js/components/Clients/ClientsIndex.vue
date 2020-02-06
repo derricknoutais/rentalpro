@@ -40,7 +40,7 @@ export default {
                 document.getElementById('clientForm').submit();
             }).catch(error => {
                 alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance")
-                window.location.reload()
+                // window.location.reload()
             });
 
 
