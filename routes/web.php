@@ -24,14 +24,14 @@ use App\Technicien;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::loginUsingID(1);
+// Auth::loginUsingID(1);
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
-    
+
     Route::get('/test', function(){
         $contrat = Contrat::find(1);
-        event(new ContratCree( $contrat )); 
+        event(new ContratCree( $contrat ));
     });
 
     Route::get('/', 'HomeController@welcome');
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['auth']], function () {
         ]);
 
         return redirect('/contrat/' . $request->contrat_id);
-        
+
     });
 
     // VOITURES
@@ -80,7 +80,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post( '/clients/ajout-client', 'ClientController@store');
     Route::get('/clients/{client}/edit', 'ClientController@edit');
     Route::post('/clients/{client}/update', 'ClientController@update');
-    
+
     // CONTRATS
     Route::get('/contrats/menu', 'ContratController@menu');
     Route::get('/contrats', 'ContratController@index');
@@ -110,7 +110,7 @@ Route::group(['middleware' => ['auth']], function () {
                     ->pluck('id');
                 $query->whereIn('client_id', $clients);
             }
-            // Date du 
+            // Date du
             if($request->check_out){
                 $query->where('check_out', 'like',  $request->check_out . '%' );
             }
@@ -125,7 +125,7 @@ Route::group(['middleware' => ['auth']], function () {
                 $query->whereNull('real_check_in');
             } else if( $request->etat === 'terminé') {
                 $query->whereNotNull('real_check_in');
-            } 
+            }
             return $query;
         })->orderBy('id', 'desc')->paginate(20);
         $voitures = Voiture::all();
@@ -220,15 +220,15 @@ Route::group(['middleware' => ['auth']], function () {
             }
         }
         return redirect()->back();
-        
-        
-        
+
+
+
     });
 
     // PANNES
     Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
 
-    // Maintenances 
+    // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
     Route::post('/maintenances/store', 'MaintenanceController@store');
     Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
@@ -246,7 +246,7 @@ Route::group(['middleware' => ['auth']], function () {
         $maintenance->loadMissing('voiture');
 
         $maintenance->voiture->etat('disponible');
-        
+
         return redirect()->back();
     });
     Route::get('/reporting/voitures', function(){
