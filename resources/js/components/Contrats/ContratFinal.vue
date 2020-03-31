@@ -22,7 +22,7 @@
                                 <p><i>{{ contrat.client.phone1 }}</i></p>
                             </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <h3 class="display-6 letter-spaced-1 mt-2 text-center mt-5" ><u>CONTRAT {{ contrat.numéro }}</u></h3>
                 <!-- INFORMATION VOITURE -->
@@ -58,7 +58,7 @@
                     <ol>
                         <li>Le Véhicule sera restitué à l'heure indiquée sur le contrat.</li>
                         <li>Le Véhicule devra être restitué dans le même état qu'il a été pris; faute de quoi le locataire endossera les charges afférentes aux dommages éventuels.</li>
-                        <li>Les images enregistrées dans le système et envoyées au client par e-mail feront office de réference de l'état du véhicule.</li> 
+                        <li>Les images enregistrées dans le système et envoyées au client par e-mail feront office de réference de l'état du véhicule.</li>
                         <li>S.T.A se réserve le droit de récuperer le véhicule loué pour tout retard de paiement de plus de 48 heures.</li>
                         <li>S.T.A se réserve le droit de récuperer le véhicule loué au cas où une personne autre que le client est aperçu entrain de conduire ce véhicule.</li>
                         <li>Toute prolongation de contrat devra être notifiée 24 heures avant échéance sous peine d'une pénalité de 10.000 F imputable sur la caution</li>
@@ -88,7 +88,7 @@
                             Enregistrer
                             </button>
                         <!-- Bouton Envoyer a Cashier -->
-                        <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null"> 
+                        <button type="button" class="btn btn-primary" @click="envoyerACashier" v-if="contrat_enregistre !== null && contrat.cashier_facture_id === null">
                         <i v-if="isLoading" class="fas fa-spinner fa-spin"></i> Envoyer à Cashier
                         </button>
                         <!-- Bouton Voir Dans Cashier -->
@@ -97,7 +97,7 @@
                         <a target="_blank" :href="'http://thecashier.test/Heaney%20LLC/Facture/' + contrat.cashier_facture_id" class="btn btn-primary" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null && environment === 'local'" >Voir Facture dans Cashier</a>
 
                         <!-- Bouton Ajouter Paiement -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutPaiement" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null"> 
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajoutPaiement" v-if="contrat_enregistre !== null && contrat.cashier_facture_id !== null">
                             Ajouter un Paiement
                         </button>
 
@@ -158,7 +158,7 @@
                                 <p><i>{{ contrat.client.phone1 }}</i></p>
                             </div>
                         </div>
-                    </div>  
+                    </div>
                 </div>
                 <h3 class="display-6 letter-spaced-1 mt-2 text-center mt-5" ><u>CONTRAT {{ contrat.numéro }}</u></h3>
                 <!-- INFORMATION VOITURE -->
@@ -194,7 +194,7 @@
                     <ol>
                         <li>Le Véhicule sera restitué à l'heure indiquée sur le contrat.</li>
                         <li>Le Véhicule devra être restitué dans le même état qu'il a été pris; faute de quoi le locataire endossera les charges afférentes aux dommages éventuels.</li>
-                        <li>Les images enregistrées dans le système et envoyées au client par e-mail feront office de réference de l'état du véhicule.</li> 
+                        <li>Les images enregistrées dans le système et envoyées au client par e-mail feront office de réference de l'état du véhicule.</li>
                         <li>S.T.A se réserve le droit de récuperer le véhicule loué pour tout retard de paiement de plus de 48 heures.</li>
                         <li>S.T.A se réserve le droit de récuperer le véhicule loué au cas où une personne autre que le client est aperçu entrain de conduire ce véhicule.</li>
                         <li>Toute prolongation de contrat devra être notifiée 24 heures avant échéance sous peine d'une pénalité de 10.000 F imputable sur la caution</li>
@@ -215,7 +215,7 @@
                 <h4 class="mt-3">{{ wn( contrat.prix_journalier * contrat.nombre_jours ) }} Francs CFA</h4>
             </div>
     </div>
-    
+
 </template>
 
 <script>
@@ -241,7 +241,7 @@ export default {
         },
         envoyerACashier(){
             if(! this.isLoading){
-                    this.$emit('cashier', this.contrat) 
+                    this.$emit('cashier', this.contrat)
                 this.isLoading = true
             } else {
                 alert('La patience est une grande vertue! ')
@@ -250,7 +250,7 @@ export default {
         ajouterUnPaiement(){
             this.paiement.facture_id = this.contrat.cashier_facture_id
             if(! this.isLoading){
-                this.$emit('paiement', this.paiement) 
+                this.$emit('paiement', this.paiement)
                 this.isLoading = true
             } else {
                 alert('La patience est une grande vertue! ')
@@ -258,9 +258,9 @@ export default {
         },
         getPaiements(){
             if(this.contrat.cashier_facture_id ){
-                var link = 'http://cashier.azimuts.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
+                var link = 'https://cashier.azimuts.ga/api/get-paiements/' + this.contrat.cashier_facture_id ;
                 if(this.environment === 'local'){
-                    link = 'http://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
+                    link = 'https://thecashier.test/api/get-paiements/' + this.contrat.cashier_facture_id;
                 }
                 axios.get(link).then(response => {
                     this.paiements = response.data
@@ -282,7 +282,7 @@ export default {
 
                 this.$forceUpdate()
             },1000);
-            
+
         },
         enregistrer(){
             this.isSaving = true;
@@ -295,7 +295,7 @@ export default {
             }, 1000);
             setTimeout(() => {
                 this.printing = false
-            }, 5000); 
+            }, 5000);
         },
         //Utilitaires
         wn(number){
@@ -325,14 +325,14 @@ export default {
                     total += paiement.montant
                 });
                 this.totalPaiement = total
-                
+
             } else {
                 this.totalPaiement = -1
             }
-            
+
             this.$forceUpdate()
         },1000);
-        
+
     }
 }
 </script>
@@ -344,7 +344,6 @@ export default {
         border-top: 1px dashed black
     }
     .pbn-3 {
-        
+
     }
 </style>
-   

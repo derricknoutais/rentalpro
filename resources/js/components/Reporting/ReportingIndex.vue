@@ -59,12 +59,12 @@ export default {
                     total += contrat.total
                 });
             }
-            
+
             return total;
         },
         getPaiements(cashier_id){
             if( cashier_id ){
-                var link = 'https://thecashier.ga/api/get-paiements/' + cashier_id ;
+                var link = 'https://cashier.azimuts.ga/api/get-paiements/' + cashier_id ;
                 if(this.environment === 'local'){
                     var link = 'http://thecashier.test/api/get-paiements/' + cashier_id;
                 }
@@ -75,7 +75,7 @@ export default {
                     console.log(error);
                 });
             }
-             
+
             setTimeout(() => {
                 var total = 0;
                 if(paiements){
@@ -96,11 +96,11 @@ export default {
                 this.voiture_selectionée.contrats.forEach( contrat => {
                     this.getPaiements(contrat.cashier_facture_id)
                 });
-                
+
             }
         },
 
-        
+
         // Maintenance
 
         coûtDeMaintenance(){
@@ -113,12 +113,12 @@ export default {
             return total;
         },
 
-        // Analyse 
+        // Analyse
         seuilDeRentabilité(){
             var seuil = 0;
             if(this.voiture_selectionée){
-                seuil = this.voiture_selectionée.douane + 
-                    this.voiture_selectionée.prix_achat + 
+                seuil = this.voiture_selectionée.douane +
+                    this.voiture_selectionée.prix_achat +
                     this.voiture_selectionée.transport + this.coûtDeMaintenance()
 
             }
@@ -126,7 +126,7 @@ export default {
         },
         coutsVariables(){
             return this.coûtDeMaintenance();
-        }, 
+        },
         marge(){
             return this.chiffreDAffaires() - this.coutsVariables()
         },
@@ -138,9 +138,9 @@ export default {
 
             // this.dates = this.voiture_selectionée.contrats.filter( contrat => {
             //     return Date.parse(contrat.created_at) > new Date(date.getFullYear(), date.getMonth(), 1)
-                
+
             // })
-            
+
         }
 
     },

@@ -3,7 +3,7 @@ export default {
     data(){
         return {
             fields :[
-                
+
             ],
             client: {
                 nom: '',
@@ -31,8 +31,8 @@ export default {
             this.$forceUpdate()
 
             // Créee un nouveau client
-            axios.post('http://cashier.azimuts.ga/api/client/nouveau', this.client).then(response => {
-                
+            axios.post('https://cashier.azimuts.ga/api/client/nouveau', this.client).then(response => {
+
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
                 document.getElementById("cashier_id").value = response.data.id
@@ -42,11 +42,6 @@ export default {
                 alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance")
                 // window.location.reload()
             });
-
-
-            
-
-            
         }
     },
     mounted(){
