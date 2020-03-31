@@ -2,7 +2,7 @@
 
 
 @section('content')
-<reporting-index inline-template :chiffre="{{ json_encode($chiffre_DAffaire_Annuel, TRUE) }}" :voitures="{{ json_encode($voitures) }}" :environment="{{ config('app.env') }}">
+<reporting-index inline-template :chiffre="{{ json_encode($chiffre_DAffaire_Annuel, TRUE) }}" :voitures="{{ json_encode($voitures) }}" environment="{{ config('app.env') }}">
     <div>
         {{-- En-tête --}}
         <div class="container">
@@ -15,16 +15,16 @@
         <span v-if="dates">
             @{{ dates.length }}
         </span>
-        
+
         {{-- Selection véhicule Reporting --}}
 
         <div class="container-fluid">
 
             <div class="row">
                 <div class="offset-3 col-6">
-                    <multiselect v-model="voiture_selectionée" :options="{{ $voitures }}" 
+                    <multiselect v-model="voiture_selectionée" :options="{{ $voitures }}"
                         placeholder="Select one" label="immatriculation">
-                    </multiselect>  
+                    </multiselect>
                 </div>
             </div>
 
@@ -39,7 +39,7 @@
                                     <i class="fas fa-car-alt    "></i>
                                     @{{ voiture_selectionée.contrats.length }} Locations
                                 </p>
-                                <p class=" d-inline-block display-6 col-6"> 
+                                <p class=" d-inline-block display-6 col-6">
                                     <i class="fas fa-clock    "></i>
                                     @{{ joursDeLocation() }} Jours de Location
                                 </p>
@@ -63,9 +63,9 @@
                                 </p>
                             </div>
                         </div>
-                        
+
                     </div>
-                    
+
                 </div>
                 <div class="col-4">
                     <div class="card text-white bg-dark-gradient" >
@@ -98,7 +98,7 @@
                                 </p>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div class="col-4">
@@ -122,9 +122,9 @@
                                 </p>
                             </div>
                         </div>
-                    
+
                     </div>
-                    
+
                 </div>
             </div>
             {{-- <div class="row">
@@ -139,5 +139,5 @@
 
     </div>
 </reporting-index>
-    
+
 @endsection
