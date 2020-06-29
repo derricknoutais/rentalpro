@@ -20,12 +20,12 @@ class ContratController extends Controller
         return view('contrats.menu');
     }
     public function index(){
-        
+
         $contrats = Contrat::with('client', 'voiture')->orderBy('id', 'desc')->paginate(20);
         $contrat = $contrats[0];
         $voitures = Voiture::all();
-        // return $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location pour la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
-        // . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre confiance.'; 
+        // return $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location pour la ' . $contrat->voiture->immatriculation . ' pour la période du '
+        // . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre confiance.';
 
         return view('contrats.index', compact(['contrats', 'voitures']));
     }
@@ -75,17 +75,17 @@ class ContratController extends Controller
         if($contrat){
             $contrat->loadMissing('voiture', 'client');
             Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
-            $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du ' 
-                . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.'; 
+            $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
+                . $contrat->check_out->format('d-M-Y h:i') . ' au ' . $contrat->check_in->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.';
 
             // Nexmo::message()->send([
             //     'to'   => '24107158215',
             //     'from' => 'STA',
             //     'text' => $message
             // ]);
-            
-            
-            
+
+
+
 
             return $contrat;
         }
@@ -133,7 +133,7 @@ class ContratController extends Controller
                 'real_check_in' => $contrat->check_in,
                 'prolongation_id' => $nouveauContrat->id
             ]);
-            
+
             if($contrat->voiture->id !== $request->voiture){
                 $contrat->voiture->etat('disponible');
                 Voiture::find( $request->voiture )->etat('loué');
@@ -141,6 +141,7 @@ class ContratController extends Controller
             return $nouveauContrat;
         });
         $contrat->loadMissing('voiture', 'client');
+        // return $contrat;
         Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
         return redirect()->back();
     }
@@ -150,7 +151,7 @@ class ContratController extends Controller
             // Retrouve la voiture a remplacer
             $voiture = Voiture::find( $request->voiture );
 
-            // 
+            //
             $contrat->voiture->etat('disponible');
 
 
@@ -163,10 +164,10 @@ class ContratController extends Controller
             }
 
             $voiture->etat('loué');
-            
+
         });
         return redirect()->back();
-        
+
 
     }
     public function updateCashierId(Request $request, Contrat $contrat){

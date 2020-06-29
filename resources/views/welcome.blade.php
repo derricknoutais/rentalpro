@@ -3,14 +3,14 @@
 
 @section('content')
 <example-component inline-template :contrats="{{ $contrats }}">
-    
+
     @if(sizeof($voitures) > 0)
 
         <div class="container-fluid">
             <div class="row mt-5">
                 <div class="col">
-                    <transition 
-                        name="fade" 
+                    <transition
+                        name="fade"
                         enter-active-class="animated tada"
                         leave-active-class="animated fadeOut"
                         :duration="{ enter: 50000, leave: 800 }"
@@ -26,23 +26,23 @@
             </div>
             <div class="container">
                 <div class="col-12">
-                    <table class="table table-responsive">
+                    {{-- <table class="table table-responsive">
                         <thead class="thead-inverse">
                             <tr>
                                 <th>Immatriculation</th>
-                                
+
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($voitures as $voiture)
                                 <tr>
                                     <td scope="row">{{ $voiture->immatriculation }}</td>
-                                    
-                                </tr> 
+
+                                </tr>
                             @endforeach
-                            
+
                         </tbody>
-                    </table>
+                    </table> --}}
                 </div>
                 <div class="row mt-5" >
                     {{-- Disponible --}}
@@ -63,7 +63,7 @@
                                     @if ($voiture->etat == 'disponible')
                                         <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }}</a>
                                     @endif
-                                @endforeach    
+                                @endforeach
                             </div>
                         </div>
                         </div>
@@ -156,7 +156,7 @@
                             <div class="list-group mt-3 overflow-auto" style="height: 20vh">
                                 @foreach ($contrats_en_cours as $contrat)
                                     <a href="/contrat/{{ $contrat->id }}" class="list-group-item list-group-item-action">{{ $contrat->check_in }}</a>
-                                @endforeach    
+                                @endforeach
                             </div>
                         </div>
                         </div>
@@ -177,13 +177,13 @@
                                 <div class="list-group mt-3 overflow-auto" style="height: 20vh">
                                     @foreach ($contrats_en_retard as $contrat)
                                         <a href="/contrat/{{ $contrat->id }}" class="list-group-item list-group-item-action">
-                                            {{ $contrat->check_in->format('d-M-Y') }} | 
+                                            {{ $contrat->check_in->format('d-M-Y') }} |
                                             <span >
                                                 {{ $contrat->voiture->immatriculation }}
                                             </span>
 
                                         </a>
-                                    @endforeach    
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
 
                 </div>
             </div>
-            
+
 
         </div>
     @else
@@ -213,6 +213,6 @@
     @endif
 
 </example-component>
-    
-    
+
+
 @endsection
