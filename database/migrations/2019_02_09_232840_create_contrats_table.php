@@ -15,17 +15,18 @@ class CreateContratsTable extends Migration
     {
         Schema::create('contrats', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('voiture_id');
+            $table->unsignedInteger('contractable_id');
+            $table->string('contractable_type');
             $table->unsignedInteger('client_id');
             $table->unsignedInteger('compagnie_id');
-            $table->string('numéro');
-            $table->dateTime('check_out')->nullable();
-            $table->dateTime('check_in')->nullable();
-            $table->dateTime('real_check_in')->nullable();
+            $table->string('numéro')->nullable();
+            $table->dateTime('au')->nullable();
+            $table->dateTime('du')->nullable();
+            $table->dateTime('real_check_out')->nullable();
             $table->double('prix_journalier');
-            $table->integer('nombre_jours');
-            $table->double('total');
-            $table->double('caution');
+            $table->integer('nombre_jours')->nullable();
+            $table->double('total')->nullable();
+            $table->double('caution')->nullable();
             $table->string('etat_accessoires')->nullable();
             $table->string('etat_documents')->nullable();
             $table->string('etat_accessoires_au_retour')->nullable();
@@ -37,6 +38,7 @@ class CreateContratsTable extends Migration
             $table->unsignedInteger('cashier_facture_id')->nullable();
             $table->unsignedInteger('prolongation_id')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
         });

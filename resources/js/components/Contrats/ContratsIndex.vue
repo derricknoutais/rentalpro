@@ -17,7 +17,7 @@ export default {
             var data;
             data = {
                 'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
-                'échéance' : payload.check_in,
+                'échéance' : payload.du,
                 'quantité' : payload.nombre_jours,
                 'description' : 'Jours',
                 'prix_unitaire' : payload.prix_journalier,
@@ -37,6 +37,15 @@ export default {
                         console.log(error);
                     });
                 }
+            }).catch(error => {
+                console.log(error);
+            });
+        },
+        annulerContrat(contrat){
+            console.log('deleting...')
+            axios.delete('/contrats/' + contrat.id ).then(response => {
+                console.log(response.data);
+                location.reload()
             }).catch(error => {
                 console.log(error);
             });

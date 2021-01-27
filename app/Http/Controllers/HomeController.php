@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Voiture;
 use App\Contrat;
+use App\Chambre;
+use App\Client;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContratCréé;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -22,17 +24,30 @@ class HomeController extends Controller
         return view('home');
     }
     public function welcome(){
-        
-        $voitures = Voiture::with('contrats')->get();
-        $contrats = Contrat::with('voiture', 'client')->get();
-        $contrats_en_cours = Contrat::where('check_in', '>' ,now())->get()->sortBy('check_in');
-        $contrats_en_retard = Contrat::where('check_in', '<', now())->whereNull('real_check_in')->get()->sortBy('check_in');
+        $compacted = null;
+        $clients = Client::all();
+        if(Auth::user()->compagnie->isVehicules()){
+            $voitures = Voiture::with('contrats')->get();
+            $contrats = Contrat::with('contractable', 'client')->get();
+            $contrats_en_cours = Contrat::where('du', '>' ,now())->get()->sortBy('du');
+            $contrats_en_retard = Contrat::where('du', '<', now())->whereNull('real_check_out')->get()->sortBy('du');
+            $compacted = compact('voitures', 'contrats_en_cours', 'contrats_en_retard', 'contrats', 'clients');
+        }
+        else if(Auth::user()->compagnie->isHotel())
+        {
+            $chambres = Chambre::with('contrats')->get();
+            foreach ($chambres as $chambre ) {
+                $chambre->contrat_en_cours = $chambre->contratEnCours();
+            }
+
+            $contrats = Contrat::where('compagnie_id',Auth::user()->compagnie_id)->get();
+            $compacted = compact('chambres', 'contrats', 'clients');
+        }
+        return view('welcome', $compacted);
         // Nexmo::message()->send([
         //     'to'   => '24107158215',
         //     'from' => 'STA',
-        //     'text' => 'Bienvenue sur Rental Pro ' . Auth::user()->name 
+        //     'text' => 'Bienvenue sur Rental Pro ' . Auth::user()->name
         // ]);
-        return view('welcome', compact('voitures', 'contrats_en_cours', 'contrats_en_retard', 'contrats'));
-        
     }
 }

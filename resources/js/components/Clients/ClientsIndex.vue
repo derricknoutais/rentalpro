@@ -5,6 +5,13 @@ export default {
             fields :[
 
             ],
+            search: {
+                nom: '',
+                numero: '',
+                permis: '',
+                ville: '',
+                email: ''
+            },
             client: {
                 nom: '',
                 prenom: '',
@@ -20,19 +27,18 @@ export default {
             isLoading: false
         }
     },
+
     methods:{
         relocateTo(location){
             window.location = location
         },
         enregistreClientDansCashier(){
-
             // Affiche le Spinner
             this.isLoading = true;
-            this.$forceUpdate()
+            this.$forceUpdate();
 
             // Créee un nouveau client
             axios.post('https://cashier.azimuts.ga/api/client/nouveau', this.client).then(response => {
-
                 console.log(response.data);
                 this.client.cashier_id = response.data.id
                 document.getElementById("cashier_id").value = response.data.id
@@ -40,7 +46,6 @@ export default {
                 document.getElementById('clientForm').submit();
             }).catch(error => {
                 alert("Une erreur est survenue. Réessayez ou contactez l'équipe de maintenance")
-                // window.location.reload()
             });
         }
     },

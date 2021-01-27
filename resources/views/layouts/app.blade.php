@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app2.css') }}" rel="stylesheet">
     {{-- Font Awesome  --}}
     {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous"> --}}
@@ -27,12 +28,12 @@
     <meta name="apple-mobile-web-app-title" content="Rental Pro">
     <link rel="apple-touch-icon" href="/images/icons/app-icon-256x256.png" size="256x256">
 </head>
-<body>
+<body >
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    Tableau de Bord
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -43,7 +44,7 @@
                     @auth
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item mx-3">
-                                <a href="/contrats/menu" class="nav-link">
+                                <a href="/contrats" class="nav-link">
                                     <i class="fas fa-file-contract"></i>
                                     Contrats
                                 </a>
@@ -54,36 +55,38 @@
                                     Clients
                                 </a>
                             </li>
-                            <li class="nav-item mx-3">
-                                <a href="/voitures" class="nav-link">
-                                    <i class="fas fa-car"></i>
-                                    Voitures
-                                </a>
-                            </li>
-                            <li class="nav-item mx-3">
-                                <a href="/maintenances" class="nav-link">
-                                    <i class="fas fa-tools"></i>
-                                    Maintenances
-                                </a>
-                            </li>
-                            <li class="nav-item dropdown mx-3">
-                                <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown">
-                                    <i class="fas fa-chart-bar"></i>
-                                    Reporting
-                                    <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/reporting">General
+                            @if (Auth::user()->compagnie->type === 'véhicule')
+                                <li class="nav-item mx-3">
+                                    <a href="/voitures" class="nav-link">
+                                        <i class="fas fa-car"></i>
+                                        Voitures
                                     </a>
-                                    <a href="/reporting/voitures" class="dropdown-item">Par Voiture</a>
-                                    <a href="/reporting/par-client/reporting/par-voiture/reporting/par-voiture" class="dropdown-item">Par Client</a>
-                                </div>
+                                </li>
+                                <li class="nav-item mx-3">
+                                    <a href="/maintenances" class="nav-link">
+                                        <i class="fas fa-tools"></i>
+                                        Maintenances
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown mx-3">
+                                    <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown">
+                                        <i class="fas fa-chart-bar"></i>
+                                        Reporting
+                                        <span class="caret"></span>
+                                    </a>
 
-                            </li>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="/reporting">General
+                                        </a>
+                                        <a href="/reporting/voitures" class="dropdown-item">Par Voiture</a>
+                                        <a href="/reporting/par-client/reporting/par-voiture/reporting/par-voiture" class="dropdown-item">Par Client</a>
+                                    </div>
+
+                                </li>
+                            @endif
                         </ul>
                     @endauth
-                    
+
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -98,7 +101,7 @@
                                 </li>
                             @endif
                         @else
-                        
+
                             <li class="nav-item dropdown mr-3">
                                 <a id="navbarDropdown" class="nav-link fa-stack" href="#" role="button" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
@@ -107,7 +110,7 @@
                                       <i class="fa fa-bell fa-stack-1x"></i>
                                     </span>
                                 </a>
-                            
+
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" v-if="notifications">
                                     <a :href="notif.lien" class="dropdown-item" v-for="notif in notifications">@{{ notif.message }}</a>
                                 </div>
@@ -115,12 +118,12 @@
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
-                                    
+
                                     <span class="caret">
-                                        
+
                                     </span>
                                 </a>
-                                
+
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -139,12 +142,25 @@
                 </div>
             </div>
         </nav>
-
+        @include('flash::message')
         <main>
-            
             @yield('content')
         </main>
     </div>
+    {{-- <div id="app" class="tw-bg-screen">
+
+        <div class="tw-w-1/12 tw-h-screen tw-border tw-border-gray-300">
+            <ul>
+                <li>kfljgfkldj</li>
+                <li>kfljgfkldj</li>
+                <li>kfljgfkldj</li>
+                <li>kfljgfkldj</li>
+                <li>kfljgfkldj</li>
+            </ul>
+        </div>
+
+    </div> --}}
+
     @yield('js')
 </body>
 </html>

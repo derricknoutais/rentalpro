@@ -7,7 +7,7 @@
         <div>
             <!-- En Tête -->
             <h1 class="text-center mt-5">
-                
+
                 {{  $voiture->immatriculation }}
 
                 @if (sizeof($voiture->pannesNonResolues()) > 0 )
@@ -38,17 +38,17 @@
 
                             {{-- Voir Pannes --}}
                             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#voirPannes"><i class="fas fa-exclamation-triangle text-warning mr-2"></i> Voir Pannes</button>
-                            
+
                             {{-- Signaler Panne --}}
                             <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#panneSignalisation"><i class="fas fa-exclamation-triangle text-warning mr-2"></i> Ajouter une Panne</button>
-                            
-                            
+
+
                             {{-- Envoyer en Maintenance --}}
                             <button type="button" class="btn btn-warning btn-block" @click="toggleMaintenanceModal({{ $voiture }})">
                                 <i class="fas fa-tools text-danger mr-2"></i>
                                 Envoyer en Maintenance
                             </button>
-                        
+
                         </div>
                             {{-- <button type="button" class="btn btn-primary">Voir Historique</button>
                             <button type="button" class="btn btn-primary">Faire Louer</button> --}}
@@ -78,7 +78,7 @@
                         </div>
                     </div>
 
-                    
+
 
                 </div>
             </div>
@@ -103,11 +103,11 @@
                                                 <tr>
                                                     <td scope="row"><a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a></td>
                                                     <td><a href="/clients/{{ $contrat->client->id }}">{{ $contrat->client->nom . ' ' . $contrat->client->prenom  }}</a></td>
-                                                    <td>{{ $contrat->check_out->format('d-M-Y') }}</td>
-                                                    <td>{{ $contrat->check_in->format('d-M-Y') }}</td>
+                                                    <td>{{ $contrat->au->format('d-M-Y') }}</td>
+                                                    <td>{{ $contrat->du->format('d-M-Y') }}</td>
                                                 </tr>
                                             @endif
-                                            
+
                                         @endforeach
                                             <tr>
                                                 <td colspan="4" class="text-center">{{ $contrats->links() }}</td>
@@ -117,7 +117,7 @@
 
                         </div>
                     @endif
-                    
+
 
                     <div class="col-12  col-lg-6">
                         <div class="card text-center">
@@ -199,28 +199,28 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
-                
+
             </div>
 
             <div class="container-fluid">
                 <div class="row mt-5">
 
                 </div>
-                
+
                 {{-- Liste Contrat --}}
                 <div class="container">
-                    
+
                 </div>
 
 
                 {{-- Modal Reception Voiture --}}
                 @if(sizeof($voiture->contrats) > 0)
-                    <controle-documents-accessoires :voiture="{{ $voiture }}" 
+                    <controle-documents-accessoires :voiture="{{ $voiture }}"
                         :contrat="{{ $voiture->contrats[0] }}">
                     </controle-documents-accessoires>
-                @endif           
+                @endif
 
             </div>
 
@@ -267,8 +267,8 @@
                                 <ul class="list-group">
                                     @foreach ($voiture->pannes as $panne)
                                         @if($panne->etat === 'non-résolue' || $panne->etat === 'maintenance' )
-                                            <li class="list-group-item">{{ $panne->description }}</li>  
-                                        @endif 
+                                            <li class="list-group-item">{{ $panne->description }}</li>
+                                        @endif
                                     @endforeach
                                 </ul>
                             </div>
@@ -303,7 +303,7 @@
                                       </label>
                                     </div>
                                 @endif
-                                    
+
                                 @endforeach
 
                                 <div class="form-group mt-3">
@@ -324,11 +324,11 @@
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
-                            
+
                     </div>
                 </div>
             </div>
-            
+
             <!-- Modal -->
             <div class="modal fade" id="pasDePannes">
                 <div class="modal-dialog" role="document">
@@ -387,12 +387,12 @@
                                 </div>
                             </form>
                         @endisset
-                        
+
                     </div>
                 </div>
             </div>
-            
+
         </div>
-        
+
     </voiture-show>
 @endsection

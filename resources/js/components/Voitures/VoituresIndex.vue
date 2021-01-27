@@ -48,8 +48,8 @@ export default {
             var contrat = this.contrats[index];
             this.fcEvents.push({
                 title : contrat.voiture.immatriculation,
-                start : contrat.check_out,
-                end : contrat.check_in,
+                start : contrat.au,
+                end : contrat.du,
                 cssClass: 'bg-danger text-white',
 
             })

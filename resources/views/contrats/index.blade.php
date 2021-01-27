@@ -4,221 +4,436 @@
 @section('content')
     <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}">
         <div>
-            <transition 
-                name="fade" 
-                enter-active-class="animated fadeIn"
-                leave-active-class="animated fadeOut"
-            >
-                <div class="container">
-                    <h1 class="text-center  my-5">Contrat</h1>
-                </div>
-            </transition>
+            <h1 class="text-center tw-text-3xl my-5">Contrats</h1>
 
-            <div class="container-fluid bg-warning py-5">
-                <form action="/contrats/recherche" method="GET">
-                    {{-- @csrf --}}
-                    <div class="container">
-                        <div class="row px-5">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="">Cherche Contrat par Nº Contrat</label>
-                                    <input type="text" class="form-control" name="contrat" id="" aria-describedby="helpId" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="">Nom, Prénom, Nº Téléphone Client</label>
-                                    <input type="text" class="form-control" name="client" id="" aria-describedby="helpId" placeholder="">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row px-5">
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="">Date du</label>
-                                    <input type="date" class="form-control" name="check_out" >
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="">Date au</label>
-                                    <input type="date" class="form-control" name="check_in" >
-                                </div>
-                            </div>
-                            <div class="col-3">
-                                <div class="form-group">
-                                    <label for="">État</label>
-                                    <select class="form-control" name="etat">
-                                        <option value="tout">Tout</option>
-                                        <option value="en-cours">En Cours</option>
-                                        <option value="terminé">Terminé</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-2 offset-1">
-                                <div class="form-group">
-                                    <label for="" style="visibility: hidden">Type</label>
-                                    <button type="submit" class="btn btn-primary btn-block">Chercher</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-                
-
-            </div>
             <div class="container">
-                <table class="table table-hover mt-5">
+
+                <table class="table mt-5">
                     <thead>
                         <tr>
                             <th>Contrat Nº</th>
                             <th>Client</th>
                             <th>Voiture</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        @foreach ($contrats as $contrat)
-                            <tr>
-                                <td scope="row">
-                                    <div class="row">
-                                        <a href="/contrat/{{ $contrat->id }}">
-                                            {{ $contrat->numéro }}
-                                        </a>
-                                    </div>
-                                    <div class="row">
-                                        @if (! $contrat->cashier_facture_id)
-                                                <button class="btn btn-primary btn-sm px-1 py-0 mr-2" role="button" @click="envoieACashier( {{ $contrat }} )">Envoyer à Cashier</button>
-                                        @else
-                                            @if (config('app.env') !== 'local')
-                                                <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button"
-                                                    href="http://cashier.azimuts.ga/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>
-                                            @else
-                                                <a class="btn btn-success btn-sm px-1 py-0 mr-2" role="button"
-                                                    href="http://thecashier.test/STA/Facture/{{ $contrat->cashier_facture_id }}">Voir Facture</a>
-                                            @endif
-                                                
-                                        @endif
-                                        
-                                        <!-- Si le contrat n'est plus en cours -->
-                                        @if ( $contrat->real_check_in )
-                                            <!-- Si le contrat a été prolongé -->
-                                            @if ($contrat->prolongation_id)
-                                                <span class="mx-1 badge badge-pill badge-success">Prolongé</span>
-                                                <a class="btn btn-secondary btn-sm px-1 py-0 mr-2" role="button"
-                                                    href="/contrat/{{ $contrat->prolongation_id }}">Voir Contrat Prolongé</a>
-                                            <!-- Si le contrat n'a jamais été prolongé -->
-                                            @else
-                                                <span class="mx-1 badge badge-pill badge-success">Retourné</span>
-                                            @endif
-                                        
-                                        <!-- Si le contrat est en cours -->
-                                        @else
+                        @if (sizeof($contrats) > 0)
+                            @foreach ($contrats as $contrat)
+                                <tr>
 
-                                            <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2 " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
-                                                <i class="fas fa-clock"></i> Prolonger Contrat
-                                            </button>
-                                            <button type="button" class="btn btn-secondary btn-sm px-1 py-0" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
-                                                <i class="fas fa-exchange-alt mr-1"></i> Changer Voiture 
-                                            </button>
-                                            <span class="badge badge-pill badge-warning mr-2">En Location</span>
+                                    {{-- Contrat --}}
+                                    <td scope="row" class="">
+
+                                        {{-- Numéro de Contrat --}}
+                                        <div class="tw-flex tw-bg-yellow-600 tw-px-2">
+                                            <a href="/contrat/{{ $contrat->id }}" class=" tw-font-semibold">
+                                                {{ $contrat->numéro }}
+                                            </a>
+                                        </div>
+
+                                        {{-- Dates --}}
+                                        <div class="tw-flex tw-mt-2 tw-bg-yellow-200 tw-py-3 tw-px-2 tw-rounded tw-rounded-b-none">
+                                            <span class="tw-mr-1">
+                                                Du:
+                                            </span>
+                                            <span class="bg-success tw-px-5 tw-rounded tw-text-white">
+                                                {{ $contrat->du->format('d-M-Y') }}
+                                            </span>
+                                            <span class="tw-ml-3">
+                                                Au :
+                                            </span>
+                                            @if ($contrat->au)
+                                                <span class="tw-mx-1 bg-danger tw-px-5 tw-rounded tw-text-white" >
+                                                    {{ $contrat->au->format('d-M-Y') }}
+                                                </span>
+                                            @else
+                                                <span class="tw-mx-1" >
+                                                    <i class="fas fa-infinity "></i>
+                                                </span>
+                                            @endif
+                                            <span class="tw-mr-1">
+                                                Soit:
+                                            </span>
+                                            <span class="bg-primary tw-px-5 tw-rounded tw-text-white">
+                                                {{ $contrat->nombre_jours }} Jours
+                                            </span>
+
+                                        </div>
+
+                                        {{-- Montant Total --}}
+                                        <div class="tw-flex tw-justify-between tw-mt-3 tw-py-1 tw-bg-blue-200 tw-px-14 tw-rounded tw-rounded-b-none">
+                                            <p class="tw-font-semibold">Montant Total</p>
+                                            <span class="tw-font-semibold">{{ $contrat->prix_journalier  * $contrat->nombre_jours}} F CFA</span>
+                                        </div>
+
+                                        {{-- Paiements --}}
+                                        @if (sizeof($contrat->paiements) > 0)
+                                            <div class="tw-flex tw-flex-col tw-justify-between tw-py-1 tw-bg-blue-100 tw-pr-6 tw-pl-14">
+
+                                                <p class="tw-text-md tw-underline tw-font-semibold tw-mt-1 tw-mb-3">Paiements</p>
+
+                                                @foreach ($contrat->paiements as $paiement)
+                                                    <div class="tw-flex tw-justify-between">
+                                                        <span >{{ $paiement->created_at->format('d-M-Y') }}</span>
+                                                        <div class="tw-w-1/4">
+                                                            <span class="tw-font-semibold">{{ $paiement->montant }} F CFA</span>
+                                                            @can('editer paiements')
+                                                                <button class="tw-text-blue-400 tw-mx-1" data-toggle="modal" data-target="#updatePaiement{{ $paiement->id }}"><i class="fas fa-edit"></i></button>
+                                                            @endcan
+                                                            @can('supprimer paiements')
+                                                                <button class="tw-text-red-400 tw-mr-1" data-toggle="modal" data-target="#supprimerModal"><i class="fas fa-trash"></i></button>
+                                                            @endcan
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Modal Update Paiement --}}
+                                                    <div class="modal fade" id="updatePaiement{{ $paiement->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Editer Paiement</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="/paiement/{{ $paiement->id }}" method="POST">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label for="">Montant</label>
+                                                                            <input type="number" class="form-control" name="montant" value="{{ $paiement->montant }}">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="">Note</label>
+                                                                            <textarea class="form-control" name="note" value="{{ $paiement->note }}"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                                                        <button type="submit" class="btn btn-primary">Editer</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal Delete Paiement -->
+                                                    <div class="modal fade" id="supprimerModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                                        <form action="/paiement/{{ $paiement->id }}" class="modal-dialog" role="document" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Êtes-vous sûr de Vouloir Supprimer le Paiement? </h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                                                    <button type="submit" class="btn btn-primary">Oui</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                @endforeach
+
+
+                                            </div>
                                         @endif
 
-                                        <div class="modal fade" id="changervoiture{{ $contrat->id }}" tabindex="-1" role="dialog">
+                                        {{-- Solde Si il y a Paiements --}}
+                                        @if (sizeof($contrat->paiements) > 0 )
+                                            <div class="tw-flex tw-justify-between tw-py-1 tw-bg-blue-200 tw-px-14 tw-rounded tw-rounded-t-none">
+                                                <p class="tw-font-semibold tw-text-md">Solde</p>
+                                                <div>
+                                                    <span class="tw-font-semibold tw-w-1/4"
+                                                    >{{ $contrat->solde()}} F CFA</span>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        {{-- Bouttons --}}
+                                        @if ($contrat->deleted_at === NULL)
+                                            <div class="tw-flex tw-bg-gray-100 tw-px-1 tw-py-3 tw-rounded" >
+                                                @can('créer paiement')
+                                                    <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2"
+                                                        data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
+                                                    >
+                                                        Effectuer Paiement
+                                                    </button>
+                                                @endcan
+
+                                                <!-- Si le contrat n'est plus en cours -->
+                                                @if( $contrat->real_check_out )
+                                                    <span class="mx-1 badge badge-pill badge-success">Terminé</span>
+                                                <!-- Si le contrat est en cours -->
+                                                @else
+                                                    @can('prolonger contrats')
+                                                        <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2 " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
+                                                            <i class="fas fa-clock"></i> Prolonger Contrat
+                                                        </button>
+                                                    @endcan
+                                                    @can('editer contrat')
+                                                        <button type="button" class="btn btn-secondary btn-sm px-1 py-0" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
+                                                            <i class="fas fa-exchange-alt mr-1"></i> Changer Voiture
+                                                        </button>
+                                                    @endcan
+                                                    <span class="badge badge-pill badge-warning ml-4">En Location</span>
+                                                @endif
+
+                                                {{-- COMPAGNIE TYPE V --}}
+                                                @if ( $compagnie->type === 'véhicule' )
+                                                    {{-- MODAL CHANGER VOITURE  --}}
+                                                    <div class="modal fade" id="changervoiture{{ $contrat->id }}" tabindex="-1" role="dialog" >
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Changer Véhicule</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <form action="/contrats/{{ $contrat->id }}/changer-voiture" method="POST" v-if="">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label for="">Sélectionner Voiture</label>
+                                                                            <select class="custom-select" name="voiture">
+                                                                                <option value="{{ $contrat->voiture->id }}" selected>{{ $contrat->voiture->immatriculation }}</option>
+
+                                                                                @foreach ($voitures as $voiture)
+                                                                                    @if($voiture->etat === 'disponible')
+                                                                                        <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary" >Submit</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- MODAL PROLONGATION --}}
+                                                    <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Prolonger Contrat</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                </div>
+                                                                <form action="/contrats/{{ $contrat->id }}/prolonger" method="POST">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label for="">Nouvelle Date Prolongation</label>
+                                                                            <input type="date" class="form-control" name="du">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="">Montant</label>
+                                                                            <input type="number" step=5000 class="form-control" name="prix_journalier" value="{{ $contrat->prix_journalier }}">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="">Sélectionner Voiture</label>
+                                                                            <select class="custom-select" name="voiture">
+                                                                                <option value="{{ $contrat->voiture->id }}" selected>{{ $contrat->voiture->immatriculation }}</option>
+                                                                                @foreach ($voitures as $voiture)
+                                                                                    @if($voiture->etat === 'disponible')
+                                                                                        <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary" >Submit</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                            </div>
+                                        @endif
+
+
+                                        <!-- Modal Prolongation Durée de Contrat -->
+                                        <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">Changer Véhicule</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+                                                        <h5 class="modal-title">Prolongation Durée de Contrat</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                    <form action="/contrats/{{ $contrat->id }}/changer-voiture" method="POST">
+                                                    <form action="/contrat/{{ $contrat->id }}/update" method="POST">
                                                         @csrf
+                                                        @method('PUT')
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label for="">Sélectionner Voiture</label>
-                                                                <select class="custom-select" name="voiture">
-                                                                    <option value="{{ $contrat->voiture->id }}" selected>{{ $contrat->voiture->immatriculation }}</option>
-                                                                    @foreach ($voitures as $voiture)
-                                                                        @if($voiture->etat === 'disponible')
+                                                                <label for="">Nouvelle Date</label>
+                                                                <input type="date" class="form-control" name="date">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                @if ($compagnie->type === 'véhicules')
+                                                                    <label for="">Nouveau Véhicule</label>
+                                                                    <select type="date" class="form-control" name="contractable">
+                                                                        <option value="{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</option>
+                                                                        @foreach ($contractablesDisponibles as $voiture)
                                                                             <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </select>
+                                                                        @endforeach
+                                                                    </select>
+                                                                @else
+                                                                    <label for="">Nouvelle Chambre</label>
+                                                                    <select type="date" class="form-control" name="contractable">
+                                                                        <option value="{{ $contrat->contractable->id }}">{{ $contrat->contractable->nom }}</option>
+                                                                        @foreach ($contractablesDisponibles as $chambre)
+                                                                            <option value="{{ $chambre->id }}">{{ $chambre->nom }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                @endif
+
+
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary" >Submit</button>
+                                                            <button type="submit" class="btn btn-primary">Save</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
+                                        <!-- Modal Paiement -->
+                                        <div class="modal fade" id="paiement{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title">Prolonger Contrat</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
+                                                        <h5 class="modal-title">Paiement Contrat</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                     </div>
-                                                    <form action="/contrats/{{ $contrat->id }}/prolonger" method="POST">
+                                                    <form action="/paiement" method="POST">
                                                         @csrf
                                                         <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <label for="">Nouvelle Date Prolongation</label>
-                                                                <input type="date" class="form-control" name="check_in">
-                                                            </div>
+
+                                                            <input type="hidden" class="form-control" name="contrat_id" value="{{ $contrat->id }}">
+
                                                             <div class="form-group">
                                                                 <label for="">Montant</label>
-                                                                <input type="number" step=5000 class="form-control" name="prix_journalier" value="{{ $contrat->prix_journalier }}">
+                                                                <input type="number" class="form-control" name="montant">
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="">Sélectionner Voiture</label>
-                                                                <select class="custom-select" name="voiture">
-                                                                    <option value="{{ $contrat->voiture->id }}" selected>{{ $contrat->voiture->immatriculation }}</option>
-                                                                    @foreach ($voitures as $voiture)
-                                                                        @if($voiture->etat === 'disponible')
-                                                                            <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </select>
+                                                                <label for="">Note</label>
+                                                                <textarea type="number" class="form-control" name="note"></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary" >Submit</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                                            <button type="submit" class="btn btn-primary">Paier</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
-                                        
 
-                                    </div>
-                                </td>
-                                <td>{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</td>
-                                <td>{{ $contrat->voiture->immatriculation }}</td>
-                            </tr>
-                        @endforeach
+                                    </td>
 
+                                    {{-- Client --}}
+                                    <td class="">
+                                        <div class="tw-flex tw-flex-col tw-bg-gray-300 ">
+                                            <span class="">{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</span>
+                                        </div>
+                                        <div class="tw-flex tw-flex-col tw-bg-green-300 tw-mt-4 tw-rounded">
+                                            <span class="">{{ $contrat->client['phone1'] }}</span>
+                                            @if ($contrat->client['phone2'])
+                                                <span>{{ $contrat->client['phone2'] }}</span>
+                                            @else
+                                                <span>N/A</span>
+                                            @endif
+                                        </div>
+                                        <div class="tw-flex tw-flex-col tw-bg-green-600 ">
+                                            <span class="">{{ $contrat->client['adresse'] }}</span>
+                                            <a class="tw-bg-white tw-text-center" role="button" href="/client/{{ $contrat->client->id }}">Voir Plus de Détails</a>
+                                        </div>
+                                    </td>
+
+                                    {{-- Contractable : Chambre Ou Hotel --}}
+                                    @if ($compagnie->type === 'hôtel')
+                                        <td class="">{{ $contrat->contractable->nom }}</td>
+                                    @else
+                                        <td class="">{{ $contrat->contractable->immatriculation }}</td>
+                                    @endif
+
+                                    {{-- Actions --}}
+                                    <td class="tw-flex tw-flex-col">
+
+                                        @if($contrat->deleted_at !== NULL)
+                                            <span class="tw-bg-red-400 tw-text-red-100 tw-mt-5 tw-py-5 tw-text-center">
+                                                <i class="fas fa-ban    "></i>
+                                                Contrat Annulé
+                                            </span>
+                                        @else
+                                            @can('terminer contrat')
+                                                <button class="tw-bg-green-400 tw-py-1 tw-px-2 tw-text-green-50 tw-mt-5 tw-rounded" @click="terminerContrat({{ $contrat }})">
+                                                    <i class="fas fa-ban    "></i>
+                                                    Terminer Contrat
+                                                </button>
+                                            @endcan
+                                            @can('editer contrat')
+                                                <a class="tw-no-underline tw-bg-blue-400 tw-text-blue-100 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-center" href="/contrat/{{ $contrat->id }}/edit">
+                                                    <i class="fas fa-edit    "></i>
+                                                    Editer
+                                                </a>
+                                            @endcan
+                                            @can('annuler contrat')
+                                                <button class="tw-bg-red-400 tw-py-1 tw-px-2 tw-text-red-100 tw-mt-2 tw-rounded" @click="annulerContrat({{ $contrat }})">
+                                                    <i class="fas fa-ban    "></i>
+                                                    Annuler
+                                                </button>
+                                            @endcan
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
-                <div class="row">
-                    <div class="col d-flex justify-content-center">
-                        {{ $contrats->links() }}
-                    </div>
+
+                <div class="tw-flex tw-pb-24 tw-pt-10 tw-justify-center">
+                    {{ $contrats->links('vendor.pagination.bootstrap-4') }}
                 </div>
-                
             </div>
-            <!-- Modal Prolongation -->
-            
+
+            <div class="tw-sticky tw-bottom-16 tw-justify-end tw-flex tw-container-fluid tw-px-40">
+                <a href="/">
+                    <i class="fas fa-plus-circle fa-5x tw-text-green-700 hover:tw-text-green-800 tw-cursor-pointer"></i>
+                </a>
+            </div>
+
         </div>
     </contrats-index>
-    
-    
+
+
+@endsection
+
+@section('js')
+    <script>
+        document.getElementById('#flash-overlay-modal').modal();
+        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+    </script>
 @endsection

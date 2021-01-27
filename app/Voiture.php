@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Rinvex\Bookings\Traits\Bookable;
 
 class Voiture extends Model
 {
+    use HasFactory;
     protected $guarded = [];
     public function documents()
     {
@@ -18,7 +21,8 @@ class Voiture extends Model
 
     public function contrats()
     {
-        return $this->hasMany('App\Contrat')->orderBy('id', 'desc');
+        return $this->morphMany('App\Contrat', 'contractable');
+        // ->orderBy('id', 'desc');
     }
 
     public function pannes()
@@ -35,7 +39,7 @@ class Voiture extends Model
         return Voiture::where('etat', $etat)->count();
     }
     public static function moinsPerformante(){
-        
+
     }
     public function etat($etat){
         $this->update([

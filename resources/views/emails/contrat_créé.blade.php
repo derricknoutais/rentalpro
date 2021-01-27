@@ -12,7 +12,7 @@
     <h4>Client : {{ $contrat->client->nom . ' ' . $contrat->client->prenom  }}</h4>
     <h4>Nº de téléphone : {{ $contrat->client->phone1 }}</h4>
     <h4>Immatriculation : {{ $contrat->voiture->immatriculation }}</h4>
-    <h4>Période du : {{ $contrat->check_out }} au : {{ $contrat->check_in }} </h4>
+    <h4>Période du : {{ $contrat->au }} au : {{ $contrat->du }} </h4>
     <h4>Montant : {{ $contrat->prix_journalier }} x {{ $contrat->nombre_jours }} = {{ $contrat->total }}</h4>
     <a href="https://location.stapog.ga/contrat/{{ $contrat->id }}">
         Voir Contrat

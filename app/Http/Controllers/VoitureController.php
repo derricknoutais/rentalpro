@@ -34,11 +34,11 @@ class VoitureController extends Controller
     public function reception(Request $request){
         $dernier_contrat_id =  $request->voiture['contrats'][0]['id'];
         $contrat = Contrat::find( $dernier_contrat_id);
-        
+
         $contrat->update([
             'etat_accessoires_au_retour' => $request->accessoires,
             'etat_documents_au_retour' => $request->documents,
-            'real_check_in' => now()
+            'real_check_out' => now()
         ]);
         Voiture::find( $request->voiture['id'])->etat('disponible');
     }
@@ -60,5 +60,5 @@ class VoitureController extends Controller
 
         return redirect('/voiture/' . $voiture->id);
     }
-    
+
 }

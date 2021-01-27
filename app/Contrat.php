@@ -5,22 +5,52 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Auth;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Contrat extends Model
 {
+    use SoftDeletes, LogsActivity, HasFactory;
+
     protected $guarded = [];
-    protected $dates = ['check_out', 'check_in'];
+    protected static $logAttributes = '*';
+    protected $dates = ['au', 'du'];
 
     // Relationships
+
     public function client()
     {
         return $this->belongsTo('App\Client');
     }
-    public function voiture()
+    public function contractable()
     {
-        return $this->belongsTo('App\Voiture');
+        return $this->morphTo();
     }
+
+    public function compagnie()
+    {
+        return $this->belongsTo('App\Compagnie');
+    }
+    public function paiements()
+    {
+        return $this->hasMany('App\Paiement');
+    }
+    public function total(){
+        return $this->nombre_jours * $this->prix_journalier;
+    }
+    public function payé(){
+        $total_payé = 0;
+        foreach ($this->paiements as $paiement ) {
+            $total_payé += $paiement->montant;
+        }
+        return $total_payé;
+    }
+    public function solde(){
+        return $this->total() - $this->payé();
+    }
+
 
     // Methods
     // protected static function numéro(){
@@ -45,7 +75,7 @@ class Contrat extends Model
 
             if( Carbon::today()->isSameDay(new Carbon('first day of this month')) ) {
 
-                // ... & aucun contrat n'est établi 
+                // ... & aucun contrat n'est établi
 
                 if( sizeof( $contrats_du_mois )  === 0){
 
@@ -58,7 +88,7 @@ class Contrat extends Model
             };
             // Récupérer le numero de contrat actuel
             $numero_contrat = Auth::user()->compagnie->numero_contrat;
-            
+
             if($numero_contrat < 10){
                 $numéro = '00' . $numero_contrat;
             } else if( $numero_contrat >= 10 && $numero_contrat < 100 ){

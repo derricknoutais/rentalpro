@@ -1,4 +1,3 @@
-
 require('./bootstrap');
 
 window.Vue = require('vue');
@@ -17,7 +16,6 @@ Vue.use(VueCurrencyFilter, {
 });
 
 import fullCalendar from 'vue-fullcalendar'
-
 Vue.component('full-calendar', fullCalendar)
 
 const moment = require('moment')
@@ -60,23 +58,23 @@ const app = new Vue({
             var data;
             data = {
                 'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
-                'échéance' : payload.check_in,
+                'échéance' : payload.du,
                 'quantité' : payload.nombre_jours,
                 'description' : 'Jours',
                 'prix_unitaire' : payload.prix_journalier,
-                'client': payload.client.cashier_id 
+                'client': payload.client.cashier_id
             };
 
             axios.post('https://thecashier.ga/api/facture', data).then(response => {
                 var cashier_id = response.data.id
-                this.cashier_id = cashier_id       
+                this.cashier_id = cashier_id
                 if( cashier_id !== null ){
                     axios.post('/contrat/' + payload.id + '/update-cashier-id', {cashier_id: this.cashier_id}).then( response => {
                         window.location.reload()
                     }).catch(error => {
                         console.log(error);
                     });
-                }   
+                }
             }).catch(error => {
                 console.log(error);
             });
@@ -84,7 +82,7 @@ const app = new Vue({
     },
     mounted() {
             this.test = true
-        
+
     },
     created(){
         window.Echo.channel('contrats').listen('ContratCree', e => {
@@ -97,6 +95,6 @@ const app = new Vue({
         })
     }
 
-    
+
 });
 

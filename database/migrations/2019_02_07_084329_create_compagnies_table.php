@@ -16,11 +16,12 @@ class CreateCompagniesTable extends Migration
     {
         Schema::create('compagnies', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('numero_contrat');
             $table->string('nom');
+            $table->string('numero_contrat')->nullable();
+            $table->enum('type', ['hôtel', 'véhicules']);
             $table->timestamps();
 
-            
+
 
         });
     }

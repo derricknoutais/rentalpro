@@ -12,7 +12,7 @@ export default {
             var link = 'https://cashier.azimuts.ga/api/facture';
             data = {
                 'objet': 'Location ' + payload.voiture.marque + ' ' + payload.voiture.type + ' ' + payload.voiture.immatriculation,
-                'échéance' : payload.check_in,
+                'échéance' : payload.du,
                 'quantité' : payload.nombre_jours,
                 'description' : 'Jours',
                 'prix_unitaire' : payload.prix_journalier,

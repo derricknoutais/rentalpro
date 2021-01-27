@@ -4,78 +4,8 @@
 @section('content')
     <clients-index inline-template>
         <div>
-            {{-- En-tête --}}
-            <div class="container">
-                <h1 class="text-left my-5">Clients</h1>
-            </div>
-            {{-- Boutton Ajouter Client --}}
-            <div class="container-fluid bg-primary py-5">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-10">
-                            <p class="text-white">Ajoute, Visualise et Modifie tous tes clients.</p>
-                        </div>
-                        <div class="col-2">
-                            <button class="btn btn-light" data-toggle="modal" data-target="#ajoutClient">Ajouter Client</button>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
 
-            {{-- Bannière Recherche Clients --}}
-
-            <div class="container-fluid bg-white py-5">
-                <div class="container">
-                    <div class="row px-5">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Cherche Clients par Nom, Prénom</label>
-                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Nº Téléphone</label>
-                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row px-5">
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="">Nº Permis</label>
-                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="">Ville</label>
-                                <select class="form-control" name="" id="">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="">E-mail</label>
-                                <input type="text" class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-                            </div>
-                        </div>
-
-                        <div class="col-2 offset-1">
-                            <div class="form-group">
-                                <label for="" style="visibility: hidden">Type</label>
-                               <button type="button" class="btn btn-primary btn-block">Chercher</button>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
+            <h1 class="text-center tw-text-3xl my-5">Clients</h1>
 
             {{-- Tableau index sur les clients --}}
 
@@ -84,10 +14,9 @@
                     <div class="col">
 
                         {{-- Tableau des clients --}}
-                        {{-- <vuet` --}}
                         <table class="table table-hover">
                             <thead>
-                                <tr>
+                                <tr class="tw-bg-yellow-300">
                                     <th>Nom</th>
                                     <th>Numéro de Phone</th>
                                     <th>Nombre Locations</th>
@@ -113,12 +42,12 @@
                     </div>
                 </div>
             </div>
-            
+
             {{-- Modal Ajouter Client --}}
             <div class="modal fade" id="ajoutClient" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" @keyup.enter="enregistreClientDansCashier()">
-                
+
                 <div class="modal-dialog modal-lg" role="document">
-                    
+
                     {{-- Contenu Modal --}}
 
                     <div class="modal-content">
@@ -131,12 +60,12 @@
                         </div>
 
                         {{-- Formulaire Ajout Client --}}
-                        
+
                         <form action="/clients/ajout-client" method="POST"  enctype="multipart/form-data" id="clientForm" @submit.prevent="enregistreClientDansCashier()">
-                            
+
                             <div class="modal-body">
                                 <div class="container-fluid">
-                                    
+
                                         @csrf
                                         <div class="row">
                                             <div class="col">
@@ -213,8 +142,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    
-                                    
+
+
                                 </div>
                             </div>
 
@@ -229,7 +158,8 @@
                     </div>
                 </div>
             </div>
+
         </div>
-        
+
     </clients-index>
 @endsection

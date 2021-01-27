@@ -13,25 +13,63 @@ use App\Panne;
 use App\Maintenance;
 use Carbon\Carbon;
 use App\Technicien;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 Auth::loginUsingID(1);
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::get('/test', function(){
-        $contrat = Contrat::find(1);
-        event(new ContratCree( $contrat ));
+    Route::get('/role-et-permissions', function(){
+        $role1 = Role::create(['name' => 'admin']);
+        $role2 = Role::create(['name' => 'gérant']);
+        $role3 = Role::create(['name' => 'basique']);
+
+        $permission0 = Permission::create(['name' => 'terminer contrat']);
+        $permission1 = Permission::create(['name' => 'créer contrat']);
+        $permission2 = Permission::create(['name' => 'lire contrats']);
+        $permission3 = Permission::create(['name' => 'editer contrat']);
+        $permission4 = Permission::create(['name' => 'supprimer contrat']);
+        $permission5 = Permission::create(['name' => 'annuler contrat']);
+        $permission6 = Permission::create(['name' => 'prolonger contrat']);
+        $permission7 = Permission::create(['name' => 'créer paiement']);
+        $permission8 = Permission::create(['name' => 'lire paiements']);
+        $permission9 = Permission::create(['name' => 'editer paiements']);
+        $permission10 =Permission::create(['name' => 'supprimer paiements']);
+        $permission11 =Permission::create(['name' => 'annuler paiements']);
+        $permission12 = Permission::create(['name' => 'créer client']);
+        $permission13 = Permission::create(['name' => 'lire clients']);
+        $permission14 = Permission::create(['name' => 'editer client']);
+        $permission15 = Permission::create(['name' => 'supprimer client']);
+
+        $role1->syncPermissions($permission0,
+            $permission1, $permission2, $permission3,
+            $permission4, $permission5, $permission6, $permission7, $permission8,
+            $permission9,$permission10,$permission11,$permission12,
+            $permission13,$permission14,$permission15,
+        );
+        $role2->syncPermissions(
+            $permission0,
+            $permission1, $permission2, $permission3,
+             $permission5, $permission6, $permission7, $permission8,
+            $permission9,$permission11,$permission12,
+            $permission13,$permission14,$permission15,
+        );
+        $role3->syncPermissions(
+            $permission0, $permission1,
+            $permission2, $permission6,
+            $permission5,
+            $permission7, $permission8,
+            $permission11,$permission12,
+            $permission13,$permission14
+        );
+
+        $user = Auth::user();
+        $user->assignRole('admin');
+        App\User::find(2)->assignRole('gérant');
+        App\User::find(3)->assignRole('basique');
+
     });
 
     Route::get('/', 'HomeController@welcome');
@@ -81,19 +119,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/clients/{client}/edit', 'ClientController@edit');
     Route::post('/clients/{client}/update', 'ClientController@update');
 
-    // CONTRATS
+
+    //  CONTRATS
     Route::get('/contrats/menu', 'ContratController@menu');
     Route::get('/contrats', 'ContratController@index');
     Route::get('/contrats/create', 'ContratController@create');
     Route::get('/contrat/{contrat}', 'ContratController@show');
     Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
+    Route::get('/contrat/{contrat}/edit', 'ContratController@edit');
+    Route::put('/contrat/{contrat}/update', 'ContratController@update');
+    Route::put('/contrat/{contrat}/update-all', 'ContratController@updateAll');
     Route::post('/contrats/{contrat}/ajoute-photos', 'ContratController@ajoutePhotos')->where('contrat', '[0-9]+' );
     Route::post('/contrats/{contrat}/update-cashier', 'ContratController@updateCashier')->where( 'contrat', '[0-9]+');
     Route::post('/contrats/store', 'ContratController@store');
+    // Le contrat rapide permet de créer un client et louer une chambre ou une voiture en meme temps
+    Route::post('/contrats/store-contrat-rapide', 'ContratController@storeContratRapide');
     Route::post( '/contrat/{contrat}/update-cashier-id', 'ContratController@updateCashierId');
     Route::post('/contrats/{contrat}/prolonger', 'ContratController@prolonger');
     Route::post('/contrats/{contrat}/changer-voiture', 'ContratController@changerVoiture');
-
     Route::get('/contrats/recherche', function(Request $request){
         $contrats = Contrat::when($request, function($query,  $request){
             // Contrat
@@ -111,26 +154,28 @@ Route::group(['middleware' => ['auth']], function () {
                 $query->whereIn('client_id', $clients);
             }
             // Date du
-            if($request->check_out){
-                $query->where('check_out', 'like',  $request->check_out . '%' );
+            if($request->au){
+                $query->where('au', 'like',  $request->au . '%' );
             }
 
             // Date au
-            if($request->check_in){
-                $query->where('check_in', 'like',  $request->check_in . '%' );
+            if($request->du){
+                $query->where('du', 'like',  $request->du . '%' );
             }
 
             // Etat
             if($request->etat === 'en-cours'){
-                $query->whereNull('real_check_in');
+                $query->whereNull('real_check_out');
             } else if( $request->etat === 'terminé') {
-                $query->whereNotNull('real_check_in');
+                $query->whereNotNull('real_check_out');
             }
             return $query;
         })->orderBy('id', 'desc')->paginate(20);
         $voitures = Voiture::all();
         return view('contrats.index', compact(['contrats', 'voitures']));
     });
+    Route::delete('/contrats/{contrat}', 'ContratController@destroy');
+
 
     // Paramètres
     Route::get('/mes-paramètres', function(){
@@ -141,7 +186,7 @@ Route::group(['middleware' => ['auth']], function () {
         return view( 'paramètres.index', compact('documents', 'accessoires', 'voitures', 'techniciens'));
     });
 
-
+    // Documents
     Route::post('/documents', function(Request $request){
         $document = Document::create([
             'type' => $request->type,
@@ -165,7 +210,7 @@ Route::group(['middleware' => ['auth']], function () {
             return redirect('/mes-paramètres');
     });
 
-
+    // Accessoires
     Route::post('/accessoires', function (Request $request) {
         $accessoire = Accessoire::create([
             'type' => $request->type,
@@ -225,8 +270,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     });
 
-    // PANNES
+    // Pannes
     Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
+
 
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
@@ -249,6 +295,8 @@ Route::group(['middleware' => ['auth']], function () {
 
         return redirect()->back();
     });
+
+    // Reporting
     Route::get('/reporting/voitures', function(){
         $voitures = Voiture::with(['contrats', 'maintenances'])->get();
 
@@ -280,11 +328,13 @@ Route::group(['middleware' => ['auth']], function () {
         $contrats = Contrat::all();
         return view('reporting.index', compact('contrats'));
     });
-
     // COMPAGNIES
-
     Route::view('/compagnies/create', 'compagnies.create');
+
+    // PAIEMENTS
+    Route::resource('paiement', 'PaiementController');
 
     // Techniciens
     Route::post('techniciens', 'TechnicienController@store');
+
 });

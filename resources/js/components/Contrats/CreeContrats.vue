@@ -77,8 +77,8 @@ export default {
             contrat : {
                 client : null, //this.prop_clients[0]
                 voiture: null, // this.prop_voitures[0]
-                check_out: null,
-                check_in: null,
+                au: null,
+                du: null,
                 nombre_jours: null,
                 prix_journalier: null,
                 caution: null,
@@ -208,9 +208,9 @@ export default {
         },
         lanceEtape4(value){
             this.step = 4
-            this.contrat.check_out = value.check_out
-            this.contrat.check_in = value.check_in
-            this.contrat.nombre_jours = (new Date(this.contrat.check_in) - new Date(this.contrat.check_out) ) / ( 1000 * 60 * 60 * 24)
+            this.contrat.au = value.au
+            this.contrat.du = value.du
+            this.contrat.nombre_jours = (new Date(this.contrat.du) - new Date(this.contrat.au) ) / ( 1000 * 60 * 60 * 24)
         },
         lanceEtape5(value){
             this.step = 5
@@ -235,7 +235,7 @@ export default {
             var link = 'https://cashier.azimuts.ga/api/facture';
             this.data = data = {
                 'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
-                'échéance' : this.contrat.check_in,
+                'échéance' : this.contrat.du,
                 'quantité' : this.contrat.nombre_jours,
                 'description' : 'Jours',
                 'prix_unitaire' : this.contrat.prix_journalier,

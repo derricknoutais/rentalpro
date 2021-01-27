@@ -17,13 +17,14 @@ class ClientController extends Controller
         } else {
             return redirect('/compagnies/create');
         }
-        
+
     }
     public function show(Client $client){
-        $client->loadMissing('contrats');
+        $client->loadMissing('contrats', 'contrats.compagnie', 'compagnie');
         return view('clients.show', compact('client'));
     }
     public function edit(Client $client){
+
         return view('clients.update', compact('client'));
     }
     public function update(Request $request, Client $client){
@@ -38,6 +39,16 @@ class ClientController extends Controller
             'mail' => $request->mail,
             'ville' => $request->ville,
         ]);
+        if($request->hasFile('permis')){
+            $image = $request->file('permis');
+            $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/uploads');
+            $image->move($destinationPath, $nom);
+            $client->update([
+                'permis' => $nom
+            ]);
+        }
+        return redirect('/clients/' . $client->id);
     }
     public function store(Request $request){
         $client = DB::transaction(function () use ($request){
@@ -66,7 +77,7 @@ class ClientController extends Controller
             }
             return $client;
         });
-        
+
         return redirect('/clients/' . $client->id);
 
     }
