@@ -22,4 +22,7 @@ class Client extends Model
     public function nombreLocations(){
         return $this->contrats->count();
     }
+    public function troisDerniersContrats(){
+        return Contrat::where('client_id', $this->id)->take(3)->latest()->get();
+    }
 }

@@ -13,7 +13,6 @@
 </head>
 <body>
 
-
         <img src="{{ asset('/img/orishainn_logo.png') }}" style="width: 25rem" >
         <p style="margin-top: 0rem">MOUKALA, B.P:1268 PORT-GENTIL (GABON) </p>
         <p style="margin-top: 0rem">Téléphone: 011-56-08-55 / 077-59-92-90 / 066-88-77- </p>

@@ -80,7 +80,6 @@ class Contrat extends Model
                 if( sizeof( $contrats_du_mois )  === 0){
 
                     // reinitialise la numérotation du contrat a 1
-
                     Auth::user()->compagnie->update([
                         'numero_contrat' => 1
                     ]);
@@ -101,6 +100,6 @@ class Contrat extends Model
             return $numéro;
         });
 
-        return $nouveau_numéro = 'CL' . $numéro . '/' . date('m') . '/' . date('Y');
+        return $nouveau_numéro =  $numéro . '/' . date('m') . '/' . date('Y');
     }
 }

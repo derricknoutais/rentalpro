@@ -5977,7 +5977,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['contrat', 'contrat_enregistre', 'environment'],
   data: function data() {
@@ -12361,7 +12360,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "p{\n  font-size: 12pt\n}\n.dashed {\n  border-top: 1px dashed black\n}\n.pbn-3 {\n}\n", ""]);
+exports.push([module.i, "p{\n  font-size: 12pt\n}\n.dashed {\n  border-top: 1px dashed black\n}\n", ""]);
 
 // exports
 
@@ -77120,7 +77119,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", {}, [
-    _vm._v("\nlk;læ\n\n    "),
     _vm.contrat.compagnie.type === "véhicules"
       ? _c("div", { staticClass: "tw-h-screen tw-flex tw-flex-col" }, [
           _c("div", { staticClass: "row mt-3" }, [
@@ -77171,11 +77169,11 @@ var render = function() {
               _vm._v(" Location "),
               _c("i", [
                 _vm._v(
-                  _vm._s(_vm.contrat.voiture.marque) +
+                  _vm._s(_vm.contrat.contractable.marque) +
                     " " +
-                    _vm._s(_vm.contrat.voiture.type) +
+                    _vm._s(_vm.contrat.contractable.type) +
                     "  " +
-                    _vm._s(_vm.contrat.voiture.annee) +
+                    _vm._s(_vm.contrat.contractable.annee) +
                     " "
                 )
               ]),
@@ -77183,8 +77181,10 @@ var render = function() {
               _c("i", [
                 _c(
                   "a",
-                  { attrs: { href: "/voiture/" + _vm.contrat.voiture.id } },
-                  [_vm._v(_vm._s(_vm.contrat.voiture.immatriculation))]
+                  {
+                    attrs: { href: "/voiture/" + _vm.contrat.contractable.id }
+                  },
+                  [_vm._v(_vm._s(_vm.contrat.contractable.immatriculation))]
                 )
               ])
             ])
@@ -77673,11 +77673,11 @@ var render = function() {
               _vm._v(" Location "),
               _c("i", [
                 _vm._v(
-                  _vm._s(_vm.contrat.voiture.marque) +
+                  _vm._s(_vm.contrat.contractable.marque) +
                     " " +
-                    _vm._s(_vm.contrat.voiture.type) +
+                    _vm._s(_vm.contrat.contractable.type) +
                     "  " +
-                    _vm._s(_vm.contrat.voiture.annee) +
+                    _vm._s(_vm.contrat.contractable.annee) +
                     " "
                 )
               ]),
@@ -77685,8 +77685,10 @@ var render = function() {
               _c("i", [
                 _c(
                   "a",
-                  { attrs: { href: "/voiture/" + _vm.contrat.voiture.id } },
-                  [_vm._v(_vm._s(_vm.contrat.voiture.immatriculation))]
+                  {
+                    attrs: { href: "/voiture/" + _vm.contrat.contractable.id }
+                  },
+                  [_vm._v(_vm._s(_vm.contrat.contractable.immatriculation))]
                 )
               ])
             ])

@@ -27,7 +27,8 @@
                                     <td scope="row" class="">
 
                                         {{-- Numéro de Contrat --}}
-                                        <div class="tw-flex tw-bg-yellow-600 tw-px-2">
+                                        <div class="tw-flex tw-bg-yellow-600 tw-px-2 tw-py-2 tw-items-center">
+                                            <i class="fas fa-chevron-right    "></i>
                                             <a href="/contrat/{{ $contrat->id }}" class=" tw-font-semibold">
                                                 {{ $contrat->numéro }}
                                             </a>
@@ -172,7 +173,7 @@
                                                     <span class="mx-1 badge badge-pill badge-success">Terminé</span>
                                                 <!-- Si le contrat est en cours -->
                                                 @else
-                                                    @can('prolonger contrats')
+                                                    @can('prolonger contrat')
                                                         <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2 " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
                                                             <i class="fas fa-clock"></i> Prolonger Contrat
                                                         </button>
@@ -355,10 +356,12 @@
 
                                     {{-- Client --}}
                                     <td class="">
+                                        {{-- Nom --}}
                                         <div class="tw-flex tw-flex-col tw-bg-gray-300 ">
                                             <span class="">{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</span>
                                         </div>
-                                        <div class="tw-flex tw-flex-col tw-bg-green-300 tw-mt-4 tw-rounded">
+                                        {{-- Numéros de Téléphone --}}
+                                        <div class="tw-flex tw-flex-col tw-bg-green-300 tw-mt-2 tw-rounded">
                                             <span class="">{{ $contrat->client['phone1'] }}</span>
                                             @if ($contrat->client['phone2'])
                                                 <span>{{ $contrat->client['phone2'] }}</span>
@@ -366,9 +369,16 @@
                                                 <span>N/A</span>
                                             @endif
                                         </div>
-                                        <div class="tw-flex tw-flex-col tw-bg-green-600 ">
+                                        <div class="tw-flex tw-flex-col tw-bg-green-600 tw-mt-4 tw-py-1">
                                             <span class="">{{ $contrat->client['adresse'] }}</span>
+                                        </div>
+                                        <div class="tw-flex tw-flex-col tw-bg-green-600 tw-mt-4 ">
                                             <a class="tw-bg-white tw-text-center" role="button" href="/client/{{ $contrat->client->id }}">Voir Plus de Détails</a>
+                                        </div>
+                                        <div>
+                                            @foreach ($contrat->client->troisDerniersContrats() as $contrat)
+                                            <p>{{ $contrat->numéro }}</p>
+                                            @endforeach
                                         </div>
                                     </td>
 
@@ -406,6 +416,16 @@
                                                     Annuler
                                                 </button>
                                             @endcan
+
+                                                <button class="tw-bg-purple-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white" @click="annulerContrat({{ $contrat }})">
+                                                    <i class="fas fa-print "></i>
+                                                    Imprimer
+                                                </button>
+                                                <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center" href="/contrat/{{ $contrat->id }}/download">
+                                                    <i class="fas fa-download    "></i>
+                                                    Télécharger
+                                                </a>
+
                                         @endif
                                     </td>
                                 </tr>
@@ -420,7 +440,13 @@
             </div>
 
             <div class="tw-sticky tw-bottom-16 tw-justify-end tw-flex tw-container-fluid tw-px-40">
-                <a href="/">
+                @if ($compagnie->type === 'véhicules')
+
+                    <a href="/contrats/create">
+                @else
+
+                    <a href="/">
+                @endif
                     <i class="fas fa-plus-circle fa-5x tw-text-green-700 hover:tw-text-green-800 tw-cursor-pointer"></i>
                 </a>
             </div>

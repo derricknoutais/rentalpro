@@ -39,12 +39,20 @@ class ContratController extends Controller
         return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'contractablesDisponibles']));
     }
     public function show(Contrat $contrat){
-        $contrat->loadMissing('client', 'contractable', 'compagnie');
+        $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements');
         $du = $contrat->du->format('d-M-Y');
         $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
         $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
 
-        return view('contrats.show', compact('contrat'));
+        $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
+        $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
+        if ( $contrat->compagnie->type === 'véhicules' ) {
+            $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
+        } else if( $contrat->compagnie->type === 'hôtel' ){
+            $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
+        }
+        return $pdf->stream();
+
     }
     public function edit(Contrat $contrat){
         $contrat->loadMissing('client');
@@ -83,6 +91,7 @@ class ContratController extends Controller
             'contractable_id' => $request->contractable,
             'nombre_jours' => $diffInDays
         ]);
+        return redirect('/contrats');
     }
     public function voirUploads(Contrat $contrat){
         return view('contrats.uploads', compact('contrat'));
@@ -133,16 +142,7 @@ class ContratController extends Controller
             $contrat->loadMissing('contractable', 'client');
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
             // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
-            //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.';
-
-            // Nexmo::message()->send([
-            //     'to'   => '24107158215',
-            //     'from' => 'STA',
-            //     'text' => $message
-            // ]);
-
-
-
+            //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
             return $contrat;
         }
@@ -238,13 +238,10 @@ class ContratController extends Controller
                     'montant' => $request->paiement
                 ]);
             }
-            $contrat->loadMissing('contractable', 'client');
-            // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
-            // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
-            //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.';
+            $contrat->loadMissing('contractable', 'client', 'paiements');
             $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
             $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
-            $pdf = PDF::loadView('contrats.pdf', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
+            $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
             return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
         }
     }
@@ -335,6 +332,19 @@ class ContratController extends Controller
     }
     public function destroy(Contrat $contrat){
         $contrat->delete();
+    }
+    public function download(Contrat $contrat){
+        $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
+        $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
+        $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
+        if ( $contrat->compagnie->type == 'véhicules' ) {
+            $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
+            return 'V';
+        } else if( $contrat->compagnie->type == 'hôtel' ){
+            $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
+            return 'H';
+        }
+        // return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
     }
 
 }

@@ -68,7 +68,7 @@ Route::group(['middleware' => ['auth']], function () {
         $user = Auth::user();
         $user->assignRole('admin');
         App\User::find(2)->assignRole('gérant');
-        App\User::find(3)->assignRole('basique');
+        // App\User::find(3)->assignRole('basique');
 
     });
 
@@ -125,6 +125,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrats', 'ContratController@index');
     Route::get('/contrats/create', 'ContratController@create');
     Route::get('/contrat/{contrat}', 'ContratController@show');
+    Route::get('/contrat/{contrat}/download', 'ContratController@download');
     Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
     Route::get('/contrat/{contrat}/edit', 'ContratController@edit');
     Route::put('/contrat/{contrat}/update', 'ContratController@update');

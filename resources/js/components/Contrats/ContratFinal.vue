@@ -1,7 +1,6 @@
 <template>
     <div class="">
         <!-- Contrat Véhicule -->
-    lk;læ
 
         <div v-if="contrat.compagnie.type === 'véhicules'" class="tw-h-screen tw-flex tw-flex-col">
             <!-- EN TETE -->
@@ -31,7 +30,7 @@
             <!-- INFORMATION VOITURE -->
             <div class="row mt-3">
                 <p>
-                    <u><strong>Objet:</strong></u> Location <i>{{ contrat.voiture.marque }} {{ contrat.voiture.type }}  {{ contrat.voiture.annee }} </i> immatriculé <i> <a :href="'/voiture/' + contrat.voiture.id">{{ contrat.voiture.immatriculation }}</a></i>
+                    <u><strong>Objet:</strong></u> Location <i>{{ contrat.contractable.marque }} {{ contrat.contractable.type }}  {{ contrat.contractable.annee }} </i> immatriculé <i> <a :href="'/voiture/' + contrat.contractable.id">{{ contrat.contractable.immatriculation }}</a></i>
                 </p>
 
             </div>
@@ -269,7 +268,7 @@
             <!-- INFORMATION VOITURE -->
             <div class="row mt-3">
                 <p>
-                    <u><strong>Objet:</strong></u> Location <i>{{ contrat.voiture.marque }} {{ contrat.voiture.type }}  {{ contrat.voiture.annee }} </i> immatriculé <i> <a :href="'/voiture/' + contrat.voiture.id">{{ contrat.voiture.immatriculation }}</a></i>
+                    <u><strong>Objet:</strong></u> Location <i>{{ contrat.contractable.marque }} {{ contrat.contractable.type }}  {{ contrat.contractable.annee }} </i> immatriculé <i> <a :href="'/voiture/' + contrat.contractable.id">{{ contrat.contractable.immatriculation }}</a></i>
                 </p>
 
             </div>
@@ -452,8 +451,5 @@ export default {
     }
     .dashed {
         border-top: 1px dashed black
-    }
-    .pbn-3 {
-
     }
 </style>
