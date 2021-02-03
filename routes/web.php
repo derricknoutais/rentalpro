@@ -16,7 +16,7 @@ use App\Technicien;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-Auth::loginUsingID(1);
+// Auth::loginUsingID(1);
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
