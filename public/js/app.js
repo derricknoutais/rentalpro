@@ -5995,7 +5995,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     nombre_jours: function nombre_jours() {
-      return new Date(this.contrat.du) - new Date(this.contrat.au);
+      return (new Date(this.contrat.au) - new Date(this.contrat.du)) / (1000 * 60 * 60 * 24);
     }
   },
   methods: {
@@ -6785,297 +6785,125 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['prop_clients', 'prop_voitures', 'environment'],
+  props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop"],
   data: function data() {
     return {
-      clients: this.prop_clients,
-      voitures: this.prop_voitures,
-      finalStep: false,
-      step: 1,
-      contrat: {
-        client: null,
-        //this.prop_clients[0]
-        voiture: null,
-        // this.prop_voitures[0]
-        au: null,
-        du: null,
-        nombre_jours: null,
-        prix_journalier: null,
-        caution: null,
-        photos: {
-          avant: null,
-          arriere: null,
-          droit: null,
-          gauche: null
-        }
+      contractables: this.contractables_prop,
+      contractable: {
+        id: null
       },
-      contrat_enregistré: null,
-      cashier_id: null,
-      data: null
+      fcEvents: [],
+      clients: this.clients_prop,
+      today: new Date().toISOString().substr(0, 10),
+      weekDays: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+      chambres: this.chambres_prop,
+      chambreADetailler: this.chambres_prop[0],
+      formulaire: {
+        du: null,
+        au: null,
+        nb_jours: 2
+      },
+      afficheFormulaireLocationRapide: true,
+      client: {
+        id: '',
+        nom: '',
+        prenom: '',
+        numero_telephone: '',
+        numero_telephone2: '',
+        numero_telephone3: '',
+        numero_permis: '',
+        mail: '',
+        ville: '',
+        addresse: '',
+        cashier_id: ''
+      },
+      display: {
+        nouveau_client: false
+      }
     };
   },
-  watch: {
-    cashier_id: function cashier_id() {
-      var _this = this;
-
-      axios.post('/contrats/' + this.contrat_enregistré.id + '/update-cashier', {
-        id: this.cashier_id
-      }).then(function (response) {
-        _this.contrat_enregistré.cashier_facture_id = _this.cashier_id;
-
-        _this.$forceUpdate();
-      }).catch(function (error) {
-        console.log(error);
-      });
-      console.log(this.cashier_id);
-    }
-  },
   computed: {
-    documentString: function documentString() {
-      var binary = '';
-
-      if (this.contrat.voiture) {
-        this.contrat.voiture.documents.forEach(function (document) {
-          if (document.type === 'Carte Grise') {
-            binary += '1';
-          }
-        });
-
-        if (binary.length === 0) {
-          binary += '0';
-        }
-
-        this.contrat.voiture.documents.forEach(function (document) {
-          if (document.type === 'Visite Technique') {
-            binary += '1';
-          }
-        });
-
-        if (binary.length === 1) {
-          binary += '0';
-        }
-
-        this.contrat.voiture.documents.forEach(function (document) {
-          if (document.type === 'Assurance') {
-            binary += '1';
-          }
-        });
-
-        if (binary.length === 2) {
-          binary += '0';
-        }
-
-        this.contrat.voiture.documents.forEach(function (document) {
-          if (document.type === 'Carte Extincteur') {
-            binary += '1';
-          }
-        });
-
-        if (binary.length === 3) {
-          binary += '0';
-        }
-
-        return binary;
-      }
+    week: function week() {
+      todayDay = this.today.getDay();
     },
-    accessoireString: function accessoireString() {
-      var binary = '';
-
-      if (this.contrat.voiture) {
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Crick') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Triangle') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Manivelle') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Calle Métallique') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Pneu Secours') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Gilet') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Extincteur') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        this.contrat.voiture.accessoires.forEach(function (accessoire) {
-          if (accessoire.type === 'Trousse Secours') {
-            binary += accessoire.pivot.quantité;
-          }
-        });
-        return binary;
+    'nb_jours': function nb_jours() {
+      if (this.formulaire.du && this.formulaire.au) {
+        this.formulaire.nb_jours = (new Date(this.formulaire.au) - new Date(this.formulaire.du)) / (3600 * 1000 * 24);
+        return (new Date(this.formulaire.au) - new Date(this.formulaire.du)) / (3600 * 1000 * 24);
       }
     }
   },
   methods: {
-    decrementStep: function decrementStep() {
-      this.step -= 1;
+    // Retourne la couleur a afficher selon l'état de la chambre
+    couleurEtat: function couleurEtat(chambre) {
+      switch (chambre.etat) {
+        case 'Disponible':
+          return 'tw-bg-green-500';
+          break;
+
+        case 'Loué':
+          return 'tw-bg-red-500';
+          break;
+
+        case 'Maintenance':
+          return 'tw-bg-blue-500';
+          break;
+
+        default:
+          break;
+      }
     },
-    lanceEtape2: function lanceEtape2(value) {
-      this.contrat.client = value;
-      this.step = 2;
-    },
-    lanceEtape3: function lanceEtape3(value) {
-      this.contrat.voiture = value;
-      this.step = 3;
-    },
-    lanceEtape4: function lanceEtape4(value) {
-      this.step = 4;
-      this.contrat.au = value.au;
-      this.contrat.du = value.du;
-      this.contrat.nombre_jours = (new Date(this.contrat.du) - new Date(this.contrat.au)) / (1000 * 60 * 60 * 24);
-    },
-    lanceEtape5: function lanceEtape5(value) {
-      this.step = 5;
-      this.contrat.prix_journalier = value.prix_journalier;
-      this.contrat.caution = value.caution;
-    },
-    lanceEtape6: function lanceEtape6(value) {
-      this.step = 6;
-    },
-    lanceEtape7: function lanceEtape7(payload) {
-      this.contrat.photos.arriere = payload.arriere;
-      this.contrat.photos.avant = payload.avant;
-      this.contrat.photos.gauche = payload.gauche;
-      this.contrat.photos.droit = payload.droit;
-      this.step = 7;
-      this.finalStep = true;
+    // Affiche les détails de la chambre cliquée
+    afficheDetailsChambre: function afficheDetailsChambre(chambre) {
+      this.chambreADetailler = chambre;
       this.$forceUpdate();
     },
-    envoieACashier: function envoieACashier() {
-      var _this2 = this;
+    // Affiche le formulaire de Location Rapide
+    faireLouer: function faireLouer() {
+      this.afficheFormulaireLocationRapide = true;
+      this.$forceUpdate();
+    },
+    // Cache Formulaire
+    cacheFormulaireDétails: function cacheFormulaireDTails() {
+      this.afficheFormulaireLocationRapide = false;
+      this.$forceUpdate();
+    },
+    displayNewCustomerForm: function displayNewCustomerForm() {
+      this.display.nouveau_client = !this.display.nouveau_client;
+      this.client = {};
+    },
+    enregistreClientDansCashier: function enregistreClientDansCashier() {
+      var _this = this;
 
-      var data;
-      var link = 'https://cashier.azimuts.ga/api/facture';
-      this.data = data = {
-        'objet': 'Location ' + this.contrat.voiture.marque + ' ' + this.contrat.voiture.type + ' ' + this.contrat.voiture.immatriculation,
-        'échéance': this.contrat.du,
-        'quantité': this.contrat.nombre_jours,
-        'description': 'Jours',
-        'prix_unitaire': this.contrat.prix_journalier,
-        'client': this.contrat.client.cashier_id
-      };
+      // Affiche le Spinner
+      // this.isLoading = true;
+      // this.$forceUpdate();
+      // Créee un nouveau client
+      if (!this.client.id) {
+        axios.post('https://cashier.azimuts.ga/api/client/nouveau', this.client).then(function (response) {
+          console.log(response.data);
+          _this.client.cashier_id = response.data.id;
+          document.getElementById('cashier_id').value = response.data.id;
 
-      if (this.environment === 'local') {
-        link = 'http://thecashier.test/api/facture';
+          _this.$forceUpdate();
+
+          _this.$alertify.success("Le Client a été enregistré dans Cashier");
+
+          document.getElementById('clientForm').submit();
+        }).catch(function (error) {
+          _this.$alertify.error("Un Problème est survenu lors de l'enregistrement du client. Veuillez vérifiez votre connexion Internet");
+        });
+      } else {
+        console.log('Hellooooo');
+        document.getElementById('clientForm').submit();
       }
-
-      axios.post(link, this.data).then(function (response) {
-        var cashier_id = response.data.id;
-        _this2.cashier_id = cashier_id;
-      }).catch(function (error) {
-        console.log(error);
-      });
-    },
-    enregistrer: function enregistrer() {
-      var _this3 = this;
-
-      this.contrat.accessoireString = this.accessoireString;
-      this.contrat.documentString = this.documentString;
-      axios.post('/contrats/store', this.contrat).then(function (response) {
-        window.location = '/contrat/' + response.data.id;
-        _this3.contrat_enregistré = response.data;
-      }).catch(function (error) {});
-    },
-    submitFile: function submitFile(file, id) {
-      var formData = new FormData();
-      formData.append('droit', file.droit);
-      formData.append('avant', file.avant);
-      formData.append('arriere', file.arriere);
-      formData.append('gauche', file.gauche);
-      axios.post('/contrats/' + id + '/ajoute-photos', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then(function () {
-        console.log('SUCCESS!!');
-      }).catch(function () {
-        console.log('FAILURE!!');
+    }
+  },
+  mounted: function mounted() {
+    if (this.clients) {
+      this.clients.map(function (client) {
+        client.nom_complet = client.nom + ' ' + client.prenom;
       });
     }
   }
@@ -77661,12 +77489,6 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c(
-            "h3",
-            { staticClass: "display-6 letter-spaced-1 mt-2 text-center mt-5" },
-            [_c("u", [_vm._v("CONTRAT " + _vm._s(_vm.contrat.numéro))])]
-          ),
-          _vm._v(" "),
           _c("div", { staticClass: "row mt-3" }, [
             _c("p", [
               _vm._m(15),
@@ -80134,202 +79956,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Contrats/CreeContrats.vue?vue&type=template&id=c6ef303a&":
-/*!************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Contrats/CreeContrats.vue?vue&type=template&id=c6ef303a& ***!
-  \************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container-fluid" },
-    [
-      _c("div", { staticClass: "row mt-1" }, [
-        _c(
-          "progress",
-          {
-            staticClass: "col-12",
-            attrs: { max: "100" },
-            domProps: { value: (this.step / 6) * 100 }
-          },
-          [_vm._v("50%")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("step-1", {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: this.step === 1,
-            expression: "this.step === 1"
-          }
-        ],
-        attrs: { list: _vm.clients },
-        on: { passeAEtape2: _vm.lanceEtape2 }
-      }),
-      _vm._v(" "),
-      _c(
-        "transition",
-        {
-          attrs: {
-            name: "fade",
-            "enter-active-class": "animated fadeIn",
-            "leave-active-class": "animated fadeOut"
-          }
-        },
-        [
-          _c("step-2", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: this.step === 2,
-                expression: "this.step === 2"
-              }
-            ],
-            attrs: { list: _vm.voitures },
-            on: {
-              decrementStep: function($event) {
-                return _vm.decrementStep()
-              },
-              passeAEtape3: _vm.lanceEtape3
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "transition",
-        {
-          attrs: {
-            name: "fade",
-            "enter-active-class": "animated fadeIn",
-            "leave-active-class": "animated fadeOut"
-          }
-        },
-        [
-          _c("step-3", {
-            directives: [
-              {
-                name: "show",
-                rawName: "v-show",
-                value: this.step === 3,
-                expression: "this.step === 3"
-              }
-            ],
-            attrs: { list: _vm.voitures },
-            on: {
-              decrementStep: function($event) {
-                return _vm.decrementStep()
-              },
-              passeAEtape4: _vm.lanceEtape4
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "transition",
-        {
-          attrs: {
-            name: "fade",
-            "enter-active-class": "animated fadeIn",
-            "leave-active-class": "animated fadeOut"
-          }
-        },
-        [
-          this.step === 4
-            ? _c("step-4", {
-                attrs: { voiture: this.contrat.voiture },
-                on: {
-                  decrementStep: function($event) {
-                    return _vm.decrementStep()
-                  },
-                  passeAEtape5: _vm.lanceEtape5
-                }
-              })
-            : _vm._e()
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "transition",
-        {
-          attrs: {
-            name: "fade",
-            "enter-active-class": "animated fadeIn",
-            "leave-active-class": "animated fadeOut"
-          }
-        },
-        [
-          this.step === 5
-            ? _c("step-5", {
-                attrs: { voiture: this.contrat.voiture },
-                on: {
-                  decrementStep: function($event) {
-                    return _vm.decrementStep()
-                  },
-                  passeAEtape6: _vm.lanceEtape6
-                }
-              })
-            : _vm._e()
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "transition",
-        {
-          attrs: {
-            name: "fade",
-            "enter-active-class": "animated fadeIn",
-            "leave-active-class": "animated fadeOut"
-          }
-        },
-        [
-          this.step === 6
-            ? _c("contrat-final", {
-                attrs: {
-                  environment: _vm.environment,
-                  contrat: this.contrat,
-                  contrat_enregistre: this.contrat_enregistré
-                },
-                on: {
-                  enregistrer: _vm.enregistrer,
-                  cashier: _vm.envoieACashier,
-                  decrementStep: function($event) {
-                    return _vm.decrementStep()
-                  }
-                }
-              })
-            : _vm._e()
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Contrats/Step1.vue?vue&type=template&id=8a1a597e&":
 /*!*****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Contrats/Step1.vue?vue&type=template&id=8a1a597e& ***!
@@ -80611,7 +80237,7 @@ var render = function() {
               [
                 _c("template", { slot: "noResult" }, [
                   _vm._v(
-                    "\n                    Cette voiture n'existe pas \n                "
+                    "\n                    Cette voiture n'existe pas\n                "
                   )
                 ])
               ],
@@ -80728,30 +80354,6 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.dates.au,
-                expression: "dates.au"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { type: "date" },
-            domProps: { value: _vm.dates.au },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.dates, "au", $event.target.value)
-              }
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
                 value: _vm.dates.du,
                 expression: "dates.du"
               }
@@ -80765,6 +80367,30 @@ var render = function() {
                   return
                 }
                 _vm.$set(_vm.dates, "du", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-3" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.dates.au,
+                expression: "dates.au"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { type: "date" },
+            domProps: { value: _vm.dates.au },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.dates, "au", $event.target.value)
               }
             }
           })
@@ -99237,11 +98863,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _CreeContrats_vue_vue_type_template_id_c6ef303a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreeContrats.vue?vue&type=template&id=c6ef303a& */ "./resources/js/components/Contrats/CreeContrats.vue?vue&type=template&id=c6ef303a&");
-/* harmony import */ var _CreeContrats_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreeContrats.vue?vue&type=script&lang=js& */ "./resources/js/components/Contrats/CreeContrats.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
+/* harmony import */ var _CreeContrats_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreeContrats.vue?vue&type=script&lang=js& */ "./resources/js/components/Contrats/CreeContrats.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
 
 
 
@@ -99249,10 +98874,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _CreeContrats_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _CreeContrats_vue_vue_type_template_id_c6ef303a___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _CreeContrats_vue_vue_type_template_id_c6ef303a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CreeContrats_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"],
+  render,
+  staticRenderFns,
   false,
   null,
   null,
@@ -99278,24 +98903,6 @@ component.options.__file = "resources/js/components/Contrats/CreeContrats.vue"
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreeContrats_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreeContrats.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Contrats/CreeContrats.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreeContrats_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/Contrats/CreeContrats.vue?vue&type=template&id=c6ef303a&":
-/*!******************************************************************************************!*\
-  !*** ./resources/js/components/Contrats/CreeContrats.vue?vue&type=template&id=c6ef303a& ***!
-  \******************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreeContrats_vue_vue_type_template_id_c6ef303a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreeContrats.vue?vue&type=template&id=c6ef303a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Contrats/CreeContrats.vue?vue&type=template&id=c6ef303a&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreeContrats_vue_vue_type_template_id_c6ef303a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreeContrats_vue_vue_type_template_id_c6ef303a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
 
 /***/ }),
 
@@ -99886,15 +99493,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Welcome_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Welcome.vue?vue&type=script&lang=js& */ "./resources/js/components/Welcome.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 var render, staticRenderFns
+
 
 
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _Welcome_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"],
   render,
   staticRenderFns,

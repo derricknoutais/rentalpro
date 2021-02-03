@@ -11,10 +11,10 @@
         </div>
         <div class="row mt-5">
             <div class="col-3 offset-3">
-                <input type="date" class="form-control" v-model="dates.au"/>
+                <input type="date" class="form-control" v-model="dates.du"/>
             </div>
             <div class="col-3">
-                <input type="date" class="form-control" v-model="dates.du"/>
+                <input type="date" class="form-control" v-model="dates.au"/>
             </div>
         </div>
         <div class="row mt-5">

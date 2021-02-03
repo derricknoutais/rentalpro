@@ -13,6 +13,8 @@ class Chambre extends Model
         return $this->morphMany('App\Contrat', 'contractable');
     }
     public function contratEnCours(){
-        return Contrat::where(['contractable_id' => $this->id])->with('client', 'contractable')->first();
+        if($this->etat === 'Loué'){
+            return Contrat::where(['contractable_id' => $this->id, 'contractable_type' => 'App\\Chambre'])->with('client', 'contractable')->latest()->first();
+        }
     }
 }

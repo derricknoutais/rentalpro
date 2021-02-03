@@ -32,6 +32,9 @@ class HomeController extends Controller
             $contrats_en_cours = Contrat::where('du', '>' ,now())->get()->sortBy('du');
             $contrats_en_retard = Contrat::where('du', '<', now())->whereNull('real_check_out')->get()->sortBy('du');
             $compacted = compact('voitures', 'contrats_en_cours', 'contrats_en_retard', 'contrats', 'clients');
+            if(sizeof($contrats) === 0){
+                return view('welcome_no_contrats');
+            }
         }
         else if(Auth::user()->compagnie->isHotel())
         {
@@ -43,6 +46,7 @@ class HomeController extends Controller
             $contrats = Contrat::where('compagnie_id',Auth::user()->compagnie_id)->get();
             $compacted = compact('chambres', 'contrats', 'clients');
         }
+
         return view('welcome', $compacted);
         // Nexmo::message()->send([
         //     'to'   => '24107158215',

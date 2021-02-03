@@ -32,6 +32,7 @@ class VoitureController extends Controller
         return view('voitures.show', compact('voiture', 'techniciens', 'derniere_maintenance', 'contrats'));
     }
     public function reception(Request $request){
+
         $dernier_contrat_id =  $request->voiture['contrats'][0]['id'];
         $contrat = Contrat::find( $dernier_contrat_id);
 

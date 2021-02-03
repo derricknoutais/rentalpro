@@ -24,7 +24,14 @@
     <h3 class="text-red-100 text-size-md" style="margin-top: 7rem">Facture Nº {{ $contrat->numéro }}</h3>
 
     <h6 class="my-4">Client: {{ $contrat->client->nom . ' ' . $contrat->client->prenom }}</h6>
-    <p class="">Du {{ $contrat->du->format('d-M-Y') }} Au {{ $contrat->au->format('d-M-Y') }}</p>
+    @if ($contrat->du && $contrat->au)
+        <p>
+            Du
+            {{ $contrat->du->format('d-M-Y h:i:s') }}
+            Au
+            {{ $contrat->au->format('d-M-Y h:i:s') }}
+        </p>
+    @endif
     <table class="table" style="margin-top: 7rem; font-size:12px;">
         <thead>
             <tr>

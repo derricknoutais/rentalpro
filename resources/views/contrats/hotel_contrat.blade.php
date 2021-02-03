@@ -19,7 +19,18 @@
         <h3 class="text-red-100 text-size-md" style="margin-top: 7rem">Facture Nº {{ $contrat->numéro }}</h3>
 
         <h6 class="my-4">Client: {{ $contrat->client->nom . ' ' . $contrat->client->prenom }}</h6>
-        <p class="">Du {{ $contrat->du }} Au {{ $contrat->au }}</p>
+        <p class="">
+            Du
+            <span>
+                {{ $contrat->du->format('d-M-Y h:i:s') }}
+            </span>
+            Au
+            @if ($contrat->au)
+                <span>
+                    {{ $contrat->au->format('d-M-Y h:i:s') }}
+                </span>
+            @endif
+        </p>
         <table class="table" style="margin-top: 7rem; font-size:10px;">
             <thead>
                 <tr>

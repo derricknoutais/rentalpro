@@ -87,8 +87,8 @@
 
                         <div class="list-group mt-3 overflow-auto" style="height:20vh">
                             @foreach ($voitures as $voiture)
-                                @if ($voiture->etat == 'loué')
-                                    <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }} <span class="pl-5">{{ $voiture->contrats[0]->du->format('d-M-Y') }}</span></a>
+                                @if ($voiture->etat == 'loué' && sizeof($voiture->contrats) > 0 )
+                                    <a href="/voiture/{{ $voiture->id }}" class="list-group-item list-group-item-action">{{ $voiture->immatriculation }}<span class="pl-5">{{ $voiture->contrats[0]->du->format('d-M-Y') }}</span></a>
                                 @endif
                             @endforeach
 

@@ -264,7 +264,7 @@
                     </div>
                 </div>
             </div>
-            <h3 class="display-6 letter-spaced-1 mt-2 text-center mt-5" ><u>CONTRAT {{ contrat.numéro }}</u></h3>
+            <!-- <h3 class="display-6 letter-spaced-1 mt-2 text-center mt-5" v-if="contrat.numéro"><u>CONTRAT {{ contrat.numéro }}</u></h3> -->
             <!-- INFORMATION VOITURE -->
             <div class="row mt-3">
                 <p>
@@ -341,7 +341,7 @@ export default {
     },
     computed : {
         nombre_jours(){
-            return (new Date(this.contrat.du) - new Date(this.contrat.au))
+            return (new Date(this.contrat.au) - new Date(this.contrat.du) ) / ( 1000 * 60 * 60 * 24)
         }
     },
     methods:{

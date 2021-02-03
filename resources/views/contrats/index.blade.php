@@ -25,15 +25,12 @@
 
                                     {{-- Contrat --}}
                                     <td scope="row" class="">
-
                                         {{-- Numéro de Contrat --}}
                                         <div class="tw-flex tw-bg-yellow-600 tw-px-2 tw-py-2 tw-items-center">
-                                            <i class="fas fa-chevron-right    "></i>
                                             <a href="/contrat/{{ $contrat->id }}" class=" tw-font-semibold">
                                                 {{ $contrat->numéro }}
                                             </a>
                                         </div>
-
                                         {{-- Dates --}}
                                         <div class="tw-flex tw-mt-2 tw-bg-yellow-200 tw-py-3 tw-px-2 tw-rounded tw-rounded-b-none">
                                             <span class="tw-mr-1">
@@ -397,9 +394,13 @@
                                                 <i class="fas fa-ban    "></i>
                                                 Contrat Annulé
                                             </span>
+                                        @elseif($contrat->real_check_out !== NULL )
+                                            <span class="tw-bg-green-400 tw-text-white tw-mt-5 tw-py-5 tw-text-center">
+                                                Contrat Terminé
+                                            </span>
                                         @else
                                             @can('terminer contrat')
-                                                <button class="tw-bg-green-400 tw-py-1 tw-px-2 tw-text-green-50 tw-mt-5 tw-rounded" @click="terminerContrat({{ $contrat }})">
+                                                <button class="tw-bg-green-400 tw-py-1 tw-px-2 tw-text-green-50 tw-mt-5 tw-rounded" @click="terminerContrat({{ $contrat }})" data-toggle="modal" data-target="#terminerContrat{{ $contrat->id }}">
                                                     <i class="fas fa-ban    "></i>
                                                     Terminer Contrat
                                                 </button>
@@ -421,10 +422,36 @@
                                                     <i class="fas fa-print "></i>
                                                     Imprimer
                                                 </button>
+
                                                 <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center" href="/contrat/{{ $contrat->id }}/download">
                                                     <i class="fas fa-download    "></i>
                                                     Télécharger
                                                 </a>
+
+                                            <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title tw-text-lg">Êtes-vous sûr de vouloir terminer ce contrat? </h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="/contrat/{{ $contrat->id }}/terminer" method="GET">
+                                                            <div class="modal-body">
+                                                                <p class="tw-text-sm">
+                                                                    L'heure et Date de Fin de Contrat seront enregistrées
+                                                                    et ne pourront plus être modifiées ultérieurement
+                                                                </p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                                <button type="submit" class="btn tw-bg-green-500 tw-text-white">Terminer</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         @endif
                                     </td>

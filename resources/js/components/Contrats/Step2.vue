@@ -23,18 +23,18 @@
                 <div class="col"></div>
             </div>
         </div>
-        
+
         <div class="row mt-5">
             <div class="col">
                 <label for="">Selectionne Voiture</label>
                 <multiselect :value="value" :options="list" label="immatriculation" v-model="voiture">
                     <template slot="noResult">
-                        Cette voiture n'existe pas 
+                        Cette voiture n'existe pas
                     </template>
                 </multiselect>
             </div>
         </div>
-        
+
         <div class="row mt-5">
             <div class="col text-center">
                 <a class="btn btn-secondary" href="/contrats/menu">Annuler</a>
@@ -42,7 +42,7 @@
                 <button  class="btn btn-primary" :class="voiture ? '' : 'disabled'" @click="passeAEtape3()">Suivant</button>
             </div>
         </div>
-        
+
 
     </div>
 </template>
