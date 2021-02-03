@@ -47,14 +47,14 @@ Route::group(['middleware' => ['auth']], function () {
             $permission1, $permission2, $permission3,
             $permission4, $permission5, $permission6, $permission7, $permission8,
             $permission9,$permission10,$permission11,$permission12,
-            $permission13,$permission14,$permission15,
+            $permission13,$permission14,$permission15
         );
         $role2->syncPermissions(
             $permission0,
             $permission1, $permission2, $permission3,
              $permission5, $permission6, $permission7, $permission8,
             $permission9,$permission11,$permission12,
-            $permission13,$permission14,$permission15,
+            $permission13,$permission14,$permission15
         );
         $role3->syncPermissions(
             $permission0, $permission1,
