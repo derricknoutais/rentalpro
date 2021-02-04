@@ -100,6 +100,8 @@ class ContratController extends Controller
                         'permis' => $nom
                     ]);
                 }
+            } else {
+                $client = $request->client_id;
             }
 
             // Pour gérer les contrats ouverts
