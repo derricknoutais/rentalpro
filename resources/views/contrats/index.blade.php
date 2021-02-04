@@ -373,8 +373,8 @@
                                             <a class="tw-bg-white tw-text-center" role="button" href="/client/{{ $contrat->client->id }}">Voir Plus de Détails</a>
                                         </div>
                                         <div>
-                                            @foreach ($contrat->client->troisDerniersContrats() as $contrat)
-                                            <p>{{ $contrat->numéro }}</p>
+                                            @foreach ($contrat->client->troisDerniersContrats() as $ct)
+                                                <p>{{ $ct->numéro }}</p>
                                             @endforeach
                                         </div>
                                     </td>
@@ -388,7 +388,6 @@
 
                                     {{-- Actions --}}
                                     <td class="tw-flex tw-flex-col">
-
                                         @if($contrat->deleted_at !== NULL)
                                             <span class="tw-bg-red-400 tw-text-red-100 tw-mt-5 tw-py-5 tw-text-center">
                                                 <i class="fas fa-ban    "></i>
@@ -418,15 +417,15 @@
                                                 </button>
                                             @endcan
 
-                                                <button class="tw-bg-purple-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white" @click="annulerContrat({{ $contrat }})">
-                                                    <i class="fas fa-print "></i>
-                                                    Imprimer
-                                                </button>
+                                            <button class="tw-bg-purple-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white" @click="annulerContrat({{ $contrat }})">
+                                                <i class="fas fa-print "></i>
+                                                Imprimer
+                                            </button>
 
-                                                <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center" href="/contrat/{{ $contrat->id }}/download">
-                                                    <i class="fas fa-download    "></i>
-                                                    Télécharger
-                                                </a>
+                                            <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center" href="/contrat/{{ $contrat->id }}/download">
+                                                <i class="fas fa-download    "></i>
+                                                Télécharger
+                                            </a>
 
                                             <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
