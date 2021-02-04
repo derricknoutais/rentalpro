@@ -26,7 +26,7 @@ class ContratController extends Controller
     public function index(){
         $compagnie = Auth::user()->compagnie;
         $contrats_compagnie = Contrat::withTrashed()->where('compagnie_id', $compagnie->id)->latest()->get();
-        $contrats = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'))->orderBy('id', 'desc')->paginate(5);
+        $contrats = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'))->orderBy('id', 'desc')->paginate(10);
         $contrats->loadMissing(['client', 'contractable', 'paiements']);
         if($compagnie->type === 'véhicules'){
             $contractablesDisponibles = Voiture::where('etat', 'Disponible')->get();
