@@ -26,13 +26,13 @@
                                     {{-- Contrat --}}
                                     <td scope="row" class="">
                                         {{-- Numéro de Contrat --}}
-                                        <div class="tw-flex tw-bg-yellow-100 tw-px-2 tw-py-2 tw-items-center">
+                                        <div class="tw-flex tw-bg-yellow-200 tw-px-2 tw-py-2 tw-items-center">
                                             <a class="tw-text-blue-400" href="/contrat/{{ $contrat->id }}" class=" tw-font-semibold">
                                                 {{ $contrat->numéro }}
                                             </a>
                                         </div>
                                         {{-- Dates --}}
-                                        <div class="tw-flex tw-mt-2 tw-bg-yellow-200 tw-py-3 tw-px-2 tw-rounded tw-rounded-b-none">
+                                        <div class="tw-flex tw-mt-2 tw-bg-yellow-100 tw-py-3 tw-px-2 tw-rounded tw-rounded-b-none">
                                             <span class="tw-mr-1">
                                                 Du:
                                             </span>
@@ -365,20 +365,28 @@
                                                 <span> / {{ $contrat->client['phone2'] }}</span>
                                             @endif
                                         </div>
+                                        {{-- Adresse --}}
                                         <div class="tw-flex tw-flex-col tw-bg-green-600 tw-mt-4 tw-py-1 tw-px-2">
                                             Adresse:
                                             @if ($contrat->client->adresse)
                                                 <span class="">{{ $contrat->client['adresse'] }}</span>
                                             @endif
                                         </div>
+                                        {{-- Derniers Contrats --}}
                                         <div class="tw-flex tw-flex-col tw-p-2">
                                             <p class="tw-text-center tw-mb-2">Derniers Contrats</p>
                                             @foreach ($contrat->client->troisDerniersContrats() as $ct)
-                                                <a class="tw-text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">{{ $ct->numéro }}</a>
+                                            <div class="tw-flex tw-justify-between">
+                                                <a class="tw-text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">
+                                                    <span>
+                                                        {{ $ct->numéro }}
+                                                    </span>
+                                                </a>
+                                                <span>
+                                                    Solde: {{ $ct->solde() }}
+                                                </span>
+                                            </div>
                                             @endforeach
-                                        </div>
-                                        <div class="tw-flex tw-flex-col tw-bg-green-600 tw-mt-4 ">
-                                            <a class="tw-bg-white tw-text-center" role="button" href="/client/{{ $contrat->client->id }}">Voir Plus de Détails</a>
                                         </div>
                                     </td>
 
