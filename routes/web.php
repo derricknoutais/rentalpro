@@ -68,7 +68,6 @@ Route::group(['middleware' => ['auth']], function () {
         $user = Auth::user();
         $user->assignRole('admin');
         App\User::find(2)->assignRole('gérant');
-        // App\User::find(3)->assignRole('basique');
 
     });
 
