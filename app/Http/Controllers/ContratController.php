@@ -100,8 +100,9 @@ class ContratController extends Controller
                         'permis' => $nom
                     ]);
                 }
+                $client_id = $client->id;
             } else {
-                $client = $request->client_id;
+                $client_id = $request->client_id;
             }
 
             // Pour gérer les contrats ouverts
@@ -112,7 +113,7 @@ class ContratController extends Controller
             $contrat = Contrat::create([
                 'contractable_id'=> $request['contractable'],
                 'contractable_type' => $type,
-                'client_id'=> $client->id,
+                'client_id'=> $client_id,
                 'numéro' => Contrat::numéro(),
                 'compagnie_id' => Auth::user()->compagnie->id,
                 'du'=> $request['du'] . date('H:i:s'),
