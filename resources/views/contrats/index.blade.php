@@ -4,36 +4,48 @@
 @section('content')
     <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}" :voitures_prop="{{ $voitures }}" :clients_prop="{{ $clients }}">
         <div>
-            <h1 class="text-center tw-text-4xl tw-mt-24">Contrats</h1>
+            <h1 class="text-center tw-text-4xl tw-my-20">Contrats</h1>
 
-            <div class="tw-container tw-mx-auto tw-mt-48">
+            <div class="tw-container tw-mx-auto">
                 {{-- FILTRES --}}
-                <form action="/contrats" method="GET" class="tw-flex tw-items-center tw-py-24 tw-px-10 tw-bg-gray-100">
+                <form action="/contrats" method="GET" class="tw-flex tw-flex-col tw-items-center tw-py-10 tw-px-10 tw-bg-yellow-100">
 
-                    {{-- FILTRE VOITURE --}}
-                    <input type="hidden" name="voiture" v-model="filters.voiture.id">
-                    <div class="form-group tw-w-1/4" >
-                        <label for="">Voiture</label>
-                        <multiselect :options="{{ $voitures }}" label="immatriculation" v-model="filters.voiture"></multiselect>
+                    <div class="tw-flex tw-w-full tw-justify-center tw-items-center">
+                        <input type="hidden" name="voiture" v-model="filters.voiture.id">
+                        <div class="form-group tw-w-1/4" >
+                            <label for="">Voiture</label>
+                            <multiselect :options="{{ $voitures }}" label="immatriculation" v-model="filters.voiture"></multiselect>
+                        </div>
+                        {{-- FILTRE CLIENT --}}
+                        <input type="hidden" name="client" v-model="filters.client.id" >
+                        <div class="form-group tw-w-1/4 tw-ml-3">
+                            <label for="">Client</label>
+                            <multiselect :options="{{ $clients }}" allow-empty="true" label="nom_complet" v-model="filters.client">
+                            </multiselect>
+                        </div>
+                        {{-- FILTRE ETAT CONTRAT --}}
+                        <input type="hidden" name="etat" v-model="filters.etat">
+                        <div class="form-group tw-w-1/4 tw-ml-3">
+                            <label for="">État Contrat</label>
+                            <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']" v-model="filters.etat">
+                            </multiselect>
+                        </div>
+
                     </div>
-                    {{-- FILTRE CLIENT --}}
-                    <input type="hidden" name="client" v-model="filters.client.id" >
-                    <div class="form-group tw-w-1/4 tw-ml-3">
-                        <label for="">Client</label>
-                        <multiselect :options="{{ $clients }}" allow-empty="true" label="nom_complet" v-model="filters.client">
-                        </multiselect>
+                    <div class="tw-flex tw-w-full tw-justify-center tw-items-center">
+                        <div class="form-group tw-w-1/4">
+                          <label for="">Du</label>
+                          <input type="date" class="form-control" name="du">
+                        </div>
+                        <div class="form-group tw-w-1/4 tw-ml-3">
+                          <label for="">Au</label>
+                          <input type="date" class="form-control" name="au">
+                        </div>
+                        <div class="tw-w-1/4 tw-flex tw-justify-center tw-items-center">
+                            <button type="submit" class="tw-bg-yellow-300 tw-px-10 tw-py-2 tw-rounded">Filtrer</button>
+                        </div>
                     </div>
-                    {{-- FILTRE ETAT CONTRAT --}}
-                    <input type="hidden" name="etat" v-model="filters.etat">
-                    <div class="form-group tw-w-1/4 tw-ml-3">
-                        <label for="">État Contrat</label>
-                        <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']" v-model="filters.etat">
-                        </multiselect>
-                    </div>
-                    {{-- Boutton --}}
-                    <div class="tw-ml-10 tw-w-1/4 tw-flex tw-justify-start">
-                        <button type="submit" class="tw-bg-yellow-200 tw-px-10 tw-py-2 tw-rounded">Filtrer</button>
-                    </div>
+
                 </form>
                 <table class="table tw-mt-1">
                     <thead>
@@ -499,7 +511,7 @@
                 </table>
 
                 <div class="tw-flex tw-pb-24 tw-pt-10 tw-justify-center">
-                    {{ $contrats->links('vendor.pagination.bootstrap-4') }}
+                    {{ $contrats->appends(request()->input())->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
 

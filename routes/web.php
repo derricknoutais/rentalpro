@@ -16,8 +16,8 @@ use App\Technicien;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-// if(env('APP_ENV') == 'local')
-//     Auth::loginUsingID(1);
+if(env('APP_ENV') == 'local')
+    Auth::loginUsingID(1);
 Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {

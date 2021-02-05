@@ -15,7 +15,7 @@ class Contrat extends Model
     use SoftDeletes, LogsActivity, HasFactory;
 
     protected $guarded = [];
-    protected static $logAttributes = '*';
+    protected static $logUnguarded = true;
     protected $dates = ['au', 'du'];
 
     // Relationships

@@ -63,10 +63,15 @@ class ContratController extends Controller
                 }
 
             }
+            if($request->has('du') && $request->du !== NULL){
+                $query->whereDate('du', '>=', $request->du);
+            }
+            if($request->has('au') && $request->au !== NULL){
+                $query->whereDate('au', '<=', $request->au);
+            }
 
 
         }
-
 
         $contrats = $query->orderBy('id', 'desc')->paginate(10);
         $contrats->loadMissing(['client', 'contractable', 'paiements']);
