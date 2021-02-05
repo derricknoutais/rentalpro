@@ -6187,9 +6187,18 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['contrats', 'env'],
+  props: ['contrats', 'env', 'voitures_prop', 'clients_prop'],
   data: function data() {
     return {
+      filters: {
+        voiture: {
+          immatriculation: ''
+        },
+        client: {
+          nom_complet: ''
+        },
+        etat: false
+      },
       search: {
         etat: 'En Cours'
       }

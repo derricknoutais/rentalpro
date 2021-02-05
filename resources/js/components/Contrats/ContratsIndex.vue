@@ -1,8 +1,17 @@
 <script>
 export default {
-    props: ['contrats', 'env'],
+    props: ['contrats', 'env', 'voitures_prop', 'clients_prop'],
     data(){
         return {
+            filters: {
+                voiture: {
+                    immatriculation: ''
+                },
+                client: {
+                    nom_complet : ''
+                },
+                etat: false
+            },
             search : {
                 etat: 'En Cours'
             }

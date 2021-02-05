@@ -2,13 +2,40 @@
 
 
 @section('content')
-    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}">
+    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}" :voitures_prop="{{ $voitures }}" :clients_prop="{{ $clients }}">
         <div>
-            <h1 class="text-center tw-text-3xl my-5">Contrats</h1>
+            <h1 class="text-center tw-text-4xl tw-mt-24">Contrats</h1>
 
-            <div class="tw-container tw-mx-auto">
+            <div class="tw-container tw-mx-auto tw-mt-48">
+                {{-- FILTRES --}}
+                <form action="/contrats" method="GET" class="tw-flex tw-items-center tw-py-24 tw-px-10 tw-bg-gray-100">
 
-                <table class="table mt-5">
+                    {{-- FILTRE VOITURE --}}
+                    <input type="hidden" name="voiture" v-model="filters.voiture.id">
+                    <div class="form-group tw-w-1/4" >
+                        <label for="">Voiture</label>
+                        <multiselect :options="{{ $voitures }}" label="immatriculation" v-model="filters.voiture"></multiselect>
+                    </div>
+                    {{-- FILTRE CLIENT --}}
+                    <input type="hidden" name="client" v-model="filters.client.id" >
+                    <div class="form-group tw-w-1/4 tw-ml-3">
+                        <label for="">Client</label>
+                        <multiselect :options="{{ $clients }}" allow-empty="true" label="nom_complet" v-model="filters.client">
+                        </multiselect>
+                    </div>
+                    {{-- FILTRE ETAT CONTRAT --}}
+                    <input type="hidden" name="etat" v-model="filters.etat">
+                    <div class="form-group tw-w-1/4 tw-ml-3">
+                        <label for="">État Contrat</label>
+                        <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']" v-model="filters.etat">
+                        </multiselect>
+                    </div>
+                    {{-- Boutton --}}
+                    <div class="tw-ml-10 tw-w-1/4 tw-flex tw-justify-start">
+                        <button type="submit" class="tw-bg-yellow-200 tw-px-10 tw-py-2 tw-rounded">Filtrer</button>
+                    </div>
+                </form>
+                <table class="table tw-mt-1">
                     <thead>
                         <tr>
                             <th>Contrat Nº</th>
@@ -428,12 +455,12 @@
                                                 </button>
                                             @endcan
 
-                                            <button class="tw-bg-purple-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white" @click="annulerContrat({{ $contrat }})">
-                                                <i class="fas fa-print "></i>
-                                                Imprimer
-                                            </button>
+                                            <a target="_blank" class="tw-bg-purple-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center tw-no-underline" href="/contrat/{{ $contrat->id }}">
+                                                <i class="fas fa-file-invoice "></i>
+                                                Voir Contrat
+                                            </a>
 
-                                            <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center" href="/contrat/{{ $contrat->id }}/download">
+                                            <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center tw-no-underline" href="/contrat/{{ $contrat->id }}/download">
                                                 <i class="fas fa-download    "></i>
                                                 Télécharger
                                             </a>

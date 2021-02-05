@@ -23,10 +23,52 @@ class ContratController extends Controller
     public function menu(){
         return view('contrats.menu');
     }
-    public function index(){
+    public function index(Request $request){
         $compagnie = Auth::user()->compagnie;
         $contrats_compagnie = Contrat::withTrashed()->where('compagnie_id', $compagnie->id)->latest()->get();
-        $contrats = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'))->orderBy('id', 'desc')->paginate(10);
+        $query = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'));
+        if (sizeof($request->all()) > 0 ){
+            if($request->has('voiture') && $request->voiture !== NULL){
+                $query->where([
+                    'contractable_id' => $request->voiture,
+                    'contractable_type' => 'App\\Voiture'
+                ]);
+            }
+            if($request->has('client')&& $request->client !== NULL){
+                $query->where([
+                    'client_id' => $request->client,
+                ]);
+            }
+            if($request->has('etat')&& $request->etat !== NULL){
+                switch ($request->etat) {
+                    case 'En cours':
+                        $query->whereDate('du', '<=' ,today() )->whereDate('au', '>=', today())->whereNull('real_check_out');
+                        break;
+                    case 'Terminé':
+                        $query->whereNotNull('real_check_out');
+                        break;
+                    case 'Annulé':
+                        $query->whereNotNull('deleted_at');
+                        break;
+                    case 'Soldé':
+                        return 'En Traitement';
+                        break;
+                    case 'Non-Soldé':
+                        return 'En Traitement';
+                        break;
+
+                    default:
+                        # code...
+                        break;
+                }
+
+            }
+
+
+        }
+
+
+        $contrats = $query->orderBy('id', 'desc')->paginate(10);
         $contrats->loadMissing(['client', 'contractable', 'paiements']);
         if($compagnie->type === 'véhicules'){
             $contractablesDisponibles = Voiture::where('etat', 'Disponible')->get();
@@ -35,8 +77,12 @@ class ContratController extends Controller
         }
         $contrat = $contrats[0];
         $voitures = Voiture::all();
+        $clients = Client::all();
+        foreach($clients as $client){
+            $client->nom_complet = $client->nom . ' ' . $client->prenom;
+        }
 
-        return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'contractablesDisponibles']));
+        return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'clients', 'contractablesDisponibles']));
     }
     public function show(Contrat $contrat){
         $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements');
@@ -371,12 +417,12 @@ class ContratController extends Controller
         $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
         if ( $contrat->compagnie->type == 'véhicules' ) {
             $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-            return 'V';
+
         } else if( $contrat->compagnie->type == 'hôtel' ){
             $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-            return 'H';
+
         }
-        // return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
+        return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
     }
     public function voirUploads(Contrat $contrat){
         return view('contrats.uploads', compact('contrat'));
@@ -423,6 +469,7 @@ class ContratController extends Controller
         });
         return redirect()->back();
     }
+
 
 
 }
