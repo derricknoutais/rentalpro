@@ -417,6 +417,9 @@ class ContratController extends Controller
 
     }
     public function destroy(Contrat $contrat){
+        $contrat->contractable->update([
+            'etat' => 'disponible'
+        ]);
         $contrat->delete();
     }
     public function download(Contrat $contrat){
