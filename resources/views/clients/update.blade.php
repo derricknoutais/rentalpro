@@ -3,6 +3,7 @@
 
 @section('content')
 <client-update inline-template :prop_client="{{ $client }}">
+
     <form action="/clients/{{ $client->id }}/update" method="POST"
         enctype="multipart/form-data" id="clientUpdateForm"
         {{-- @submit.prevent="updateClient()"  --}}

@@ -46,9 +46,9 @@
                 <input type="date" class="form-control tw-mt-3" name="du" v-model="formulaire.du">
                 <input type="date" class="form-control tw-mt-3" name="au" v-model="formulaire.au">
                 <input type="text" class="form-control tw-mt-3" name="nombre_jours" placeholder="Nombre de Jours" :value="nb_jours" readonly>
-                <input type="number" class="form-control tw-mt-3" name="prix_journalier"
-                    placeholder="Prix Journalier">
+                <input type="number" class="form-control tw-mt-3" name="prix_journalier" placeholder="Prix Journalier">
                 <input type="number" class="form-control tw-mt-3" name="paiement" placeholder="Paiement">
+                <input type="number" class="form-control tw-mt-3" name="caution" placeholder="Caution">
 
 
                 {{-- Boutons Annuler et Ajouter Client & Réserver --}}

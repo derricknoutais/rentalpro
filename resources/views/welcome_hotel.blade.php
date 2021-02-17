@@ -21,9 +21,8 @@
         <div class="tw-container-fluid tw-flex">
             {{-- Liste de Chambres --}}
             <div class="tw-w-2/3 tw-bg-gray-300 tw-flex tw-flex-col tw-items-center tw-justify-center">
-
-                <div class="tw-flex">
-                    <div class="tw-p-10 tw-border tw-cursor-pointer tw-flex tw-flex-col" :class="couleurEtat(chambre)" v-for="chambre in chambres" @click="afficheDetailsChambre(chambre)">
+                <div class="tw-grid tw-grid-cols-6">
+                    <div class="tw-p-10 tw-border tw-cursor-pointer tw-flex tw-flex-col" :class="couleurEtat(chambre)" v-for="(chambre, index) in chambres" @click="afficheDetailsChambre(chambre)">
                         <span>@{{ chambre.nom }}</span>
                         <i class="fas fa-star tw-text-yellow-300 tw-mt-2" v-if="chambre.type === 'VIP'"></i>
                     </div>

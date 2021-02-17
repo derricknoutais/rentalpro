@@ -161,6 +161,7 @@ class ContratController extends Controller
             if($request['au'] == NULL){
                 $au = NULL;
             }
+
             $contrat = Contrat::create([
                 'contractable_id'=> $request['contractable'],
                 'contractable_type' => $type,
@@ -187,7 +188,7 @@ class ContratController extends Controller
             }
         });
         if($contrat){
-            if($request->paiement != NULL){
+            if($request->paiement != NULL && $request->paiement !== 0){
                 Paiement::create([
                     'contrat_id' => $contrat->id,
                     'montant' => $request->paiement
@@ -341,13 +342,15 @@ class ContratController extends Controller
     }
     public function updateAll(Contrat $contrat, Request $request){
         $diffInDays = Carbon::parse($request->au)->startOfDay()->diffInDays(Carbon::parse($request->du)->startOfDay());
+
         $contrat->update([
             'client_id' => $request->client,
             'du' => $request->du,
             'au' => $request->au,
             'prix_journalier' => $request->prix_journalier,
             'contractable_id' => $request->contractable,
-            'nombre_jours' => $diffInDays
+            'nombre_jours' => $diffInDays,
+            'caution' => $request->caution
         ]);
         return redirect('/contrats');
     }
