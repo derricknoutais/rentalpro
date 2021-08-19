@@ -17,7 +17,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 if(env('APP_ENV') == 'local')
-    Auth::loginUsingID(4);
+    Auth::loginUsingID(1);
 
 Auth::routes();
 

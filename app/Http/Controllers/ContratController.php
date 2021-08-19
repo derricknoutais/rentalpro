@@ -180,9 +180,9 @@ class ContratController extends Controller
                 'etat_documents' => $request[ 'documentString'],
             ]);
 
-            Voiture::find( $request['contractable'])->update([
-                'etat' => 'loué'
-            ]);
+            // Voiture::find( $request['contractable'])->update([
+            //     'etat' => 'loué'
+            // ]);
             if($contrat){
                 return $contrat;
             }
