@@ -4,50 +4,50 @@
 @section('content')
     <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}" :voitures_prop="{{ $voitures }}" :clients_prop="{{ $clients }}">
         <div>
-            <h1 class="text-center tw-text-4xl tw-my-20">Contrats</h1>
+            <h1 class="my-20 text-4xl text-center">Contrats</h1>
 
-            <div class="tw-container tw-mx-auto">
+            <div class="container mx-auto">
                 {{-- FILTRES --}}
-                <form action="/contrats" method="GET" class="tw-flex tw-flex-col tw-items-center tw-py-10 tw-px-10 tw-bg-yellow-100">
+                <form action="/contrats" method="GET" class="flex flex-col items-center px-10 py-10 bg-yellow-100">
 
-                    <div class="tw-flex tw-w-full tw-justify-center tw-items-center">
+                    <div class="flex items-center justify-center w-full">
                         <input type="hidden" name="voiture" v-model="filters.voiture.id">
-                        <div class="form-group tw-w-1/4" >
+                        <div class="w-1/4 form-group" >
                             <label for="">Voiture</label>
                             <multiselect :options="{{ $voitures }}" label="immatriculation" v-model="filters.voiture"></multiselect>
                         </div>
                         {{-- FILTRE CLIENT --}}
                         <input type="hidden" name="client" v-model="filters.client.id" >
-                        <div class="form-group tw-w-1/4 tw-ml-3">
+                        <div class="w-1/4 ml-3 form-group">
                             <label for="">Client</label>
                             <multiselect :options="{{ $clients }}" allow-empty="true" label="nom_complet" v-model="filters.client">
                             </multiselect>
                         </div>
                         {{-- FILTRE ETAT CONTRAT --}}
                         <input type="hidden" name="etat" v-model="filters.etat">
-                        <div class="form-group tw-w-1/4 tw-ml-3">
+                        <div class="w-1/4 ml-3 form-group">
                             <label for="">État Contrat</label>
                             <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']" v-model="filters.etat">
                             </multiselect>
                         </div>
 
                     </div>
-                    <div class="tw-flex tw-w-full tw-justify-center tw-items-center">
-                        <div class="form-group tw-w-1/4">
+                    <div class="flex items-center justify-center w-full">
+                        <div class="w-1/4 form-group">
                           <label for="">Du</label>
                           <input type="date" class="form-control" name="du">
                         </div>
-                        <div class="form-group tw-w-1/4 tw-ml-3">
+                        <div class="w-1/4 ml-3 form-group">
                           <label for="">Au</label>
                           <input type="date" class="form-control" name="au">
                         </div>
-                        <div class="tw-w-1/4 tw-flex tw-justify-center tw-items-center">
-                            <button type="submit" class="tw-bg-yellow-300 tw-px-10 tw-py-2 tw-rounded">Filtrer</button>
+                        <div class="flex items-center justify-center w-1/4">
+                            <button type="submit" class="px-10 py-2 bg-yellow-300 rounded">Filtrer</button>
                         </div>
                     </div>
 
                 </form>
-                <table class="table tw-mt-1">
+                <table class="table mt-1">
                     <thead>
                         <tr>
                             <th>Contrat Nº</th>
@@ -65,68 +65,68 @@
                                     {{-- Contrat --}}
                                     <td scope="row" class="">
                                         {{-- Numéro de Contrat --}}
-                                        <div class="tw-flex tw-bg-yellow-200 tw-px-2 tw-py-2 tw-items-center">
-                                            <a class="tw-text-blue-400" href="/contrat/{{ $contrat->id }}" class=" tw-font-semibold">
+                                        <div class="flex items-center px-2 py-2 bg-yellow-200">
+                                            <a class="text-blue-400" href="/contrat/{{ $contrat->id }}" class="font-semibold ">
                                                 {{ $contrat->numéro }}
                                             </a>
                                         </div>
                                         {{-- Dates --}}
-                                        <div class="tw-flex tw-mt-2 tw-bg-yellow-100 tw-py-3 tw-px-2 tw-rounded tw-rounded-b-none">
-                                            <span class="tw-mr-1">
+                                        <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
+                                            <span class="mr-1">
                                                 Du:
                                             </span>
-                                            <span class="bg-success tw-px-5 tw-rounded tw-text-white">
+                                            <span class="px-5 text-white rounded bg-success">
                                                 {{ $contrat->du->format('d-M-Y') }}
                                             </span>
-                                            <span class="tw-ml-3">
+                                            <span class="ml-3">
                                                 Au :
                                             </span>
                                             @if ($contrat->au)
-                                                <span class="tw-mx-1 bg-danger tw-px-5 tw-rounded tw-text-white" >
+                                                <span class="px-5 mx-1 text-white rounded bg-danger" >
                                                     {{ $contrat->au->format('d-M-Y') }}
                                                 </span>
                                             @else
-                                                <span class="tw-mx-1" >
+                                                <span class="mx-1" >
                                                     <i class="fas fa-infinity "></i>
                                                 </span>
                                             @endif
-                                            <span class="tw-mr-1">
+                                            <span class="mr-1">
                                                 Soit:
                                             </span>
-                                            <span class="bg-primary tw-px-5 tw-rounded tw-text-white">
+                                            <span class="px-5 text-white rounded bg-primary">
                                                 {{ $contrat->nombre_jours }} Jours
                                             </span>
 
                                         </div>
 
                                         {{-- Montant Total --}}
-                                        <div class="tw-flex tw-justify-between tw-mt-3 tw-py-1 tw-bg-blue-200 tw-px-14 tw-rounded tw-rounded-b-none">
-                                            <p class="tw-font-semibold">Montant Total</p>
-                                            <span class="tw-font-semibold">{{ $contrat->prix_journalier  * $contrat->nombre_jours}} F CFA</span>
+                                        <div class="flex justify-between py-1 mt-3 bg-blue-200 rounded rounded-b-none px-14">
+                                            <p class="font-semibold">Montant Total</p>
+                                            <span class="font-semibold">{{ $contrat->prix_journalier  * $contrat->nombre_jours}} F CFA</span>
                                         </div>
 
                                         {{-- Paiements --}}
                                         @if (sizeof($contrat->paiements) > 0)
-                                            <div class="tw-flex tw-flex-col tw-justify-between tw-py-1 tw-bg-blue-100 tw-pr-6 tw-pl-14">
+                                            <div class="flex flex-col justify-between py-1 pr-6 bg-blue-100 pl-14">
 
-                                                <p class="tw-text-md tw-underline tw-font-semibold tw-mt-1 tw-mb-3">Paiements</p>
+                                                <p class="mt-1 mb-3 font-semibold underline text-md">Paiements</p>
 
                                                 @foreach ($contrat->paiements as $paiement)
-                                                    <div class="tw-flex tw-justify-between">
+                                                    <div class="flex justify-between">
                                                         <span >{{ $paiement->created_at->format('d-M-Y') }}</span>
-                                                        <div class="tw-w-1/4">
-                                                            <span class="tw-font-semibold">{{ $paiement->montant }} F CFA</span>
+                                                        <div class="w-1/4">
+                                                            <span class="font-semibold">{{ $paiement->montant }} F CFA</span>
                                                             @can('editer paiements')
-                                                                <button class="tw-text-blue-400 tw-mx-1" data-toggle="modal" data-target="#updatePaiement{{ $paiement->id }}"><i class="fas fa-edit"></i></button>
+                                                                <button class="mx-1 text-blue-400" data-toggle="modal" data-target="#updatePaiement{{ $paiement->id }}"><i class="fas fa-edit"></i></button>
                                                             @endcan
                                                             @can('supprimer paiements')
-                                                                <button class="tw-text-red-400 tw-mr-1" data-toggle="modal" data-target="#supprimerModal"><i class="fas fa-trash"></i></button>
+                                                                <button class="mr-1 text-red-400" data-toggle="modal" data-target="#supprimerModal"><i class="fas fa-trash"></i></button>
                                                             @endcan
                                                         </div>
                                                     </div>
 
                                                     {{-- Modal Update Paiement --}}
-                                                    <div class="modal fade" id="updatePaiement{{ $paiement->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                                    {{-- <div class="modal fade" id="updatePaiement{{ $paiement->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -155,9 +155,9 @@
                                                                 </form>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                     <!-- Modal Delete Paiement -->
-                                                    <div class="modal fade" id="supprimerModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                                    {{-- <div class="modal fade" id="supprimerModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                                         <form action="/paiement/{{ $paiement->id }}" class="modal-dialog" role="document" method="POST">
                                                             @csrf
                                                             @method('DELETE')
@@ -175,7 +175,7 @@
                                                                 </div>
                                                             </div>
                                                         </form>
-                                                    </div>
+                                                    </div> --}}
                                                 @endforeach
 
 
@@ -184,10 +184,10 @@
 
                                         {{-- Solde Si il y a Paiements --}}
                                         @if (sizeof($contrat->paiements) > 0 )
-                                            <div class="tw-flex tw-justify-between tw-py-1 tw-bg-blue-200 tw-px-14 tw-rounded tw-rounded-t-none">
-                                                <p class="tw-font-semibold tw-text-md">Solde</p>
+                                            <div class="flex justify-between py-1 bg-blue-200 rounded rounded-t-none px-14">
+                                                <p class="font-semibold text-md">Solde</p>
                                                 <div>
-                                                    <span class="tw-font-semibold tw-w-1/4"
+                                                    <span class="w-1/4 font-semibold"
                                                     >{{ $contrat->solde()}} F CFA</span>
                                                 </div>
                                             </div>
@@ -195,9 +195,9 @@
 
                                         {{-- Bouttons --}}
                                         @if ($contrat->deleted_at === NULL)
-                                            <div class="tw-flex tw-bg-gray-100 tw-px-1 tw-py-3 tw-rounded" >
+                                            <div class="flex px-1 py-3 bg-gray-100 rounded" >
                                                 @can('créer paiement')
-                                                    <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2"
+                                                    <button type="button" class="px-1 py-0 mr-2 bg-blue-500"
                                                         data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
                                                     >
                                                         Effectuer Paiement
@@ -210,16 +210,16 @@
                                                 <!-- Si le contrat est en cours -->
                                                 @else
                                                     @can('prolonger contrat')
-                                                        <button type="button" class="btn btn-primary btn-sm px-1 py-0 mr-2 " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
+                                                        <button type="button" class="px-1 py-0 mr-2 btn btn-primary btn-sm " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
                                                             <i class="fas fa-clock"></i> Prolonger Contrat
                                                         </button>
                                                     @endcan
                                                     @can('editer contrat')
-                                                        <button type="button" class="btn btn-secondary btn-sm px-1 py-0" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
-                                                            <i class="fas fa-exchange-alt mr-1"></i> Changer Voiture
+                                                        <button type="button" class="px-1 py-0 btn btn-secondary btn-sm" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
+                                                            <i class="mr-1 fas fa-exchange-alt"></i> Changer Voiture
                                                         </button>
                                                     @endcan
-                                                    <span class="badge badge-pill badge-warning ml-4">En Location</span>
+                                                    <span class="ml-4 badge badge-pill badge-warning">En Location</span>
                                                 @endif
 
                                                 {{-- COMPAGNIE TYPE V --}}
@@ -260,7 +260,7 @@
                                                     </div>
 
                                                     {{-- MODAL PROLONGATION --}}
-                                                    <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
+                                                    {{-- <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -299,7 +299,7 @@
                                                                 </form>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                 @endif
 
                                             </div>
@@ -307,7 +307,7 @@
 
 
                                         <!-- Modal Prolongation Durée de Contrat -->
-                                        <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        {{-- <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -353,9 +353,9 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <!-- Modal Paiement -->
-                                        <div class="modal fade" id="paiement{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        {{-- <div class="modal fade" id="paiement{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -386,37 +386,37 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                     </td>
 
                                     {{-- Client --}}
                                     <td class="">
                                         {{-- Nom --}}
-                                        <div class="tw-flex tw-flex-col tw-bg-gray-300 tw-p-2">
-                                            <a class="tw-text-blue-500" target="_blank" href="/clients/{{ $contrat->client->id }}">{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</a>
+                                        <div class="flex flex-col p-2 bg-gray-300">
+                                            <a class="text-blue-500" target="_blank" href="/clients/{{ $contrat->client->id }}">{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</a>
                                         </div>
 
                                         {{-- Numéros de Téléphone --}}
-                                        <div class="tw-flex tw-bg-green-300 tw-mt-2 tw-py-3 tw-px-2 tw-rounded-sm">
+                                        <div class="flex px-2 py-3 mt-2 bg-green-300 rounded-sm">
                                             <span class="">Nº Téléphone: {{ $contrat->client['phone1'] }}</span>
                                             @if ($contrat->client['phone2'])
                                                 <span> / {{ $contrat->client['phone2'] }}</span>
                                             @endif
                                         </div>
                                         {{-- Adresse --}}
-                                        <div class="tw-flex tw-flex-col tw-bg-green-600 tw-mt-4 tw-py-1 tw-px-2">
+                                        <div class="flex flex-col px-2 py-1 mt-4 bg-green-600">
                                             Adresse:
                                             @if ($contrat->client->adresse)
                                                 <span class="">{{ $contrat->client['adresse'] }}</span>
                                             @endif
                                         </div>
                                         {{-- Derniers Contrats --}}
-                                        <div class="tw-flex tw-flex-col tw-p-2">
-                                            <p class="tw-text-center tw-mb-2">Derniers Contrats</p>
+                                        <div class="flex flex-col p-2">
+                                            <p class="mb-2 text-center">Derniers Contrats</p>
                                             @foreach ($contrat->client->troisDerniersContrats() as $ct)
-                                            <div class="tw-flex tw-justify-between">
-                                                <a class="tw-text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">
+                                            <div class="flex justify-between">
+                                                <a class="text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">
                                                     <span>
                                                         {{ $ct->numéro }}
                                                     </span>
@@ -437,70 +437,70 @@
                                     @endif
 
                                     {{-- Actions --}}
-                                    <td class="tw-flex tw-flex-col">
+                                    <td class="flex flex-col">
                                         @if($contrat->deleted_at !== NULL)
-                                            <span class="tw-bg-red-400 tw-text-red-100 tw-mt-5 tw-py-5 tw-text-center">
-                                                <i class="fas fa-ban    "></i>
+                                            <span class="py-5 mt-5 text-center text-red-100 bg-red-400">
+                                                <i class="fas fa-ban "></i>
                                                 Contrat Annulé
                                             </span>
                                         @elseif($contrat->real_check_out !== NULL )
-                                            <span class="tw-bg-green-400 tw-text-white tw-mt-5 tw-py-5 tw-text-center">
+                                            <span class="py-5 mt-5 text-center text-white bg-green-400">
                                                 Contrat Terminé
                                             </span>
                                         @else
                                             @can('terminer contrat')
-                                                <button class="tw-bg-green-400 tw-py-1 tw-px-2 tw-text-green-50 tw-mt-5 tw-rounded" @click="terminerContrat({{ $contrat }})" data-toggle="modal" data-target="#terminerContrat{{ $contrat->id }}">
-                                                    <i class="fas fa-ban    "></i>
+                                                <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" @click="terminerContrat({{ $contrat }})" data-toggle="modal" data-target="#terminerContrat{{ $contrat->id }}">
+                                                    <i class="fas fa-ban "></i>
                                                     Terminer Contrat
                                                 </button>
                                             @endcan
                                             @can('editer contrat')
-                                                <a class="tw-no-underline tw-bg-blue-400 tw-text-blue-100 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-center" href="/contrat/{{ $contrat->id }}/edit">
-                                                    <i class="fas fa-edit    "></i>
+                                                <a class="px-2 py-1 mt-2 text-center text-blue-100 no-underline bg-blue-400 rounded" href="/contrat/{{ $contrat->id }}/edit">
+                                                    <i class="fas fa-edit "></i>
                                                     Editer
                                                 </a>
                                             @endcan
                                             @can('annuler contrat')
-                                                <button class="tw-bg-red-400 tw-py-1 tw-px-2 tw-text-red-100 tw-mt-2 tw-rounded" @click="annulerContrat({{ $contrat }})">
-                                                    <i class="fas fa-ban    "></i>
+                                                <button class="px-2 py-1 mt-2 text-red-100 bg-red-400 rounded" @click="annulerContrat({{ $contrat }})">
+                                                    <i class="fas fa-ban "></i>
                                                     Annuler
                                                 </button>
                                             @endcan
 
-                                            <a target="_blank" class="tw-bg-purple-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center tw-no-underline" href="/contrat/{{ $contrat->id }}">
+                                            <a target="_blank" class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded" href="/contrat/{{ $contrat->id }}">
                                                 <i class="fas fa-file-invoice "></i>
                                                 Voir Contrat
                                             </a>
 
-                                            <a class="tw-bg-gray-400 tw-py-1 tw-px-2 tw-mt-2 tw-rounded tw-text-white tw-text-center tw-no-underline" href="/contrat/{{ $contrat->id }}/download">
-                                                <i class="fas fa-download    "></i>
+                                            <a class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded" href="/contrat/{{ $contrat->id }}/download">
+                                                <i class="fas fa-download "></i>
                                                 Télécharger
                                             </a>
 
-                                            <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                            {{-- <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title tw-text-lg">Êtes-vous sûr de vouloir terminer ce contrat? </h5>
+                                                            <h5 class="text-lg modal-title">Êtes-vous sûr de vouloir terminer ce contrat? </h5>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
                                                         <form action="/contrat/{{ $contrat->id }}/terminer" method="GET">
                                                             <div class="modal-body">
-                                                                <p class="tw-text-sm">
+                                                                <p class="text-sm">
                                                                     L'heure et Date de Fin de Contrat seront enregistrées
                                                                     et ne pourront plus être modifiées ultérieurement
                                                                 </p>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                                <button type="submit" class="btn tw-bg-green-500 tw-text-white">Terminer</button>
+                                                                <button type="submit" class="text-white bg-green-500 btn">Terminer</button>
                                                             </div>
                                                         </form>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                         @endif
                                     </td>
@@ -510,12 +510,12 @@
                     </tbody>
                 </table>
 
-                <div class="tw-flex tw-pb-24 tw-pt-10 tw-justify-center">
+                <div class="flex justify-center pt-10 pb-24">
                     {{ $contrats->appends(request()->input())->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
 
-            <div class="tw-sticky tw-bottom-16 tw-justify-end tw-flex tw-container-fluid tw-px-40">
+            <div class="sticky flex justify-end px-40 bottom-16 container-fluid">
                 @if ($compagnie->type === 'véhicules')
 
                     <a href="/contrats/create">
@@ -523,7 +523,7 @@
 
                     <a href="/">
                 @endif
-                    <i class="fas fa-plus-circle fa-5x tw-text-green-700 hover:tw-text-green-800 tw-cursor-pointer"></i>
+                    <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
                 </a>
             </div>
 

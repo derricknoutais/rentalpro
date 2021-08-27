@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Auth;
 class VoitureController extends Controller
 {
     public function index(){
-        $voitures = Voiture::all()->sortBy('immatriculation');
-        $contrats = Contrat::with('voiture')->get();
+        $voitures = Voiture::with('contrats')->get();
+
+        $contrats = Contrat::with('contractable')->get();
+
         return view('voitures.index', compact('voitures', 'contrats'));
     }
     public function show(Voiture $voiture){
@@ -22,7 +24,7 @@ class VoitureController extends Controller
 
         $voiture->loadMissing('documents', 'accessoires', 'pannes', 'maintenances');
 
-        $contrats = Contrat::where('voiture_id', $voiture->id)->orderBy('id', 'desc')->paginate(10);
+        $contrats = Contrat::where('contractable_id', $voiture->id)->orderBy('id', 'desc')->paginate(10);
         $derniere_maintenance = null;
         if(sizeof($voiture->maintenances)){
             $dernier_contrat_id = $voiture->maintenances[sizeof($voiture->maintenances) - 1]->id ;

@@ -21,7 +21,8 @@ class CreateVoituresTable extends Migration
             $table->smallInteger('annee')->nullable();
             $table->string('marque')->nullable();
             $table->string('type')->nullable();
-            $table->enum('etat', ['disponible', 'loué', 'maintenance'])->nullable();
+            $table->string('photo_url')->nullable();
+            $table->enum('etat', ['disponible', 'loué', 'maintenance', 'vendu'])->nullable();
             $table->double('prix')->nullable();
             $table->double('prix_achat')->nullable();
             $table->double('douane')->nullable();

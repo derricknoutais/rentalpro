@@ -29,7 +29,9 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.8.2",
+        "alpinejs": "^3.2.4",
         "animate.css": "^3.7.0",
+        "apexcharts": "^3.27.3",
         "dotenv": "^8.2.0",
         "laravel-echo": "^1.5.4",
         "pusher-js": "^5.0.0",

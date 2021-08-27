@@ -1,5 +1,6 @@
 require('./bootstrap');
-
+require('./alpine');
+require('./apex');
 window.Vue = require('vue');
 
 window.writtenNumber = require('written-number');

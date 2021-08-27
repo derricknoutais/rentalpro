@@ -19,6 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app2.css') }}" rel="stylesheet">
+    @livewireStyles
     {{-- Font Awesome  --}}
     {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous"> --}}
@@ -28,141 +29,191 @@
     <meta name="apple-mobile-web-app-title" content="Rental Pro">
     <link rel="apple-touch-icon" href="/images/icons/app-icon-256x256.png" size="256x256">
 </head>
-<body >
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-            <div class="container">
-                @auth
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ Auth::user()->compagnie->nom }}
-                </a>
-                @endauth
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<body>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    @auth
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item mx-3">
-                                <a href="/contrats" class="nav-link">
-                                    <i class="fas fa-file-contract"></i>
-                                    Contrats
-                                </a>
-                            </li>
-                            <li class="nav-item mx-3">
-                                <a href="/clients" class="nav-link">
-                                    <i class="fas fa-user-tie"></i>
-                                    Clients
-                                </a>
-                            </li>
-                            @if (Auth::user()->compagnie->type === 'véhicule')
-                                <li class="nav-item mx-3">
-                                    <a href="/voitures" class="nav-link">
-                                        <i class="fas fa-car"></i>
-                                        Voitures
-                                    </a>
-                                </li>
-                                <li class="nav-item mx-3">
-                                    <a href="/maintenances" class="nav-link">
-                                        <i class="fas fa-tools"></i>
-                                        Maintenances
-                                    </a>
-                                </li>
-                                <li class="nav-item dropdown mx-3">
-                                    <a class="nav-link dropdown-toggle" role="button" href="#" data-toggle="dropdown">
-                                        <i class="fas fa-chart-bar"></i>
-                                        Reporting
-                                        <span class="caret"></span>
-                                    </a>
+    <div id="app" class="min-h-screen bg-gray-100">
 
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="/reporting">General
-                                        </a>
-                                        <a href="/reporting/voitures" class="dropdown-item">Par Voiture</a>
-                                        <a href="/reporting/par-client/reporting/par-voiture/reporting/par-voiture" class="dropdown-item">Par Client</a>
-                                    </div>
+        <nav class="bg-gray-800" x-show="false">
+            <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:px-8">
+                <div class="relative flex items-center justify-between h-16">
+                    <div class="flex items-center px-2 lg:px-0">
+                        <div class="flex-shrink-0">
+                            <img class="block w-auto h-8"
+                                src="/img/logo-simple.png" alt="Workflow">
 
-                                </li>
-                            @endif
-                        </ul>
-                    @endauth
-
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-
-                            <li class="nav-item dropdown mr-3">
-                                <a id="navbarDropdown" class="nav-link fa-stack" href="#" role="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                    <span class="fa-stack has-badge" :data-count="notifications.length">
-                                      <i class="fa  fa-stack-2x"></i>
-                                      <i class="fa fa-bell fa-stack-1x"></i>
-                                    </span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" v-if="notifications">
-                                    <a :href="notif.lien" class="dropdown-item" v-for="notif in notifications">@{{ notif.message }}</a>
+                        </div>
+                        <div class="hidden lg:block lg:ml-6">
+                            <div class="flex space-x-4">
+                                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                                @auth
+                                    <a href="/dashboard"
+                                        class="px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md">Tableau de Bord</a>
+                                    <a href="/contrats"
+                                        class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Contrats</a>
+                                    <a href="/clients"
+                                        class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Clients</a>
+                                    <a href="/voitures"
+                                        class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Voitures</a>
+                                @endauth
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center flex-1 px-2 lg:ml-6 lg:justify-end">
+                        <div class="w-full max-w-lg lg:max-w-xs">
+                            <label for="search" class="sr-only">Search</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <!-- Heroicon name: solid/search -->
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                        fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd"
+                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                            clip-rule="evenodd" />
+                                    </svg>
                                 </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                <input id="search" name="search"
+                                    class="block w-full py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 bg-gray-700 border border-transparent rounded-md focus:outline-none focus:bg-white focus:border-white focus:ring-white focus:text-gray-900 sm:text-sm"
+                                    placeholder="Search" type="search">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex lg:hidden">
+                        <!-- Mobile menu button -->
+                        <button type="button"
+                            class="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                            aria-controls="mobile-menu" aria-expanded="false">
+                            <span class="sr-only">Open main menu</span>
+                            <!--
+                                Icon when menu is closed.
+                                Heroicon name: outline/menu
+                                Menu open: "hidden", Menu closed: "block"
+                            -->
+                            <svg class="block w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <!--
+                                Icon when menu is open.
 
-                                    <span class="caret">
+                                Heroicon name: outline/x
 
-                                    </span>
-                                </a>
+                                Menu open: "block", Menu closed: "hidden"
+                            -->
+                            <svg class="hidden w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="hidden lg:block lg:ml-4">
+                        <div class="flex items-center">
+                            <button type="button"
+                                class="flex-shrink-0 p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                                <span class="sr-only">View notifications</span>
+                                <!-- Heroicon name: outline/bell -->
+                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                            </button>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    <a href="/mes-paramètres" class="dropdown-item">Settings</a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
+                            <!-- Profile dropdown -->
+                            <div class="relative flex-shrink-0 ml-4">
+                                <div>
+                                    <button type="button"
+                                        class="flex text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                        <span class="sr-only">Open user menu</span>
+                                        <img class="w-8 h-8 rounded-full"
+                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                            alt="">
+                                    </button>
                                 </div>
-                            </li>
-                        @endguest
-                    </ul>
+                                <!--
+                                    Dropdown menu, show/hide based on menu state.
+
+                                    Entering: "transition ease-out duration-100"
+                                        From: "transform opacity-0 scale-95"
+                                        To: "transform opacity-100 scale-100"
+                                    Leaving: "transition ease-in duration-75"
+                                        From: "transform opacity-100 scale-100"
+                                        To: "transform opacity-0 scale-95"
+                                -->
+                                {{-- <div class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                                    <!-- Active: "bg-gray-100", Not Active: "" -->
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                        id="user-menu-item-0">Your Profile</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                        id="user-menu-item-1">Settings</a>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                        id="user-menu-item-2">Sign out</a>
+                                </div> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile menu, show/hide based on menu state. -->
+            <div class="lg:hidden" id="mobile-menu">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                    <a href="#" class="block px-3 py-2 text-base font-medium text-white bg-gray-900 rounded-md">Dashboard</a>
+                    <a href="#"
+                        class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Team</a>
+                    <a href="#"
+                        class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Projects</a>
+                    <a href="#"
+                        class="block px-3 py-2 text-base font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Calendar</a>
+                </div>
+                <div class="pt-4 pb-3 border-t border-gray-700">
+                    <div class="flex items-center px-5">
+                        <div class="flex-shrink-0">
+                            <img class="w-10 h-10 rounded-full"
+                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                alt="">
+                        </div>
+                        <div class="ml-3">
+                            <div class="text-base font-medium text-white">Tom Cook</div>
+                            <div class="text-sm font-medium text-gray-400">tom@example.com</div>
+                        </div>
+                        <button type="button"
+                            class="flex-shrink-0 p-1 ml-auto text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                            <span class="sr-only">View notifications</span>
+                            <!-- Heroicon name: outline/bell -->
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="px-2 mt-3 space-y-1">
+                        <a href="#"
+                            class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700">Your
+                            Profile</a>
+                        <a href="#"
+                            class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700">Settings</a>
+                        <a href="#"
+                            class="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700">Sign
+                            out</a>
+                    </div>
                 </div>
             </div>
         </nav>
         @include('flash::message')
-        <main>
+        <main class="">
             @yield('content')
         </main>
     </div>
-    {{-- <div id="app" class="tw-bg-screen">
-
-        <div class="tw-w-1/12 tw-h-screen tw-border tw-border-gray-300">
-            <ul>
-                <li>kfljgfkldj</li>
-                <li>kfljgfkldj</li>
-                <li>kfljgfkldj</li>
-                <li>kfljgfkldj</li>
-                <li>kfljgfkldj</li>
-            </ul>
-        </div>
-
-    </div> --}}
-
-    @yield('js')
 </body>
+    @yield('js')
+    @livewireScripts
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="/ressources/js/apex.js"></script>
+    @livewireChartsScripts
 </html>

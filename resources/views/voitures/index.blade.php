@@ -2,189 +2,26 @@
 
 
 @section('content')
-    <voitures-index inline-template :contrats="{{ $contrats }}">
-        <div>
-            
-            <div class="container">
-                <h1 class="text-left my-5">Voitures</h1>
-            </div>
-            <div class="container-fluid bg-primary py-5">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-10">
-                            <p class="text-white">Ajoute, Visualise et Modifie toutes les voitures.</p>
-                        </div>
-                        <div class="col-2">
-                            <button class="btn btn-light" data-toggle="modal" data-target="#ajoutVoiture">Ajouter Voiture</button>
 
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="container-fluid bg-white py-5">
-                <div class="container">
-                    <div class="row px-5">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Cherche Voitures par Immatriculation</label>
-                                <input type="text" class="form-control" name="">
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="">Marque</label>
-                                <select class="form-control" name="" id="">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row px-5">
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="">Type</label>
-                                <select class="form-control" name="" id="">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="">État</label>
-                                <select class="form-control" name="" id="">
-                                    <option></option>
-                                    <option></option>
-                                    <option></option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="">Prix</label>
-                                <input type="text" class="form-control" name="">
-                            </div>
-                        </div>
-                        <div class="col-2 offset-1">
-                            <div class="form-group">
-                                <label for="" style="visibility: hidden">Type</label>
-                               <button type="button" class="btn btn-primary btn-block">Chercher</button>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                
-            </div>
-            <div class="container mt-5" >
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Immatriculation</th>
-                            <th>Type</th>
-                            <th>État</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($voitures as $voiture)
-                            <tr @click="relocateTo({{ $voiture->id }})">
-                                <td scope="row"><a href="/voiture/{{ $voiture->id }}">{{ $voiture->immatriculation }}</a></td>
-                                <td>{{ $voiture->marque . ' ' . $voiture->type }}</td>
-                                <td>
-                                    @if($voiture->etat === 'loué')
-                                        <span class="dot bg-warning"></span>
-                                    @elseif($voiture->etat === 'disponible')
-                                        <span class="dot bg-success"></span>
-                                    @elseif($voiture->etat === 'maintenance')
-                                        <span class="dot bg-danger"></span>    
-                                    @endif
-                                    {{ $voiture->etat }}
-                                    @if( sizeof($voiture->pannesNonResolues()) > 0 )
-                                        <i class="fas fa-exclamation-triangle text-danger"></i>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-
-                    </tbody>
-                </table>
-
-            </div>
-
-
-            <!-- Modal -->
-            <div class="modal fade" id="ajoutVoiture" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" @keyup.enter="submitForm()">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Nouvelle Voiture</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form action="/voitures/ajout-voiture" enctype="multipart/form-data" method="POST" id="voitureForm" @submit.prevent="submitForm()">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group">
-                                            <label for="">Immatriculation</label>
-                                            <input type="text" class="form-control" name="immatriculation">
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                            <label for="">Nº Chassis</label>
-                                            <input type="text" class="form-control" name="numero_chassis">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group">
-                                            <label for="">Marque</label>
-                                            <input type="text" class="form-control" name="marque">
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                            <label for="">Type</label>
-                                            <input type="text" class="form-control" name="type">
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                            <label for="">Année</label>
-                                            <input type="number" class="form-control" name="annee">
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                            <label for="">Prix Journalier</label>
-                                            <input type="number" class="form-control" name="prix">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i v-if="isLoading" class="fas fa-spinner fa-spin"></i>
-                                    Enregistrer
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+    <div class="container mx-auto">
+        <div class="relative pb-5 mt-10 border-b border-gray-200 sm:pb-0">
+            <div class="md:flex md:items-center md:justify-between">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Liste Véhicules
+                </h2>
+                <div class="flex mt-3 md:mt-0 md:absolute md:top-3 md:right-0">
+                    <button type="button"
+                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Share
+                    </button>
+                    <button type="button"
+                        class="inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Create
+                    </button>
                 </div>
             </div>
+
+            <livewire:car-list >
         </div>
-        
-        
-    </voitures-index>
+    </div>
 @endsection

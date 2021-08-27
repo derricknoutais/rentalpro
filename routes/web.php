@@ -1,20 +1,24 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Panne;
+use App\Client;
 use App\Contrat;
 use App\Voiture;
-use App\Client;
-use GuzzleHttp\Client as Gzclient;
-use Illuminate\Support\Facades\Auth;
+
 use App\Document;
-use App\Accessoire;
-use App\Events\ContratCree;
-use App\Panne;
-use App\Maintenance;
+use App\Paiement;
 use Carbon\Carbon;
+use App\Accessoire;
 use App\Technicien;
+use App\Maintenance;
+use App\Events\ContratCree;
+use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Spatie\Permission\Models\Permission;
+use Asantibanez\LivewireCharts\Models\LineChartModel;
+use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 if(env('APP_ENV') == 'local')
     Auth::loginUsingID(1);
@@ -73,7 +77,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     });
 
-    Route::get('/', 'HomeController@welcome');
     Route::get('/home', 'HomeController@index')->name('home');
 
     Route::get('/test-upload/{contrat}', function(Contrat $contrat){
@@ -299,10 +302,32 @@ Route::group(['middleware' => ['auth']], function () {
         return redirect()->back();
     });
 
+
+    Route::get('/paiements-cashier', function(){
+        $ids = Contrat::pluck('id')->toArray();
+        $contrats = Contrat::all();
+        $response = Http::post('https://cashier.azimuts.ga/api/get-payments', ['ids' => $ids]);
+        $test = $response->json();
+        foreach($test as $paiement){
+            $contrat_id = $contrats->where('cashier_facture_id', $paiement['facture_id'])->first()['id'];
+
+            if($contrat_id)
+                $paiements[] = [
+                    'contrat_id' => $contrat_id,
+                    'montant' => $paiement['montant'] ,
+                    'note' => $paiement['note'],
+                    'created_at' => $paiement['created_at'],
+                    'updated_at' => $paiement['updated_at'],
+                ];
+        }
+        DB::table('paiements')->insert($paiements);
+        // return $test;
+    });
+
     // Reporting
     Route::get('/reporting/voitures', function(){
-        $voitures = Voiture::with(['contrats', 'maintenances'])->get();
-
+        $voitures = Voiture::with(['contrats' , 'contrats.paiements', 'maintenances'])->get();
+        // return $voitures;
         $contrats =  Contrat::all()->sortBy('created_at')->groupBy(function ($contrat){
             return Carbon::parse($contrat->created_at)->format('m');
         });
@@ -315,7 +340,9 @@ Route::group(['middleware' => ['auth']], function () {
                 array_push($contrat_ordered_by_month, $contrats[$j]);
             }
         }
+
         $chiffre_DAffaire_Annuel = [];
+
         foreach ( $contrat_ordered_by_month as $contrats_in_month) {
             $chiffre_DAffaire_Mensuel = 0;
             foreach($contrats_in_month as $contrat){
@@ -325,11 +352,48 @@ Route::group(['middleware' => ['auth']], function () {
         }
         $chiffre_DAffaire_Annuel;
 
+        return view('reporting.index');
+
         return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
     });
-    Route::get('/reporting', function(){
-        $contrats = Contrat::all();
-        return view('reporting.index', compact('contrats'));
+    Route::get('/dashboard', function(){
+
+        $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(
+            DB::raw('sum(montant) as sums'),
+            DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"),
+
+        )->orderBy('months')->groupBy('months')->get();
+
+
+        $contrats_in_year_ids = Contrat::whereYear('du', now()->format('Y'))->pluck('id');
+        $last_year_contrats_ids = Contrat::whereYear('du', now()->format('Y') - 1 )->pluck('id');
+
+        // 1st Card
+        $dashboard['paiements_annuels'] = Paiement::whereIn('contrat_id', $contrats_in_year_ids)->sum('montant');
+        $dashboard['last_year_payments'] = Paiement::whereIn('contrat_id', $last_year_contrats_ids)->sum('montant');
+
+        // 2nd Card
+        $dashboard['nb_locations'] = Contrat::whereYear('du', now()->format('Y'))->sum('nombre_jours');
+        $dashboard['last_year_nb_locations'] = Contrat::whereYear('du', now()->format('Y') - 1)->sum('nombre_jours');
+
+        // 3rd Card
+        $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
+        $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total') * 100;
+
+
+
+
+        // return Paiement::all()->sum('montant');
+        $columnChartModel =
+        (new LineChartModel())
+        ->setTitle('Paiements');
+        foreach($paiements_by_months as $pay){
+            $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
+        }
+
+    ;
+
+        return view('dashboard.index', compact('dashboard', 'columnChartModel'));
     });
     // COMPAGNIES
     Route::view('/compagnies/create', 'compagnies.create');
