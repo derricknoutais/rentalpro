@@ -20,12 +20,12 @@ use Spatie\Permission\Models\Permission;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
-if(env('APP_ENV') == 'local')
-    Auth::loginUsingID(1);
+// if(env('APP_ENV') == 'local')
+//     Auth::loginUsingID(1);
 
 Auth::routes();
 
-Route::group(['middleware' => ['auth']], function () {
+// Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/role-et-permissions', function(){
         $role1 = Role::create(['name' => 'admin']);
@@ -404,4 +404,4 @@ Route::group(['middleware' => ['auth']], function () {
     // Techniciens
     Route::post('techniciens', 'TechnicienController@store');
 
-});
+// });
