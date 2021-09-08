@@ -150,6 +150,7 @@
                     @endif
                 </dd>
             </div>
+            {{-- Third Card --}}
             <div class="px-4 py-5 sm:p-10">
                 <dt class="text-base font-normal text-gray-900">
                     Jours de Locations
@@ -175,7 +176,7 @@
                         <span class="sr-only">
                             Augmentation de
                         </span>
-                        {{ number_format( $dashboard['last_year_nb_locations'] / $dashboard['nb_locations']  * 100 , 1, ',', '.') }}
+                        {{ number_format(( $dashboard['nb_locations'] - $dashboard['last_year_nb_locations'] ) / $dashboard['nb_locations']  * 100 , 1, ',', '.') }}
                     </div>
                     @else
                     <div
@@ -190,7 +191,7 @@
                         <span class="sr-only">
                             Baisse de
                         </span>
-                        {{ ( number_format( $dashboard['last_year_nb_locations'] / $dashboard['nb_locations']  * 100, 0, ',', '.' )) }}%
+                        {{ ( number_format( ($dashboard['last_year_nb_locations'] - $dashboard['nb_locations']) / $dashboard['nb_locations']  * 100, 0, ',', '.' )) }}%
                     </div>
                     @endif
                 </dd>
