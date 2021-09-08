@@ -83,7 +83,7 @@
                             <span class="sr-only">
                                 Augmentation de
                             </span>
-                            {{ ( $dashboard['last_year_payments'] / $dashboard['paiements_annuels'] ) * 100 }}
+                            {{ ( ($dashboard['paiements_annuels'] - $dashboard['last_year_payments']) / $dashboard['paiements_annuels'] ) * 100 }}
                         </div>
                     @else
                         <div
@@ -98,7 +98,7 @@
                             <span class="sr-only">
                                 Baisse de
                             </span>
-                            {{ ( number_format( $dashboard['last_year_payments'] / $dashboard['paiements_annuels']  * 100, 0, ',', '.' )) }}%
+                            {{ ( number_format( ( $dashboard['last_year_payments'] - $dashboard['paiements_annuels'] )/ $dashboard['paiements_annuels']  * 100, 0, ',', '.' )) }}%
                         </div>
                     @endif
                 </dd>

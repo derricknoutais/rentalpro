@@ -383,10 +383,6 @@ Route::group(['middleware' => ['auth']], function () {
         // 3rd Card
         $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
         $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total') * 100;
-
-
-
-
         // return Paiement::all()->sum('montant');
         $columnChartModel =
         (new LineChartModel())
@@ -395,7 +391,6 @@ Route::group(['middleware' => ['auth']], function () {
             $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
         }
 
-    ;
 
         return view('dashboard.index', compact('dashboard', 'columnChartModel'));
     });
