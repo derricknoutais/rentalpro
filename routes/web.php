@@ -20,8 +20,8 @@ use Spatie\Permission\Models\Permission;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
-// if(env('APP_ENV') == 'local')
-//     Auth::loginUsingID(1);
+if(env('APP_ENV') == 'local')
+    Auth::loginUsingID(1);
 
 Auth::routes();
 
@@ -75,6 +75,10 @@ Route::group(['middleware' => ['auth']], function () {
         $user->assignRole('admin');
         App\User::find(2)->assignRole('gérant');
 
+    });
+
+    Route::get('/', function(){
+        return redirect('/dashboard');
     });
 
     Route::get('/home', 'HomeController@index')->name('home');
