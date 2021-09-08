@@ -25,7 +25,7 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 Auth::routes();
 
-// Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/role-et-permissions', function(){
         $role1 = Role::create(['name' => 'admin']);
@@ -404,4 +404,4 @@ Auth::routes();
     // Techniciens
     Route::post('techniciens', 'TechnicienController@store');
 
-// });
+});
