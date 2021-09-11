@@ -356,7 +356,7 @@
                                             </span>
                                         @else
                                             @can('terminer contrat')
-                                                <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" @click="terminerContrat({{ $contrat }})" data-toggle="modal" data-target="#terminerContrat{{ $contrat->id }}">
+                                                <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" data-toggle="modal" data-target="#terminerContrat{{ $contrat->id }}">
                                                     <i class="fas fa-ban "></i>
                                                     Terminer Contrat
                                                 </button>
@@ -384,7 +384,7 @@
                                                 Télécharger
                                             </a>
 
-                                            {{-- <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                            <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -407,7 +407,7 @@
                                                         </form>
                                                     </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
 
                                         @endif
                                     </td>
