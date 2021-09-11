@@ -3,6 +3,7 @@ export default {
     props: ['contrats', 'env', 'voitures_prop', 'clients_prop'],
     data(){
         return {
+            modal: '',
             filters: {
                 voiture: {
                     immatriculation: ''
@@ -58,6 +59,12 @@ export default {
             }).catch(error => {
                 console.log(error);
             });
+        },
+        showModal(modal){
+            this.modal = modal
+        },
+        closeModal(){
+            this.modal = ''
         }
     },
     watch : {

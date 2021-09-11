@@ -32,14 +32,14 @@
                         </div>
 
                     </div>
-                    <div class="flex items-center justify-center w-full">
-                        <div class="w-1/4 form-group">
+                    <div class="flex items-center justify-center w-full mt-3">
+                        <div class="flex flex-col w-1/4 form-group">
                           <label for="">Du</label>
-                          <input type="date" class="form-control" name="du">
+                          <input type="date" class="py-2 rounded-md" name="du">
                         </div>
-                        <div class="w-1/4 ml-3 form-group">
+                        <div class="flex flex-col w-1/4 ml-3 form-group">
                           <label for="">Au</label>
-                          <input type="date" class="form-control" name="au">
+                          <input type="date" class="py-2 rounded-md" name="au">
                         </div>
                         <div class="flex items-center justify-center w-1/4">
                             <button type="submit" class="px-10 py-2 bg-yellow-300 rounded">Filtrer</button>
@@ -124,58 +124,6 @@
                                                             @endcan
                                                         </div>
                                                     </div>
-
-                                                    {{-- Modal Update Paiement --}}
-                                                    {{-- <div class="modal fade" id="updatePaiement{{ $paiement->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Editer Paiement</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form action="/paiement/{{ $paiement->id }}" method="POST">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label for="">Montant</label>
-                                                                            <input type="number" class="form-control" name="montant" value="{{ $paiement->montant }}">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label for="">Note</label>
-                                                                            <textarea class="form-control" name="note" value="{{ $paiement->note }}"></textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                                        <button type="submit" class="btn btn-primary">Editer</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div> --}}
-                                                    <!-- Modal Delete Paiement -->
-                                                    {{-- <div class="modal fade" id="supprimerModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                                                        <form action="/paiement/{{ $paiement->id }}" class="modal-dialog" role="document" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Êtes-vous sûr de Vouloir Supprimer le Paiement? </h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
-                                                                    <button type="submit" class="btn btn-primary">Oui</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div> --}}
                                                 @endforeach
 
 
@@ -197,8 +145,9 @@
                                         @if ($contrat->deleted_at === NULL)
                                             <div class="flex px-1 py-3 bg-gray-100 rounded" >
                                                 @can('créer paiement')
-                                                    <button type="button" class="px-1 py-0 mr-2 bg-blue-500"
+                                                    <button type="button" class="px-1 py-0 mr-2 bg-blue-500 btn"
                                                         data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
+                                                        @click="showModal('paiement')"
                                                     >
                                                         Effectuer Paiement
                                                     </button>
@@ -260,7 +209,7 @@
                                                     </div>
 
                                                     {{-- MODAL PROLONGATION --}}
-                                                    {{-- <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
+                                                    <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
@@ -299,63 +248,15 @@
                                                                 </form>
                                                             </div>
                                                         </div>
-                                                    </div> --}}
+                                                    </div>
                                                 @endif
 
                                             </div>
                                         @endif
-
-
-                                        <!-- Modal Prolongation Durée de Contrat -->
-                                        {{-- <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Prolongation Durée de Contrat</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <form action="/contrat/{{ $contrat->id }}/update" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <label for="">Nouvelle Date</label>
-                                                                <input type="date" class="form-control" name="date">
-                                                            </div>
-                                                            <div class="form-group">
-                                                                @if ($compagnie->type === 'véhicules')
-                                                                    <label for="">Nouveau Véhicule</label>
-                                                                    <select type="date" class="form-control" name="contractable">
-                                                                        <option value="{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</option>
-                                                                        @foreach ($contractablesDisponibles as $voiture)
-                                                                            <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                @else
-                                                                    <label for="">Nouvelle Chambre</label>
-                                                                    <select type="date" class="form-control" name="contractable">
-                                                                        <option value="{{ $contrat->contractable->id }}">{{ $contrat->contractable->nom }}</option>
-                                                                        @foreach ($contractablesDisponibles as $chambre)
-                                                                            <option value="{{ $chambre->id }}">{{ $chambre->nom }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                @endif
-
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Save</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div> --}}
                                         <!-- Modal Paiement -->
-                                        {{-- <div class="modal fade" id="paiement{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        <div class="modal fade" id="paiement{{ $contrat->id }}"
+                                            tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                                            aria-hidden="true" >
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -364,30 +265,36 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form action="/paiement" method="POST">
-                                                        @csrf
-                                                        <div class="modal-body">
+                                                    <div class="modal-body">
+                                                        <form action="/paiement" method="POST" class="flex flex-col">
+                                                            @csrf
+                                                            <input type="hidden" class="border border-gray-300 rounded-md " name="contrat_id" value="{{ $contrat->id }}">
 
-                                                            <input type="hidden" class="form-control" name="contrat_id" value="{{ $contrat->id }}">
-
-                                                            <div class="form-group">
+                                                            <div class="flex flex-col items-start">
                                                                 <label for="">Montant</label>
-                                                                <input type="number" class="form-control" name="montant">
+                                                                <input type="number" class="w-full p-2 border border-gray-300 rounded-md" name="montant">
                                                             </div>
-                                                            <div class="form-group">
+                                                            <div class="flex flex-col items-start">
                                                                 <label for="">Note</label>
-                                                                <textarea type="number" class="form-control" name="note"></textarea>
+                                                                <textarea type="number" class="w-full px-2 py-6 border border-gray-300 rounded-md" name="note"></textarea>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                            <button type="submit" class="btn btn-primary">Paier</button>
-                                                        </div>
-                                                    </form>
+                                                            <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                                                                <button type="submit"
+                                                                    class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
+                                                                    Payer
+                                                                </button>
+                                                                <button type="button" @click="closeModal()"
+                                                                    class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                                                                    Cancel
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+
                                                 </div>
                                             </div>
-                                        </div> --}}
-
+                                        </div>
                                     </td>
 
                                     {{-- Client --}}

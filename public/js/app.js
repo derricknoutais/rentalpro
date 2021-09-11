@@ -6974,6 +6974,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['contrats', 'env', 'voitures_prop', 'clients_prop'],
   data: function data() {
     return {
+      modal: '',
       filters: {
         voiture: {
           immatriculation: ''
@@ -7036,6 +7037,12 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    showModal: function showModal(modal) {
+      this.modal = modal;
+    },
+    closeModal: function closeModal() {
+      this.modal = '';
     }
   },
   watch: {

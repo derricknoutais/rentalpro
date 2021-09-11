@@ -38,8 +38,9 @@ class PaiementController extends Controller
     {
 
         $contrat = Contrat::find($request->contrat_id);
-
+        dd([$request->all()]);
         if( $contrat->solde() < $request->montant  ){
+
             flash('Le Montant Imputé est supérieur au solde. Veuillez imputer une valeur inférieure ou égale au solde.')->error();
             return redirect()->back();
         }
