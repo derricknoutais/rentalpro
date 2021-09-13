@@ -73,7 +73,7 @@ class ContratController extends Controller
 
         }
 
-        $contrats = $query->orderBy('id', 'desc')->paginate(10);
+        $contrats = $query->orderBy('updated_at', 'desc')->paginate(10);
         $contrats->loadMissing(['client', 'contractable', 'paiements']);
         if($compagnie->type === 'véhicules'){
             $contractablesDisponibles = Voiture::where('etat', 'Disponible')->get();
@@ -354,43 +354,46 @@ class ContratController extends Controller
         ]);
         return redirect('/contrats');
     }
+
     public function prolonger(Request $request, Contrat $contrat){
         $contrat = DB::transaction(function () use ( $request, $contrat) {
-            $nombre_jours = Carbon::parse($request->du)->endOfDay()->diffInDays($contrat->du->endOfDay());
 
-            $nouveauContrat = Contrat::create([
-                'contractable_id' => $request->voiture,
-                'contractable_type' => 'App\\Voiture',
-                'client_id' => $contrat->client_id,
-                'numéro' => Contrat::numéro(),
-                'compagnie_id' => Auth::user()->compagnie->id,
-                'au' => $contrat->du ,
-                'du' => $request->du . $contrat->du->format('H:i:s'),
-                'prix_journalier' => $request->prix_journalier,
-                'nombre_jours' => $nombre_jours,
-                "total" => $nombre_jours * $contrat->prix_journalier,
-                "caution" => $contrat->caution,
-                "etat_accessoires" => $contrat->etat_accessoires,
-                "lien_photo_avant" => $contrat->lien_photo_avant,
-                "lien_photo_arriere" => $contrat->lien_photo_arriere,
-                "lien_photo_droit" => $contrat->lien_photo_droit,
-                "lien_photo_gauche" => $contrat->lien_photo_gauche,
-            ]);
+            $nombre_jours = Carbon::parse($request->du)->endOfDay()->diffInDays($contrat->du->endOfDay());
+            // $nouveauContrat = Contrat::create([
+            //     'contractable_id' => $request->voiture,
+            //     'contractable_type' => 'App\\Voiture',
+            //     'client_id' => $contrat->client_id,
+            //     'numéro' => Contrat::numéro(),
+            //     'compagnie_id' => Auth::user()->compagnie->id,
+            //     'au' => $request->du ,
+            //     'du' => $contrat->au . $contrat->du->format('H:i:s'),
+            //     'prix_journalier' => $request->prix_journalier,
+            //     'nombre_jours' => $nombre_jours,
+            //     "total" => $nombre_jours * $contrat->prix_journalier,
+            //     "caution" => $contrat->caution,
+            //     "etat_accessoires" => $contrat->etat_accessoires,
+            //     "lien_photo_avant" => $contrat->lien_photo_avant,
+            //     "lien_photo_arriere" => $contrat->lien_photo_arriere,
+            //     "lien_photo_droit" => $contrat->lien_photo_droit,
+            //     "lien_photo_gauche" => $contrat->lien_photo_gauche,
+            // ]);
             $contrat->update([
-                'real_check_out' => $contrat->du,
-                'prolongation_id' => $nouveauContrat->id
+                'au' => $request->du,
+                'nombre_jours' => $nombre_jours,
+                'contractable_id' => $request->voiture,
+
             ]);
 
             if($contrat->contractable->id !== $request->voiture){
                 $contrat->contractable->etat('disponible');
                 Voiture::find( $request->voiture )->etat('loué');
             }
-            return $nouveauContrat;
+            return $contrat;
         });
         $contrat->loadMissing('contractable', 'client');
         // return $contrat;
         // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
-        // return redirect()->back();
+        return redirect()->back();
     }
     public function changerVoiture( Request $request, Contrat $contrat){
 
@@ -398,9 +401,7 @@ class ContratController extends Controller
             // Retrouve la voiture a remplacer
             $voiture = Voiture::find( $request->voiture );
 
-            //
             $contrat->contractable->etat('disponible');
-
 
             if( $voiture->etat === 'disponible' ){
 
