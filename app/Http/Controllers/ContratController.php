@@ -387,7 +387,7 @@ class ContratController extends Controller
             }
             return $nouveauContrat;
         });
-        $contrat->loadMissing('voiture', 'client');
+        $contrat->loadMissing('contractable', 'client');
         // return $contrat;
         // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
         // return redirect()->back();
