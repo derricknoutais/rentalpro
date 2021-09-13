@@ -180,9 +180,9 @@ class ContratController extends Controller
                 'etat_documents' => $request[ 'documentString'],
             ]);
 
-            // Voiture::find( $request['contractable'])->update([
-            //     'etat' => 'loué'
-            // ]);
+            Voiture::find( $request['contractable'])->update([
+                'etat' => 'loué'
+            ]);
             if($contrat){
                 return $contrat;
             }
@@ -359,7 +359,8 @@ class ContratController extends Controller
             $nombre_jours = Carbon::parse($request->du)->endOfDay()->diffInDays($contrat->du->endOfDay());
 
             $nouveauContrat = Contrat::create([
-                'voiture_id' => $request->voiture,
+                'contractable_id' => $request->voiture,
+                'contractable_type' => 'App\\Voiture',
                 'client_id' => $contrat->client_id,
                 'numéro' => Contrat::numéro(),
                 'compagnie_id' => Auth::user()->compagnie->id,
@@ -380,8 +381,8 @@ class ContratController extends Controller
                 'prolongation_id' => $nouveauContrat->id
             ]);
 
-            if($contrat->voiture->id !== $request->voiture){
-                $contrat->voiture->etat('disponible');
+            if($contrat->contractable->id !== $request->voiture){
+                $contrat->contractable->etat('disponible');
                 Voiture::find( $request->voiture )->etat('loué');
             }
             return $nouveauContrat;
@@ -398,7 +399,7 @@ class ContratController extends Controller
             $voiture = Voiture::find( $request->voiture );
 
             //
-            $contrat->voiture->etat('disponible');
+            $contrat->contractable->etat('disponible');
 
 
             if( $voiture->etat === 'disponible' ){

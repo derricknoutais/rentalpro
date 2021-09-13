@@ -172,7 +172,7 @@
                                                 @endif
 
                                                 {{-- COMPAGNIE TYPE V --}}
-                                                @if ( $compagnie->type === 'véhicule' )
+                                                @if ( $compagnie->type === 'véhicules' )
                                                     {{-- MODAL CHANGER VOITURE  --}}
                                                     <div class="modal fade" id="changervoiture{{ $contrat->id }}" tabindex="-1" role="dialog" >
                                                         <div class="modal-dialog" role="document">
@@ -189,7 +189,7 @@
                                                                         <div class="form-group">
                                                                             <label for="">Sélectionner Voiture</label>
                                                                             <select class="custom-select" name="voiture">
-                                                                                <option value="{{ $contrat->voiture->id }}" selected>{{ $contrat->voiture->immatriculation }}</option>
+                                                                                <option value="{{ $contrat->contractable->id }}" selected>{{ $contrat->contractable->immatriculation }}</option>
 
                                                                                 @foreach ($voitures as $voiture)
                                                                                     @if($voiture->etat === 'disponible')
@@ -232,7 +232,7 @@
                                                                         <div class="form-group">
                                                                             <label for="">Sélectionner Voiture</label>
                                                                             <select class="custom-select" name="voiture">
-                                                                                <option value="{{ $contrat->voiture->id }}" selected>{{ $contrat->voiture->immatriculation }}</option>
+                                                                                <option value="{{ $contrat->contractable->id }}" selected>{{ $contrat->contractable->immatriculation }}</option>
                                                                                 @foreach ($voitures as $voiture)
                                                                                     @if($voiture->etat === 'disponible')
                                                                                         <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
