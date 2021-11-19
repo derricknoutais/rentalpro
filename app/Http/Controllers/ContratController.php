@@ -381,7 +381,6 @@ class ContratController extends Controller
                 'au' => $request->du,
                 'nombre_jours' => $nombre_jours,
                 'contractable_id' => $request->voiture,
-
             ]);
 
             if($contrat->contractable->id !== $request->voiture){

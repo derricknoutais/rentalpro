@@ -24,6 +24,9 @@ class Voiture extends Model
         return $this->morphMany('App\Contrat', 'contractable');
         // ->orderBy('id', 'desc');
     }
+    public function paiements(){
+        return $this->hasManyThrough(Paiement::class, Contrat::class, 'contractable_id', 'contrat_id'  );
+    }
 
     public function pannes()
     {

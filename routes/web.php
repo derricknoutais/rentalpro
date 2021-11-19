@@ -365,12 +365,13 @@ Route::group(['middleware' => ['auth']], function () {
         $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(
             DB::raw('sum(montant) as sums'),
             DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"),
-
         )->orderBy('months')->groupBy('months')->get();
 
 
         $contrats_in_year_ids = Contrat::whereYear('du', now()->format('Y'))->pluck('id');
         $last_year_contrats_ids = Contrat::whereYear('du', now()->format('Y') - 1 )->pluck('id');
+
+
 
         // 1st Card
         $dashboard['paiements_annuels'] = Paiement::whereIn('contrat_id', $contrats_in_year_ids)->sum('montant');
@@ -382,7 +383,11 @@ Route::group(['middleware' => ['auth']], function () {
 
         // 3rd Card
         $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
-        $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total') * 100;
+        $dashboard['last_year_payment_rate'] = null;
+        if(Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total')){
+            $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total') * 100;
+        }
+
         // return Paiement::all()->sum('montant');
         $columnChartModel =
         (new LineChartModel())
@@ -393,6 +398,15 @@ Route::group(['middleware' => ['auth']], function () {
 
 
         return view('dashboard.index', compact('dashboard', 'columnChartModel'));
+    });
+
+    Route::get('/my-feeds', function(){
+        $contrats = Contrat::all();
+        foreach ($contrats as $contrat ) {
+            $contrat->start = $contrat->du;
+            $contrat->end = $contrat->au;
+        }
+        return $contrats;
     });
     // COMPAGNIES
     Route::view('/compagnies/create', 'compagnies.create');

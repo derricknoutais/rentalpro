@@ -50,7 +50,6 @@
                 <input type="number" class="form-control tw-mt-3" name="paiement" placeholder="Paiement">
                 <input type="number" class="form-control tw-mt-3" name="caution" placeholder="Caution">
 
-
                 {{-- Boutons Annuler et Ajouter Client & Réserver --}}
                 <div class="tw-flex">
                     <button type="button" class="form-control tw-my-3 tw-bg-gray-300 tw-text-gray-900">

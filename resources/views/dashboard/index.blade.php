@@ -54,11 +54,11 @@
 
     <!-- This example requires Tailwind CSS v2.0+ -->
     <div class="container mx-auto bg-gray-100">
-        <h3 class="mt-10 text-lg font-medium leading-6 text-gray-900">
-            Année en Cours
-        </h3>
-        <dl
-            class="grid grid-cols-1 mt-5 overflow-hidden bg-white divide-y divide-gray-200 rounded-lg shadow md:grid-cols-3 md:divide-y-0 md:divide-x">
+
+
+        <livewire:dashboard-cards/>
+
+        {{-- <dl class="grid grid-cols-1 mt-5 overflow-hidden bg-white divide-y divide-gray-200 rounded-lg shadow md:grid-cols-3 md:divide-y-0 md:divide-x">
             <div class="px-4 py-5 sm:p-10">
                 <dt class="text-base font-normal text-gray-900">
                     Paiement Annuel
@@ -150,7 +150,7 @@
                     @endif
                 </dd>
             </div>
-            {{-- Third Card --}}
+
             <div class="px-4 py-5 sm:p-10">
                 <dt class="text-base font-normal text-gray-900">
                     Jours de Locations
@@ -196,12 +196,13 @@
                     @endif
                 </dd>
             </div>
-
-
-        </dl>
+        </dl> --}}
         <div class="flex">
             <div class="w-1/2 mt-10" style="height: 50vh">
                 <livewire:livewire-line-chart :line-chart-model="$columnChartModel" />
+            </div>
+            <div class="w-1/2 mt-10" style="height: 50vh">
+                <div id='calendar' class=""></div>
             </div>
 
         </div>
@@ -214,3 +215,23 @@
 
 
 @endsection
+
+@stack('js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                var calendarEl = document.getElementById('calendar');
+                if(calendarEl){
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        dateClick: function() {
+                            alert('a day has been clicked!');
+                        },
+                        events: '/my-feeds'
+                    });
+                    calendar.setOption('locale', 'fr');
+                    calendar.render();
+                }
+              });
+
+    </script>
+@endstack

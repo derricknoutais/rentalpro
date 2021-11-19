@@ -13,10 +13,6 @@
                     <span class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></span>
                 </div>
             </div>
-            <!--
-          Use vertical padding to simulate center alignment when both lines of text are one line,
-          but preserve the same layout if the text wraps without making the image jump around.
-        -->
             <div class="pt-1.5">
                 <h1 class="text-2xl font-bold text-gray-900">{{ $voiture->immatriculation }}</h1>
                 <p class="text-sm font-medium text-gray-500">{{ $voiture->marque }} {{ $voiture->type }}</p>
@@ -28,6 +24,10 @@
             <button type="button"
                 class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                 Faire Louer
+            </button>
+            <button type="button"
+                class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+                Envoyer en Maintenance
             </button>
         </div>
     </div>

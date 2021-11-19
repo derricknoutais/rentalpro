@@ -46,7 +46,7 @@ class VoitureController extends Controller
         Voiture::find( $request->voiture['id'])->etat('disponible');
     }
     public function maintenance(Voiture $voiture){
-        $voiture->etat('maintenance');
+        return $voiture->etat('maintenance');
     }
     public function store(Request $request){
 
