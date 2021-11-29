@@ -9,7 +9,7 @@ class MaintenanceCreate extends Component
 {
     public $voitures, $techniciens;
 
-    public $titre, $voiture_id, $technicien_id, $coût, $coût_pièces, $description_panne, $pannes = [];
+    public $titre, $voiture_id, $technicien_id, $coût, $coût_pièces, $created_at, $description_panne, $pannes = [];
     public function mount($voitures, $techniciens){
         $this->voitures = $voitures;
         $this->techniciens = $techniciens;
@@ -25,7 +25,9 @@ class MaintenanceCreate extends Component
             'voiture_id' => $this->voiture_id,
             'technicien_id' => $this->technicien_id,
             'coût' => $this->coût,
-            'coût_pièces' => $this->coût_pièces
+            'coût_pièces' => $this->coût_pièces,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->created_at
         ]);
 
         foreach( $this->pannes as &$panne) {

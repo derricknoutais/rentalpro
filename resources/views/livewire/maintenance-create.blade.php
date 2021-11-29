@@ -23,6 +23,10 @@
         </div>
         <div class="flex flex-col justify-center w-1/2">
             <div>
+                <label for="">Date</label>
+                <input type="date" class="form-control" wire:model="created_at">
+            </div>
+            <div>
                 <label for="">Titre</label>
                 <input type="text" class="form-control" wire:model="titre">
             </div>
