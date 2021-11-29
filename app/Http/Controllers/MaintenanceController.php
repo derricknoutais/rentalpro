@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Maintenance;
 use App\Panne;
+use App\Technicien;
 use App\Voiture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,9 @@ class MaintenanceController extends Controller
      */
     public function create()
     {
-        //
+        $voitures = Voiture::all();
+        $techniciens = Technicien::all();
+        return view('maintenances.create', compact('voitures', 'techniciens'));
     }
 
     /**
@@ -54,13 +57,11 @@ class MaintenanceController extends Controller
             // Attache les pannes sélectionnées a la maintenance créée
 
             for($i = 0; $i < sizeof($request->panne); $i++){
-
                 Panne::find( $request->panne[$i])->update([
                     'voiture_id' => $request->voiture,
                     'maintenance_id' => $maintenance->id,
                     'etat' => 'en-maintenance'
                 ]);
-
             }
 
             // Change l'état du véhicule en maintenance
