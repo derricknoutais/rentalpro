@@ -37,33 +37,30 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($maintenances as $maintenance)
-                                    <tr
-                                        @if ($loop->odd)
-                                            class="bg-white"
-                                        @else
-                                            class="bg-gray-100"
-                                        @endif
-                                    >
-                                        <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                            {{ $maintenance->titre }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            {{ $maintenance->voiture->immatriculation }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            {{ $maintenance->technicien->nom }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            {{ $maintenance->coût }}
-                                        </td>
-                                        <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                            {{ $maintenance->coût_pièces }}
-                                        </td>
-                                    </tr>
-
+                                        <tr
+                                            @if ($loop->odd)
+                                                class="bg-white"
+                                            @else
+                                                class="bg-gray-100"
+                                            @endif
+                                        >
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                {{ $maintenance->titre }}
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                {{ $maintenance->voiture->immatriculation }}
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                {{ $maintenance->technicien->nom }}
+                                            </td>
+                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                {{ $maintenance->coût }}
+                                            </td>
+                                            <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                                                {{ $maintenance->coût_pièces }}
+                                            </td>
+                                        </tr>
                                     @endforeach
-
-
                                 </tbody>
                             </table>
                         </div>

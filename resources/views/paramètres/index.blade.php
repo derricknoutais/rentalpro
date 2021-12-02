@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="text-center mt-5">Paramètres</h1>
+        <h1 class="mt-5 text-center">Paramètres</h1>
         <div class="row">
             {{-- Sidebar --}}
             <div class="col-2">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary btn-block mt-3" data-toggle="modal" data-target="#ajouterTypeAccessoire">
+                <button type="button" class="mt-3 btn btn-primary btn-block" data-toggle="modal" data-target="#ajouterTypeAccessoire">
                     Ajouter Accessoire
                 </button>
                 <!-- Modal -->
@@ -72,7 +72,7 @@
 
             <div class="col-10">
                 <div class="row">
-                    <div class="col-4 text-center">
+                    <div class="text-center col-4">
                         <h3>Mes Documents</h3>
                         <div class="list-group">
                             @foreach ($documents as $document)
@@ -138,7 +138,7 @@
 
                         </div>
                     </div>
-                    <div class="col-4 text-center">
+                    <div class="text-center col-4">
                         <h3>Mes Accessoires</h3>
                         <div class="list-group">
                             @foreach ($accessoires as $accessoire)
@@ -210,7 +210,7 @@
                                 <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#voiture{{ $voiture->id }}" href="#">{{ $voiture->immatriculation }} </a>
 
                                 <!-- Modal -->
-                                <div class="modal  fade" id="voiture{{ $voiture->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="voiture{{ $voiture->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -226,8 +226,8 @@
                                                         @foreach ($documents as $document)
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input" 
-                                                                    name="{{ str_replace(' ', '',  $document->type) }}" 
+                                                                    <input type="checkbox" class="form-check-input"
+                                                                    name="{{ str_replace(' ', '',  $document->type) }}"
                                                                     @foreach ($voiture->documents as $voit_document)
                                                                         @if ($voit_document->type === $document->type)
                                                                             checked
@@ -239,7 +239,7 @@
                                                                 </label>
                                                             </div>
                                                             <div class="form-group col-6">
-                                                                <input type="date" class="form-control" 
+                                                                <input type="date" class="form-control"
                                                                 name="date{{ str_replace(' ', '', $document->type) }}"
                                                                     @foreach ($voiture->documents as $voit_doc)
                                                                         @if ($voit_doc->type === $document->type)
@@ -248,13 +248,13 @@
                                                                     @endforeach
                                                                 >
                                                             </div>
-                                                        @endforeach 
+                                                        @endforeach
                                                     </div>
                                                     <div class="col-6">
                                                         @foreach ($accessoires as $accessoire)
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input" 
+                                                                    <input type="checkbox" class="form-check-input"
                                                                     name="{{ str_replace(' ', '', $accessoire->type) }}"
                                                                     value="{{ $accessoire->id }}"
                                                                     @foreach ($voiture->accessoires as $voit_access)
@@ -276,9 +276,9 @@
                                                                     @endforeach
                                                                 >
                                                             </div>
-                                                        @endforeach 
+                                                        @endforeach
                                                     </div>
-                                                    
+
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -294,15 +294,15 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col-4">
-                <h3>Mes Techniciens 
+                <h3>Mes Techniciens
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ajouteTechnicien">
                         <i class="fas fa-plus-square"></i>
                     </button>
-                    
+
                     <!-- Modal -->
                     <div class="modal fade" id="ajouteTechnicien" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -326,7 +326,7 @@
                                         <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -335,15 +335,16 @@
                     @foreach($techniciens as $technicien)
                         <li class="list-group-item">{{ $technicien->nom }}</li>
                     @endforeach
-                    
+
                 </ul>
             </div>
+            <livewire:api-setting-component>
         </div>
-        
-    </div>
-    
 
-    
-    
+    </div>
+
+
+
+
 
 @endsection

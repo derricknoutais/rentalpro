@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ApiSetting;
 use Illuminate\Http\Request;
 use App\Contrat;
 use App\Client;
@@ -18,6 +19,8 @@ use PDF;
 use Nexmo\Laravel\Facade\Nexmo;
 use NumberFormatter;
 use App\Paiement;
+use Illuminate\Support\Facades\Http;
+
 class ContratController extends Controller
 {
     public function menu(){
@@ -188,20 +191,65 @@ class ContratController extends Controller
             }
         });
         if($contrat){
+            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+            $transactionData = [
+                'transaction_date' => $contrat->created_at,
+                'tenant_id' => $apiSettings->tenant_id,
+                'book_id' => $apiSettings->gescash_book_id,
+                'exercise_id' => $apiSettings->gescash_exercise_id,
+                'attachment' => 'https://rentalpro.azimuts.ga/contrat/' . $contrat->id,
+                'entries' => [
+                    // Client Entry Debit
+                    [
+                        'account_id' => $apiSettings->gescash_client_account_id,
+                        'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
+                        'debit' => $contrat->total,
+                        'credit' => NULL
+                    ],
+                    // Service Entry Credit
+                    [
+                        'account_id' => $apiSettings->gescash_service_account_id,
+                        'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
+                        'credit' => $contrat->total,
+                        'debit' => NULL
+                    ]
+                ]
+            ];
             if($request->paiement != NULL && $request->paiement !== 0){
                 Paiement::create([
                     'contrat_id' => $contrat->id,
                     'montant' => $request->paiement
                 ]);
+                array_push($transactionData['entries'],
+                    // Caisse Entry Debit
+                    [
+                        'account_id' => $apiSettings->gescash_service_account_id,
+                        'label' => 'Paiment Contrat ' . $contrat->numéro,
+                        'debit' => $request->paiement,
+                        'credit' => NULL
+                    ],
+                    // Client Entry Credit
+                    [
+                        'account_id' => $apiSettings->gescash_client_account_id,
+                        'label' => 'Paiment Contrat ' . $contrat->numéro,
+                        'credit' => $request->paiement,
+                        'debit' => NULL
+                    ]
+
+                );
             }
             $contrat->loadMissing('contractable', 'client');
+            // dd('hello');
+            Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
             // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
             //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
             flash('Contrat Enregistré avec Succès')->success();
             return redirect('/contrats');
         }
+
     }
+
     public function storeContratRapide(Request $request){
 
         if(Auth::user()->compagnie->type == 'véhicules'){

@@ -83,6 +83,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 
+    // Route::get('/test', function(){
+    //     return Http::get('http://gescash.test/api/v1/test');
+    // });
+
     Route::get('/test-upload/{contrat}', function(Contrat $contrat){
         return view('test', compact('contrat'));
     });
