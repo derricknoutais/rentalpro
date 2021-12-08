@@ -21,10 +21,8 @@ class CreateApiSettingsTable extends Migration
             $table->unsignedBigInteger('gescash_exercise_id');
 
             $table->unsignedBigInteger('gescash_client_account_id');
-            $table->unsignedBigInteger('gescash_client_label');
-
             $table->unsignedBigInteger('gescash_service_account_id');
-            $table->unsignedBigInteger('gescash_service_label');
+            $table->unsignedBigInteger('gescash_maintenance_account_id');
 
             $table->unsignedBigInteger('gescash_cash_account_id');
             $table->unsignedBigInteger('gescash_cash_label');

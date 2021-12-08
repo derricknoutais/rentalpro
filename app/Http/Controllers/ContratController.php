@@ -223,7 +223,7 @@ class ContratController extends Controller
                 array_push($transactionData['entries'],
                     // Caisse Entry Debit
                     [
-                        'account_id' => $apiSettings->gescash_service_account_id,
+                        'account_id' => $apiSettings->gescash_cash_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro,
                         'debit' => $request->paiement,
                         'credit' => NULL
@@ -240,7 +240,15 @@ class ContratController extends Controller
             }
             $contrat->loadMissing('contractable', 'client');
             // dd('hello');
-            Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+            $response = Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+
+            if($response->status() == 201){
+                $contrat->update([
+                    'gescash_transaction_id' => $response->json()['id']
+                ]);
+                return redirect()->route('contrats.show', $contrat->id)->with('success', 'Contrat créé avec succès');
+            }
+
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
             // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
             //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.

@@ -16,6 +16,7 @@ class CreatePaiementsTable extends Migration
         Schema::create('paiements', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('contrat_id');
+            $table->unsignedBigInteger('gescash_entry_id');
             $table->float('montant');
             $table->text('note')->nullable();
             $table->timestamps();

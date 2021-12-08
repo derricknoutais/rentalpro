@@ -55,7 +55,6 @@ class MaintenanceController extends Controller
             ]);
 
             // Attache les pannes sélectionnées a la maintenance créée
-
             for($i = 0; $i < sizeof($request->panne); $i++){
                 Panne::find( $request->panne[$i])->update([
                     'voiture_id' => $request->voiture,
@@ -65,7 +64,6 @@ class MaintenanceController extends Controller
             }
 
             // Change l'état du véhicule en maintenance
-
             Voiture::find($request->voiture)->etat('maintenance');
 
         });

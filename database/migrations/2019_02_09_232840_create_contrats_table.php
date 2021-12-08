@@ -37,6 +37,7 @@ class CreateContratsTable extends Migration
             $table->string('lien_photo_gauche')->nullable();
             $table->unsignedInteger('cashier_facture_id')->nullable();
             $table->unsignedInteger('prolongation_id')->nullable();
+            $table->unsignedInteger('gescash_transaction_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

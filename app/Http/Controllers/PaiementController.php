@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Paiement;
 use App\Contrat;
+use App\Paiement;
+use App\ApiSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class PaiementController extends Controller
 {
@@ -37,19 +41,61 @@ class PaiementController extends Controller
     public function store(Request $request)
     {
 
-        $contrat = Contrat::find($request->contrat_id);
-        if( $contrat->solde() < $request->montant  ){
+        $done = DB::transaction(function () use ($request){
+            $contrat = Contrat::find($request->contrat_id);
+            if( $contrat->solde() < $request->montant  ){
 
-            flash('Le Montant Imputé est supérieur au solde. Veuillez imputer une valeur inférieure ou égale au solde.')->error();
+                flash('Le Montant Imputé est supérieur au solde. Veuillez imputer une valeur inférieure ou égale au solde.')->error();
+                return redirect()->back();
+            }
+            $paiement = Paiement::create([
+                'contrat_id' => $request->contrat_id,
+                'montant' => $request->montant,
+                'note' => $request->note
+            ]);
+            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+
+            if($paiement){
+                $response = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction/' . $contrat->gescash_transaction_id . '/entry',
+                [
+                    'entries' => [
+                        // Client Entry Credit
+                        [
+                            'account_id' => $apiSettings->gescash_client_account_id,
+                            'label' => 'Paiment Contrat ' . $contrat->numéro,
+                            'credit' => $request->montant,
+                            'debit' => NULL
+                        ],
+                        // Caisse Entry Debit
+                        [
+                            'account_id' => $apiSettings->gescash_cash_account_id,
+                            'label' => 'Paiment Contrat ' . $contrat->numéro,
+                            'debit' => $request->montant,
+                            'credit' => NULL
+                        ],
+                    ]
+
+                ]
+
+                );
+                if($response->status() == 201){
+                    $updated = $paiement->update([
+                        'gescash_entry_id' => $response->json()['id']
+                    ]);
+                    if($updated){
+
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+        if($done){
+            flash('Paiement effectué avec succès')->success();
             return redirect()->back();
         }
-        $paiement = Paiement::create([
-            'contrat_id' => $request->contrat_id,
-            'montant' => $request->montant,
-            'note' => $request->note
-        ]);
-        flash('Paiement de ' . $request->montant . ' enregistré avec succès')->success();
-        return redirect()->back();
+
+
 
     }
 
