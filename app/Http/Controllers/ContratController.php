@@ -194,7 +194,7 @@ class ContratController extends Controller
             $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
             $transactionData = [
                 'transaction_date' => $contrat->created_at,
-                'tenant_id' => $apiSettings->tenant_id,
+                'tenant_id' => $apiSettings->gescash_tenant_id,
                 'book_id' => $apiSettings->gescash_book_id,
                 'exercise_id' => $apiSettings->gescash_exercise_id,
                 'attachment' => 'https://rentalpro.azimuts.ga/contrat/' . $contrat->id,
