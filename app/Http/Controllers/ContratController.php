@@ -246,14 +246,14 @@ class ContratController extends Controller
                 $contrat->update([
                     'gescash_transaction_id' => $response->json()['id']
                 ]);
-                return redirect()->route('contrats.show', $contrat->id)->with('success', 'Contrat créé avec succès');
+                flash('Contrat Enregistré avec Succès')->success();
+                return redirect('/contrats');
             }
 
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
             // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
             //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
-            flash('Contrat Enregistré avec Succès')->success();
-            return redirect('/contrats');
+
         }
 
     }
