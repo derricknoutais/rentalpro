@@ -407,6 +407,7 @@
                                                             </button>
                                                         </div>
                                                         <form action="/contrat/{{ $contrat->id }}/terminer" method="POST">
+                                                            @csrf
                                                             <div class="modal-body">
                                                                 <div>
                                                                     <input name="date_fin" type="date" class="form-control">
