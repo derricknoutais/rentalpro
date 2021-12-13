@@ -138,7 +138,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrats/create', 'ContratController@create');
     Route::get('/contrat/{contrat}', 'ContratController@show');
     Route::get('/contrat/{contrat}/download', 'ContratController@download');
-    Route::get('/contrat/{contrat}/terminer', 'ContratController@terminer');
+    Route::post('/contrat/{contrat}/terminer', 'ContratController@terminer');
     Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
     Route::get('/contrat/{contrat}/edit', 'ContratController@edit');
     Route::put('/contrat/{contrat}/update', 'ContratController@update');
