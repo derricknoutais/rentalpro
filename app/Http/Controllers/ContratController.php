@@ -518,16 +518,16 @@ class ContratController extends Controller
             'cashier_facture_id' => $request->cashier_id
         ]);
     }
-    public function terminer(Contrat $contrat){
-        DB::transaction(function () use ($contrat) {
-            $today = now();
-            $nb_jours = Carbon::parse($today)->startOfDay()->diffInDays(Carbon::parse($contrat->du)->startOfDay());
+    public function terminer(Contrat $contrat, Request $request){
+        DB::transaction(function () use ($contrat, $request) {
+
+            $nb_jours = Carbon::parse($request->date_fin)->startOfDay()->diffInDays(Carbon::parse($contrat->du)->startOfDay());
             if($nb_jours == 0 ){
                 $nb_jours = 1;
             }
             $contrat->update([
-                'real_check_out' => now(),
-                'au' => now(),
+                'real_check_out' => $request->date_fin,
+                'au' => $request->date_fin,
                 'nombre_jours' => $nb_jours
             ]);
             $contrat->contractable->update([

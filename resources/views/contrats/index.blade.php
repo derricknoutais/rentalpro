@@ -406,8 +406,11 @@
                                                                 <span aria-hidden="true">&times;</span>
                                                             </button>
                                                         </div>
-                                                        <form action="/contrat/{{ $contrat->id }}/terminer" method="GET">
+                                                        <form action="/contrat/{{ $contrat->id }}/terminer" method="POST">
                                                             <div class="modal-body">
+                                                                <div>
+                                                                    <input name="date_fin" type="date" class="form-control">
+                                                                </div>
                                                                 <p class="text-sm">
                                                                     L'heure et Date de Fin de Contrat seront enregistrées
                                                                     et ne pourront plus être modifiées ultérieurement
