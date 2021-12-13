@@ -144,8 +144,21 @@
                                         {{-- Bouttons --}}
                                         @if ($contrat->deleted_at === NULL)
                                             <div class="flex px-1 py-3 bg-gray-100 rounded" >
+                                                @if(! $contrat->gescash_transaction_id)
+                                                    <a type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
+                                                        href=""
+                                                        data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
+
+                                                    >
+                                                        Envoyer à Gescash
+                                                    </a>
+                                                @else
+                                                    <a href="{{ env('GESCASH_BASE_URL') . '/transaction/' . $contrat->gescash_transaction_id }}">
+                                                        <span class="mx-1 badge badge-pill badge-success">Envoyé à Gescash</span>
+                                                    </a>
+                                                @endif
                                                 @can('créer paiement')
-                                                    <button type="button" class="px-1 py-0 mr-2 bg-blue-500 btn"
+                                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
                                                         data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
                                                         @click="showModal('paiement')"
                                                     >

@@ -18,7 +18,6 @@ class CreateMaintenancesPannesTable extends Migration
             $table->unsignedInteger('maintenance_id');
             $table->unsignedInteger('panne_id');
             $table->timestamps();
-
             $table->foreign( 'maintenance_id')->references('id')->on('maintenances')->onDelete('cascade')->onUpdate('cascade');
         });
     }
