@@ -3,7 +3,6 @@
         <label for="">Identifiant Tenant</label>
         <input type="text" wire:model="tenant_id" class="form-control">
     </div>
-
     <div>
         <label for="">Identifiant Journal</label>
         <input type="text" wire:model="book_id" class="form-control">
@@ -12,7 +11,6 @@
         <label for="">Identifiant Exercice</label>
         <input type="text" wire:model="exercise_id" class="form-control">
     </div>
-
     <div>
         <label for="">Identifiant Compte Debit</label>
         <input type="text" wire:model="debit_account_id" class="form-control">

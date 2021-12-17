@@ -538,6 +538,66 @@ class ContratController extends Controller
         return redirect()->back();
     }
 
+    public function envoyerGescash(Contrat $contrat){
+        $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+        $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
+        $transactionData = [
+            'transaction_date' => $contrat->created_at,
+            'tenant_id' => $apiSettings->gescash_tenant_id,
+            'book_id' => $apiSettings->gescash_book_id,
+            'exercise_id' => $apiSettings->gescash_exercise_id,
+            'attachment' => 'https://rentalpro.azimuts.ga/contrat/' . $contrat->id,
+            'entries' => [
+                // Client Entry Debit
+                [
+                    'account_id' => $apiSettings->gescash_client_account_id,
+                    'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
+                    'debit' => $contrat->total,
+                    'credit' => NULL
+                ],
+                // Service Entry Credit
+                [
+                    'account_id' => $apiSettings->gescash_service_account_id,
+                    'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
+                    'credit' => $contrat->total,
+                    'debit' => NULL
+                ]
+            ]
+        ];
+        if(isset($contrat->paiements)){
+            foreach ($contrat->paiements as  $paiement) {
+                array_push(
+                    $transactionData['entries'],
+                    // Caisse Entry Debit
+                    [
+                        'account_id' => $apiSettings->gescash_cash_account_id,
+                        'label' => 'Paiment Contrat ' . $contrat->numéro ,
+                        'debit' => $paiement->montant,
+                        'credit' => NULL
+                    ],
+                    // Client Entry Credit
+                    [
+                        'account_id' => $apiSettings->gescash_client_account_id,
+                        'label' => 'Paiment Contrat ' . $contrat->numéro,
+                        'credit' => $paiement->montant,
+                        'debit' => NULL
+                    ]
+                );
+            }
+        }
+        // dd('hello');
+        $response = Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+
+        if($response->status() == 201){
+            $contrat->update([
+                'gescash_transaction_id' => $response->json()['id']
+            ]);
+            flash('Transféré vers Gescash avec succès')->success();
+            return redirect('/contrats');
+        }
+        return redirect()->back();
+    }
+
 
 
 }

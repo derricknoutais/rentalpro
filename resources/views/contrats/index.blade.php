@@ -145,9 +145,8 @@
                                         @if ($contrat->deleted_at === NULL)
                                             <div class="flex px-1 py-3 bg-gray-100 rounded" >
                                                 @if(! $contrat->gescash_transaction_id)
-                                                    <a type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
-                                                        href=""
-                                                        data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
+                                                    <a class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
+                                                        href="/contrat/{{ $contrat->id }}/envoyer-gescash"
 
                                                     >
                                                         Envoyer à Gescash

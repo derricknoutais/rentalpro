@@ -216,22 +216,22 @@
 
 @endsection
 
-@stack('js')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-                var calendarEl = document.getElementById('calendar');
-                if(calendarEl){
-                    var calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        dateClick: function() {
-                            alert('a day has been clicked!');
-                        },
-                        events: '/my-feeds'
-                    });
-                    calendar.setOption('locale', 'fr');
-                    calendar.render();
-                }
-              });
 
-    </script>
-@endstack
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            if(calendarEl){
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    dateClick: function() {
+                        alert('a day has been clicked!');
+                    },
+                    events: '/my-feeds'
+                });
+                calendar.setOption('locale', 'fr');
+                calendar.render();
+            }
+            });
+
+</script>
+
