@@ -594,7 +594,7 @@ class ContratController extends Controller
                 'gescash_transaction_id' => $response->json()['id']
             ]);
             flash('Transféré vers Gescash avec succès')->success();
-            return redirect('/contrats');
+            return redirect()->back();
         }
         return redirect()->back();
     }
