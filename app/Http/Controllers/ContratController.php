@@ -247,7 +247,7 @@ class ContratController extends Controller
                     'gescash_transaction_id' => $response->json()['id']
                 ]);
                 flash('Contrat Enregistré avec Succès')->success();
-                return redirect('/contrats');
+                return redirect()->back();
             }
 
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
