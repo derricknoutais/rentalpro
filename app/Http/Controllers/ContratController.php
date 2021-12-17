@@ -203,14 +203,14 @@ class ContratController extends Controller
                     [
                         'account_id' => $apiSettings->gescash_client_account_id,
                         'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
-                        'debit' => $contrat->total,
+                        'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
                         'credit' => NULL
                     ],
                     // Service Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_service_account_id,
                         'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
-                        'credit' => $contrat->total,
+                        'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
                         'debit' => NULL
                     ]
                 ]
@@ -436,6 +436,7 @@ class ContratController extends Controller
             $contrat->update([
                 'au' => $request->du,
                 'nombre_jours' => $nombre_jours,
+                'total' => $nombre_jours * $contrat->prix_journalier,
                 'contractable_id' => $request->voiture,
             ]);
 
@@ -552,14 +553,14 @@ class ContratController extends Controller
                 [
                     'account_id' => $apiSettings->gescash_client_account_id,
                     'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
-                    'debit' => $contrat->total,
+                    'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
                     'credit' => NULL
                 ],
                 // Service Entry Credit
                 [
                     'account_id' => $apiSettings->gescash_service_account_id,
                     'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
-                    'credit' => $contrat->total,
+                    'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
                     'debit' => NULL
                 ]
             ]
