@@ -51,7 +51,7 @@ class MaintenanceCreate extends Component
             $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
             $transactionData = [
                 'transaction_date' => $maintenance->created_at,
-                'tenant_id' => $apiSettings->tenant_id,
+                'tenant_id' => $apiSettings->gescash_tenant_id,
                 'book_id' => $apiSettings->gescash_book_id,
                 'exercise_id' => $apiSettings->gescash_exercise_id,
                 'attachment' => 'https://rentalpro.azimuts.ga/maintenance/' . $maintenance->id,
@@ -66,7 +66,7 @@ class MaintenanceCreate extends Component
                     // Service Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_cash_account_id,
-                        'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . 'par' . $maintenance->technicien->nom ,
+                        'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom ,
                         'credit' => $maintenance->coût + $maintenance->coût_pièces,
                         'debit' => NULL
                     ]
