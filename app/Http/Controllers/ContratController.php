@@ -205,14 +205,18 @@ class ContratController extends Controller
                         'account_id' => $apiSettings->gescash_client_account_id,
                         'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
                         'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                        'credit' => NULL
+                        'credit' => NULL,
+                        'created_at' => $contrat->created_at,
+                        'updated_at' => now()
                     ],
                     // Service Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_service_account_id,
                         'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
                         'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                        'debit' => NULL
+                        'debit' => NULL,
+                        'created_at' => $contrat->created_at,
+                        'updated_at' => now()
                     ]
                 ]
             ];
@@ -227,14 +231,18 @@ class ContratController extends Controller
                         'account_id' => $apiSettings->gescash_cash_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro,
                         'debit' => $request->paiement,
-                        'credit' => NULL
+                        'credit' => NULL,
+                        'created_at' => $contrat->created_at,
+                        'updated_at' => now()
                     ],
                     // Client Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_client_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro,
                         'credit' => $request->paiement,
-                        'debit' => NULL
+                        'debit' => NULL,
+                        'created_at' => $contrat->created_at,
+                        'updated_at' => now()
                     ]
 
                 );
@@ -555,14 +563,18 @@ class ContratController extends Controller
                     'account_id' => $apiSettings->gescash_client_account_id,
                     'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
                     'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                    'credit' => NULL
+                    'credit' => NULL,
+                    'created_at' => $contrat->created_at,
+                    'updated_at' => now()
                 ],
                 // Service Entry Credit
                 [
                     'account_id' => $apiSettings->gescash_service_account_id,
                     'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
                     'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                    'debit' => NULL
+                    'debit' => NULL,
+                    'created_at' => $contrat->created_at,
+                    'updated_at' => now()
                 ]
             ]
         ];
@@ -575,14 +587,18 @@ class ContratController extends Controller
                         'account_id' => $apiSettings->gescash_cash_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro ,
                         'debit' => $paiement->montant,
-                        'credit' => NULL
+                        'credit' => NULL,
+                        'created_at' => $contrat->created_at,
+                        'updated_at' => now()
                     ],
                     // Client Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_client_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro,
                         'credit' => $paiement->montant,
-                        'debit' => NULL
+                        'debit' => NULL,
+                        'created_at' => $contrat->created_at,
+                        'updated_at' => now()
                     ]
                 );
             }
