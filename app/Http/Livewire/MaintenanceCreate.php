@@ -76,7 +76,10 @@ class MaintenanceCreate extends Component
                     ]
                 ]
             ];
-            Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+            $sent = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+            $maintenance->update([
+                'gescash_transaction_id' => $sent->json()['id'],
+            ]);
             $this->cleanVariables();
 
         });
