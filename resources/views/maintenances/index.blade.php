@@ -62,7 +62,7 @@
                                             </td>
                                             <td>
                                                 @if (! $maintenance->gescash_transaction_id)
-                                                    <a class="text-white bg-blue-500" href="#">Envoyer à Gescash</a>
+                                                    <a class="text-white bg-blue-500" href="/maintenances/{{ $maintenance->id }}/envoyer-gescash">Envoyer à Gescash</a>
                                                 @else
                                                     <span class="text-white bg-green-500 rounded-2xl">Envoyé à Gescash</span>
                                                 @endif

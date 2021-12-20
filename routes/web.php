@@ -287,13 +287,17 @@ Route::group(['middleware' => ['auth']], function () {
     // Pannes
     Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
 
-
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
+
     Route::get('maintenances/create', 'MaintenanceController@create');
-    Route::get('maintenances/{maintenance}', 'MaintenanceController@envoyerMaintenanceGescash');
+
+    Route::get('maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');
+
     Route::post('/maintenances/store', 'MaintenanceController@store');
-    Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
+
+    Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance)
+    {
         // return $request->all();
         foreach ($request->pannes as $panne) {
             $panne = Panne::find($panne);
@@ -311,7 +315,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         return redirect()->back();
     });
-
 
     Route::get('/paiements-cashier', function(){
         $ids = Contrat::pluck('id')->toArray();
