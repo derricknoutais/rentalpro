@@ -200,6 +200,11 @@ Route::group(['middleware' => ['auth']], function () {
         return view( 'paramètres.index', compact('documents', 'accessoires', 'voitures', 'techniciens'));
     });
 
+    Route::get('/update-date-contrats', function(){
+        $dates = Contrat::pluck('created_at', 'gescash_transaction_id')->toArray();
+        Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction/update-date', $dates );
+    });
+
     // Documents
     Route::post('/documents', function(Request $request){
         $document = Document::create([
