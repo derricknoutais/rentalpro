@@ -33,6 +33,7 @@
                                             class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                             Coût Pièces
                                         </th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,6 +59,13 @@
                                             </td>
                                             <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                                                 {{ $maintenance->coût_pièces }}
+                                            </td>
+                                            <td>
+                                                @if (! $maintenance->gescash_transaction_id)
+                                                    <a class="text-white bg-blue-500" href="#">Envoyer à Gescash</a>
+                                                @else
+                                                    <span class="text-white bg-green-500 rounded-2xl">Envoyé à Gescash</span>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
