@@ -138,7 +138,7 @@ class MaintenanceController extends Controller
                     // Service Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_cash_account_id,
-                        'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . 'par' . $maintenance->technicien->nom ,
+                        'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom ,
                         'credit' => $maintenance->coût + $maintenance->coût_pièces,
                         'debit' => NULL
                     ]
