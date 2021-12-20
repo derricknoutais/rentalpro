@@ -143,6 +143,12 @@ class MaintenanceController extends Controller
                 ]
             ]
         ];
-        Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+        $sent = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+        if($sent->status() == 201){
+            $maintenance->update([
+                'gescash_id' => $sent->json()['id'],
+            ]);
+            return redirect()->back();
+        }
     }
 }
