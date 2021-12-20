@@ -291,6 +291,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
     Route::get('maintenances/create', 'MaintenanceController@create');
+    Route::get('maintenances/{maintenance}', 'MaintenanceController@envoyerMaintenanceGescash');
     Route::post('/maintenances/store', 'MaintenanceController@store');
     Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance) {
         // return $request->all();

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Maintenance;
 use App\Panne;
-use App\Technicien;
 use App\Voiture;
+use App\ApiSetting;
+use App\Technicien;
+use App\Maintenance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class MaintenanceController extends Controller
 {
@@ -115,5 +117,32 @@ class MaintenanceController extends Controller
     public function destroy(Maintenance $maintenance)
     {
         //
+    }
+    public function envoyerMaintenanceGescash(Maintenance $maintenance){
+        $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+        $transactionData = [
+            'transaction_date' => $maintenance->created_at,
+            'tenant_id' => $apiSettings->tenant_id,
+            'book_id' => $apiSettings->gescash_book_id,
+            'exercise_id' => $apiSettings->gescash_exercise_id,
+            'attachment' => 'https://rentalpro.azimuts.ga/maintenance/' . $maintenance->id,
+            'entries' => [
+                // Client Entry Debit
+                [
+                    'account_id' => $apiSettings->gescash_maintenance_account_id,
+                    'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom ,
+                    'debit' => $maintenance->coût + $maintenance->coût_pièces,
+                    'credit' => NULL
+                ],
+                // Service Entry Credit
+                [
+                    'account_id' => $apiSettings->gescash_cash_account_id,
+                    'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . 'par' . $maintenance->technicien->nom ,
+                    'credit' => $maintenance->coût + $maintenance->coût_pièces,
+                    'debit' => NULL
+                ]
+            ]
+        ];
+        Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
     }
 }

@@ -14,6 +14,7 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContratCréé;
+use App\Maintenance;
 use App\Prolongation;
 use PDF;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -539,7 +540,7 @@ class ContratController extends Controller
         return redirect()->back();
     }
 
-    public function envoyerGescash(Contrat $contrat){
+    public function envoyerContratGescash(Contrat $contrat){
         $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
         $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
         $transactionData = [
@@ -598,6 +599,8 @@ class ContratController extends Controller
         }
         return redirect()->back();
     }
+
+
 
 
 
