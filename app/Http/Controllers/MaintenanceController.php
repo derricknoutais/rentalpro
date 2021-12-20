@@ -119,6 +119,9 @@ class MaintenanceController extends Controller
         //
     }
     public function envoyerMaintenanceGescash(Maintenance $maintenance){
+        $done = DB::transaction(function () {
+
+        });
         $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
         $transactionData = [
             'transaction_date' => $maintenance->created_at,
@@ -146,8 +149,12 @@ class MaintenanceController extends Controller
         $sent = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
         if($sent->status() == 201){
             $maintenance->update([
-                'gescash_id' => $sent->json()['id'],
+                'gescash_transacton_id' => $sent->json()['id'],
             ]);
+            return true;
+        }
+        if($done){
+
             return redirect()->back();
         }
     }
