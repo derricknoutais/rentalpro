@@ -119,40 +119,39 @@ class MaintenanceController extends Controller
         //
     }
     public function envoyerMaintenanceGescash(Maintenance $maintenance){
-        $done = DB::transaction(function () {
-
-        });
-        $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
-        $transactionData = [
-            'transaction_date' => $maintenance->created_at,
-            'tenant_id' => $apiSettings->gescash_tenant_id,
-            'book_id' => $apiSettings->gescash_book_id,
-            'exercise_id' => $apiSettings->gescash_exercise_id,
-            'attachment' => 'https://rentalpro.azimuts.ga/maintenance/' . $maintenance->id,
-            'entries' => [
-                // Client Entry Debit
-                [
-                    'account_id' => $apiSettings->gescash_maintenance_account_id,
-                    'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom ,
-                    'debit' => $maintenance->coût + $maintenance->coût_pièces,
-                    'credit' => NULL
-                ],
-                // Service Entry Credit
-                [
-                    'account_id' => $apiSettings->gescash_cash_account_id,
-                    'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . 'par' . $maintenance->technicien->nom ,
-                    'credit' => $maintenance->coût + $maintenance->coût_pièces,
-                    'debit' => NULL
+        $done = DB::transaction(function () use ($maintenance){
+            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+            $transactionData = [
+                'transaction_date' => $maintenance->created_at,
+                'tenant_id' => $apiSettings->gescash_tenant_id,
+                'book_id' => $apiSettings->gescash_book_id,
+                'exercise_id' => $apiSettings->gescash_exercise_id,
+                'attachment' => 'https://rentalpro.azimuts.ga/maintenance/' . $maintenance->id,
+                'entries' => [
+                    // Client Entry Debit
+                    [
+                        'account_id' => $apiSettings->gescash_maintenance_account_id,
+                        'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom ,
+                        'debit' => $maintenance->coût + $maintenance->coût_pièces,
+                        'credit' => NULL
+                    ],
+                    // Service Entry Credit
+                    [
+                        'account_id' => $apiSettings->gescash_cash_account_id,
+                        'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . 'par' . $maintenance->technicien->nom ,
+                        'credit' => $maintenance->coût + $maintenance->coût_pièces,
+                        'debit' => NULL
+                    ]
                 ]
-            ]
-        ];
-        $sent = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
-        if($sent->status() == 201){
-            $maintenance->update([
-                'gescash_transaction_id' => $sent->json()['id'],
-            ]);
-            return true;
-        }
+            ];
+            $sent = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+            if($sent->status() == 201){
+                $maintenance->update([
+                    'gescash_transaction_id' => $sent->json()['id'],
+                ]);
+                return true;
+            }
+        });
         if($done){
 
             return redirect()->back();
