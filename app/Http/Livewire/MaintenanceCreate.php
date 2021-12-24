@@ -48,7 +48,7 @@ class MaintenanceCreate extends Component
             $pannes = $maintenance->pannes()->createMany($this->pannes);
 
 
-            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
             $transactionData = [
                 'transaction_date' => $maintenance->created_at,
                 'tenant_id' => $apiSettings->gescash_tenant_id,

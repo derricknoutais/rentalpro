@@ -52,7 +52,7 @@ class PaiementController extends Controller
                 'montant' => $request->montant,
                 'note' => $request->note
             ]);
-            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
+            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
             if($paiement && $contrat->gescash_transaction_id){
                 $response = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction/' . $contrat->gescash_transaction_id . '/entry',
                     [
