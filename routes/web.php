@@ -396,7 +396,9 @@ Route::group(['middleware' => ['auth']], function () {
         $dashboard['last_year_nb_locations'] = Contrat::whereYear('du', now()->format('Y') - 1)->sum('nombre_jours');
 
         // 3rd Card
-        $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
+        if( Contrat::whereYear('du', now()->format('Y'))->sum('total')) {
+            $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
+        }
         $dashboard['last_year_payment_rate'] = null;
         if(Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total')){
             $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total') * 100;
