@@ -98,6 +98,20 @@
                                             </span>
 
                                         </div>
+                                        {{-- Caution --}}
+                                        <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
+                                            <span class="mr-1">
+                                                Caution:
+                                            </span>
+                                            @if (isset($contrat->caution))
+                                            <span class="px-5 text-white rounded bg-success">
+                                                {{ $contrat->caution }}
+                                            </span>
+                                            @endif
+
+                                        </div>
+
+
 
                                         {{-- Montant Total --}}
                                         <div class="flex justify-between py-1 mt-3 bg-blue-200 rounded rounded-b-none px-14">

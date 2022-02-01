@@ -375,17 +375,13 @@ Route::group(['middleware' => ['auth']], function () {
         return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
     });
     Route::get('/dashboard', function(){
-
         $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(
             DB::raw('sum(montant) as sums'),
             DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"),
         )->orderBy('months')->groupBy('months')->get();
 
-
         $contrats_in_year_ids = Contrat::whereYear('du', now()->format('Y'))->pluck('id');
         $last_year_contrats_ids = Contrat::whereYear('du', now()->format('Y') - 1 )->pluck('id');
-
-
 
         // 1st Card
         $dashboard['paiements_annuels'] = Paiement::whereIn('contrat_id', $contrats_in_year_ids)->sum('montant');
