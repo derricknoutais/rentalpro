@@ -49,7 +49,7 @@
                 <input type="number" class="form-control tw-mt-3" name="prix_journalier" placeholder="Prix Journalier">
                 <input type="number" class="form-control tw-mt-3" name="paiement" placeholder="Paiement">
                 <input type="number" class="form-control tw-mt-3" name="caution" placeholder="Caution">
-                <textarea name="note" class="form-control" id="" cols="30" rows="10"></textarea>
+                <textarea name="note" class="form-control" id="" cols="30" rows="4"></textarea>
 
                 {{-- Boutons Annuler et Ajouter Client & Réserver --}}
                 <div class="tw-flex">
