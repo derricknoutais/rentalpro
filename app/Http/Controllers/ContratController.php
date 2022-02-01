@@ -122,7 +122,7 @@ class ContratController extends Controller
         }
     }
     public function store(Request $request){
-        // return $request->all();
+
         if(Auth::user()->compagnie->type == 'véhicules'){
             $type = 'App\\Voiture';
         } else if (Auth::user()->compagnie->type == 'hôtel') {
@@ -143,7 +143,8 @@ class ContratController extends Controller
                     'phone3' => $request->numero_telephone3,
                     'mail' => $request->mail,
                     'ville' => $request->ville,
-                    'cashier_id' => $request->cashier_id
+                    'cashier_id' => $request->cashier_id,
+
                 ]);
 
                 if($request->hasFile('permis')){
@@ -182,6 +183,7 @@ class ContratController extends Controller
                 'cashier_facture_id' => $request['cashier_id'],
                 'etat_accessoires' => $request[ 'accessoireString'],
                 'etat_documents' => $request[ 'documentString'],
+                'note' => $request->note
             ]);
 
             Voiture::find( $request['contractable'])->update([
@@ -265,6 +267,11 @@ class ContratController extends Controller
 
         }
 
+    }
+
+    public function print(Contrat $contrat){
+        $contrat->loadMissing('contractable', 'client');
+        return view('contrats.print', compact('contrat'));
     }
 
     public function storeContratRapide(Request $request){
