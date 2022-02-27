@@ -23,7 +23,9 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 if(env('APP_ENV') == 'local')
     Auth::loginUsingID(1);
 
+
 Auth::routes();
+
 
 Route::group(['middleware' => ['auth']], function () {
 

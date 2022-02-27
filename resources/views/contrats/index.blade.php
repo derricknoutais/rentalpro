@@ -405,9 +405,9 @@
                                                 Voir Contrat
                                             </a>
 
-                                            <a class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded" href="/contrat/{{ $contrat->id }}/download">
-                                                <i class="fas fa-download "></i>
-                                                Télécharger
+                                            <a class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded" href="/contrat/{{ $contrat->id }}/print">
+                                                <i class="fas fa-print "></i>
+                                                Imprimer
                                             </a>
 
                                             <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">

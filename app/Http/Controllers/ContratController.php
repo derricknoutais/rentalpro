@@ -146,7 +146,6 @@ class ContratController extends Controller
                     'cashier_id' => $request->cashier_id,
 
                 ]);
-
                 if($request->hasFile('permis')){
                     $image = $request->file('permis');
                     $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
@@ -186,9 +185,10 @@ class ContratController extends Controller
                 'note' => $request->note
             ]);
 
-            Voiture::find( $request['contractable'])->update([
+            $voiture = Voiture::find( $request['contractable'])->update([
                 'etat' => 'loué'
             ]);
+            
             if($contrat){
                 return $contrat;
             }

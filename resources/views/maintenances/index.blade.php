@@ -46,6 +46,9 @@
                                             @endif
                                         >
                                             <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                                                {{ $maintenance->created_at->format('d-M-Y') }}
+                                            </td>
+                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                 {{ $maintenance->titre }}
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
