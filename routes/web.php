@@ -192,7 +192,7 @@ Route::group(['middleware' => ['auth']], function () {
         return view('contrats.index', compact(['contrats', 'voitures']));
     });
     Route::delete('/contrats/{contrat}', 'ContratController@destroy');
-    Route::get('/contrat/{contrat}/envoyer-gescash', 'ContratController@envoyerGescash');
+    Route::get('/contrat/{contrat}/envoyer-gescash', 'ContratController@envoyerContratGescash');
 
     // Paramètres
     Route::get('/mes-paramètres', function(){
