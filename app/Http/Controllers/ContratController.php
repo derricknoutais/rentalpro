@@ -188,7 +188,7 @@ class ContratController extends Controller
             $voiture = Voiture::find( $request['contractable'])->update([
                 'etat' => 'loué'
             ]);
-            
+
             if($contrat){
                 return $contrat;
             }
@@ -258,7 +258,7 @@ class ContratController extends Controller
                     'gescash_transaction_id' => $response->json()['id']
                 ]);
                 flash('Contrat Enregistré avec Succès')->success();
-                return redirect()->back();
+                return redirect('/contrat/' . $contrat->id . '/print');
             }
 
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
@@ -478,7 +478,7 @@ class ContratController extends Controller
             if( $voiture->etat === 'disponible' ){
 
                 $contrat->update([
-                    'voiture_id' => $request->voiture
+                    'contractable_id' => $request->voiture
                 ]);
 
             }
