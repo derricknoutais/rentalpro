@@ -13,37 +13,20 @@
         <div class="flex justify-between mt-6">
             <div class="w-2/3 mr-3">
                 <p class="mt-6 text-xl">
-                    <span class="font-semibold underline">Objet:</span>
+                    <span class="font-medium underline">Objet:</span>
                     <span>Location </span>
                     <span>{{ $contrat->contractable->immatriculation }} </span>
                 </p>
                 <p class="mt-6 text-lg underline">Termes Contrat </p>
-                <ol>
-                    <li class="ml-6 text-sm">Le véhicule sera restitué à l'heure indiquée sur le contrat.</li>
-                    <li class="ml-6 text-sm">Le véhicule devra être restitué dans le même état qu'il a été pris; faute de quoi le locataire
-                        endossera les
-                        charges afférentes aux dommages éventuels.</li>
-                </ol>
+
             </div>
             <div class="flex justify-end w-1/3 px-4 pt-4 mt-12 border border-gray-800">
                 <p class="flex flex-col text-lg">
-                    <span class="text-xl font-semibold underline">Client:</span>
+                    <span class="text-xl font-medium underline">Client:</span>
                     <span class="">{{ $contrat->client->nom .  ' '  . $contrat->client->prenom }} </span>
                     <span>{{ $contrat->client->phone1 }}</span>
                 </p>
             </div>
-        </div>
-
-        <div class="row">
-
-            <ol class="mt-1">
-                <li class="ml-6 text-sm">Les images enregistrées dans le système et envoyées au client par e-mail feront office de réference de
-                    l'état du véhicule.</li>
-                <li class="ml-6 text-sm">S.T.A se réserve le droit de récuperer le véhicule loué pour tout retard de paiement.</li>
-                <li class="ml-6 text-sm">S.T.A se réserve le droit de récuperer le véhicule loué au cas où une personne autre que le client est
-                    aperçu entrain de conduire ce véhicule.</li>
-                <li class="ml-6 text-sm">Toute prolongation  devra être notifiée 24 heures avant échéance du contrat actuel</li>
-            </ol>
         </div>
 
         {{-- TABLEAU --}}
@@ -76,16 +59,16 @@
                                 <!-- Even row -->
                                 <tr class="border border-gray-200 bg-gray-50">
                                     <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-semibold text-right text-gray-500 text-md whitespace-nowrap">Paiements Perçus
+                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Paiements Perçus
                                     </td>
-                                    <td class="px-6 py-4 font-semibold text-gray-500 text-md whitespace-nowrap">{{ $contrat->payé() }} F CFA</td>
+                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->payé() }} F CFA</td>
                                 </tr>
                                 <!-- Even row -->
                                 <tr class="bg-gray-50">
                                     <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-semibold text-right text-gray-500 text-md whitespace-nowrap">Solde
+                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Solde
                                     </td>
-                                    <td class="px-6 py-4 font-semibold text-gray-500 text-md whitespace-nowrap">{{ $contrat->solde() }} F CFA</td>
+                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->solde() }} F CFA</td>
                                 </tr>
 
                                 <!-- More people... -->
@@ -111,8 +94,28 @@
 @endsection
 
 @section('sheet2')
+    <header class="flex justify-center">
+        <img src="/img/logosta.png" alt="" class="w-1/2">
+    </header>
     {{-- CONTRAT --}}
-    <p class="text-2xl font-semibold underline">Niveau de Carburant</p>
+    <div class="mt-12 ">
+        <p class="text-2xl font-medium underline">Terme du contrat</p>
+        <ol class="mt-1">
+            <li class="ml-6 text-sm">Le véhicule sera restitué à l'heure indiquée sur le contrat.</li>
+            <li class="ml-6 text-sm">Le véhicule devra être restitué dans le même état qu'il a été pris; faute de quoi le
+                locataire
+                endossera les
+                charges afférentes aux dommages éventuels.</li>
+            <li class="ml-6 text-sm">Des images seront enregistrées feront office de réference de l'état du véhicule.</li>
+            <li class="ml-6 text-sm">S.T.A se réserve le droit de récuperer le véhicule loué pour tout retard de paiement.
+            </li>
+            <li class="ml-6 text-sm">S.T.A se réserve le droit de récuperer le véhicule loué au cas où une personne autre
+                que le client est
+                aperçu entrain de conduire ce véhicule.</li>
+            <li class="ml-6 text-sm">Toute prolongation devra être notifiée 24 heures avant échéance du contrat actuel</li>
+        </ol>
+    </div>
+    <p class="text-xl font-medium underline">Niveau de Carburant</p>
     <ul class="flex justify-between mt-3">
         <li class="flex text-2xl ">
             <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
@@ -147,6 +150,7 @@
             <label for="" class="ml-1">Full</label>
         </li>
     </ul>
+
     <div class="flex">
         <div class="w-1/2">
             <p class="mt-12 text-2xl font-semibold underline">État des Véhicules</p>
@@ -162,6 +166,10 @@
 
         </div>
 
+    </div>
+    <div class="flex justify-between mt-12">
+        <p>Le Client</p>
+        <p>Le Responsable</p>
     </div>
 @endsection
 
