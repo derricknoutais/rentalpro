@@ -88,6 +88,10 @@
             <span class="">Francs CFA</span>
         </p>
 
+        <div class="flex justify-end mt-12 mr-12">
+            <p>Le Responsable</p>
+        </div>
+
 
 
     </main>
