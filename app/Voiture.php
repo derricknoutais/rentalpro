@@ -2,14 +2,25 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Scopes\VoitureScope;
 use Rinvex\Bookings\Traits\Bookable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Voiture extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    protected static function booted(){
+        static::addGlobalScope(new VoitureScope);
+    }
+
+    public function scopeNonVendu($query)
+    {
+        return $query->where('etat', '<>' ,'vendu');
+    }
+
     public function documents()
     {
         return $this->belongsToMany('App\Document', 'voiture_documents', 'voiture_id', 'document_id')->withPivot('date_expiration');

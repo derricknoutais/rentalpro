@@ -197,7 +197,7 @@
                 </dd>
             </div>
         </dl> --}}
-        <div class="flex">
+        {{-- <div class="flex">
             <div class="w-1/2 mt-10" style="height: 50vh">
                 <livewire:livewire-line-chart :line-chart-model="$columnChartModel" />
             </div>
@@ -205,7 +205,7 @@
                 <div id='calendar' class=""></div>
             </div>
 
-        </div>
+        </div> --}}
         <div class="w-full my-10 overflow-y-auto" style="height: 50vh">
             <livewire:car-display />
         </div>
