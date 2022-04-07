@@ -52,8 +52,8 @@ class DashboardCards extends Component
     public function mount(){
         $this->voitures = Voiture::all();
         $date = Carbon::now();
-        $this->date_au = $date->format('Y-m-d');
-        $this->date_du = $date->copy()->startOfYear()->format('Y-m-d');
+        $this->filtres1['date_au'] = $date->format('Y-m-d');
+        $this->filtres1['date_du'] = $date->copy()->startOfYear()->format('Y-m-d');
         // $this->filtrer();
     }
     public function fi(&$data){
