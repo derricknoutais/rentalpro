@@ -260,7 +260,9 @@
                                                                         <div class="form-group">
                                                                             <label for="">Sélectionner Voiture</label>
                                                                             <select class="custom-select" name="voiture">
-                                                                                <option value="{{ $contrat->contractable->id }}" selected>{{ $contrat->contractable->immatriculation }}</option>
+                                                                                @isset($contrat->contractable)
+                                                                                    <option value="{{ $contrat->contractable->id }}" selected>{{ $contrat->contractable->immatriculation }}</option>
+                                                                                @endisset
                                                                                 @foreach ($voitures as $voiture)
                                                                                     @if($voiture->etat === 'disponible')
                                                                                         <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
