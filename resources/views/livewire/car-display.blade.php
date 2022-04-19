@@ -1,5 +1,5 @@
 <div class="container" x-data="dashboard()">
-    <!-- This example requires Tailwind CSS v2.0+ -->
+
     <div class="flex flex-col">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -12,43 +12,48 @@
                                     Immatriculation
                                 </th>
                                 <th scope="col"
-                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                    class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
+                                >
                                     Title
                                 </th>
-                                <th scope="col" class="relative px-6 py-3">
-                                    <span class="sr-only">Edit</span>
+                                <th scope="col" class="flex justify-end px-6 py-3">
+                                    <select name="" wire:model="filters.etat"
+                                    class="block w-full py-2 pl-3 pr-10 mt-1 text-base bg-gray-200 border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="*">Tout</option>
+                                        <option value="loué">Loué</option>
+                                        <option value="disponible">Disponible</option>
+                                        <option value="maintenance">En Maintenance</option>
+                                        <option value="vendu">Vendu</option>
+                                    </select>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($cars as $car)
                                 @if ($loop->odd)
-                                    <!-- Odd row -->
                                     <tr class="bg-white">
                                         <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                             {{ $car->immatriculation }}
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            Regional Paradigm Technician
+                                            {{ $car->marque }} {{ $car->type }}
                                         </td>
                                         <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                            <button wire:click="addCarToDisplay({{ $car }})" class="text-indigo-600 hover:text-indigo-900">Voir Détails</button>
+                                            {{ $car->etat }}
                                         </td>
                                     </tr>
                                 @else
-                                    <!-- Even row -->
                                     <tr class="bg-gray-50">
                                         <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                             {{ $car->immatriculation }}
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                            Product Directives Officer
+                                            {{ $car->marque }} {{ $car->type }}
                                         </td>
                                         <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                            <button wire:click="addCarToDisplay({{ $car }})" class="text-indigo-600 hover:text-indigo-900">Voir Détails</button>
+                                            {{ $car->etat }}
                                         </td>
                                     </tr>
-
                                 @endif
                             @endforeach
 
