@@ -182,7 +182,6 @@ class ContratController extends Controller
                 'cashier_facture_id' => $request['cashier_id'],
                 'etat_accessoires' => $request[ 'accessoireString'],
                 'etat_documents' => $request[ 'documentString'],
-                'note' => $request->note
             ]);
 
             $voiture = Voiture::find( $request['contractable'])->update([
@@ -225,7 +224,8 @@ class ContratController extends Controller
             if($request->paiement != NULL && $request->paiement !== 0){
                 Paiement::create([
                     'contrat_id' => $contrat->id,
-                    'montant' => $request->paiement
+                    'montant' => $request->paiement,
+                    'note' => $request->note
                 ]);
                 array_push($transactionData['entries'],
                     // Caisse Entry Debit

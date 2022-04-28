@@ -12,7 +12,7 @@ class DashboardCards extends Component
 {
     public $voitures;
     public $filtres1 = [
-        'voiture_selectionnee' => 1,
+        'voiture_selectionnee' => '*',
         'date_du' => NULL,
         'date_au' => NULL,
         'taux_recouvrement' => [
@@ -53,26 +53,29 @@ class DashboardCards extends Component
         $this->voitures = Voiture::all();
         $date = Carbon::now();
         $this->filtres1['date_au'] = $date->format('Y-m-d');
-        $this->filtres1['date_du'] = $date->copy()->startOfYear()->format('Y-m-d');
+        $this->filtres1['date_du'] = $date->format('Y-m-d');
+        $this->filtres1['paiements']['periode'] = Paiement::where('created_at', '>=' ,Carbon::today())->sum('montant');
         // $this->filtrer();
     }
     public function fi(&$data){
         $voiture = null;
-        if(isset($data['voiture_selectionnee'])){
+        if(isset($data['voiture_selectionnee']) && ($data['voiture_selectionnee'] !== '*') ){
             $voiture = Voiture::find($data['voiture_selectionnee'])->loadMissing('paiements', 'contrats');
             $paiements = $voiture->paiements;
             $contrats = $voiture->contrats;
-        } else {
+        }
+
+        else {
             $paiements = Paiement::query();
             $contrats = Contrat::query();
         }
         if($data['date_du']){
-            $paiements = $paiements->where('created_at', '>=', $data['date_du']);
-            $contrats = $contrats->where('created_at', '>=', $data['date_du']);
+            $paiements = $paiements->where('created_at', '>=', Carbon::parse($data['date_du'])->startOfDay());
+            $contrats = $contrats->where('created_at', '>=', Carbon::parse($data['date_du'])->startOfDay());
         }
         if($data['date_au']){
-            $paiements = $paiements->where('created_at', '<=', $data['date_au']);
-            $contrats = $contrats->where('created_at', '>=', $data['date_du']);
+            $paiements = $paiements->where('created_at', '<=',  Carbon::parse( $data['date_au'])->endOfDay()  );
+            $contrats = $contrats->where('created_at', '<=', Carbon::parse($data['date_au'])->endOfDay());
         }
         $data['paiements']['periode'] = $paiements->sum('montant');
         $data['jours_location']['periode'] = $contrats->sum('nombre_jours');
