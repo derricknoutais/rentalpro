@@ -18,6 +18,8 @@
                     <span>{{ $contrat->contractable->immatriculation }} </span>
                 </p>
                 <p class="mt-6 text-lg underline">Termes Contrat </p>
+                <p>Date du : {{ $contrat->du->format('d/m/Y') }} au: {{ $contrat->au->format('d/m/Y') }}</p>
+                <p>Caution : {{ $contrat->caution }} F CFA</p>
 
             </div>
             <div class="flex justify-end w-1/3 px-4 pt-4 mt-12 border border-gray-800">
@@ -55,6 +57,7 @@
                                     <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">{{ number_format($contrat->prix_journalier, 0, ',', '.' ) }} F CFA</td>
                                     <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">{{ number_format($contrat->total(), 0, ',', '.') }} F CFA</td>
                                 </tr>
+
 
                                 <!-- Even row -->
                                 <tr class="border border-gray-200 bg-gray-50">

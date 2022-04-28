@@ -36,12 +36,15 @@
             <label for="" class="tw-mt-3">Prix Journalier</label>
             <input type="number" class="form-control" name="prix_journalier" placeholder="Prix Journalier" value="{{ $contrat->prix_journalier }}">
 
-            <label for="" class="tw-mt-3">Chambre</label>
+            <label for="" class="tw-mt-3">Caution</label>
+            <input type="number" class="form-control" name="caution" placeholder="Caution" value="{{ $contrat->caution }}">
+
+            <label for="" class="tw-mt-3">Voiture</label>
             <select type="date" class="form-control" name="contractable">
-                <option value="{{ $contrat->contractable->id }}">{{ $contrat->contractable->nom }}</option>
-                @foreach ($chambresDisponibles as $chambre)
-                    @if ($contrat->contractable->id !== $chambre->id)
-                        <option value="{{ $chambre->id }}">{{ $chambre->nom }}</option>
+                <option value="{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</option>
+                @foreach (App\Voiture::all() as $voiture)
+                    @if ($contrat->contractable->id !== $voiture->id)
+                        <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
                     @endif
                 @endforeach
             </select>
