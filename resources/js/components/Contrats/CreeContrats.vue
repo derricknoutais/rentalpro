@@ -17,7 +17,9 @@ data() {
         formulaire: {
             du: null,
             au : null,
-            nb_jours: 2
+            nb_jours: 2,
+            prix_journalier: null,
+            paiement : null
         },
         afficheFormulaireLocationRapide: true,
         client: {
@@ -49,6 +51,16 @@ computed: {
         if(this.formulaire.du && this.formulaire.au){
             this.formulaire.nb_jours = ( (new Date(this.formulaire.au) - new Date(this.formulaire.du)) / (3600 * 1000 * 24))
             return ( (new Date(this.formulaire.au) - new Date(this.formulaire.du)) / (3600 * 1000 * 24))
+        }
+    },
+    'total' : function(){
+        if(this.formulaire.du && this.formulaire.au && this.formulaire.prix_journalier){
+            return this.formulaire.nb_jours * this.formulaire.prix_journalier
+        }
+    },
+    solde(){
+        if(this.total && this.formulaire.paiement){
+            return this.total - this.formulaire.paiement
         }
     }
 },

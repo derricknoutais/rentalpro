@@ -69,6 +69,7 @@
                                             <a class="text-blue-400" href="/contrat/{{ $contrat->id }}" class="font-semibold ">
                                                 {{ $contrat->numéro }}
                                             </a>
+                                            <span></span>
                                         </div>
                                         {{-- Dates --}}
                                         <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
@@ -110,15 +111,11 @@
                                             @endif
 
                                         </div>
-
-
-
                                         {{-- Montant Total --}}
                                         <div class="flex justify-between py-1 mt-3 bg-blue-200 rounded rounded-b-none px-14">
                                             <p class="font-semibold">Montant Total</p>
                                             <span class="font-semibold">{{ $contrat->prix_journalier  * $contrat->nombre_jours}} F CFA</span>
                                         </div>
-
                                         {{-- Paiements --}}
                                         @if (sizeof($contrat->paiements) > 0)
                                             <div class="flex flex-col justify-between py-1 pr-6 bg-blue-100 pl-14">
@@ -144,7 +141,6 @@
 
                                             </div>
                                         @endif
-
                                         {{-- Solde Si il y a Paiements --}}
                                         @if (sizeof($contrat->paiements) > 0 )
                                             <div class="flex justify-between py-1 bg-blue-200 rounded rounded-t-none px-14">
@@ -155,7 +151,6 @@
                                                 </div>
                                             </div>
                                         @endif
-
                                         {{-- Bouttons --}}
                                         @if ($contrat->deleted_at === NULL)
                                             <div class="flex px-1 py-3 bg-gray-100 rounded" >
@@ -304,7 +299,6 @@
                                             </div>
                                         </div>
                                     </td>
-
                                     {{-- Client --}}
                                     <td class="">
                                         {{-- Nom --}}
@@ -343,14 +337,26 @@
                                             @endforeach
                                         </div>
                                     </td>
-
                                     {{-- Contractable : Chambre Ou Hotel --}}
                                     @if ($compagnie->type === 'hôtel')
                                         <td class="">{{ $contrat->contractable->nom }}</td>
                                     @else
-                                        <td class="">{{ $contrat->contractable->immatriculation }}</td>
+                                        <td>
+                                            <div class="flex flex-col">
+                                                <div class="flex flex-col p-2 bg-gray-300">
+                                                <span>
+                                                    {{ $contrat->contractable->immatriculation }}
+                                                </span>
+                                                </div>
+                                                <div class="flex flex-col p-2 mt-3 bg-red-300">
+                                                <span>
+                                                    Créé par
+                                                    {{ $contrat->activities->where('description', 'created')->first()->causer->name }} le {{ $contrat->activities->where('description', 'created')->first()->created_at->format('d-M-Y à H\Hi') }}
+                                                </span>
+                                                </div>
+                                            </div>
+                                        </td>
                                     @endif
-
                                     {{-- Actions --}}
                                     <td class="flex flex-col">
                                         @if($contrat->deleted_at !== NULL)

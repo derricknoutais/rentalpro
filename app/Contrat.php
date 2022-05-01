@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Contrat extends Model
@@ -49,6 +50,10 @@ class Contrat extends Model
     }
     public function solde(){
         return $this->total() - $this->payé();
+    }
+    public function logs()
+    {
+        return $this->morphToMany(Activity::class, 'activity_log');
     }
 
 
