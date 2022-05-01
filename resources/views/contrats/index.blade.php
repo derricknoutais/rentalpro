@@ -351,7 +351,9 @@
                                                 <div class="flex flex-col p-2 mt-3 bg-red-300">
                                                 <span>
                                                     Créé par
-                                                    {{ $contrat->activities->where('description', 'created')->first()->causer->name }} le {{ $contrat->activities->where('description', 'created')->first()->created_at->format('d-M-Y à H\Hi') }}
+                                                    @if (@isset($activity = $contrat->activities->where('description', 'created')->first()))
+                                                        {{ $activity->causer->name }} le {{ $activity->created_at->format('d-M-Y à H\Hi') }}
+                                                    @endif
                                                 </span>
                                                 </div>
                                             </div>

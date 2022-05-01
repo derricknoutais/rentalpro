@@ -429,6 +429,15 @@ Route::group(['middleware' => ['auth']], function () {
     // PAIEMENTS
     Route::resource('paiement', 'PaiementController');
 
+    Route::get('/ghost', function(){
+        return Paiement::find(168);
+        foreach(Paiement::all() as $paiement){
+            if(! $paiement->contrat){
+                $paiement->delete();
+            }
+        }
+    });
+
     // Techniciens
     Route::post('techniciens', 'TechnicienController@store');
 
