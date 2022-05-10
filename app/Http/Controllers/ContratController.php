@@ -105,7 +105,7 @@ class ContratController extends Controller
         } else if( $contrat->compagnie->type === 'hôtel' ){
             $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
         }
-        return $pdf->stream();
+        return view('contrats.show', compact('contrat'));
 
     }
     public function create(){
@@ -177,11 +177,13 @@ class ContratController extends Controller
                 'real_check_out' => NULL,
                 'prix_journalier'=> $request['prix_journalier'],
                 'caution' => $request['caution'],
+                'type_caution' => $request['type_caution'],
                 'nombre_jours'=> $request['nombre_jours'],
                 'total'=> $request['prix_journalier'] * $request['nombre_jours'],
                 'cashier_facture_id' => $request['cashier_id'],
                 'etat_accessoires' => $request[ 'accessoireString'],
                 'etat_documents' => $request[ 'documentString'],
+                'note' => $request['note_contrat']
             ]);
 
             $voiture = Voiture::find( $request['contractable'])->update([
@@ -225,7 +227,8 @@ class ContratController extends Controller
                 Paiement::create([
                     'contrat_id' => $contrat->id,
                     'montant' => $request->paiement,
-                    'note' => $request->note
+                    'type_paiement' => $request->type_paiement,
+                    'note' => $request->note_paiement
                 ]);
                 array_push($transactionData['entries'],
                     // Caisse Entry Debit

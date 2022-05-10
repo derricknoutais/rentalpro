@@ -70,19 +70,35 @@
                     </div>
                 </div>
                 <div class="flex w-full mt-3">
-                    <div class="w-1/2">
+                    <div class="w-1/3">
                         <label for="">Paiement</label>
                         <input type="number" class="form-control" name="paiement" placeholder="Paiement" v-model="formulaire.paiement">
                     </div>
-                    <div class="w-1/2">
+                    <div class="w-1/3">
+                        <label for="">Type Paiement</label>
+                        <select type="number" class="form-control" name="type_paiement" placeholder="Type Paiement" >
+                            <option v-for="type in types_paiements ">@{{ type }}</option>
+                        </select>
+
+                    </div>
+                    <div class="w-1/3">
                         <label for="">Solde</label>
                         <input type="text" class="form-control" name="" placeholder="Solde" :value="solde" readonly>
                     </div>
                 </div>
+                <div class="flex">
+                    <div class="w-1/2">
+                        <label for="">Caution</label>
+                        <input type="number" class="form-control" name="caution" placeholder="Caution">
+                    </div>
+                    <div class="w-1/2">
+                        <label for="">Type Caution</label>
+                        <select type="number" class="form-control" name="type_caution" placeholder="Type Caution">
+                            <option v-for="type in types_paiements">@{{ type }}</option>
+                        </select>
+                    </div>
+                </div>
 
-
-                <label for="">Caution</label>
-                <input type="number" class="form-control" name="caution" placeholder="Caution">
                 <label for="">Note</label>
                 <textarea name="note" class="form-control" id="" cols="30" rows="4"></textarea>
 

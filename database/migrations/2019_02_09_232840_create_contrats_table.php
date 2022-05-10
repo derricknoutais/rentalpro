@@ -27,6 +27,7 @@ class CreateContratsTable extends Migration
             $table->integer('nombre_jours')->nullable();
             $table->double('total')->nullable();
             $table->double('caution')->nullable();
+            $table->double('type_caution')->nullable();
             $table->string('carburant')->nullable();
             $table->string('etat_accessoires')->nullable();
             $table->string('etat_documents')->nullable();

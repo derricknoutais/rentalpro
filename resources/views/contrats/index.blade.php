@@ -103,28 +103,38 @@
                                         <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
                                             <span class="mr-1">
                                                 Caution:
+                                                @if (isset($contrat->caution))
+                                                    <span class="px-2 ">
+                                                        {{ $contrat->caution }}
+                                                    </span>
+                                                @endif
                                             </span>
-                                            @if (isset($contrat->caution))
-                                            <span class="px-5 text-white rounded bg-success">
-                                                {{ $contrat->caution }}
+                                            @if (isset($contrat->type_caution))
+                                            <span class="px-5 text-white rounded bg-primary">
+                                                {{ $contrat->type_caution }}
                                             </span>
                                             @endif
 
+
                                         </div>
                                         {{-- Montant Total --}}
-                                        <div class="flex justify-between py-1 mt-3 bg-blue-200 rounded rounded-b-none px-14">
+                                        <div class="flex justify-between py-1 pl-2 mt-3 bg-blue-200 rounded rounded-b-none pr-14">
                                             <p class="font-semibold">Montant Total</p>
                                             <span class="font-semibold">{{ $contrat->prix_journalier  * $contrat->nombre_jours}} F CFA</span>
                                         </div>
                                         {{-- Paiements --}}
                                         @if (sizeof($contrat->paiements) > 0)
-                                            <div class="flex flex-col justify-between py-1 pr-6 bg-blue-100 pl-14">
+                                            <div class="flex flex-col justify-between py-1 pl-3 pr-6 bg-blue-100">
 
                                                 <p class="mt-1 mb-3 font-semibold underline text-md">Paiements</p>
 
                                                 @foreach ($contrat->paiements as $paiement)
                                                     <div class="flex justify-between">
                                                         <span >{{ $paiement->created_at->format('d-M-Y') }}</span>
+                                                        @isset($paiement->type_paiement)
+
+                                                        <span>{{ $paiement->type_paiement }}</span>
+                                                        @endisset
                                                         <span>{{ $paiement->note }}</span>
                                                         <div>
                                                             <span class="font-semibold">{{ $paiement->montant }} F CFA</span>

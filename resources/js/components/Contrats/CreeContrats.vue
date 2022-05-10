@@ -5,6 +5,9 @@ props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop"],
 data() {
 	return {
         contractables: this.contractables_prop,
+        types_paiements : ['Espèce', 'Airtel Money', 'Chèque'],
+        type_paiement_selectionné : null,
+        type_caution_selectionné : null,
         contractable: {
             id: null
         },
