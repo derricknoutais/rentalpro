@@ -27,11 +27,11 @@ class ContratFactory extends Factory
 
         'numéro' => strtoupper($faker->bothify('CL###/##/2019')),
         'compagnie_id' => 1,
-        'au' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
-        'du' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
+        'au' => $faker->dateTimeThisYear($max = 'now'),
+        'du' => $faker->dateTimeThisYear($max = 'now'),
         'prix_journalier' => $prix_journalier,
         'caution' => 100000,
-        'created_at' => $faker->dateTimeInInterval($startDate = '-365 days', $interval = '+ 800 days', $timezone = null),
+        'created_at' => $faker->dateTimeThisYear($max = 'now'),
         'cashier_facture_id' => rand(1,10)
         ];
     }

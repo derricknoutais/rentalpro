@@ -194,7 +194,7 @@ class ContratController extends Controller
                 return $contrat;
             }
         });
-        if($contrat){
+        if($contrat && env('APP_ENV') !== 'local'){
             $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
             $transactionData = [
                 'transaction_date' => $contrat->created_at,
@@ -264,11 +264,13 @@ class ContratController extends Controller
                 return redirect('/contrat/' . $contrat->id . '/print');
             }
 
+
             // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
             // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
             //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
         }
+        return redirect('/contrat/' . $contrat->id . '/print');
 
     }
 

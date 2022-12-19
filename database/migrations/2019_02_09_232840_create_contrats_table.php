@@ -27,7 +27,7 @@ class CreateContratsTable extends Migration
             $table->integer('nombre_jours')->nullable();
             $table->double('total')->nullable();
             $table->double('caution')->nullable();
-            $table->double('type_caution')->nullable();
+            $table->string('type_caution')->nullable();
             $table->string('carburant')->nullable();
             $table->string('etat_accessoires')->nullable();
             $table->string('etat_documents')->nullable();
@@ -40,6 +40,7 @@ class CreateContratsTable extends Migration
             $table->unsignedInteger('cashier_facture_id')->nullable();
             $table->unsignedInteger('prolongation_id')->nullable();
             $table->unsignedInteger('gescash_transaction_id')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
