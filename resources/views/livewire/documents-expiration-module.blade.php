@@ -34,7 +34,7 @@
                                     <tr
                                         @if(  ( $nbreJours = now()->diffInDays( \Carbon\Carbon::parse($document->pivot->date_expiration), false) ) <= 0 )
                                             class="text-white bg-red-500"
-                                        @elseif(( $nbreJours = now()->diffInDays( \Carbon\Carbon::parse($document->pivot->date_expiration), false) ) <= 14 )
+                                        @elseif(( $nbreJours = now()->diffInDays( \Carbon\Carbon::parse($document->pivot->date_expiration), false) ) <= 31 )
                                             class="text-white bg-orange-500"
                                         @else
                                             class="text-white bg-green-500"
