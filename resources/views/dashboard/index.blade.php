@@ -206,13 +206,16 @@
             </div>
 
         </div> --}}
-        <div class="w-full my-10 overflow-y-auto" style="height: 50vh">
-            <livewire:car-display />
-        </div>
 
         <div class="w-full my-10 overflow-y-auto" style="height: 50vh">
             <livewire:documents-expiration-module />
         </div>
+
+        <div class="w-full my-10 overflow-y-auto" style="height: 50vh">
+            <livewire:car-display />
+        </div>
+
+
 
 
     </div>

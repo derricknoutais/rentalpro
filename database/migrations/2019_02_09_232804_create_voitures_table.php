@@ -27,6 +27,7 @@ class CreateVoituresTable extends Migration
             $table->double('prix_achat')->nullable();
             $table->double('douane')->nullable();
             $table->double('transport')->nullable();
+            $table->boolean('archived')->default(false);
             $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });

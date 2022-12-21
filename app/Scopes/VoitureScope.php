@@ -10,6 +10,6 @@ class VoitureScope implements Scope {
 
     public function apply(Builder $builder, Model $model)
     {
-            $builder->where( $model->getTable() . '.etat', '<>', 'vendu' );
+            $builder->where( $model->getTable() . '.archived', '<>', 1 );
     }
 }
