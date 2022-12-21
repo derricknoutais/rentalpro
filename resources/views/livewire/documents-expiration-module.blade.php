@@ -32,7 +32,7 @@
                             @foreach ($voitures as $voiture)
                                 @foreach ($voiture->documents as $document)
                                     <tr
-                                        @if( $nbreJours = now()->diffInDays( \Carbon\Carbon::parse($document->pivot->date_expiration)) <= 14 )
+                                        @if(  ( $nbreJours = now()->diffInDays( \Carbon\Carbon::parse($document->pivot->date_expiration)) ) <= 14 )
                                             class="text-white bg-red-500"
                                         @endif
                                     >

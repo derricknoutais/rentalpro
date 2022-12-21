@@ -177,7 +177,6 @@
                     <li> {{ $acc->pivot->quantité }} {{ $acc->type }}</li>
                 @endforeach
             </ul>
-
         </div>
 
     </div>
