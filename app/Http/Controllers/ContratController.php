@@ -194,82 +194,82 @@ class ContratController extends Controller
                 return $contrat;
             }
         });
-        if($contrat && env('APP_ENV') !== 'local'){
-            $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
-            $transactionData = [
-                'transaction_date' => $contrat->created_at,
-                'tenant_id' => $apiSettings->gescash_tenant_id,
-                'book_id' => $apiSettings->gescash_book_id,
-                'exercise_id' => $apiSettings->gescash_exercise_id,
-                'attachment' => 'https://rentalpro.azimuts.ga/contrat/' . $contrat->id,
-                'entries' => [
-                    // Client Entry Debit
-                    [
-                        'account_id' => $apiSettings->gescash_client_account_id,
-                        'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
-                        'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                        'credit' => NULL,
-                        'created_at' => $contrat->created_at,
-                        'updated_at' => now()
-                    ],
-                    // Service Entry Credit
-                    [
-                        'account_id' => $apiSettings->gescash_service_account_id,
-                        'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
-                        'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                        'debit' => NULL,
-                        'created_at' => $contrat->created_at,
-                        'updated_at' => now()
-                    ]
-                ]
-            ];
-            if($request->paiement != NULL && $request->paiement !== 0){
-                Paiement::create([
-                    'contrat_id' => $contrat->id,
-                    'montant' => $request->paiement,
-                    'type_paiement' => $request->type_paiement,
-                    'note' => $request->note_paiement
-                ]);
-                array_push($transactionData['entries'],
-                    // Caisse Entry Debit
-                    [
-                        'account_id' => $apiSettings->gescash_cash_account_id,
-                        'label' => 'Paiment Contrat ' . $contrat->numéro,
-                        'debit' => $request->paiement,
-                        'credit' => NULL,
-                        'created_at' => $contrat->created_at,
-                        'updated_at' => now()
-                    ],
-                    // Client Entry Credit
-                    [
-                        'account_id' => $apiSettings->gescash_client_account_id,
-                        'label' => 'Paiment Contrat ' . $contrat->numéro,
-                        'credit' => $request->paiement,
-                        'debit' => NULL,
-                        'created_at' => $contrat->created_at,
-                        'updated_at' => now()
-                    ]
+        // if($contrat && env('APP_ENV') !== 'local'){
+        //     $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
+        //     $transactionData = [
+        //         'transaction_date' => $contrat->created_at,
+        //         'tenant_id' => $apiSettings->gescash_tenant_id,
+        //         'book_id' => $apiSettings->gescash_book_id,
+        //         'exercise_id' => $apiSettings->gescash_exercise_id,
+        //         'attachment' => 'https://rentalpro.azimuts.ga/contrat/' . $contrat->id,
+        //         'entries' => [
+        //             // Client Entry Debit
+        //             [
+        //                 'account_id' => $apiSettings->gescash_client_account_id,
+        //                 'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
+        //                 'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
+        //                 'credit' => NULL,
+        //                 'created_at' => $contrat->created_at,
+        //                 'updated_at' => now()
+        //             ],
+        //             // Service Entry Credit
+        //             [
+        //                 'account_id' => $apiSettings->gescash_service_account_id,
+        //                 'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
+        //                 'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
+        //                 'debit' => NULL,
+        //                 'created_at' => $contrat->created_at,
+        //                 'updated_at' => now()
+        //             ]
+        //         ]
+        //     ];
+        //     if($request->paiement != NULL && $request->paiement !== 0){
+        //         Paiement::create([
+        //             'contrat_id' => $contrat->id,
+        //             'montant' => $request->paiement,
+        //             'type_paiement' => $request->type_paiement,
+        //             'note' => $request->note_paiement
+        //         ]);
+        //         array_push($transactionData['entries'],
+        //             // Caisse Entry Debit
+        //             [
+        //                 'account_id' => $apiSettings->gescash_cash_account_id,
+        //                 'label' => 'Paiment Contrat ' . $contrat->numéro,
+        //                 'debit' => $request->paiement,
+        //                 'credit' => NULL,
+        //                 'created_at' => $contrat->created_at,
+        //                 'updated_at' => now()
+        //             ],
+        //             // Client Entry Credit
+        //             [
+        //                 'account_id' => $apiSettings->gescash_client_account_id,
+        //                 'label' => 'Paiment Contrat ' . $contrat->numéro,
+        //                 'credit' => $request->paiement,
+        //                 'debit' => NULL,
+        //                 'created_at' => $contrat->created_at,
+        //                 'updated_at' => now()
+        //             ]
 
-                );
-            }
-            $contrat->loadMissing('contractable', 'client');
-            // dd('hello');
-            $response = Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
+        //         );
+        //     }
+        //     $contrat->loadMissing('contractable', 'client');
+        //     // dd('hello');
+        //     $response = Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
 
-            if($response->status() == 201){
-                $contrat->update([
-                    'gescash_transaction_id' => $response->json()['id']
-                ]);
-                flash('Contrat Enregistré avec Succès')->success();
-                return redirect('/contrat/' . $contrat->id . '/print');
-            }
+        //     if($response->status() == 201){
+        //         $contrat->update([
+        //             'gescash_transaction_id' => $response->json()['id']
+        //         ]);
+        //         flash('Contrat Enregistré avec Succès')->success();
+        //         return redirect('/contrat/' . $contrat->id . '/print');
+        //     }
 
 
-            // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
-            // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
-            //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
+        //     // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
+        //     // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
+        //     //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
-        }
+        // }
         return redirect('/contrat/' . $contrat->id . '/print');
 
     }
