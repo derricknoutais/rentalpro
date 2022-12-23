@@ -355,7 +355,7 @@
                                             <div class="flex flex-col">
                                                 <div class="flex flex-col p-2 bg-gray-300">
                                                 <span>
-                                                    {{ $contrat }}
+                                                    {{ $contrat->contractable->immatriculation }}
                                                 </span>
                                                 </div>
                                                 <div class="flex flex-col p-2 mt-3 bg-red-300">
