@@ -54,11 +54,13 @@
                                             <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
                                                 {{ $maintenance->titre }}
                                             </td>
-                                            @isset ( $maintenance->voiture )
-                                                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+
+                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                                @isset ( $maintenance->voiture )
                                                     {{ $maintenance->voiture->immatriculation }}
-                                                </td>
-                                            @endisset
+                                                @endisset
+                                            </td>
+
 
                                             <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                 @if($maintenance->technicien)
