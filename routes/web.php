@@ -124,6 +124,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');
     Route::get('/voiture/{voiture}/maintenance', 'VoitureController@maintenance');
     Route::post('/voitures/ajout-voiture', 'VoitureController@store');
+    Route::post('/contractable/{contractable}/rendre-disponible', 'VoitureController@rendreDisponible');
 
 
     // CLIENTS
@@ -298,9 +299,11 @@ Route::group(['middleware' => ['auth']], function () {
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
 
-    Route::get('maintenances/create', 'MaintenanceController@create');
+    Route::get('/maintenance/{maintenance}', 'MaintenanceController@show');
+    Route::get('/maintenance/{maintenance}/edit', 'MaintenanceController@edit');
+    Route::get('/maintenance/create', 'MaintenanceController@create');
 
-    Route::get('maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');
+    Route::get('/maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');
 
     Route::post('/maintenances/store', 'MaintenanceController@store');
 

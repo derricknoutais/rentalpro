@@ -112,7 +112,7 @@ class ContratController extends Controller
         $clients = Client::all();
         $clients->toArray();
         $contrats = Auth::user()->compagnie->contrats;
-        $contractables = Voiture::where('etat', 'disponible')->with('documents', 'accessoires')->get();
+        $contractables = Voiture::with('documents', 'accessoires')->get();
 
         if(sizeof($contractables) > 0 ){
             $contractables->toArray();

@@ -2,54 +2,91 @@
 
 namespace App\Http\Livewire;
 
-use App\ApiSetting;
-use App\Maintenance;
 use Livewire\Component;
+use App\Maintenance;
+use App\Panne;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
 
-class MaintenanceCreate extends Component
+class MaintenanceEdit extends Component
 {
-    public $voitures, $techniciens;
+    public $voitures, $techniciens, $maintenance;
 
-    public $titre, $voiture_id, $technicien_id, $coût = 0, $coût_pièces = 0, $created_at, $description_panne, $pannes = [];
-    public function mount($voitures, $techniciens){
-        $this->created_at = now()->format('Y-m-d');
+    public $titre, $voiture_id, $technicien_id, $coût = 0, $coût_pièces = 0, $created_at, $description_panne, $pannes = [], $panne_editing = null, $panne_editing_description;
+
+    public function mount($voitures, $techniciens, $maintenance){
+
+        $this->titre = $maintenance->titre;
+        $this->created_at = $maintenance->created_at->format('Y-m-d');
         $this->voitures = $voitures;
+        $this->coût = $maintenance->coût;
+        $this->coût_pièces = $maintenance->coût_pièces;
+        $this->panne_editing = -1;
+
         if(sizeof($this->voitures) > 0)
-            $this->voiture_id = $voitures[0]->id;
+            $this->voiture_id = $maintenance->voiture_id;
         $this->techniciens = $techniciens;
         if(sizeof($this->techniciens) > 0)
-            $this->technicien_id = $techniciens[0]->id;
+            $this->technicien_id = $maintenance->technicien_id;
+
+        $this->pannes = $maintenance->pannes->toArray();
     }
+
+    public function editerPanne($panne_id){
+        $this->panne_editing = $panne_id;
+        $this->panne_editing_description = $this->pannes[$panne_id]['description'];
+    }
+
+    public function enregistrerPanne(){
+        $panne = $this->pannes[$this->panne_editing];
+        $panne['description'] = $this->panne_editing_description;
+        if(! isset($panne['id'])){
+            $this->pannes[$this->panne_editing]['description'] = $panne['description'];
+        } else {
+            Panne::find($panne['id'])->update(['description' => $this->panne_editing_description]);
+        }
+
+        $this->panne_editing = -1;
+    }
+    public function supprimerPanne($panne_id){
+        $this->panne_editing = $panne_id;
+        $panne = $this->pannes[$this->panne_editing];
+
+        if(! isset($panne['id'])){
+            array_splice($this->pannes, $panne_id, 1);
+        } else {
+            Panne::find($panne['id'])->delete();
+        }
+
+        $this->panne_editing = -1;
+    }
+
     public function ajouterPanne(){
         array_push($this->pannes, ['description' => $this->description_panne]);
         $this->description_panne = '' ;
     }
     public function creerMaintenance(){
         DB::transaction(function () {
-
-            $maintenance = Maintenance::create([
-                'titre' => $this->titre,
+            $maintenance = Maintenance::find($this->maintenance->id)->update([
+                'titre' => $this->maintenance->titre,
                 'compagnie_id' => 1,
-                'voiture_id' => $this->voiture_id,
-                'technicien_id' => $this->technicien_id,
+                'voiture_id' => $this->maintenance->voiture_id,
+                'technicien_id' => $this->maintenance->technicien_id,
                 'coût' => $this->coût,
-                'coût_pièces' => $this->coût_pièces,
-                'created_at' => $this->created_at,
-                'updated_at' => $this->created_at
+                'coût_pièces' => $this->maintenance->coût_pièces,
+                'created_at' => $this->maintenance->created_at,
+                'updated_at' => $this->maintenance->created_at
             ]);
-
             foreach( $this->pannes as &$panne) {
-                $panne['compagnie_id'] = 1;
-                $panne['voiture_id'] = $maintenance->voiture_id;
-                $panne['etat'] = 'non-résolue';
+                if(! isset($panne['id'])){
+                    $panne['compagnie_id'] = 1;
+                    $panne['voiture_id'] = $maintenance->voiture_id;
+                    $panne['etat'] = 'non-résolue';
+                    Panne::create($panne);
+                } else {
+                    Panne::find($panne['id'])->update($panne);
+                }
+
             };
-
-            $pannes = $maintenance->pannes()->createMany($this->pannes);
-
-
             // $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
             // $transactionData = [
             //     'transaction_date' => $maintenance->created_at,
@@ -95,10 +132,8 @@ class MaintenanceCreate extends Component
         $this->description_panne = null;
         $this->pannes = [];
     }
-
-
     public function render()
     {
-        return view('livewire.maintenance-create');
+        return view('livewire.maintenance-edit');
     }
 }

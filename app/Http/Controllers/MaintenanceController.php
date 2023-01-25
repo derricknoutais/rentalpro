@@ -82,7 +82,16 @@ class MaintenanceController extends Controller
      */
     public function show(Maintenance $maintenance)
     {
-        //
+
+        $maintenance->numero_recu = 116031;
+        $sale = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/search?type=sales&invoice_number=' . $maintenance->numero_recu);
+        // return $sale;
+        foreach($sale['data'][0]['line_items'] as $line){
+            $prods[] = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/products/' . $line['product_id'])['data']['variant_name'];
+        }
+        // return $prods;
+
+        return view('maintenances.print', compact('maintenance', 'sale', 'prods'));
     }
 
     /**
@@ -93,7 +102,10 @@ class MaintenanceController extends Controller
      */
     public function edit(Maintenance $maintenance)
     {
-        //
+        $maintenance->loadMissing('pannes');
+        $voitures = Voiture::all();
+        $techniciens = Technicien::all();
+        return view('maintenances.edit', compact('voitures', 'techniciens', 'maintenance'));
     }
 
     /**

@@ -14,7 +14,6 @@
                 <label class="mt-5 form-check-label">
                     <input type="checkbox" @click="displayNewCustomerForm">Nouveau Client
                 </label>
-
                 {{-- Champs Clients --}}
                 <input type="hidden" name="client_id" v-model.number="client.id">
 
@@ -34,16 +33,24 @@
                     </multiselect>
                 </div>
 
-                {{-- Champs Clients --}}
+                {{-- Champs Voiture --}}
                 <input type="hidden" name="contractable" v-model.number="contractable.id">
-                 <div class="mt-3">
-                     <label for="">Selectionner Voiture</label>
-                    <multiselect show-labels="true" :options="contractables" label="immatriculation" v-model="contractable">
-                        <template slot="noResult"> Cette voiture n'existe pas </template>
-                    </multiselect>
+                 <div class="w-full mt-3">
+                    <label for="">Selectionner Voiture</label>
+                    <div class="flex w-full">
+                        <multiselect :show-labels="true" :options="contractables" label="immatriculation" v-model="contractable">
+                            <template slot="noResult"> Cette voiture n'existe pas </template>
+                        </multiselect>
+                        <button type="button" v-if="contractable.etat === 'loué' "
+                            class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control"
+                            data-toggle="modal" data-target="#rendreVehiculeDisponible"
+                        >Receptionner</button>
+                    </div>
+
                 </div>
                 {{-- Champs Chambre & Contrat --}}
                 <input type="hidden" class="form-control" id="chambre_id" name="chambre_id" :value="chambreADetailler.id">
+
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">
                         <label for="">Du</label>
@@ -116,6 +123,31 @@
 
                 </div>
             </form>
+            <div class="modal fade" id="rendreVehiculeDisponible" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-lg modal-title">Êtes-vous sûr de vouloir rendre disponible cette voiture sans terminer le contrat correspondant? </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form
+                            {{-- :action="'/contractable/' + contractable.id  + '/rendre-disponible'" --}}
+                            {{-- method="POST" --}}
+                        >
+                            @csrf
+                            <div class="modal-body">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="button" @click="rendreVehiculeDisponible" class="text-white bg-green-500 btn">Rendre Disponible</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </cree-contrats>
 

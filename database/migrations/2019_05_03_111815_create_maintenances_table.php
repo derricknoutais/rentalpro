@@ -6,16 +6,12 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMaintenancesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('maintenances', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('titre');
+            $table->string('titre')->nullable();
             $table->unsignedInteger('voiture_id');
             $table-> unsignedInteger('technicien_id')->nullable();
             $table->unsignedInteger('compagnie_id');

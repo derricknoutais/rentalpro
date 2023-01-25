@@ -89,7 +89,6 @@ methods: {
         this.chambreADetailler = chambre
         this.$forceUpdate()
     },
-
     // Affiche le formulaire de Location Rapide
     faireLouer(){
         this.afficheFormulaireLocationRapide = true;
@@ -104,7 +103,6 @@ methods: {
         this.display.nouveau_client = ! this.display.nouveau_client
         this.client = {}
     },
-
     enregistreClientDansCashier(){
         // Affiche le Spinner
         // this.isLoading = true;
@@ -126,6 +124,18 @@ methods: {
             console.log('Hellooooo')
             document.getElementById('clientForm').submit();
         }
+    },
+    rendreVehiculeDisponible(){
+        axios.post('/contractable/' + this.contractable.id  + '/rendre-disponible')
+        .then( response => {
+            console.log(response)
+            this.contractable.etat = 'disponible'
+            document.getElementById('rendreVehiculeDisponible').style.display = 'none';
+            document.getElementsByClassName('modal-backdrop')[0].classList.remove('show')
+            console.log(document.getElementById('rendreVehiculeDisponible'))
+            this.$forceUpdate()
+            this.$alertify.success("Le Client a été enregistré dans Cashier")
+        })
     }
 },
 mounted() {

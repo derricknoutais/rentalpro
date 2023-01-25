@@ -13,6 +13,9 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
+                                        <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
+                                            Date
+                                        </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                                             Titre
@@ -23,7 +26,7 @@
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Contractant
+                                            Technicien
                                         </th>
                                         <th scope="col"
                                             class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
@@ -55,7 +58,11 @@
                                                 {{ $maintenance->voiture->immatriculation }}
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                {{ $maintenance->technicien->nom }}
+                                                @if($maintenance->technicien)
+
+                                                    {{ $maintenance->technicien->nom }}
+
+                                                @endif
                                             </td>
                                             <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
                                                 {{ $maintenance->coût }}
@@ -64,8 +71,11 @@
                                                 {{ $maintenance->coût_pièces }}
                                             </td>
                                             <td>
+                                                <a href="/maintenance/{{ $maintenance->id }}/edit" class="bg-blue-300 px-3 py-1 rounded-md">
+                                                    Modifier
+                                                </a>
                                                 @if (! $maintenance->gescash_transaction_id)
-                                                    <a class="text-white bg-blue-500" href="/maintenances/{{ $maintenance->id }}/envoyer-gescash">Envoyer à Gescash</a>
+                                                    <a class="text-white bg-blue-500 px-3 py-1 rounded-md" href="/maintenances/{{ $maintenance->id }}/envoyer-gescash">Envoyer à Gescash</a>
                                                 @else
                                                     <span class="text-white bg-green-500 rounded-2xl">Envoyé à Gescash</span>
                                                 @endif
@@ -80,7 +90,7 @@
             </div>
         </div>
         <div class="sticky flex justify-end px-40 bottom-16 container-fluid">
-            <a href="/maintenances/create">
+            <a href="/maintenance/create">
                 <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
             </a>
         </div>

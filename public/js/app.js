@@ -7713,6 +7713,21 @@ __webpack_require__.r(__webpack_exports__);
         console.log('Hellooooo');
         document.getElementById('clientForm').submit();
       }
+    },
+    rendreVehiculeDisponible: function rendreVehiculeDisponible() {
+      var _this2 = this;
+
+      axios.post('/contractable/' + this.contractable.id + '/rendre-disponible').then(function (response) {
+        console.log(response);
+        _this2.contractable.etat = 'disponible';
+        document.getElementById('rendreVehiculeDisponible').style.display = 'none';
+        document.getElementsByClassName('modal-backdrop')[0].classList.remove('show');
+        console.log(document.getElementById('rendreVehiculeDisponible'));
+
+        _this2.$forceUpdate();
+
+        _this2.$alertify.success("Le Client a été enregistré dans Cashier");
+      });
     }
   },
   mounted: function mounted() {
@@ -121808,9 +121823,9 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/derricknoutais/code/laravel/rentalpro/resources/js/app.js */"./resources/js/app.js");
-__webpack_require__(/*! /Users/derricknoutais/code/laravel/rentalpro/resources/sass/app.scss */"./resources/sass/app.scss");
-module.exports = __webpack_require__(/*! /Users/derricknoutais/code/laravel/rentalpro/resources/css/app.css */"./resources/css/app.css");
+__webpack_require__(/*! C:\Users\USER\Documents\code\rentalpro\resources\js\app.js */"./resources/js/app.js");
+__webpack_require__(/*! C:\Users\USER\Documents\code\rentalpro\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\Users\USER\Documents\code\rentalpro\resources\css\app.css */"./resources/css/app.css");
 
 
 /***/ })

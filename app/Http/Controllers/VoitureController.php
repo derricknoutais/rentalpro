@@ -18,14 +18,17 @@ class VoitureController extends Controller
 
         return view('voitures.index', compact('voitures', 'contrats'));
     }
+    public function rendreDisponible(Voiture $contractable){
+        return $contractable->update(['etat' => 'disponible']);
+    }
     public function show(Voiture $voiture){
-
         $techniciens = Technicien::all();
 
         $voiture->loadMissing('documents', 'accessoires', 'pannes', 'maintenances');
 
         $contrats = Contrat::where('contractable_id', $voiture->id)->orderBy('id', 'desc')->paginate(10);
         $derniere_maintenance = null;
+
         if(sizeof($voiture->maintenances)){
             $dernier_contrat_id = $voiture->maintenances[sizeof($voiture->maintenances) - 1]->id ;
             $derniere_maintenance = \App\Maintenance::where('id', $dernier_contrat_id)->with('pannes')->first();
