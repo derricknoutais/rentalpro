@@ -79,7 +79,7 @@ class MaintenanceEdit extends Component
             foreach( $this->pannes as &$panne) {
                 if(! isset($panne['id'])){
                     $panne['compagnie_id'] = 1;
-                    $panne['voiture_id'] = $maintenance->voiture_id;
+                    $panne['voiture_id'] = $this->maintenance->voiture_id;
                     $panne['etat'] = 'non-résolue';
                     Panne::create($panne);
                 } else {
