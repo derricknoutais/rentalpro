@@ -301,7 +301,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/maintenance/{maintenance}', 'MaintenanceController@show');
     Route::get('/maintenance/{maintenance}/edit', 'MaintenanceController@edit');
-    Route::get('/maintenance/create', 'MaintenanceController@create');
+    Route::get('/maintenance/new', 'MaintenanceController@create');
+    Route::get('/maintenances/create', 'MaintenanceController@create');
 
     Route::get('/maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');
 
