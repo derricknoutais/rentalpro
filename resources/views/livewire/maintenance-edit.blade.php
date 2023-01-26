@@ -28,9 +28,6 @@
                                     <button wire:click="supprimerPanne({{ $loop->index }})">Supprimer Panne</button>
                                 </div>
                             @endif
-
-
-
                         </div>
                     </li>
                 @endforeach
@@ -73,5 +70,5 @@
 
     </div>
 
-    <button class="mt-12 bg-blue-500 btn" wire:click="creerMaintenance">Créer Maintenance</button>
+    <button class="mt-12 bg-blue-500 btn" wire:click="editerMaintenance">Editer Maintenance</button>
 </div>

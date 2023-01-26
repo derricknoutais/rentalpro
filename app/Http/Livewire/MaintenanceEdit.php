@@ -64,17 +64,17 @@ class MaintenanceEdit extends Component
         array_push($this->pannes, ['description' => $this->description_panne]);
         $this->description_panne = '' ;
     }
-    public function creerMaintenance(){
+    public function editerMaintenance(){
         DB::transaction(function () {
             $maintenance = Maintenance::find($this->maintenance->id)->update([
-                'titre' => $this->maintenance->titre,
+                'titre' => $this->titre,
                 'compagnie_id' => 1,
-                'voiture_id' => $this->maintenance->voiture_id,
-                'technicien_id' => $this->maintenance->technicien_id,
+                'voiture_id' => $this->voiture_id,
+                'technicien_id' => $this->technicien_id,
                 'coût' => $this->coût,
-                'coût_pièces' => $this->maintenance->coût_pièces,
-                'created_at' => $this->maintenance->created_at,
-                'updated_at' => $this->maintenance->created_at
+                'coût_pièces' => $this->coût_pièces,
+                'created_at' => $this->created_at,
+                'updated_at' => now()
             ]);
             foreach( $this->pannes as &$panne) {
                 if(! isset($panne['id'])){
