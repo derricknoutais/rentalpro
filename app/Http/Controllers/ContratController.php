@@ -194,6 +194,14 @@ class ContratController extends Controller
                 return $contrat;
             }
         });
+        if ($request->paiement != null && $request->paiement !== 0) {
+            Paiement::create([
+                'contrat_id' => $contrat->id,
+                'montant' => $request->paiement,
+                'type_paiement' => $request->type_paiement,
+                'note' => $request->note_paiement
+            ]);
+        }
         // if($contrat && env('APP_ENV') !== 'local'){
         //     $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
         //     $transactionData = [
@@ -271,9 +279,7 @@ class ContratController extends Controller
 
         // }
         return redirect('/contrat/' . $contrat->id . '/print');
-
     }
-
     public function print(Contrat $contrat){
         $contrat->loadMissing('contractable', 'client');
         return view('contrats.print', compact('contrat'));

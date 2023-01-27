@@ -41,7 +41,6 @@ data() {
         display: {
             nouveau_client : false
         }
-
 	};
 
 },
