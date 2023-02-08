@@ -11,11 +11,11 @@
                 <div class="overflow-hidden bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:px-6">
                         <h3 class="text-2xl font-medium leading-6 text-gray-900">Contrat {{ $contrat->numéro  }}</h3>
-                        @isset( $contrat->activities->where('description', 'created')->first() )
-                            @if( $contrat->activities && $causer = $contrat->activities->where('description', 'created')->first()->causer )
+                        @isset($contrat->activities && $contrat->activities->where('description', 'created')->first() )
+                            {{-- @if( $contrat->activities && $causer = $contrat->activities->where('description', 'created')->first()->causer ) --}}
                                 <p class="max-w-2xl mt-1 text-sm text-gray-500">Créé par {{ $causer->name }} le {{ $contrat->created_at->format('d-m-Y')
                                 }}</p>
-                            @endif
+                            {{-- @endif --}}
                         @endisset
 
                     </div>
