@@ -13,7 +13,7 @@ class Voiture extends Model
     protected $guarded = [];
 
     protected static function booted(){
-        static::addGlobalScope(new VoitureScope);
+        // static::addGlobalScope(new VoitureScope);
     }
 
     public function scopeNonVendu($query)
