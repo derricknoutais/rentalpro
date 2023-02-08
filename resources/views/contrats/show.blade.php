@@ -11,7 +11,7 @@
                 <div class="overflow-hidden bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:px-6">
                         <h3 class="text-2xl font-medium leading-6 text-gray-900">Contrat {{ $contrat->numéro  }}</h3>
-                        @if($contrat->activities && $contrat->activities->where('description', 'created') )
+                        @if($contrat->activities && $contrat->activities->where('description', 'created')->first() )
                             <p class="max-w-2xl mt-1 text-sm text-gray-500">
                                 Créé par {{ $contrat->activities->where('description', 'created')->first()->name }} le {{ $contrat->created_at->format('d-m-Y')}}
                             </p>
