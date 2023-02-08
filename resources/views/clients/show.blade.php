@@ -87,7 +87,10 @@
                                         <a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a>
                                     </td>
                                     <td>
-                                        <a href="/voiture/{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</a>
+                                        @isset($contrat->contractable)
+                                            <a href="/voiture/{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</a>
+                                        @endisset
+
                                     </td>
                                     @if($contrat->checkout)
                                         <td>{{ $contrat->au->format('d-M-Y')  }}</td>
@@ -102,7 +105,10 @@
                                         <a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a>
                                     </td>
                                     <td>
-                                        <a href="/voiture/{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</a>
+                                        @isset($contrat->contractable)
+                                            <a href="/voiture/{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</a>
+                                        @endisset
+
                                     </td>
                                     @if($contrat->checkout)
                                         <td>{{ $contrat->au->format('d-M-Y')  }}</td>
