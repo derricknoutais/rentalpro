@@ -44,7 +44,11 @@
         <tbody>
             <tr>
                 <td scope="row">{{ $contrat->nombre_jours }}</td>
-                <td>{{ $contrat->contractable->immatriculation }}</td>
+                <td>
+                    @isset($contrat->contractable)
+                        {{ $contrat->contractable->immatriculation }}
+                    @endisset
+                </td>
                 <td>{{ $contrat->prix_journalier }}</td>
                 <td>{{ $contrat->nombre_jours * $contrat->prix_journalier }} F CFA</td>
             </tr>
