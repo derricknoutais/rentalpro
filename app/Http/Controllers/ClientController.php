@@ -11,10 +11,13 @@ use Illuminate\Support\Facades\Auth;
 class ClientController extends Controller
 {
     public function index(){
+        // return Auth::user();
+
         if( isset(Auth::user()->compagnie)){
             $clients = Auth::user()->compagnie->clients;
             return view('clients.index', compact('clients'));
-        } else {
+        }
+        else {
             return redirect('/compagnies/create');
         }
 

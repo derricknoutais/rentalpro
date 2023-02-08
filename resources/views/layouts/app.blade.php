@@ -28,20 +28,17 @@
 </head>
 <body>
 
-    <div id="app" class="min-h-screen bg-gray-100">
+    <div id="app" class="min-h-screen bg-gray-100" >
 
         <nav class="bg-gray-800" x-show="false">
             <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:px-8">
                 <div class="relative flex items-center justify-between h-16">
                     <div class="flex items-center px-2 lg:px-0">
                         <div class="flex-shrink-0">
-                            <img class="block w-auto h-8"
-                                src="/img/logo-simple.png" alt="Workflow">
-
+                            <img class="block w-auto h-8" src="/img/logo-simple.png" alt="Workflow">
                         </div>
                         <div class="hidden lg:block lg:ml-6">
                             <div class="flex space-x-4">
-                                <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                                 @auth
                                     <a href="/dashboard"
                                         class="px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-md">Tableau de Bord</a>
@@ -72,7 +69,8 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input id="search" name="search"
+                                <input id="search"
+                                    name="search"
                                     class="block w-full py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 bg-gray-700 border border-transparent rounded-md focus:outline-none focus:bg-white focus:border-white focus:ring-white focus:text-gray-900 sm:text-sm"
                                     placeholder="Search" type="search">
                             </div>
@@ -143,16 +141,16 @@
                                         From: "transform opacity-100 scale-100"
                                         To: "transform opacity-0 scale-95"
                                 -->
-                                {{-- <div class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                                <div class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="test">
                                     <!-- Active: "bg-gray-100", Not Active: "" -->
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                                         id="user-menu-item-0">Your Profile</a>
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                                         id="user-menu-item-1">Settings</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+                                    <a href="/logout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                                         id="user-menu-item-2">Sign out</a>
-                                </div> --}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,7 +216,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-    <script src="/ressources/js/apex.js"></script>
+    <script src="/ressources/js/apex.js" defer></script>
     @livewireChartsScripts
 
 </html>

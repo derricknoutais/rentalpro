@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         App\User::factory()->create([
             'name' => 'Kevin',
             'email' => 'kevin@gmail.com',
-            'compagnie_id' => 2,
+            // 'compagnie_id' => 2,
             'email_verified_at' => now(),
             'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
 
@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         App\User::factory()->create([
             'name' => 'Amoure',
             'email' => 'amoure@gmail.com',
-            'compagnie_id' => 1,
+            // 'compagnie_id' => 1,
             'email_verified_at' => now(),
             'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
 

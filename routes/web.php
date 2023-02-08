@@ -85,9 +85,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', 'HomeController@index')->name('home');
 
-    // Route::get('/test', function(){
-    //     return Http::get('http://gescash.test/api/v1/test');
-    // });
 
     Route::get('/test-upload/{contrat}', function(Contrat $contrat){
         return view('test', compact('contrat'));
@@ -298,16 +295,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
-
     Route::get('/maintenance/{maintenance}', 'MaintenanceController@show');
     Route::get('/maintenance/{maintenance}/edit', 'MaintenanceController@edit');
     Route::get('/maintenance/new', 'MaintenanceController@create');
     Route::get('/maintenances/create', 'MaintenanceController@create');
-
     Route::get('/maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');
-
     Route::post('/maintenances/store', 'MaintenanceController@store');
-
     Route::post('/maintenances/{maintenance}/reception-véhicule', function(Request $request, Maintenance $maintenance)
     {
         // return $request->all();
@@ -327,7 +320,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         return redirect()->back();
     });
-
     Route::get('/paiements-cashier', function(){
         $ids = Contrat::pluck('id')->toArray();
         $contrats = Contrat::all();
@@ -348,6 +340,7 @@ Route::group(['middleware' => ['auth']], function () {
         DB::table('paiements')->insert($paiements);
         // return $test;
     });
+
 
     // Reporting
     Route::get('/reporting/voitures', function(){
@@ -418,7 +411,6 @@ Route::group(['middleware' => ['auth']], function () {
 
         return view('dashboard.index', compact('dashboard', 'columnChartModel'));
     });
-
     Route::get('/my-feeds', function(){
         $contrats = Contrat::all();
         foreach ($contrats as $contrat ) {
@@ -427,12 +419,13 @@ Route::group(['middleware' => ['auth']], function () {
         }
         return $contrats;
     });
+
     // COMPAGNIES
     Route::view('/compagnies/create', 'compagnies.create');
 
+
     // PAIEMENTS
     Route::resource('paiement', 'PaiementController');
-
     Route::get('/ghost', function(){
         return Paiement::find(168);
         foreach(Paiement::all() as $paiement){

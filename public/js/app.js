@@ -15158,17 +15158,9 @@ function isnan (val) {
   !*** ./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Contrats/ContratFinal.vue?vue&type=style&index=0&lang=css& ***!
   \***************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "p{\n  font-size: 12pt\n}\n.dashed {\n  border-top: 1px dashed black\n}\n", ""]);
-
-// exports
-
+throw new Error("Module build failed (from ./node_modules/postcss-loader/src/index.js):\nTypeError: Cannot read properties of undefined (reading '700')\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\@tailwindcss\\typography\\src\\styles.js:929:38)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\@tailwindcss\\typography\\src\\index.js:4:16)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\tailwind.config.js:20:46)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\lib\\index.js:80:107\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\lib\\index.js:88:36\n    at creator (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\node_modules\\postcss\\lib\\postcss.js:133:35)\n    at Function.get (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\node_modules\\postcss\\lib\\postcss.js:142:27)\n    at Processor.normalize (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\processor.js:151:13)\n    at new Processor (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\processor.js:56:25)\n    at postcss (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\postcss.js:55:10)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\src\\index.js:140:12\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)");
 
 /***/ }),
 
@@ -15177,104 +15169,9 @@ exports.push([module.i, "p{\n  font-size: 12pt\n}\n.dashed {\n  border-top: 1px 
   !*** ./node_modules/css-loader??ref--7-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/vue-multiselect/dist/vue-multiselect.min.css?vue&type=style&index=0&lang=css& ***!
   \*********************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, "fieldset[disabled] .multiselect{\n  pointer-events:none\n}\n.multiselect__spinner{\n  position:absolute;\n  right:1px;\n  top:1px;\n  width:48px;\n  height:35px;\n  background:#fff;\n  display:block\n}\n.multiselect__spinner:after,.multiselect__spinner:before{\n  position:absolute;\n  content:\"\";\n  top:50%;\n  left:50%;\n  margin:-8px 0 0 -8px;\n  width:16px;\n  height:16px;\n  border-radius:100%;\n  border:2px solid transparent;\n  border-top-color:#41b883;\n  box-shadow:0 0 0 1px transparent\n}\n.multiselect__spinner:before{\n  -webkit-animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);\n          animation:spinning 2.4s cubic-bezier(.41,.26,.2,.62);\n  -webkit-animation-iteration-count:infinite;\n          animation-iteration-count:infinite\n}\n.multiselect__spinner:after{\n  -webkit-animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);\n          animation:spinning 2.4s cubic-bezier(.51,.09,.21,.8);\n  -webkit-animation-iteration-count:infinite;\n          animation-iteration-count:infinite\n}\n.multiselect__loading-enter-active,.multiselect__loading-leave-active{\n  transition:opacity .4s ease-in-out;\n  opacity:1\n}\n.multiselect__loading-enter,.multiselect__loading-leave-active{\n  opacity:0\n}\n.multiselect,.multiselect__input,.multiselect__single{\n  font-family:inherit;\n  font-size:16px;\n  touch-action:manipulation\n}\n.multiselect{\n  box-sizing:content-box;\n  display:block;\n  position:relative;\n  width:100%;\n  min-height:40px;\n  text-align:left;\n  color:#35495e\n}\n.multiselect *{\n  box-sizing:border-box\n}\n.multiselect:focus{\n  outline:none\n}\n.multiselect--disabled{\n  background:#ededed;\n  pointer-events:none;\n  opacity:.6\n}\n.multiselect--active{\n  z-index:50\n}\n.multiselect--active:not(.multiselect--above) .multiselect__current,.multiselect--active:not(.multiselect--above) .multiselect__input,.multiselect--active:not(.multiselect--above) .multiselect__tags{\n  border-bottom-left-radius:0;\n  border-bottom-right-radius:0\n}\n.multiselect--active .multiselect__select{\n  transform:rotate(180deg)\n}\n.multiselect--above.multiselect--active .multiselect__current,.multiselect--above.multiselect--active .multiselect__input,.multiselect--above.multiselect--active .multiselect__tags{\n  border-top-left-radius:0;\n  border-top-right-radius:0\n}\n.multiselect__input,.multiselect__single{\n  position:relative;\n  display:inline-block;\n  min-height:20px;\n  line-height:20px;\n  border:none;\n  border-radius:5px;\n  background:#fff;\n  padding:0 0 0 5px;\n  width:100%;\n  transition:border .1s ease;\n  box-sizing:border-box;\n  margin-bottom:8px;\n  vertical-align:top\n}\n.multiselect__input:-ms-input-placeholder{\n  color:#35495e\n}\n.multiselect__input::-moz-placeholder{\n  color:#35495e\n}\n.multiselect__input::placeholder{\n  color:#35495e\n}\n.multiselect__tag~.multiselect__input,.multiselect__tag~.multiselect__single{\n  width:auto\n}\n.multiselect__input:hover,.multiselect__single:hover{\n  border-color:#cfcfcf\n}\n.multiselect__input:focus,.multiselect__single:focus{\n  border-color:#a8a8a8;\n  outline:none\n}\n.multiselect__single{\n  padding-left:5px;\n  margin-bottom:8px\n}\n.multiselect__tags-wrap{\n  display:inline\n}\n.multiselect__tags{\n  min-height:40px;\n  display:block;\n  padding:8px 40px 0 8px;\n  border-radius:5px;\n  border:1px solid #e8e8e8;\n  background:#fff;\n  font-size:14px\n}\n.multiselect__tag{\n  position:relative;\n  display:inline-block;\n  padding:4px 26px 4px 10px;\n  border-radius:5px;\n  margin-right:10px;\n  color:#fff;\n  line-height:1;\n  background:#41b883;\n  margin-bottom:5px;\n  white-space:nowrap;\n  overflow:hidden;\n  max-width:100%;\n  text-overflow:ellipsis\n}\n.multiselect__tag-icon{\n  cursor:pointer;\n  margin-left:7px;\n  position:absolute;\n  right:0;\n  top:0;\n  bottom:0;\n  font-weight:700;\n  font-style:normal;\n  width:22px;\n  text-align:center;\n  line-height:22px;\n  transition:all .2s ease;\n  border-radius:5px\n}\n.multiselect__tag-icon:after{\n  content:\"\\D7\";\n  color:#266d4d;\n  font-size:14px\n}\n.multiselect__tag-icon:focus,.multiselect__tag-icon:hover{\n  background:#369a6e\n}\n.multiselect__tag-icon:focus:after,.multiselect__tag-icon:hover:after{\n  color:#fff\n}\n.multiselect__current{\n  min-height:40px;\n  overflow:hidden;\n  padding:8px 30px 0 12px;\n  white-space:nowrap;\n  border-radius:5px;\n  border:1px solid #e8e8e8\n}\n.multiselect__current,.multiselect__select{\n  line-height:16px;\n  box-sizing:border-box;\n  display:block;\n  margin:0;\n  text-decoration:none;\n  cursor:pointer\n}\n.multiselect__select{\n  position:absolute;\n  width:40px;\n  height:38px;\n  right:1px;\n  top:1px;\n  padding:4px 8px;\n  text-align:center;\n  transition:transform .2s ease\n}\n.multiselect__select:before{\n  position:relative;\n  right:0;\n  top:65%;\n  color:#999;\n  margin-top:4px;\n  border-color:#999 transparent transparent;\n  border-style:solid;\n  border-width:5px 5px 0;\n  content:\"\"\n}\n.multiselect__placeholder{\n  color:#adadad;\n  display:inline-block;\n  margin-bottom:10px;\n  padding-top:2px\n}\n.multiselect--active .multiselect__placeholder{\n  display:none\n}\n.multiselect__content-wrapper{\n  position:absolute;\n  display:block;\n  background:#fff;\n  width:100%;\n  max-height:240px;\n  overflow:auto;\n  border:1px solid #e8e8e8;\n  border-top:none;\n  border-bottom-left-radius:5px;\n  border-bottom-right-radius:5px;\n  z-index:50;\n  -webkit-overflow-scrolling:touch\n}\n.multiselect__content{\n  list-style:none;\n  display:inline-block;\n  padding:0;\n  margin:0;\n  min-width:100%;\n  vertical-align:top\n}\n.multiselect--above .multiselect__content-wrapper{\n  bottom:100%;\n  border-bottom-left-radius:0;\n  border-bottom-right-radius:0;\n  border-top-left-radius:5px;\n  border-top-right-radius:5px;\n  border-bottom:none;\n  border-top:1px solid #e8e8e8\n}\n.multiselect__content::webkit-scrollbar{\n  display:none\n}\n.multiselect__element{\n  display:block\n}\n.multiselect__option{\n  display:block;\n  padding:12px;\n  min-height:40px;\n  line-height:16px;\n  text-decoration:none;\n  text-transform:none;\n  vertical-align:middle;\n  position:relative;\n  cursor:pointer;\n  white-space:nowrap\n}\n.multiselect__option:after{\n  top:0;\n  right:0;\n  position:absolute;\n  line-height:40px;\n  padding-right:12px;\n  padding-left:20px;\n  font-size:13px\n}\n.multiselect__option--highlight{\n  background:#41b883;\n  outline:none;\n  color:#fff\n}\n.multiselect__option--highlight:after{\n  content:attr(data-select);\n  background:#41b883;\n  color:#fff\n}\n.multiselect__option--selected{\n  background:#f3f3f3;\n  color:#35495e;\n  font-weight:700\n}\n.multiselect__option--selected:after{\n  content:attr(data-selected);\n  color:silver\n}\n.multiselect__option--selected.multiselect__option--highlight{\n  background:#ff6a6a;\n  color:#fff\n}\n.multiselect__option--selected.multiselect__option--highlight:after{\n  background:#ff6a6a;\n  content:attr(data-deselect);\n  color:#fff\n}\n.multiselect--disabled .multiselect__current,.multiselect--disabled .multiselect__select{\n  background:#ededed;\n  color:#a6a6a6\n}\n.multiselect__option--disabled{\n  background:#ededed!important;\n  color:#a6a6a6!important;\n  cursor:text;\n  pointer-events:none\n}\n.multiselect__option--group{\n  background:#ededed;\n  color:#35495e\n}\n.multiselect__option--group.multiselect__option--highlight{\n  background:#35495e;\n  color:#fff\n}\n.multiselect__option--group.multiselect__option--highlight:after{\n  background:#35495e\n}\n.multiselect__option--disabled.multiselect__option--highlight{\n  background:#dedede\n}\n.multiselect__option--group-selected.multiselect__option--highlight{\n  background:#ff6a6a;\n  color:#fff\n}\n.multiselect__option--group-selected.multiselect__option--highlight:after{\n  background:#ff6a6a;\n  content:attr(data-deselect);\n  color:#fff\n}\n.multiselect-enter-active,.multiselect-leave-active{\n  transition:all .15s ease\n}\n.multiselect-enter,.multiselect-leave-active{\n  opacity:0\n}\n.multiselect__strong{\n  margin-bottom:8px;\n  line-height:20px;\n  display:inline-block;\n  vertical-align:top\n}\n[dir=rtl] .multiselect{\n  text-align:right\n}\n[dir=rtl] .multiselect__select{\n  right:auto;\n  left:1px\n}\n[dir=rtl] .multiselect__tags{\n  padding:8px 8px 0 40px\n}\n[dir=rtl] .multiselect__content{\n  text-align:right\n}\n[dir=rtl] .multiselect__option:after{\n  right:auto;\n  left:0\n}\n[dir=rtl] .multiselect__clear{\n  right:auto;\n  left:12px\n}\n[dir=rtl] .multiselect__spinner{\n  right:auto;\n  left:1px\n}\n@-webkit-keyframes spinning{\n0%{\n    transform:rotate(0)\n}\nto{\n    transform:rotate(2turn)\n}\n}\n@keyframes spinning{\n0%{\n    transform:rotate(0)\n}\nto{\n    transform:rotate(2turn)\n}\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/lib/css-base.js":
-/*!*************************************************!*\
-  !*** ./node_modules/css-loader/lib/css-base.js ***!
-  \*************************************************/
-/*! no static exports found */
 /***/ (function(module, exports) {
 
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
+throw new Error("Module build failed (from ./node_modules/postcss-loader/src/index.js):\nTypeError: Cannot read properties of undefined (reading '700')\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\@tailwindcss\\typography\\src\\styles.js:929:38)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\@tailwindcss\\typography\\src\\index.js:4:16)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\tailwind.config.js:20:46)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\lib\\index.js:80:107\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\lib\\index.js:88:36\n    at creator (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\node_modules\\postcss\\lib\\postcss.js:133:35)\n    at Function.get (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\node_modules\\postcss\\lib\\postcss.js:142:27)\n    at Processor.normalize (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\processor.js:151:13)\n    at new Processor (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\processor.js:56:25)\n    at postcss (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\postcss.js:55:10)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\src\\index.js:140:12");
 
 /***/ }),
 
@@ -99888,7 +99785,7 @@ exports.defaults = defaults;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\nModuleBuildError: Module build failed (from ./node_modules/postcss-loader/src/index.js):\nTypeError: Cannot read properties of undefined (reading '700')\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\@tailwindcss\\typography\\src\\styles.js:929:38)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\@tailwindcss\\typography\\src\\index.js:4:16)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at Object.<anonymous> (C:\\Users\\USER\\Documents\\code\\rentalpro\\tailwind.config.js:20:46)\n    at Module._compile (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:192:30)\n    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1180:10)\n    at Module.load (node:internal/modules/cjs/loader:1004:32)\n    at Function.Module._load (node:internal/modules/cjs/loader:839:12)\n    at Module.require (node:internal/modules/cjs/loader:1028:19)\n    at require (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\v8-compile-cache\\v8-compile-cache.js:159:20)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\lib\\index.js:80:107\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\lib\\index.js:88:36\n    at creator (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\node_modules\\postcss\\lib\\postcss.js:133:35)\n    at Function.get (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\tailwindcss\\node_modules\\postcss\\lib\\postcss.js:142:27)\n    at Processor.normalize (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\processor.js:151:13)\n    at new Processor (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\processor.js:56:25)\n    at postcss (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\node_modules\\postcss\\lib\\postcss.js:55:10)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\src\\index.js:140:12\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\webpack\\lib\\NormalModule.js:316:20\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\loader-runner\\lib\\LoaderRunner.js:367:11\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\loader-runner\\lib\\LoaderRunner.js:233:18\n    at context.callback (C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\loader-runner\\lib\\LoaderRunner.js:111:13)\n    at C:\\Users\\USER\\Documents\\code\\rentalpro\\node_modules\\postcss-loader\\src\\index.js:208:9\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)");
 
 /***/ }),
 
@@ -120513,10 +120410,13 @@ var app = new Vue({
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    toggleTest: function toggleTest() {
+      this.test != this.test;
     }
   },
   mounted: function mounted() {
-    this.test = true;
+    this.test = false;
   },
   created: function created() {
     var _this2 = this;
@@ -121805,17 +121705,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/app.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/app.scss ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ 0:
 /*!*************************************************************************************!*\
   !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/css/app.css ***!
@@ -121824,7 +121713,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! C:\Users\USER\Documents\code\rentalpro\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! C:\Users\USER\Documents\code\rentalpro\resources\sass\app.scss */"./resources/sass/app.scss");
+!(function webpackMissingModule() { var e = new Error("Cannot find module 'C:\\Users\\USER\\Documents\\code\\rentalpro\\resources\\sass\\app.scss'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 module.exports = __webpack_require__(/*! C:\Users\USER\Documents\code\rentalpro\resources\css\app.css */"./resources/css/app.css");
 
 

@@ -20,15 +20,33 @@
                                     <th>Nom</th>
                                     <th>Numéro de Phone</th>
                                     <th>Nombre Locations</th>
+                                    <th>Chiffre Affaire</th>
+                                    <th>Paiements Percus</th>
+                                    <th>Solde</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($clients as $client)
                                     <tr class="pointer" @click="relocateTo('/clients/{{ $client->id }}')">
-                                        <td scope="row">{{ $client->nom . ' ' . $client->prenom }}</td>
+                                        <td scope="row">
+                                            <a href="/clients/{{ $client->id }}">
+                                                {{ $client->nom . ' ' . $client->prenom }}
+                                            </a>
+
+                                        </td>
                                         <td>{{ $client->phone1 }}</td>
                                         <td>{{ $client->nombreLocations() }}</td>
+                                        <td>
+                                            {{ $client->chiffreAffaire() }}
+                                        </td>
+                                        <td>
+                                            {{ $client->paiementsPercus() }}
+                                        </td>
+                                        <td>
+                                            {{ $client->solde() }}
+                                        </td>
+
                                         <td>
                                             <a href="/clients/{{ $client->id }}/edit">
                                                 <i class="fas fa-edit"></i>

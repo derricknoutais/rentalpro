@@ -48,7 +48,8 @@ const app = new Vue({
           title : 'Sunny Out of Office',
           start : '2019-08-25',
           end : '2020-07-27'
-        }
+        },
+
     },
     methods: {
         relocateTo(location){
@@ -80,9 +81,12 @@ const app = new Vue({
                 console.log(error);
             });
         },
+        toggleTest(){
+            this.test != this.test
+        }
     },
     mounted() {
-            this.test = true
+        this.test = false
 
     },
     created(){
