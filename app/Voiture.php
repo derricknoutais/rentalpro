@@ -18,7 +18,7 @@ class Voiture extends Model
 
     public function scopeNonVendu($query)
     {
-        return $query->where('etat', '<>' ,'vendu');
+        // return $query->where('etat', '<>' ,'vendu');
     }
 
     public function documents()
