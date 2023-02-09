@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Accessoire;
 use App\Technicien;
 use App\Maintenance;
+use App\Models\Summary;
 use App\Events\ContratCree;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -343,6 +344,10 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // Reporting
+
+
+
+
     Route::get('/reporting/voitures', function(){
         $voitures = Voiture::with(['contrats' , 'contrats.paiements', 'maintenances'])->get();
         // return $voitures;
@@ -419,6 +424,34 @@ Route::group(['middleware' => ['auth']], function () {
         }
         return $contrats;
     });
+
+    // SUMMARY
+    Route::get('/jobs/reconcile-contract-data', 'JobController@reconcileContractData');
+
+    Route::get('/summary/summarize-data', 'SummaryController@summarizeData');
+
+    Route::get('/summary', function(){
+        return Summary::all();
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // COMPAGNIES
     Route::view('/compagnies/create', 'compagnies.create');
