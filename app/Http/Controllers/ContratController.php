@@ -122,7 +122,6 @@ class ContratController extends Controller
         }
     }
     public function store(Request $request){
-
         if(Auth::user()->compagnie->type == 'véhicules'){
             $type = 'App\\Voiture';
         } else if (Auth::user()->compagnie->type == 'hôtel') {
@@ -159,13 +158,11 @@ class ContratController extends Controller
             } else {
                 $client_id = $request->client_id;
             }
-
             // Pour gérer les contrats ouverts
             $au = $request['au'];
             if($request['au'] == NULL){
                 $au = NULL;
             }
-
             $contrat = Contrat::create([
                 'contractable_id'=> $request['contractable'],
                 'contractable_type' => $type,
@@ -177,19 +174,21 @@ class ContratController extends Controller
                 'real_check_out' => NULL,
                 'prix_journalier'=> $request['prix_journalier'],
                 'caution' => $request['caution'],
+                'demi_journee' => $request['demi_journee'],
+                'montant_chauffeur' => $request['montant_chauffeur'],
                 'type_caution' => $request['type_caution'],
                 'nombre_jours'=> $request['nombre_jours'],
-                'total'=> $request['prix_journalier'] * $request['nombre_jours'],
+                'total'=> $request['prix_journalier'] * $request['nombre_jours'] + $request['demi_journee'] + $request['montant_chauffeur'],
                 'cashier_facture_id' => $request['cashier_id'],
                 'etat_accessoires' => $request[ 'accessoireString'],
                 'etat_documents' => $request[ 'documentString'],
-                'note' => $request['note_contrat']
+                'note' => $request['note_contrat'],
+                'demi_journee' => $request['demi_journee'],
+                'montant_chauffeur' => $request['chauffeur']
             ]);
-
             $voiture = Voiture::find( $request['contractable'])->update([
                 'etat' => 'loué'
             ]);
-
             if($contrat){
                 return $contrat;
             }
@@ -632,6 +631,18 @@ class ContratController extends Controller
             return redirect()->back();
         }
         return redirect()->back();
+    }
+
+    public function ajouterDemiJournee(Contrat $contrat, Request $request){
+        $contrat->update([
+            'demi_journee' => $request['demi_journee']
+        ]);
+        return redirect()->back();
+    }
+    public function ajouterMontantChauffeur(Contrat $contrat, Request $request){
+        $contrat->update([
+            'montant_chauffeur' => $request['montant_chauffeur']
+        ]);
     }
 
 

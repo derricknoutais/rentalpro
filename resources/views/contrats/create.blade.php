@@ -11,21 +11,31 @@
                 {{-- @submit.prevent="enregistreClientDansCashier()" --}}
             >
                 @csrf
-                <label class="mt-5 form-check-label">
-                    <input type="checkbox" @click="displayNewCustomerForm">Nouveau Client
-                </label>
+                <div class="flex mt-5">
+                    <label class="form-check-label flex items-center">
+                        <input type="checkbox" @click="toggleNewCustomerForm">
+                        <span class="ml-1">Nouveau Client</span>
+                    </label>
+                    <label class=" form-check-label flex items-center ml-3">
+                        <input type="checkbox" v-model="display.halfDay">
+                        <span class="ml-1">Ajouter 1/2 Journee</span>
+                    </label>
+                    <label class=" form-check-label flex items-center ml-3">
+                        <input type="checkbox" v-model="display.driver" >
+                        <span class="ml-1">Ajouter Chauffeur</span>
+                    </label>
+                </div>
+
                 {{-- Champs Clients --}}
                 <input type="hidden" name="client_id" v-model.number="client.id">
 
-                <div class="flex flex-col" v-if="display.nouveau_client">
+                <div class="flex flex-col mt-3" v-if="display.nouveau_client">
                     <input type="hidden" class="form-control" id="cashier_id" name="cashier_id" v-model="client.cashier_id">
-                    <label for=""></label>
-                    <input type="text" class="mt-3 form-control" name="nom" placeholder="Nom" v-model="client.nom">
-                    <input type="text" class="mt-3 form-control" name="prenom" placeholder="Prénom" v-model="client.prenom">
-                    <input type="text" class="mt-3 form-control" name="numero_telephone" placeholder="Nº Téléphone" v-model="client.numero_telephone">
+                    <input type="text" class="form-control" name="nom" placeholder="Nom" v-model="client.nom">
+                    <input type="text" class="form-control" name="prenom" placeholder="Prénom" v-model="client.prenom">
+                    <input type="text" class="form-control" name="numero_telephone" placeholder="Nº Téléphone" v-model="client.numero_telephone">
                 </div>
-
-                <div class="flex flex-col mt-5" v-else>
+                <div class="flex flex-col mt-3" v-else>
                     <input type="hidden" name="client" v-model.number="client.id">
                     <label for="">Selectionner Client</label>
                     <multiselect placeholder="Selectionne un Client" :options="clients" label="nom_complet" v-model="client">
@@ -35,7 +45,7 @@
 
                 {{-- Champs Voiture --}}
                 <input type="hidden" name="contractable" v-model.number="contractable.id">
-                 <div class="w-full mt-3">
+                <div class="w-full mt-3">
                     <label for="">Selectionner Voiture</label>
                     <div class="flex w-full">
                         <multiselect :show-labels="true" :options="contractables" label="immatriculation" v-model="contractable">
@@ -46,11 +56,12 @@
                             data-toggle="modal" data-target="#rendreVehiculeDisponible"
                         >Receptionner</button>
                     </div>
-
                 </div>
+
                 {{-- Champs Chambre & Contrat --}}
                 <input type="hidden" class="form-control" id="chambre_id" name="chambre_id" :value="chambreADetailler.id">
 
+                {{-- Champs Du Au Nombre Jours --}}
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">
                         <label for="">Du</label>
@@ -66,15 +77,26 @@
                     </div>
 
                 </div>
+
+                {{-- Montant Journalier Total --}}
                 <div class="flex w-full mt-3">
-                    <div class="w-1/2">
+                    <div class="w-1/3">
                         <label for="">Montant Journalier</label>
                         <input type="number" class="form-control" name="prix_journalier" placeholder="Montant Journalier" v-model="formulaire.prix_journalier">
                     </div>
-                    <div class="w-1/2">
-                        <label for="">Total</label>
-                        <input type="text" class="form-control" name="" placeholder="Total Contrat" :value="total" readonly>
+                    <div class="w-1/3" v-show="display.halfDay">
+                        <label for="">Montant 1/2 Journee</label>
+                        <input type="number" class="form-control" name="demi_journee" placeholder="Montant 1/2 Journee"
+                            v-model="formulaire.demi_journee">
                     </div>
+                    <div class="w-1/3" v-show="display.driver">
+                        <label for="">Chauffeur</label>
+                        <input type="text" class="form-control" name="montant_chauffeur" placeholder="Montant Chauffeur" v-model="formulaire.chauffeur">
+                    </div>
+                </div>
+                <div class="w-full">
+                    <label for="">Total</label>
+                    <input type="text" class="form-control" name="" placeholder="Total Contrat" :value="total" readonly>
                 </div>
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">

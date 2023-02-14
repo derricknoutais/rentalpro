@@ -39,7 +39,7 @@ class Contrat extends Model
         return $this->hasMany('App\Paiement');
     }
     public function total(){
-        return $this->nombre_jours * $this->prix_journalier;
+        return $this->nombre_jours * $this->prix_journalier + $this->demi_journee + $this->montant_chauffeur ;
     }
     public function payé(){
         $total_payé = 0;

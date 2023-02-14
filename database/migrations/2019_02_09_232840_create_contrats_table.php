@@ -25,6 +25,8 @@ class CreateContratsTable extends Migration
             $table->dateTime('real_check_out')->nullable();
             $table->double('prix_journalier');
             $table->integer('nombre_jours')->nullable();
+            $table->double('demi_journee')->nullable();
+            $table->double('montant_chauffeur')->nullable();
             $table->double('total')->nullable();
             $table->double('caution')->nullable();
             $table->string('type_caution')->nullable();

@@ -6059,7 +6059,9 @@ __webpack_require__.r(__webpack_exports__);
         au: null,
         nb_jours: 2,
         prix_journalier: null,
-        paiement: null
+        paiement: null,
+        demi_journee: null,
+        chauffeur: null
       },
       afficheFormulaireLocationRapide: true,
       client: {
@@ -6076,7 +6078,9 @@ __webpack_require__.r(__webpack_exports__);
         cashier_id: ''
       },
       display: {
-        nouveau_client: false
+        nouveau_client: false,
+        halfDay: true,
+        driver: true
       }
     };
   },
@@ -6092,13 +6096,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     'total': function total() {
       if (this.formulaire.du && this.formulaire.au && this.formulaire.prix_journalier) {
-        return this.formulaire.nb_jours * this.formulaire.prix_journalier;
+        return +(this.formulaire.nb_jours * this.formulaire.prix_journalier) + +this.formulaire.demi_journee + +this.formulaire.chauffeur;
       }
     },
     solde: function solde() {
       if (this.total && this.formulaire.paiement) {
         return this.total - this.formulaire.paiement;
       }
+    }
+  },
+  watch: {
+    'formulaire.prix_journalier': function formulairePrix_journalier() {
+      if (this.display.halfDay) this.formulaire.demi_journee = this.formulaire.prix_journalier / 2;
     }
   },
   methods: {
@@ -6133,9 +6142,15 @@ __webpack_require__.r(__webpack_exports__);
       this.afficheFormulaireLocationRapide = false;
       this.$forceUpdate();
     },
-    displayNewCustomerForm: function displayNewCustomerForm() {
+    toggleNewCustomerForm: function toggleNewCustomerForm() {
       this.display.nouveau_client = !this.display.nouveau_client;
       this.client = {};
+    },
+    toggleHalfDayForm: function toggleHalfDayForm() {
+      this.display.halfDay = !this.display.halfDay;
+    },
+    toggleDriverForm: function toggleDriverForm() {
+      this.display.driver = !this.display.driver;
     },
     enregistreClientDansCashier: function enregistreClientDansCashier() {
       var _this = this;

@@ -24,8 +24,8 @@ if(env('APP_ENV') == 'local')
     Auth::loginUsingID(1);
 
 
-Auth::routes();
 
+Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
 
@@ -191,6 +191,8 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::delete('/contrats/{contrat}', 'ContratController@destroy');
     Route::get('/contrat/{contrat}/envoyer-gescash', 'ContratController@envoyerContratGescash');
+    Route::post('/contrat/{contrat}/ajouter-demi-journee', 'ContratController@ajouterDemiJournee');
+    Route::post('/contrat/{contrat}/ajouter-montant-chauffeur', 'ContratController@ajouterMontantChauffeur');
 
     // Paramètres
     Route::get('/mes-paramètres', function(){

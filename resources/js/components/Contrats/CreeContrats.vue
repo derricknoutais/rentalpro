@@ -22,7 +22,9 @@ data() {
             au : null,
             nb_jours: 2,
             prix_journalier: null,
-            paiement : null
+            paiement : null,
+            demi_journee: null,
+            chauffeur: null,
         },
         afficheFormulaireLocationRapide: true,
         client: {
@@ -39,7 +41,9 @@ data() {
             cashier_id: ''
         },
         display: {
-            nouveau_client : false
+            nouveau_client : false,
+            halfDay : true,
+            driver : true
         }
 	};
 
@@ -56,14 +60,20 @@ computed: {
         }
     },
     'total' : function(){
-        if(this.formulaire.du && this.formulaire.au && this.formulaire.prix_journalier){
-            return this.formulaire.nb_jours * this.formulaire.prix_journalier
+        if(this.formulaire.du && this.formulaire.au && this.formulaire.prix_journalier ){
+            return +(this.formulaire.nb_jours * this.formulaire.prix_journalier) + (+this.formulaire.demi_journee) + (+this.formulaire.chauffeur)
         }
     },
     solde(){
         if(this.total && this.formulaire.paiement){
             return this.total - this.formulaire.paiement
         }
+    }
+},
+watch : {
+    'formulaire.prix_journalier' : function(){
+        if(this.display.halfDay)
+            this.formulaire.demi_journee = this.formulaire.prix_journalier / 2
     }
 },
 methods: {
@@ -98,9 +108,15 @@ methods: {
         this.afficheFormulaireLocationRapide = false;
         this.$forceUpdate()
     },
-    displayNewCustomerForm(){
+    toggleNewCustomerForm(){
         this.display.nouveau_client = ! this.display.nouveau_client
         this.client = {}
+    },
+    toggleHalfDayForm(){
+        this.display.halfDay = ! this.display.halfDay
+    },
+    toggleDriverForm(){
+        this.display.driver = ! this.display.driver
     },
     enregistreClientDansCashier(){
         // Affiche le Spinner

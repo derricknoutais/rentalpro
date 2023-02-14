@@ -96,6 +96,9 @@
                                             </span>
                                             <span class="px-5 text-white rounded bg-primary">
                                                 {{ $contrat->nombre_jours }} Jours
+                                                @if ($contrat->demi_journee)
+                                                    1/2
+                                                @endif
                                             </span>
 
                                         </div>
@@ -117,14 +120,36 @@
 
 
                                         </div>
-                                        {{-- Montant Total --}}
-                                        <div class="flex justify-between py-1 pl-2 mt-3 bg-blue-200 rounded rounded-b-none pr-14">
-                                            <p class="font-semibold">Montant Total</p>
-                                            <span class="font-semibold">{{ $contrat->prix_journalier  * $contrat->nombre_jours}} F CFA</span>
+                                        {{-- Montant Location --}}
+                                        <div class="flex justify-between py-1 pl-2 mt-3 bg-blue-100 rounded rounded-b-none pr-14">
+                                            <p class="font-semibold">Montant Location</p>
+                                            <span class="font-semibold">{{ $contrat->prix_journalier * $contrat->nombre_jours }} F CFA</span>
                                         </div>
+                                        {{-- Option 1/2 Journee --}}
+                                        @if ($contrat->demi_journee)
+                                            <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14">
+                                                <p class="font-semibold">Option 1/2 Journee</p>
+                                                <span class="font-semibold">{{ $contrat->demi_journee }} F CFA</span>
+                                            </div>
+                                        @endif
+
+                                        {{-- Option Chauffeur --}}
+                                        @if ($contrat->montant_chauffeur)
+                                            <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14">
+                                                <p class="font-semibold">Option Chauffeur</p>
+                                                <span class="font-semibold">{{ $contrat->montant_chauffeur }} F CFA</span>
+                                            </div>
+                                        @endif
+
+                                        {{-- Montant Total --}}
+                                        <div class="flex justify-between py-1 pl-2 mt-1 bg-blue-200 rounded rounded-b-none pr-14">
+                                            <p class="font-semibold">Montant Total</p>
+                                            <span class="font-semibold">{{ $contrat->total() }} F CFA</span>
+                                        </div>
+
                                         {{-- Paiements --}}
                                         @if (sizeof($contrat->paiements) > 0)
-                                            <div class="flex flex-col justify-between py-1 pl-3 pr-6 bg-blue-100">
+                                            <div class="flex flex-col justify-between py-1 pl-3 mt-2 pr-14 bg-green-100">
 
                                                 <p class="mt-1 mb-3 font-semibold underline text-md">Paiements</p>
 
@@ -183,6 +208,20 @@
                                                         Effectuer Paiement
                                                     </button>
                                                 @endcan
+
+                                                @if (! $contrat->demi_journee)
+                                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn" data-toggle="modal"
+                                                        data-target="#ajouter-demi-journee{{ $contrat->id }}" >
+                                                        Ajouter 1/2 Journee
+                                                    </button>
+                                                @endif
+
+                                                @if (! $contrat->montant_chauffeur)
+                                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn" data-toggle="modal"
+                                                        data-target="#ajouter-montant-chauffeur{{ $contrat->id }}">
+                                                        Ajouter Chauffeur
+                                                    </button>
+                                                @endif
 
                                                 <!-- Si le contrat n'est plus en cours -->
                                                 @if( $contrat->real_check_out )
@@ -305,6 +344,66 @@
                                                     </div>
 
 
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal 1/2 Journee -->
+                                        <div class="modal fade" id="ajouter-demi-journee{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                                            aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Ajouter 1/2 Journee</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="/contrat/{{ $contrat->id }}/ajouter-demi-journee" method="POST">
+                                                        @csrf
+                                                        <div class="modal-body">
+
+                                                            <div class="form-group">
+                                                                <label for="">Montant</label>
+                                                                <input type="number" step=5000 class="form-control" name="demi_journee"
+                                                                    value="{{ $contrat->prix_journalier / 2 }}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                                            <button type="submit" class="btn btn-primary">Ajouter 1/2 Journee</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal Montant Chauffeur -->
+                                        <div class="modal fade" id="ajouter-montant-chauffeur{{ $contrat->id }}" tabindex="-1" role="dialog"
+                                            aria-labelledby="modelTitleId" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Ajouter 1/2 Journee</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="/contrat/{{ $contrat->id }}/ajouter-montant-chauffeur" method="POST">
+                                                        @csrf
+                                                        <div class="modal-body">
+
+                                                            <div class="form-group">
+                                                                <label for="">Montant Total Chauffeur</label>
+                                                                <input type="number" step=5000 class="form-control" name="montant_chauffeur"
+                                                                    value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                                            <button type="submit" class="btn btn-primary">Ajouter Chauffeur</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -455,7 +554,7 @@
                 </div>
             </div>
 
-            <div class="sticky flex justify-end px-40 bottom-16 container-fluid">
+            <div class="sticky flex justify-end px-40 bottom-16">
                 @if ($compagnie->type === 'véhicules')
 
                     <a href="/contrats/create">
