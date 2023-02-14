@@ -87,11 +87,11 @@
                     <div class="w-1/3" v-show="display.halfDay">
                         <label for="">Montant 1/2 Journee</label>
                         <input type="number" class="form-control" name="demi_journee" placeholder="Montant 1/2 Journee"
-                            v-model="formulaire.demi_journee">
+                            v-model.number="formulaire.demi_journee">
                     </div>
                     <div class="w-1/3" v-show="display.driver">
                         <label for="">Chauffeur</label>
-                        <input type="text" class="form-control" name="montant_chauffeur" placeholder="Montant Chauffeur" v-model="formulaire.chauffeur">
+                        <input type="number" class="form-control" name="montant_chauffeur" placeholder="Montant Chauffeur" v-model.number="formulaire.chauffeur">
                     </div>
                 </div>
                 <div class="w-full">

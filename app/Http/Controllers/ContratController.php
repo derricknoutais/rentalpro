@@ -122,6 +122,7 @@ class ContratController extends Controller
         }
     }
     public function store(Request $request){
+
         if(Auth::user()->compagnie->type == 'véhicules'){
             $type = 'App\\Voiture';
         } else if (Auth::user()->compagnie->type == 'hôtel') {
@@ -182,9 +183,7 @@ class ContratController extends Controller
                 'cashier_facture_id' => $request['cashier_id'],
                 'etat_accessoires' => $request[ 'accessoireString'],
                 'etat_documents' => $request[ 'documentString'],
-                'note' => $request['note_contrat'],
-                'demi_journee' => $request['demi_journee'],
-                'montant_chauffeur' => $request['chauffeur']
+                'note' => $request['note_contrat']
             ]);
             $voiture = Voiture::find( $request['contractable'])->update([
                 'etat' => 'loué'
