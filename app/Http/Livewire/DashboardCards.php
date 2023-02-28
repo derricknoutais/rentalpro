@@ -6,6 +6,7 @@ use App\Contrat;
 use App\Voiture;
 use App\Paiement;
 use Carbon\Carbon;
+use App\Maintenance;
 use Livewire\Component;
 
 class DashboardCards extends Component
@@ -17,15 +18,15 @@ class DashboardCards extends Component
         'date_au' => NULL,
         'taux_recouvrement' => [
             'periode' => null,
-            'periode_comparaison' => null
+        ],
+        'maintenances' => [
+            'periode' => null,
         ],
         'paiements' => [
             'periode' => null,
-            'periode_comparaison' => null
         ],
         'jours_location' => [
             'periode' => null,
-            'periode_comparaison' => null
         ]
     ];
     public $filtres2 = [
@@ -34,15 +35,15 @@ class DashboardCards extends Component
         'date_au' => NULL,
         'taux_recouvrement' => [
             'periode' => null,
-            'periode_comparaison' => null
         ],
         'paiements' => [
             'periode' => null,
-            'periode_comparaison' => null
+        ],
+        'maintenances' => [
+            'periode' => null,
         ],
         'jours_location' => [
             'periode' => null,
-            'periode_comparaison' => null
         ]
     ];
 
@@ -60,24 +61,28 @@ class DashboardCards extends Component
     public function fi(&$data){
         $voiture = null;
         if(isset($data['voiture_selectionnee']) && ($data['voiture_selectionnee'] !== '*') ){
-            $voiture = Voiture::find($data['voiture_selectionnee'])->loadMissing('paiements', 'contrats');
+            $voiture = Voiture::find($data['voiture_selectionnee'])->loadMissing('paiements', 'contrats', 'maintenances');
             $paiements = $voiture->paiements;
             $contrats = $voiture->contrats;
-        }
-
-        else {
+            $maintenances = $voiture->maintenances;
+        } else {
             $paiements = Paiement::query();
             $contrats = Contrat::query();
+            $maintenances = Maintenance::query();
         }
         if($data['date_du']){
             $paiements = $paiements->where('created_at', '>=', Carbon::parse($data['date_du'])->startOfDay());
             $contrats = $contrats->where('created_at', '>=', Carbon::parse($data['date_du'])->startOfDay());
+            $maintenances = $maintenances->where('created_at', '>=', Carbon::parse($data['date_du'])->startOfDay());
         }
         if($data['date_au']){
             $paiements = $paiements->where('created_at', '<=',  Carbon::parse( $data['date_au'])->endOfDay()  );
             $contrats = $contrats->where('created_at', '<=', Carbon::parse($data['date_au'])->endOfDay());
+            $maintenances = $maintenances->where('created_at', '<=', Carbon::parse($data['date_au'])->endOfDay());
+
         }
         $data['paiements']['periode'] = $paiements->sum('montant');
+        $data['maintenances']['periode'] = $maintenances->sum('coût') + $maintenances->sum('coût_pièces');
         $data['jours_location']['periode'] = $contrats->sum('nombre_jours');
         if($contrats->sum('total')){
             $data['taux_recouvrement']['periode'] = ( $paiements->sum('montant') / $contrats->sum('total') ) * 100;
