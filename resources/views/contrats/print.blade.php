@@ -58,8 +58,36 @@
                                     <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">{{ number_format($contrat->total(), 0, ',', '.') }} F CFA</td>
                                 </tr>
 
+                                <!-- 1/2 Journee -->
+                                @if ($contrat->demi_journee)
+                                    <tr class="border border-gray-200 bg-white">
+                                        <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
+                                        <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Option 1/2 Journee</td>
+                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->demi_journee }} F CFA</td>
+                                    </tr>
+                                @endif
 
-                                <!-- Even row -->
+                                <!-- 1/2 Journee -->
+                                @if ($contrat->montant_chauffeur)
+                                    <tr class="border border-gray-200 bg-white">
+                                        <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
+                                        <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Option Chauffeur</td>
+                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->montant_chauffeur }} F CFA</td>
+                                    </tr>
+                                @endif
+
+                                @if ($contrat->montant_chauffeur || $contrat->demi_journee)
+                                <tr class="border border-gray-200 bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
+                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Montant Total</td>
+                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->total() }} F CFA
+                                    </td>
+                                </tr>
+                                @endif
+
+
+
+                                <!-- Paiements -->
                                 <tr class="border border-gray-200 bg-gray-50">
                                     <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
                                     <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Paiements Perçus

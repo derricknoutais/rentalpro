@@ -1,10 +1,12 @@
 
 <script>
 export default {
-props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop"],
+props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop"],
 data() {
 	return {
         contractables: this.contractables_prop,
+        offres : this.offres_prop,
+
         types_paiements : ['Espèce', 'Airtel Money', 'Chèque'],
         type_paiement_selectionné : null,
         type_caution_selectionné : null,
@@ -25,6 +27,7 @@ data() {
             paiement : null,
             demi_journee: null,
             chauffeur: null,
+            offre : null,
         },
         afficheFormulaireLocationRapide: true,
         client: {
@@ -74,7 +77,19 @@ watch : {
     'formulaire.prix_journalier' : function(){
         if(this.display.halfDay)
             this.formulaire.demi_journee = this.formulaire.prix_journalier / 2
+    },
+    'formulaire.offre' : function(){
+        switch (this.formulaire.offre) {
+            case 'Detente':
+                this.formulaire.du = now()
+                break;
+
+            default:
+                break;
+        }
+
     }
+
 },
 methods: {
     // Retourne la couleur a afficher selon l'état de la chambre

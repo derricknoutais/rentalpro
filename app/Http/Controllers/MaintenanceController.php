@@ -128,7 +128,10 @@ class MaintenanceController extends Controller
      */
     public function destroy(Maintenance $maintenance)
     {
-        //
+        $deleted = $maintenance->delete();
+        if($deleted){
+            return redirect()->back();
+        }
     }
     public function envoyerMaintenanceGescash(Maintenance $maintenance){
         $done = DB::transaction(function () use ($maintenance){

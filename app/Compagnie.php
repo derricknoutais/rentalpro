@@ -15,7 +15,6 @@ class Compagnie extends Model
     public function isHotel(){
         if($this->type === 'hôtel')
             return true;
-
         return false;
     }
     public function isVehicules(){
@@ -27,5 +26,12 @@ class Compagnie extends Model
     public function contrats()
     {
         return $this->hasMany('App\Contrat');
+    }
+    public function offres()
+    {
+        return $this->hasMany('App\Offre');
+    }
+    public function contractables(){
+        return $this->hasMany('App\Voiture');
     }
 }

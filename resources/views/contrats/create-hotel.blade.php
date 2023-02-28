@@ -4,48 +4,48 @@
 @section('content')
 <div class="container-fluid">
     <cree-contrats inline-template
-        :contractables_prop="{{ $contractables }}"
-        :contrats="{{ $contrats }}"
-        :chambres_prop="{{ $contractables }}"
-        :clients_prop="{{ $clients }}"
-        :offres_prop="{{ $offres }}"
+    :contractables_prop="{{ $contractables }}"
+    :contrats="{{ $contrats }}":chambres_prop="{{ $contractables }}"
+    :clients_prop="{{ $clients }}" :offres_prop="{{ $offres }}"
     >
+
         <div class="flex justify-center">
-            <form
-                class="flex flex-col w-2/3" action="/contrats/store"
-                method="POST" enctype="multipart/form-data" id="clientForm"
-                {{-- @submit.prevent="enregistreClientDansCashier()" --}}
-            >
+
+            <form class="flex flex-col w-2/3" action="/contrats/store" method="POST" enctype="multipart/form-data"
+                id="clientForm" {{-- @submit.prevent="enregistreClientDansCashier()" --}}>
                 @csrf
                 <div class="flex mt-5">
                     <label class="form-check-label flex items-center">
                         <input type="checkbox" @click="toggleNewCustomerForm">
                         <span class="ml-1">Nouveau Client</span>
                     </label>
-                    <label class=" form-check-label flex items-center ml-3">
+                    {{-- <label class=" form-check-label flex items-center ml-3">
                         <input type="checkbox" v-model="display.halfDay">
                         <span class="ml-1">Ajouter 1/2 Journee</span>
                     </label>
                     <label class=" form-check-label flex items-center ml-3">
-                        <input type="checkbox" v-model="display.driver" >
+                        <input type="checkbox" v-model="display.driver">
                         <span class="ml-1">Ajouter Chauffeur</span>
-                    </label>
+                    </label> --}}
                 </div>
 
                 {{-- Champs Clients --}}
                 <input type="hidden" name="client_id" v-model.number="client.id">
                 {{-- Nouveau Client --}}
                 <div class="flex flex-col mt-3" v-if="display.nouveau_client">
-                    <input type="hidden" class="form-control" id="cashier_id" name="cashier_id" v-model="client.cashier_id">
+                    <input type="hidden" class="form-control" id="cashier_id" name="cashier_id"
+                        v-model="client.cashier_id">
                     <input type="text" class="form-control" name="nom" placeholder="Nom" v-model="client.nom">
                     <input type="text" class="form-control" name="prenom" placeholder="Prénom" v-model="client.prenom">
-                    <input type="text" class="form-control" name="numero_telephone" placeholder="Nº Téléphone" v-model="client.numero_telephone">
+                    <input type="text" class="form-control" name="numero_telephone" placeholder="Nº Téléphone"
+                        v-model="client.numero_telephone">
                 </div>
                 {{-- Ancien Client --}}
                 <div class="flex flex-col mt-3" v-else>
                     <input type="hidden" name="client" v-model.number="client.id">
                     <label for="">Selectionner Client</label>
-                    <multiselect placeholder="Selectionne un Client" :options="clients" label="nom_complet" v-model="client">
+                    <multiselect placeholder="Selectionne un Client" :options="clients" label="nom_complet"
+                        v-model="client">
                         <template slot="noResult"> Ce client n'existe pas </template>
                     </multiselect>
                 </div>
@@ -55,20 +55,30 @@
                 <div class="w-full mt-3">
                     <label for="">Selectionner Voiture</label>
                     <div class="flex w-full">
-                        <multiselect :show-labels="true" :options="contractables" label="immatriculation" v-model="contractable">
+                        <multiselect :show-labels="true" :options="contractables" label="immatriculation"
+                            v-model="contractable">
                             <template slot="noResult"> Cette voiture n'existe pas </template>
                         </multiselect>
                         <button type="button" v-if="contractable.etat === 'loué' "
-                            class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control"
-                            data-toggle="modal" data-target="#rendreVehiculeDisponible"
-                        >Receptionner</button>
+                            class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control" data-toggle="modal"
+                            data-target="#rendreVehiculeDisponible">Receptionner
+                        </button>
                     </div>
                 </div>
 
-
+                <div class="w-full mt-3">
+                    <label for="">Selectionner Offre</label>
+                    <div class="flex w-full">
+                        <multiselect :show-labels="true" :options="offres" label="nom"
+                            v-model="formulaire.offre">
+                            <template slot="noResult"> Cette voiture n'existe pas </template>
+                        </multiselect>
+                    </div>
+                </div>
 
                 {{-- Champs Chambre & Contrat --}}
-                <input type="hidden" class="form-control" id="chambre_id" name="chambre_id" :value="chambreADetailler.id">
+                <input type="hidden" class="form-control" id="chambre_id" name="chambre_id"
+                    :value="chambreADetailler.id">
 
                 {{-- Champs Du Au Nombre Jours --}}
                 <div class="flex w-full mt-3">
@@ -82,7 +92,8 @@
                     </div>
                     <div class="w-1/3">
                         <label for="">Nombre Jours</label>
-                        <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours" :value="nb_jours" readonly>
+                        <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours"
+                            :value="nb_jours" readonly>
                     </div>
 
                 </div>
@@ -91,7 +102,8 @@
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">
                         <label for="">Montant Journalier</label>
-                        <input type="number" class="form-control" name="prix_journalier" placeholder="Montant Journalier" v-model="formulaire.prix_journalier">
+                        <input type="number" class="form-control" name="prix_journalier"
+                            placeholder="Montant Journalier" v-model="formulaire.prix_journalier">
                     </div>
                     <div class="w-1/3" v-show="display.halfDay">
                         <label for="">Montant 1/2 Journee</label>
@@ -100,7 +112,8 @@
                     </div>
                     <div class="w-1/3" v-show="display.driver">
                         <label for="">Chauffeur</label>
-                        <input type="number" class="form-control" name="montant_chauffeur" placeholder="Montant Chauffeur" v-model.number="formulaire.chauffeur">
+                        <input type="number" class="form-control" name="montant_chauffeur"
+                            placeholder="Montant Chauffeur" v-model.number="formulaire.chauffeur">
                     </div>
                 </div>
                 <div class="w-full">
@@ -110,11 +123,12 @@
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">
                         <label for="">Paiement</label>
-                        <input type="number" class="form-control" name="paiement" placeholder="Paiement" v-model="formulaire.paiement">
+                        <input type="number" class="form-control" name="paiement" placeholder="Paiement"
+                            v-model="formulaire.paiement">
                     </div>
                     <div class="w-1/3">
                         <label for="">Type Paiement</label>
-                        <select type="number" class="form-control" name="type_paiement" placeholder="Type Paiement" >
+                        <select type="number" class="form-control" name="type_paiement" placeholder="Type Paiement">
                             <option v-for="type in types_paiements ">@{{ type }}</option>
                         </select>
 
@@ -145,9 +159,7 @@
                     <button type="button" class="my-3 text-gray-900 bg-gray-300 form-control">
                         Annuler
                     </button>
-                    <button
-                        type="submit" class="my-3 text-gray-100 bg-gray-800 form-control"
-                    >
+                    <button type="submit" class="my-3 text-gray-100 bg-gray-800 form-control">
                         Ajouter Client & Réserver
                     </button>
 
@@ -159,21 +171,21 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="text-lg modal-title">Êtes-vous sûr de vouloir rendre disponible cette voiture sans terminer le contrat correspondant? </h5>
+                            <h5 class="text-lg modal-title">Êtes-vous sûr de vouloir rendre disponible cette voiture
+                                sans terminer le contrat correspondant? </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form
-                            {{-- :action="'/contractable/' + contractable.id  + '/rendre-disponible'" --}}
-                            {{-- method="POST" --}}
-                        >
+                        <form {{-- :action="'/contractable/' + contractable.id  + '/rendre-disponible'" --}} {{--
+                            method="POST" --}}>
                             @csrf
                             <div class="modal-body">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                <button type="button" @click="rendreVehiculeDisponible" class="text-white bg-green-500 btn">Rendre Disponible</button>
+                                <button type="button" @click="rendreVehiculeDisponible"
+                                    class="text-white bg-green-500 btn">Rendre Disponible</button>
                             </div>
                         </form>
                     </div>

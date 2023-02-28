@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\ContratScope;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Auth;
@@ -19,6 +20,9 @@ class Contrat extends Model
     protected static $logUnguarded = true;
     protected $dates = ['au', 'du'];
 
+    protected static function booted(){
+        static::addGlobalScope(new ContratScope);
+    }
     // Relationships
 
     public function client()

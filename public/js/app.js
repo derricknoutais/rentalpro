@@ -6038,10 +6038,11 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop"],
+  props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop"],
   data: function data() {
     return {
       contractables: this.contractables_prop,
+      offres: this.offres_prop,
       types_paiements: ['Espèce', 'Airtel Money', 'Chèque'],
       type_paiement_selectionné: null,
       type_caution_selectionné: null,
@@ -6061,7 +6062,8 @@ __webpack_require__.r(__webpack_exports__);
         prix_journalier: null,
         paiement: null,
         demi_journee: null,
-        chauffeur: null
+        chauffeur: null,
+        offre: null
       },
       afficheFormulaireLocationRapide: true,
       client: {
@@ -6108,6 +6110,15 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     'formulaire.prix_journalier': function formulairePrix_journalier() {
       if (this.display.halfDay) this.formulaire.demi_journee = this.formulaire.prix_journalier / 2;
+    },
+    'formulaire.offre': function formulaireOffre() {
+      switch (this.formulaire.offre) {
+        case 'Detente':
+          this.formulaire.du = now();
+          break;
+        default:
+          break;
+      }
     }
   },
   methods: {

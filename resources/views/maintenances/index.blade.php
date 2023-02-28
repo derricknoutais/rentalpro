@@ -76,7 +76,7 @@
                                                 {{ $maintenance->coût_pièces }}
                                             </td>
                                             <td>
-                                                <a href="/maintenance/{{ $maintenance->id }}/edit" class="bg-blue-300 px-3 py-1 rounded-md">
+                                                <a href="/maintenance/{{ $maintenance->id }}/edit" class="bg-blue-300 px-3 py-1 rounded-md mr-3">
                                                     Modifier
                                                 </a>
                                                 @if (! $maintenance->gescash_transaction_id)
@@ -84,6 +84,14 @@
                                                 @else
                                                     <span class="text-white bg-green-500 rounded-2xl">Envoyé à Gescash</span>
                                                 @endif
+                                                <form action="/maintenances/{{ $maintenance->id }}" method="POST">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button class="bg-red-300 px-3 py-1 rounded-md mr-3" type="submit" >
+                                                        Supprimer
+                                                    </button>
+                                                </form>
+
                                             </td>
                                         </tr>
                                     @endforeach

@@ -11,10 +11,16 @@ use Illuminate\Support\Facades\Auth;
 
 class VoitureController extends Controller
 {
-    public function index(){
-        $voitures = Voiture::with('contrats')->get();
+    public function index(Request $request){
+        $query = Voiture::query();
+        if( sizeof($request->all()) > 0){
+            if($request->has('etat')){
+                $query->where('etat', $request->etat );
+            }
+        }
+        $voitures = $query->get();
 
-        $contrats = Contrat::with('contractable')->get();
+        $contrats = Contrat::all();
 
         return view('voitures.index', compact('voitures', 'contrats'));
     }

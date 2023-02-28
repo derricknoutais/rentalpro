@@ -5,6 +5,7 @@
 
     <div class="container mx-auto">
         <div class="relative pb-5 mt-10 border-b border-gray-200 sm:pb-0">
+
             <div class="md:flex md:items-center md:justify-between">
                 <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
                     Liste Véhicules
@@ -24,4 +25,5 @@
             <livewire:car-list >
         </div>
     </div>
+
 @endsection

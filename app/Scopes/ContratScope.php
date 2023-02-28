@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Database\Eloquent\Builder;
 
-class VoitureScope implements Scope {
+class ContratScope implements Scope {
 
     public function apply(Builder $builder, Model $model)
     {
-            $builder->where( $model->getTable() . '.archived', '<>', 1 )->where( $model->getTable() . '.compagnie_id', Auth::user()->compagnie_id );
+            $builder->where( $model->getTable() . '.compagnie_id', Auth::user()->compagnie_id );
     }
 }

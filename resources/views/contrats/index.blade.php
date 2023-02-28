@@ -555,13 +555,9 @@
             </div>
 
             <div class="sticky flex justify-end px-40 bottom-16">
-                @if ($compagnie->type === 'véhicules')
 
                     <a href="/contrats/create">
-                @else
 
-                    <a href="/">
-                @endif
                     <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
                 </a>
             </div>

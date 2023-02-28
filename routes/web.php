@@ -12,6 +12,7 @@ use App\Accessoire;
 use App\Technicien;
 use App\Maintenance;
 use App\Events\ContratCree;
+use App\Offre;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
@@ -23,9 +24,35 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 if(env('APP_ENV') == 'local')
     Auth::loginUsingID(1);
 
-
-
 Auth::routes();
+
+Route::get('/add-offers', function(){
+    Offre::create([
+        'compagnie_id' => 1,
+        'nom' => 'H24 Classique',
+        'montant' => 20000
+    ]);
+    Offre::create([
+        'compagnie_id' => 1,
+        'nom' => 'H24 VIP',
+        'montant' => 35000
+    ]);
+    Offre::create([
+        'compagnie_id' => 1,
+        'nom' => 'Nuitee Classique',
+        'montant' => 15000
+    ]);
+    Offre::create([
+        'compagnie_id' => 1,
+        'nom' => 'Nuitee VIP',
+        'montant' => 20000
+    ]);
+    Offre::create([
+        'compagnie_id' => 1,
+        'nom' => 'Detente',
+        'montant' => 10000
+    ]);
+});
 
 Route::group(['middleware' => ['auth']], function () {
 
@@ -147,6 +174,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contrats/{contrat}/ajoute-photos', 'ContratController@ajoutePhotos')->where('contrat', '[0-9]+' );
     Route::post('/contrats/{contrat}/update-cashier', 'ContratController@updateCashier')->where( 'contrat', '[0-9]+');
     Route::post('/contrats/store', 'ContratController@store');
+
     // Le contrat rapide permet de créer un client et louer une chambre ou une voiture en meme temps
     Route::post('/contrats/store-contrat-rapide', 'ContratController@storeContratRapide');
     Route::post( '/contrat/{contrat}/update-cashier-id', 'ContratController@updateCashierId');
@@ -322,6 +350,9 @@ Route::group(['middleware' => ['auth']], function () {
 
         return redirect()->back();
     });
+    Route::delete('/maintenances/{maintenance}', 'MaintenanceController@destroy');
+
+
     Route::get('/paiements-cashier', function(){
         $ids = Contrat::pluck('id')->toArray();
         $contrats = Contrat::all();

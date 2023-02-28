@@ -31,6 +31,8 @@ class ContratController extends Controller
         $compagnie = Auth::user()->compagnie;
         $contrats_compagnie = Contrat::withTrashed()->where('compagnie_id', $compagnie->id)->latest()->get();
         $query = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'));
+
+
         if (sizeof($request->all()) > 0 ){
             if($request->has('voiture') && $request->voiture !== NULL){
                 $query->where([
@@ -73,8 +75,6 @@ class ContratController extends Controller
             if($request->has('au') && $request->au !== NULL){
                 $query->whereDate('au', '<=', $request->au);
             }
-
-
         }
 
         $contrats = $query->orderBy('updated_at', 'desc')->paginate(10);
@@ -111,12 +111,16 @@ class ContratController extends Controller
     public function create(){
         $clients = Client::all();
         $clients->toArray();
-        $contrats = Auth::user()->compagnie->contrats;
+        $contrats = Auth::user()->compagnie;
+        $offres = Auth::user()->compagnie->offres;
         $contractables = Voiture::with('documents', 'accessoires')->get();
 
         if(sizeof($contractables) > 0 ){
             $contractables->toArray();
-            return view('contrats.create', compact('clients', 'contractables', 'contrats'));
+            if( Auth::user()->compagnie->isHotel() ){
+                return view('contrats.create-hotel', compact('clients', 'contractables', 'contrats', 'offres'));
+            }
+            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres'));
         } else {
             return view('contrats.create_no_cars');
         }
