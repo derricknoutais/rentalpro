@@ -42,7 +42,7 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 const app = new Vue({
     el: '#app',
     data: {
-        test: false,
+        test: true,
         notifications: [],
         fcEvents: {
           title : 'Sunny Out of Office',
@@ -52,6 +52,11 @@ const app = new Vue({
 
     },
     methods: {
+        toggleUserOptions(){
+            console.log('Hi')
+            this.test = ! this.test
+            this.$forceUpdate();
+        },
         relocateTo(location){
             window.location = location
         },

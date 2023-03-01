@@ -56,26 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-center flex-1 px-2 lg:ml-6 lg:justify-end">
-                        <div class="w-full max-w-lg lg:max-w-xs">
-                            <label for="search" class="sr-only">Search</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <!-- Heroicon name: solid/search -->
-                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                        fill="currentColor" aria-hidden="true">
-                                        <path fill-rule="evenodd"
-                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <input id="search"
-                                    name="search"
-                                    class="block w-full py-2 pl-10 pr-3 leading-5 text-gray-300 placeholder-gray-400 bg-gray-700 border border-transparent rounded-md focus:outline-none focus:bg-white focus:border-white focus:ring-white focus:text-gray-900 sm:text-sm"
-                                    placeholder="Search" type="search">
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="flex lg:hidden">
                         <!-- Mobile menu button -->
                         <button type="button"
@@ -123,6 +104,7 @@
                             <div class="relative flex-shrink-0 ml-4">
                                 <div>
                                     <button type="button"
+                                        @click="toggleUserOptions"
                                         class="flex text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                                         id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                         <span class="sr-only">Open user menu</span>
@@ -141,15 +123,24 @@
                                         From: "transform opacity-100 scale-100"
                                         To: "transform opacity-0 scale-95"
                                 -->
-                                <div class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="test">
+                                <div class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1
+                                    ring-black ring-opacity-5 focus:outline-none"
+                                    role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" .
+                                    v-show="test">
                                     <!-- Active: "bg-gray-100", Not Active: "" -->
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                                         id="user-menu-item-0">Your Profile</a>
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
                                         id="user-menu-item-1">Settings</a>
-                                    <a href="/logout" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-                                        id="user-menu-item-2">Sign out</a>
+                                    <a
+                                        href="{{ route('logout') }}"
+                                        onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"
+                                    >
+                                        Logout
+                                    </a>
+                                    <form id="frm-logout" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
                                 </div>
                             </div>
                         </div>

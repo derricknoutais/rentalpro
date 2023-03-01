@@ -115454,7 +115454,7 @@ files.keys().map(function (key) {
 var app = new Vue({
   el: '#app',
   data: {
-    test: false,
+    test: true,
     notifications: [],
     fcEvents: {
       title: 'Sunny Out of Office',
@@ -115463,6 +115463,11 @@ var app = new Vue({
     }
   },
   methods: {
+    toggleUserOptions: function toggleUserOptions() {
+      console.log('Hi');
+      this.test = !this.test;
+      this.$forceUpdate();
+    },
     relocateTo: function relocateTo(location) {
       window.location = location;
     },

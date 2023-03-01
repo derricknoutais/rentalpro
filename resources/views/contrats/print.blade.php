@@ -110,8 +110,6 @@
             </div>
         </div>
 
-
-
         {{-- Arrêté la facture --}}
         <p class="mt-6 text-xl underline">Arrêté la présente facture à la somme de:</p>
         <p class="mt-2 text-lg">
