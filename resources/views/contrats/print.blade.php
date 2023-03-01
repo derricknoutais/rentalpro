@@ -190,7 +190,7 @@
         <div class="w-2/3">
             <p class="mt-12 text-2xl font-semibold underline">Documents Vehicule</p>
             <ul class="mt-12 text-2xl w-full pr-12">
-                @foreach ($contrat->contractable->documents as $document)
+                @forelse ($documents as $document)
                     <li class="w-full flex justify-between items-end mt-3">
                         <span class="w-1/2">{{ $document->type }} </span>
                         <span class="w-1/2 text-right">{{ \Carbon\Carbon::parse($document->pivot->date_expiration)->format('d-M-Y') }}</span>
@@ -201,7 +201,7 @@
         <div class="w-1/3">
             <p class="mt-12 text-2xl font-semibold underline">État des Accessoires</p>
             <ul class="mt-12 text-2xl">
-                @foreach ($contrat->contractable->accessoires as $acc)
+                @foreach ($accessoires as $acc)
                     <li> {{ $acc->pivot->quantité }} {{ $acc->type }}</li>
                 @endforeach
             </ul>

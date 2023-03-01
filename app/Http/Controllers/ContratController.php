@@ -174,8 +174,8 @@ class ContratController extends Controller
                 'client_id'=> $client_id,
                 'numéro' => Contrat::numéro(),
                 'compagnie_id' => Auth::user()->compagnie->id,
-                'du'=> $request['du'] . date('H:i:s'),
-                'au'=> $request['au'] . date('H:i:s'),
+                'du'=> $request['du'],
+                'au'=> $request['au'],
                 'real_check_out' => NULL,
                 'prix_journalier'=> $request['prix_journalier'],
                 'caution' => $request['caution'],
@@ -284,7 +284,9 @@ class ContratController extends Controller
     }
     public function print(Contrat $contrat){
         $contrat->loadMissing('contractable', 'client');
-        return view('contrats.print', compact('contrat'));
+        isset($contrat->contractable->documents) ? $documents = $contrat->contractable->documents : $documents = [];
+        isset($contrat->contractable->accessoires) ? $accessoires = $contrat->contractable->accessoires : $accessoires = [];
+        return view('contrats.print', compact('contrat', 'documents', 'accessoires'));
     }
 
     public function storeContratRapide(Request $request){
@@ -481,23 +483,17 @@ class ContratController extends Controller
         return redirect()->back();
     }
     public function changerVoiture( Request $request, Contrat $contrat){
-
         DB::transaction(function () use ($request, $contrat){
             // Retrouve la voiture a remplacer
             $voiture = Voiture::find( $request->voiture );
-
             $contrat->contractable->etat('disponible');
-
             if( $voiture->etat === 'disponible' ){
-
                 $contrat->update([
                     'contractable_id' => $request->voiture
                 ]);
-
             }
 
             $voiture->etat('loué');
-
         });
         return redirect()->back();
 
