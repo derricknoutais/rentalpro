@@ -22,7 +22,7 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 if(env('APP_ENV') == 'local')
-    Auth::loginUsingID(1);
+    Auth::loginUsingID(2);
 
 Auth::routes();
 
@@ -142,7 +142,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     // VOITURES
-    Route::get('/voitures', 'VoitureController@index');
+    Route::get('/contractables', 'VoitureController@index');
     Route::get('/voiture/{voiture}', 'VoitureController@show');
     Route::post( '/voiture/reception', 'VoitureController@reception');
     // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');

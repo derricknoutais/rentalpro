@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Voiture;
-use App\Contrat;
-use App\Technicien;
 use App\Panne;
+use App\Chambre;
+use App\Contrat;
+use App\Voiture;
+use App\Technicien;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class VoitureController extends Controller
 {
     public function index(Request $request){
-        $query = Voiture::query();
+        if(Auth::user()->compagnie->isHotel()){
+            $query = Voiture::query();
+        } else {
+            $query = Chambre::query();
+        }
+
         if( sizeof($request->all()) > 0){
             if($request->has('etat')){
                 $query->where('etat', $request->etat );

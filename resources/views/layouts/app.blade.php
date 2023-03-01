@@ -46,8 +46,18 @@
                                         class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Contrats</a>
                                     <a href="/clients"
                                         class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Clients</a>
-                                    <a href="/voitures"
-                                        class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Voitures</a>
+                                    <a
+
+                                            href="/contractables"
+
+
+                                        class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
+                                        @if (Auth::user()->compagnie->isHotel())
+                                            Voitures
+                                        @else
+                                            Chambres
+                                        @endif
+                                    </a>
                                     <a href="/maintenances"
                                         class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">Maintenances</a>
                                     <a href="/mes-paramètres"

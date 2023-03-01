@@ -27,6 +27,7 @@ class ContratController extends Controller
     public function menu(){
         return view('contrats.menu');
     }
+
     public function index(Request $request){
         $compagnie = Auth::user()->compagnie;
         $contrats_compagnie = Contrat::withTrashed()->where('compagnie_id', $compagnie->id)->latest()->get();
@@ -93,6 +94,7 @@ class ContratController extends Controller
 
         return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'clients', 'contractablesDisponibles']));
     }
+
     public function show(Contrat $contrat){
         $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements');
         $du = $contrat->du->format('d-M-Y');
@@ -108,6 +110,7 @@ class ContratController extends Controller
         return view('contrats.show', compact('contrat'));
 
     }
+
     public function create(){
         $clients = Client::all();
         $clients->toArray();
@@ -125,6 +128,7 @@ class ContratController extends Controller
             return view('contrats.create_no_cars');
         }
     }
+
     public function store(Request $request){
 
         if(Auth::user()->compagnie->type == 'véhicules'){
@@ -282,6 +286,7 @@ class ContratController extends Controller
         // }
         return redirect('/contrat/' . $contrat->id . '/print');
     }
+
     public function print(Contrat $contrat){
         $contrat->loadMissing('contractable', 'client');
         isset($contrat->contractable->documents) ? $documents = $contrat->contractable->documents : $documents = [];
@@ -396,12 +401,14 @@ class ContratController extends Controller
             return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
         }
     }
+
     public function edit(Contrat $contrat){
         $contrat->loadMissing('client');
         $clients = Auth::user()->compagnie->clients;
         $chambresDisponibles = Chambre::where('etat', 'Disponible')->get();
         return view('contrats.edit', compact('contrat', 'clients', 'chambresDisponibles'));
     }
+
     public function update(Contrat $contrat, Request $request){
 
         $stored = DB::transaction(function () use ($contrat, $request) {
@@ -427,6 +434,7 @@ class ContratController extends Controller
         });
         return redirect()->back()->withFlash(['test' => 'micro' ]);
     }
+
     public function updateAll(Contrat $contrat, Request $request){
         $diffInDays = Carbon::parse($request->au)->startOfDay()->diffInDays(Carbon::parse($request->du)->startOfDay());
 
@@ -482,6 +490,7 @@ class ContratController extends Controller
         // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
         return redirect()->back();
     }
+
     public function changerVoiture( Request $request, Contrat $contrat){
         DB::transaction(function () use ($request, $contrat){
             // Retrouve la voiture a remplacer
@@ -499,12 +508,14 @@ class ContratController extends Controller
 
 
     }
+
     public function destroy(Contrat $contrat){
         $contrat->contractable->update([
             'etat' => 'disponible'
         ]);
         $contrat->delete();
     }
+
     public function download(Contrat $contrat){
         $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
         $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
@@ -518,9 +529,11 @@ class ContratController extends Controller
         }
         return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
     }
+
     public function voirUploads(Contrat $contrat){
         return view('contrats.uploads', compact('contrat'));
     }
+
     public function ajoutePhotos(Request $request, Contrat $contrat){
         $path_droit = \Storage::disk('public_uploads')->put("/", $request->file('droit'));
         $path_gauche = \Storage::disk('public_uploads')->put("/", $request->file('gauche'));
@@ -534,16 +547,19 @@ class ContratController extends Controller
         ]);
         return 'Depuis les photos';
     }
+
     public function updateCashier(Request $request, Contrat $contrat){
         $contrat->update([
             'cashier_facture_id' => $request->id
         ]);
     }
+
     public function updateCashierId(Request $request, Contrat $contrat){
         $contrat->update([
             'cashier_facture_id' => $request->cashier_id
         ]);
     }
+
     public function terminer(Contrat $contrat, Request $request){
         DB::transaction(function () use ($contrat, $request) {
 
@@ -638,6 +654,7 @@ class ContratController extends Controller
         ]);
         return redirect()->back();
     }
+
     public function ajouterMontantChauffeur(Contrat $contrat, Request $request){
         $contrat->update([
             'montant_chauffeur' => $request['montant_chauffeur']
