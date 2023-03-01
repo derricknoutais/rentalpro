@@ -18,17 +18,19 @@ class VoitureController extends Controller
         } else {
             $query = Chambre::query();
         }
-
         if( sizeof($request->all()) > 0){
             if($request->has('etat')){
                 $query->where('etat', $request->etat );
             }
         }
-        $voitures = $query->get();
-
+        $voitures = $contractables = $query->get();
         $contrats = Contrat::all();
+        if(Auth::user()->compagnie->isHotel()){
+            return view('voitures.index', compact('voitures', 'contrats'));
+        } else {
+            return view('contractables.hotel.index', compact('voitures', 'contrats', 'contractables'));
+        }
 
-        return view('voitures.index', compact('voitures', 'contrats'));
     }
     public function rendreDisponible(Voiture $contractable){
         return $contractable->update(['etat' => 'disponible']);
