@@ -306,7 +306,7 @@ class ContratController extends Controller
         //     //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
         // }
-        return Auth::user()->compagnie->isHotel() ?
+        return Auth::user()->compagnie->isVehicules() ?
             redirect('/contrat/' . $contrat->id . '/print') :
             redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
     }
