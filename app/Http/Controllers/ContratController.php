@@ -192,6 +192,7 @@ class ContratController extends Controller
                 'client_id'=> $client_id,
                 'numéro' => Contrat::numéro(),
                 'compagnie_id' => Auth::user()->compagnie->id,
+                'offre_id' => $request['offre_id'],
                 'du'=> $request['du'],
                 'au'=> $request['au'],
                 'real_check_out' => NULL,
