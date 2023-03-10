@@ -80,7 +80,7 @@
                 @if ($compagnie->isHotel())
                     <div class="w-full mt-3">
                         <label for="">Selectionner Offre</label>
-                        <input type="hidden" name="offre_id" v-model="formulaire.offre.id">
+                        <input type="hidden" name="offre_id" v-model="formulaire.offre.id" v-if="formulaire.offre">
                         <div class="flex w-full">
                             <multiselect :show-labels="true" :options="offres" label="nom" v-model="formulaire.offre">
                                 <template slot="noResult"> Cette voiture n'existe pas </template>
