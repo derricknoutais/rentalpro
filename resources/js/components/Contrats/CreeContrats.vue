@@ -1,7 +1,7 @@
 
 <script>
 export default {
-props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop"],
+props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop"],
 data() {
 	return {
         contractables: this.contractables_prop,
@@ -45,9 +45,10 @@ data() {
         },
         display: {
             nouveau_client : false,
-            halfDay : true,
-            driver : true
-        }
+            halfDay : false,
+            driver : false
+        },
+        compagnie : this.compagnie_prop
 	};
 
 },
@@ -57,14 +58,26 @@ computed: {
 
     },
     'nb_jours' : function(){
-        if(this.formulaire.du && this.formulaire.au){
+        if(this.compagnie.type === 'véhicules' && this.formulaire.du && this.formulaire.au){
             this.formulaire.nb_jours = ( (new Date(this.formulaire.au) - new Date(this.formulaire.du)) / (3600 * 1000 * 24))
             return ( (new Date(this.formulaire.au) - new Date(this.formulaire.du)) / (3600 * 1000 * 24))
         }
     },
+    'nb_jours_hotel' : function(){
+        // if(this.formulaire.offre && this.formulaire.offre.nom === 'Detente'){
+        //     var now = new Date();
+        //     now.setMinutes( now.getMinutes() + 10 );
+        //     this.formulaire.du = now.toISOString().split('.')[0];
+        //     this.formulaire.au = new Date(now.setHours( now.getHours() + 4  )).toISOString().split('.')[0];
+        //     this.formulaire.nb_jours = 1;
+        //     this.formulaire.prix_journalier = this.formulaire.offre.montant;
+        // }
+    },
     'total' : function(){
-        if(this.formulaire.du && this.formulaire.au && this.formulaire.prix_journalier ){
+        if(this.compagnie.type === 'véhicules' && this.formulaire.du && this.formulaire.au && this.formulaire.prix_journalier ){
             return +(this.formulaire.nb_jours * this.formulaire.prix_journalier) + (+this.formulaire.demi_journee) + (+this.formulaire.chauffeur)
+        } else if(this.compagnie.type === 'hôtel' && this.formulaire.nb_jours && this.formulaire.prix_journalier ) {
+            return +(this.formulaire.prix_journalier * this.formulaire.nb_jours)
         }
     },
     solde(){
@@ -79,11 +92,17 @@ watch : {
             this.formulaire.demi_journee = this.formulaire.prix_journalier / 2
     },
     'formulaire.offre' : function(){
-        switch (this.formulaire.offre) {
+        switch (this.formulaire.offre.nom) {
             case 'Detente':
-                this.formulaire.du = now()
+                this.appliquerOffreDetente();
                 break;
-
+            case 'Nuitee VIP':
+            case 'Nuitee Classique':
+                this.appliquerOffreNuitee();
+                break;
+            case 'H24 VIP':
+            case 'H24 Classique':
+                this.appliquerOffreH24()
             default:
                 break;
         }
@@ -92,6 +111,47 @@ watch : {
 
 },
 methods: {
+
+    appliquerOffreDetente(){
+        var now = new Date();
+        now.setMinutes( now.getMinutes() + 10 );
+        now.setHours( now.getHours() + 1 );
+        this.formulaire.du = now.toISOString().split('.')[0];
+        this.formulaire.au = new Date(now.setHours( now.getHours() + 4  )).toISOString().split('.')[0];
+        this.formulaire.nb_jours = 1;
+        this.formulaire.prix_journalier = this.formulaire.offre.montant;
+    },
+    appliquerOffreNuitee(){
+        var now = new Date();
+        now.setHours(23)
+        now.setMinutes(0);
+        now.setSeconds(0);
+        this.formulaire.du = now.toISOString().split('.')[0];
+        now.setDate( now.getDate() + 1 )
+        now.setHours(9)
+        now.setMinutes(0);
+        now.setSeconds(0);
+        this.formulaire.au = now.toISOString().split('.')[0];
+        this.formulaire.nb_jours = 1;
+        this.formulaire.prix_journalier = this.formulaire.offre.montant
+    },
+    appliquerOffreH24(){
+        var now = new Date();
+        now.setHours(14)
+        now.setMinutes(0);
+        now.setSeconds(0);
+        this.formulaire.du = now.toISOString().split('.')[0];
+        now.setDate( now.getDate() + 1 )
+        now.setHours(13)
+        now.setMinutes(59);
+        now.setSeconds(59);
+        this.formulaire.au = now.toISOString().split('.')[0];
+        this.formulaire.nb_jours = 1;
+        this.formulaire.prix_journalier = this.formulaire.offre.montant
+    },
+
+
+
     // Retourne la couleur a afficher selon l'état de la chambre
     couleurEtat(chambre){
         switch (chambre.etat) {

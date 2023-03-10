@@ -53,9 +53,9 @@
 
                                         class="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
                                         @if (Auth::user()->compagnie->isHotel())
-                                            Voitures
-                                        @else
                                             Chambres
+                                        @else
+                                            Voitures
                                         @endif
                                     </a>
                                     <a href="/maintenances"
@@ -99,7 +99,7 @@
                     </div>
                     <div class="hidden lg:block lg:ml-4">
                         <div class="flex items-center">
-                            <button type="button"
+                            {{-- <button type="button"
                                 class="flex-shrink-0 p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                 <span class="sr-only">View notifications</span>
                                 <!-- Heroicon name: outline/bell -->
@@ -108,13 +108,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
-                            </button>
+                            </button> --}}
 
                             <!-- Profile dropdown -->
 
                                 <div class="relative flex-shrink-0 ml-4">
                                     <div>
-                                        <button type="button" @click="toggleUserOptions"
+                                        <button type="button" @click="toggle('test')"
                                             class="flex text-sm text-white bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                                             id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                             <span class="sr-only">Open user menu</span>

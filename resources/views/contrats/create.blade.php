@@ -9,6 +9,7 @@
         :chambres_prop="{{ $contractables }}"
         :clients_prop="{{ $clients }}"
         :offres_prop="{{ $offres }}"
+        :compagnie_prop="{{ $compagnie }}"
     >
         <div class="flex justify-center">
             <form
@@ -53,17 +54,40 @@
                 {{-- Champs Voiture --}}
                 <input type="hidden" name="contractable" v-model.number="contractable.id">
                 <div class="w-full mt-3">
-                    <label for="">Selectionner Voiture</label>
+                    <label for="">
+                        @if ($compagnie->isHotel())
+                        Selectionner Chambre
+                        @elseif($compagnie->isVehicules())
+                        Selectionner Voiture
+                        @endif
+
+                    </label>
                     <div class="flex w-full">
-                        <multiselect :show-labels="true" :options="contractables" label="immatriculation" v-model="contractable">
+                        <multiselect :show-labels="true" :options="contractables"
+                            @if ($compagnie->isHotel())
+                                label="nom"
+                            @elseif($compagnie->isVehicules())
+                                label="immatriculation"
+                            @endif
+                            v-model="contractable"
+                        >
                             <template slot="noResult"> Cette voiture n'existe pas </template>
                         </multiselect>
-                        <button type="button" v-if="contractable.etat === 'loué' "
-                            class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control"
-                            data-toggle="modal" data-target="#rendreVehiculeDisponible"
-                        >Receptionner</button>
+                        <button type="button" v-if="contractable.etat === 'loué' " class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control"
+                            data-toggle="modal" data-target="#rendreVehiculeDisponible">Receptionner</button>
                     </div>
                 </div>
+                @if ($compagnie->isHotel())
+                    <div class="w-full mt-3">
+                        <label for="">Selectionner Offre</label>
+                        <div class="flex w-full">
+                            <multiselect :show-labels="true" :options="offres" label="nom" v-model="formulaire.offre">
+                                <template slot="noResult"> Cette voiture n'existe pas </template>
+                            </multiselect>
+                        </div>
+                    </div>
+                @endif
+
 
 
 
@@ -81,8 +105,14 @@
                         <input type="datetime-local" class="form-control" name="au" v-model="formulaire.au">
                     </div>
                     <div class="w-1/3">
-                        <label for="">Nombre Jours</label>
-                        <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours" :value="nb_jours" readonly>
+                        @if ($compagnie->isVehicules())
+                            <label for="">Nombre Jours</label>
+                            <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours" :value="nb_jours" readonly>
+                        @else
+                            <label for="">Nombre Jours (Offres)</label>
+                            <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours" v-model="formulaire.nb_jours">
+                        @endif
+
                     </div>
 
                 </div>

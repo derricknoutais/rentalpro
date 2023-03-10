@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Contractable;
 use App\Contrat;
 use App\Voiture;
 use App\Paiement;
@@ -11,9 +12,9 @@ use Livewire\Component;
 
 class DashboardCards extends Component
 {
-    public $voitures;
+    public $contractables;
     public $filtres1 = [
-        'voiture_selectionnee' => '*',
+        'contractable_selectionnee' => '*',
         'date_du' => NULL,
         'date_au' => NULL,
         'taux_recouvrement' => [
@@ -30,7 +31,7 @@ class DashboardCards extends Component
         ]
     ];
     public $filtres2 = [
-        'voiture_selectionnee' => NULL,
+        'contractable_selectionnee' => NULL,
         'date_du' => NULL,
         'date_au' => NULL,
         'taux_recouvrement' => [
@@ -47,24 +48,27 @@ class DashboardCards extends Component
         ]
     ];
 
-    public $voiture_selectionnee, $date_du, $date_au;
-    public $voiture_comparaison, $date_du_comparaison, $date_au_comparaison;
+    public $contractable_selectionnee, $date_du, $date_au;
+    public $contractable_comparaison, $date_du_comparaison, $date_au_comparaison;
 
     public function mount(){
-        $this->voitures = Voiture::all();
+        $this->contractables = Contractable::query()->get();
         $date = Carbon::now();
         $this->filtres1['date_au'] = $date->format('Y-m-d');
         $this->filtres1['date_du'] = $date->format('Y-m-d');
         $this->filtres1['paiements']['periode'] = Paiement::where('created_at', '>=' ,Carbon::today())->sum('montant');
         // $this->filtrer();
     }
+
     public function fi(&$data){
-        $voiture = null;
-        if(isset($data['voiture_selectionnee']) && ($data['voiture_selectionnee'] !== '*') ){
-            $voiture = Voiture::find($data['voiture_selectionnee'])->loadMissing('paiements', 'contrats', 'maintenances');
-            $paiements = $voiture->paiements;
-            $contrats = $voiture->contrats;
-            $maintenances = $voiture->maintenances;
+        $contractable = null;
+        if(isset($data['contractable_selectionnee']) && ($data['contractable_selectionnee'] !== '*') ){
+            $query = Contractable::query();
+            $contractable = $query->find($data['contractable_selectionnee'])->loadMissing('paiements', 'contrats', 'maintenances');
+
+            $paiements = $contractable->paiements;
+            $contrats = $contractable->contrats;
+            $maintenances = $contractable->maintenances;
         } else {
             $paiements = Paiement::query();
             $contrats = Contrat::query();

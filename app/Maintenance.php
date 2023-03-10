@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 
 class Maintenance extends Model
@@ -12,6 +13,11 @@ class Maintenance extends Model
     {
         return $this->belongsTo('App\Voiture');
     }
+    public function contractable()
+    {
+        return $this->morphTo();
+    }
+
     public function technicien()
     {
         return $this->belongsTo('App\Technicien');

@@ -41,6 +41,16 @@ class ContratController extends Controller
                     'contractable_type' => 'App\\Voiture'
                 ]);
             }
+
+            if($request->has('chambre') && $request->chambre !== NULL){
+                $query->where([
+                    'contractable_id' => $request->chambre,
+                    'contractable_type' => 'App\\Chambre'
+                ]);
+            }
+
+
+
             if($request->has('client')&& $request->client !== NULL){
                 $query->where([
                     'client_id' => $request->client,
@@ -81,18 +91,20 @@ class ContratController extends Controller
         $contrats = $query->orderBy('updated_at', 'desc')->paginate(10);
         $contrats->loadMissing(['client', 'contractable', 'paiements']);
         if($compagnie->type === 'véhicules'){
-            $contractablesDisponibles = Voiture::where('etat', 'Disponible')->get();
+            $contractablesDisponibles = Voiture::all();
         } else {
-            $contractablesDisponibles = Chambre::where('etat', 'Disponible')->get();
+            $contractablesDisponibles = Chambre::all();
         }
         $contrat = $contrats[0];
         $voitures = Voiture::all();
+        $compagnie->isHotel() ? $contractables = Chambre::all() : $contractables = Voiture::all();
+
         $clients = Client::all();
         foreach($clients as $client){
             $client->nom_complet = $client->nom . ' ' . $client->prenom;
         }
 
-        return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'clients', 'contractablesDisponibles']));
+        return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'clients', 'contractablesDisponibles', 'contractables']));
     }
 
     public function show(Contrat $contrat){
@@ -114,16 +126,18 @@ class ContratController extends Controller
     public function create(){
         $clients = Client::all();
         $clients->toArray();
-        $contrats = Auth::user()->compagnie;
-        $offres = Auth::user()->compagnie->offres;
-        $contractables = Voiture::with('documents', 'accessoires')->get();
+        $compagnie = Auth::user()->compagnie;
+        $contrats = $compagnie;
+        $offres = $compagnie->offres;
+
+        $contractables = $compagnie->contractables;
 
         if(sizeof($contractables) > 0 ){
             $contractables->toArray();
-            if( Auth::user()->compagnie->isHotel() ){
-                return view('contrats.create-hotel', compact('clients', 'contractables', 'contrats', 'offres'));
-            }
-            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres'));
+            // if( $compagnie->isHotel() ){
+            //     return view('contrats.create-hotel', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie'));
+            // }
+            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie'));
         } else {
             return view('contrats.create_no_cars');
         }
@@ -193,9 +207,16 @@ class ContratController extends Controller
                 'etat_documents' => $request[ 'documentString'],
                 'note' => $request['note_contrat']
             ]);
-            $voiture = Voiture::find( $request['contractable'])->update([
-                'etat' => 'loué'
-            ]);
+            if(Auth::user()->compagnie->isHotel()){
+                Chambre::find( $request['contractable'])->update([
+                    'etat' => 'loué'
+                ]);
+            } else {
+                $voiture = Voiture::find( $request['contractable'])->update([
+                    'etat' => 'loué'
+                ]);
+            }
+
             if($contrat){
                 return $contrat;
             }

@@ -76,4 +76,9 @@ class Voiture extends Model
         return Panne::where(['etat' => 'en-maintenance' ,'voiture_id' => $this->id])->get();
     }
 
+    public function nom(){
+        return $this->immatriculation;
+    }
+
+
 }

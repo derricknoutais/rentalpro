@@ -53,16 +53,27 @@
                 {{-- Champs Voiture --}}
                 <input type="hidden" name="contractable" v-model.number="contractable.id">
                 <div class="w-full mt-3">
-                    <label for="">Selectionner Voiture</label>
+                    <label for="">
+                        @if ($compagnie->isHotel())
+                        Selectionner Chambre
+                        @elseif($compagnie->isVehicules())
+                        Selectionner Voiture
+                        @endif
+
+                    </label>
                     <div class="flex w-full">
-                        <multiselect :show-labels="true" :options="contractables" label="immatriculation"
-                            v-model="contractable">
+                        <multiselect :show-labels="true" :options="contractables" @if ($compagnie->isHotel())
+                            label="nom"
+                            @elseif($compagnie->isVehicules())
+                            label="immatriculation"
+                            @endif
+
+                            v-model="contractable"
+                            >
                             <template slot="noResult"> Cette voiture n'existe pas </template>
                         </multiselect>
-                        <button type="button" v-if="contractable.etat === 'loué' "
-                            class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control" data-toggle="modal"
-                            data-target="#rendreVehiculeDisponible">Receptionner
-                        </button>
+                        <button type="button" v-if="contractable.etat === 'loué' " class="w-1/4 ml-3 text-gray-900 bg-gray-300 form-control"
+                            data-toggle="modal" data-target="#rendreVehiculeDisponible">Receptionner</button>
                     </div>
                 </div>
 

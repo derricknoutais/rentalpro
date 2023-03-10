@@ -19,6 +19,7 @@ class CreateContratsTable extends Migration
             $table->string('contractable_type');
             $table->unsignedInteger('client_id');
             $table->unsignedInteger('compagnie_id');
+            $table->unsignedInteger('offre_id')->nullable();
             $table->string('numéro')->nullable();
             $table->dateTime('au')->nullable();
             $table->dateTime('du')->nullable();

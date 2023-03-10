@@ -32,9 +32,9 @@
             </div>
             <div>
                 <label for="">Voiture</label>
-                <select wire:model="voiture_id" class="form-control">
-                    @foreach ($voitures as $voiture)
-                    <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
+                <select wire:model="contractable_id" class="form-control">
+                    @foreach ($contractables as $contractable)
+                        <option value="{{ $contractable->id }}">{{ Auth::user()->compagnie->isVehicules() ? $contractable->immatriculation : $contractable->nom }}</option>
                     @endforeach
                 </select>
             </div>

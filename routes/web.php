@@ -9,6 +9,7 @@ use App\Document;
 use App\Paiement;
 use Carbon\Carbon;
 use App\Accessoire;
+use App\Contractable;
 use App\Technicien;
 use App\Maintenance;
 use App\Events\ContratCree;
@@ -164,7 +165,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrats', 'ContratController@index');
     Route::get('/contrats/create', 'ContratController@create');
     Route::get('/contrat/{contrat}', 'ContratController@show');
-    Route::get('/contrat/{contrat}/print', 'ContratController@print');
+
     Route::get('/contrat/{contrat}/download', 'ContratController@download');
     Route::post('/contrat/{contrat}/terminer', 'ContratController@terminer');
     Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
@@ -221,6 +222,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrat/{contrat}/envoyer-gescash', 'ContratController@envoyerContratGescash');
     Route::post('/contrat/{contrat}/ajouter-demi-journee', 'ContratController@ajouterDemiJournee');
     Route::post('/contrat/{contrat}/ajouter-montant-chauffeur', 'ContratController@ajouterMontantChauffeur');
+
+    // Impression Contrat
+    Route::get('/contrat/{contrat}/print', 'ContratController@print');
+    Route::get('/contrat/{contrat}/print-{type_compagnie}-{size}', 'PrintController@print');
 
     // Paramètres
     Route::get('/mes-paramètres', function(){
@@ -441,8 +446,9 @@ Route::group(['middleware' => ['auth']], function () {
             $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
         }
 
+        $contractables = Contractable::query()->get();
 
-        return view('dashboard.index', compact('dashboard', 'columnChartModel'));
+        return view('dashboard.index', compact('dashboard', 'columnChartModel', 'contractables'));
     });
     Route::get('/my-feeds', function(){
         $contrats = Contrat::all();

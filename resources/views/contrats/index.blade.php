@@ -2,7 +2,7 @@
 
 
 @section('content')
-    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}" :voitures_prop="{{ $voitures }}" :clients_prop="{{ $clients }}">
+    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}" :voitures_prop="{{ $contractables }}" :clients_prop="{{ $clients }}">
         <div>
             <h1 class="my-20 text-4xl text-center">Contrats</h1>
 
@@ -11,10 +11,30 @@
                 <form action="/contrats" method="GET" class="flex flex-col items-center px-10 py-10 bg-yellow-100">
 
                     <div class="flex items-center justify-center w-full">
-                        <input type="hidden" name="voiture" v-model="filters.voiture.id">
+                        @if ($compagnie->isVehicules())
+                            <input type="hidden" name="voiture" v-model="filters.voiture.id">
+                        @else
+                            <input type="hidden" name="chambre" v-model="filters.chambre.id">
+                        @endif
+
                         <div class="w-1/4 form-group" >
-                            <label for="">Voiture</label>
-                            <multiselect :options="{{ $voitures }}" label="immatriculation" v-model="filters.voiture"></multiselect>
+                            <label for="">
+                                @if ($compagnie->isVehicules())
+                                    Voiture
+                                @else
+                                    Chambre
+                                @endif
+
+                            </label>
+                            <multiselect :options="{{ $contractables }}"
+                                @if ($compagnie->isVehicules())
+                                    label="immatriculation"
+                                    v-model="filters.voiture"
+                                @else
+                                   label="nom"
+                                   v-model="filters.chambre"
+                                @endif
+                            ></multiselect>
                         </div>
                         {{-- FILTRE CLIENT --}}
                         <input type="hidden" name="client" v-model="filters.client.id" >
@@ -506,11 +526,41 @@
                                                 <i class="fas fa-file-invoice "></i>
                                                 Voir Contrat
                                             </a>
+                                            <div class="relative flex-shrink-0">
+                                                <div class="w-full">
+                                                    <button type="button" @click="toggle('print_options')"
+                                                        class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded w-full"
+                                                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                                        <span class="sr-only">Open user menu</span>
+                                                        <i class="fas fa-print "></i>
+                                                        Imprimer
+                                                    </button>
+                                                </div>
+                                                <!--
+                                                    Dropdown menu, show/hide based on menu state.
 
-                                            <a class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded" href="/contrat/{{ $contrat->id }}/print">
-                                                <i class="fas fa-print "></i>
-                                                Imprimer
-                                            </a>
+                                                    Entering: "transition ease-out duration-100"
+                                                        From: "transform opacity-0 scale-95"
+                                                        To: "transform opacity-100 scale-100"
+                                                    Leaving: "transition ease-in duration-75"
+                                                        From: "transform opacity-100 scale-100"
+                                                        To: "transform opacity-0 scale-95"
+                                                -->
+                                                <div class="absolute left-0 w-48 py-1 mt-2 origin-top-right bg-gray-400 rounded-md shadow-lg ring-1
+                                                    ring-black ring-opacity-5 focus:outline-none" role="menu"
+                                                    aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="print_options"
+                                                >
+                                                    <!-- Active: "bg-gray-100", Not Active: "" -->
+                                                    <a target="_blank" href="/contrat/{{ $contrat->id }}/print" class="block px-4 py-2 text-sm text-white" role="menuitem" tabindex="-1">
+                                                        Template Location
+                                                    </a>
+                                                    <a target="_blank" href="/contrat/{{ $contrat->id }}/print-hotel-A5" class="block px-4 py-2 text-sm text-white" role="menuitem" tabindex="-1">
+                                                        Template Orisha
+                                                    </a>
+
+                                                </div>
+                                            </div>
+
 
                                             <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">

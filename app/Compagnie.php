@@ -9,6 +9,11 @@ class Compagnie extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function maintenances(){
+        return $this->hasMany('App\Maintenance');
+    }
+
     public function clients(){
         return $this->hasMany('App\Client');
     }
@@ -32,6 +37,6 @@ class Compagnie extends Model
         return $this->hasMany('App\Offre');
     }
     public function contractables(){
-        return $this->hasMany('App\Voiture');
+        return $this->isVehicules() ? $this->hasMany('App\Voiture') : $this->hasMany('App\Chambre');
     }
 }

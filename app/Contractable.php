@@ -1,0 +1,19 @@
+<?php
+
+namespace App;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class Contractable extends Model
+{
+    use HasFactory;
+    public static function query(){
+        return Auth::user()->compagnie->isVehicules() ? Voiture::query() : Chambre::query();
+    }
+    public static function type(){
+        return Auth::user()->compagnie->isVehicules() ? 'Voiture' : 'Chambre';
+    }
+
+}

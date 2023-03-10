@@ -55,6 +55,14 @@
     <!-- This example requires Tailwind CSS v2.0+ -->
     <div class="container mx-auto bg-gray-100">
 
+        <div class="w-full my-10 overflow-y-auto">
+            <h1 class="text-2xl">Plan des Chambres</h1>
+            <div class="mt-5">
+                @livewire('room-display', compact('contractables'))
+            </div>
+
+        </div>
+
 
         <livewire:dashboard-cards/>
 
@@ -207,13 +215,18 @@
 
         </div> --}}
 
-        <div class="w-full my-10 overflow-y-auto" style="height: 50vh">
+        <div class="w-full my-10 overflow-y-auto" style="height: 30vh">
+
             <livewire:documents-expiration-module />
         </div>
 
         <div class="w-full my-10 overflow-y-auto" style="height: 50vh">
             <livewire:car-display />
         </div>
+
+
+
+
 
 
 

@@ -18,7 +18,7 @@ class CreateChambresTable extends Migration
             $table->unsignedInteger('compagnie_id');
             $table->string('nom');
             $table->enum('type', ['Budget', 'VIP']);
-            $table->enum('etat', ['Disponible', 'Loué', 'Maintenance'])->nullable()->default('disponible');
+            $table->enum('etat', ['Disponible', 'Loué', 'Maintenance'])->nullable()->default('Disponible');
             $table->integer('prix_journalier');
             $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();

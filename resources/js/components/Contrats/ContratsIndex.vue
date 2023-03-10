@@ -3,8 +3,12 @@ export default {
     props: ['contrats', 'env', 'voitures_prop', 'clients_prop'],
     data(){
         return {
+            print_options : false,
             modal: '',
             filters: {
+                chambre : {
+                    nom : ''
+                },
                 voiture: {
                     immatriculation: ''
                 },
@@ -65,6 +69,9 @@ export default {
         },
         closeModal(){
             this.modal = ''
+        },
+        toggle(data){
+            this[data] = !this[data]
         }
     },
     watch : {

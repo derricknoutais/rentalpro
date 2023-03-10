@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Panne;
 use App\Voiture;
 use App\ApiSetting;
+use App\Chambre;
 use App\Technicien;
 use App\Maintenance;
 use Illuminate\Http\Request;
@@ -21,7 +22,11 @@ class MaintenanceController extends Controller
      */
     public function index()
     {
-        $maintenances = Maintenance::with(['voiture', 'technicien','pannes'])->latest()->get();
+        // Charge la collection des maintenances de la compagnie de l'utilisateur connecte
+        $maintenances = Auth::user()->compagnie->maintenances;
+        // Charge les relations associes aux maintenances
+        $maintenances->loadMissing(['contractable', 'technicien', 'pannes']);
+        // $maintenances = Maintenance::with(['voiture', 'technicien','pannes'])->latest()->get();
         return view('maintenances.index', compact('maintenances'));
     }
 
@@ -33,8 +38,9 @@ class MaintenanceController extends Controller
     public function create()
     {
         $voitures = Voiture::all();
+        $contractables = Auth::user()->contractables;
         $techniciens = Technicien::all();
-        return view('maintenances.create', compact('voitures', 'techniciens'));
+        return view('maintenances.create', compact('voitures', 'techniciens', 'contractables'));
     }
 
     /**

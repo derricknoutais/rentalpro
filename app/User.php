@@ -28,5 +28,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Compagnie');
     }
+    public function contractables(){
+        return $this->compagnie->contractables();
+    }
 
 }

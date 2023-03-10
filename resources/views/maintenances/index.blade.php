@@ -56,8 +56,8 @@
                                             </td>
 
                                             <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                @isset ( $maintenance->voiture )
-                                                    {{ $maintenance->voiture->immatriculation }}
+                                                @isset ( $maintenance->contractable)
+                                                    {{ $maintenance->contractable->nom() }}
                                                 @endisset
                                             </td>
 

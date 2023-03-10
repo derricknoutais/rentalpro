@@ -43,6 +43,7 @@ const app = new Vue({
     el: '#app',
     data: {
         test: false,
+        print_options : false,
         notifications: [],
         fcEvents: {
           title : 'Sunny Out of Office',
@@ -52,9 +53,8 @@ const app = new Vue({
 
     },
     methods: {
-        toggleUserOptions(){
-            console.log('Hi')
-            this.test = ! this.test
+        toggle(data){
+            this[data] = ! this[data];
             this.$forceUpdate();
         },
         relocateTo(location){

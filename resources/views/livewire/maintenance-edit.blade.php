@@ -46,7 +46,7 @@
                 <label for="">Voiture</label>
                 <select wire:model="voiture_id" class="form-control">
                     @foreach ($voitures as $voiture)
-                    <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
+                        <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
                     @endforeach
                 </select>
             </div>

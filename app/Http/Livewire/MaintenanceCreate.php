@@ -11,15 +11,19 @@ use Illuminate\Support\Facades\Http;
 
 class MaintenanceCreate extends Component
 {
-    public $voitures, $techniciens;
+    public $contractables, $techniciens;
 
-    public $titre, $voiture_id, $technicien_id, $coût = 0, $coût_pièces = 0, $created_at, $description_panne, $pannes = [];
-    public function mount($voitures, $techniciens){
+    public $titre, $contractable_id, $technicien_id, $coût = 0, $coût_pièces = 0, $created_at, $description_panne, $pannes = [];
+
+    public function mount($contractables, $techniciens){
         $this->created_at = now()->format('Y-m-d');
-        $this->voitures = $voitures;
-        if(sizeof($this->voitures) > 0)
-            $this->voiture_id = $voitures[0]->id;
+
+        $this->contractables = $contractables;
         $this->techniciens = $techniciens;
+
+        if(sizeof($this->contractables) > 0)
+            $this->contractable_id = $contractables[0]->id;
+
         if(sizeof($this->techniciens) > 0)
             $this->technicien_id = $techniciens[0]->id;
     }
@@ -29,11 +33,11 @@ class MaintenanceCreate extends Component
     }
     public function creerMaintenance(){
         DB::transaction(function () {
-
             $maintenance = Maintenance::create([
                 'titre' => $this->titre,
-                'compagnie_id' => 1,
-                'voiture_id' => $this->voiture_id,
+                'compagnie_id' => Auth::user()->compagnie_id,
+                'contractable_id' => $this->contractable_id,
+                'contractable_type' => Auth::user()->compagnie->isVehicules() ? 'App\\Vehicules' : 'App\\Chambre',
                 'technicien_id' => $this->technicien_id,
                 'coût' => $this->coût,
                 'coût_pièces' => $this->coût_pièces,
@@ -42,13 +46,12 @@ class MaintenanceCreate extends Component
             ]);
 
             foreach( $this->pannes as &$panne) {
-                $panne['compagnie_id'] = 1;
-                $panne['voiture_id'] = $maintenance->voiture_id;
+                $panne['compagnie_id'] = Auth::user()->compagnie_id;
+                $panne['contractable_id'] = $maintenance->contractable_id;
                 $panne['etat'] = 'non-résolue';
             };
 
             $pannes = $maintenance->pannes()->createMany($this->pannes);
-
 
             // $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
             // $transactionData = [
@@ -88,7 +91,7 @@ class MaintenanceCreate extends Component
     }
     private function cleanVariables(){
         $this->titre = null;
-        $this->voiture_id = null;
+        $this->contractable_id = null;
         $this->technicien_id = null;
         $this->coût = null;
         $this->coût_pièces = null;
