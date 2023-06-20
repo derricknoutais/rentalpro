@@ -4,10 +4,6 @@ use App\Offre;
 use App\Panne;
 use App\Client;
 use App\Contrat;
-<<<<<<< HEAD
-
-=======
->>>>>>> beta
 use App\Voiture;
 use App\Document;
 use App\Paiement;
@@ -17,15 +13,11 @@ use App\Technicien;
 use App\Maintenance;
 use App\Contractable;
 use App\Events\ContratCree;
-<<<<<<< HEAD
-=======
 use App\Jobs\CreateMetricEntries;
 use App\Jobs\MetricCrawler;
 use App\Metric;
-use App\Offre;
 use App\Reporting;
 use App\User;
->>>>>>> beta
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -36,11 +28,6 @@ use Spatie\Permission\Models\Permission;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
-<<<<<<< HEAD
-// if(env('APP_ENV') == 'local')
-//     Auth::loginUsingID(2);
-=======
->>>>>>> beta
 
 // if(env('APP_ENV') == 'local')
 //     Auth::loginUsingID(1);
@@ -298,21 +285,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/reservations/store', 'ReservationController@store');
     // Paramètres
     Route::get('/mes-paramètres', function () {
-<<<<<<< HEAD
-        $documents = Document::all();
-        $accessoires = Accessoire::all();
-=======
         $documents = Auth::user()->documents;
         $accessoires = Auth::user()->accessoires;
->>>>>>> beta
         $voitures = Voiture::with('documents', 'accessoires')->get();
         $contractables = Auth::user()->contractables;
         $techniciens = Technicien::where('compagnie_id', Auth::user()->compagnie_id)->get();
-<<<<<<< HEAD
-        return view('paramètres.index', compact('documents', 'accessoires', 'voitures', 'techniciens'));
-=======
         return view('paramètres.index', compact('documents', 'accessoires', 'contractables', 'techniciens'));
->>>>>>> beta
     });
 
     Route::get('/update-date-contrats', function () {
@@ -487,48 +465,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
     });
-<<<<<<< HEAD
-    Route::get('/dashboard', function () {
-        $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(
-            DB::raw('sum(montant) as sums'),
-            DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"),
-        )->orderBy('months')->groupBy('months')->get();
-
-        $contrats_in_year_ids = Contrat::whereYear('du', now()->format('Y'))->pluck('id');
-        $last_year_contrats_ids = Contrat::whereYear('du', now()->format('Y') - 1)->pluck('id');
-
-        // 1st Card
-        $dashboard['paiements_annuels'] = Paiement::whereIn('contrat_id', $contrats_in_year_ids)->sum('montant');
-        $dashboard['last_year_payments'] = Paiement::whereIn('contrat_id', $last_year_contrats_ids)->sum('montant');
-
-        // 2nd Card
-        $dashboard['nb_locations'] = Contrat::whereYear('du', now()->format('Y'))->sum('nombre_jours');
-        $dashboard['last_year_nb_locations'] = Contrat::whereYear('du', now()->format('Y') - 1)->sum('nombre_jours');
-
-        // 3rd Card
-        if (Contrat::whereYear('du', now()->format('Y'))->sum('total')) {
-            $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
-        }
-        $dashboard['last_year_payment_rate'] = null;
-        if (Contrat::whereYear('du', now()->format('Y') - 1)->sum('total')) {
-            $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1)->sum('total') * 100;
-        }
-
-        // return Paiement::all()->sum('montant');
-        $columnChartModel =
-            (new LineChartModel())
-            ->setTitle('Paiements');
-        foreach ($paiements_by_months as $pay) {
-            $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
-        }
-
-        $contractables = Contractable::query()->get();
-
-        return view('dashboard.index', compact('dashboard', 'columnChartModel', 'contractables'));
-    });
-=======
     Route::get('/dashboard',  'DashboardController@index');
->>>>>>> beta
     Route::get('/my-feeds', function () {
         $contrats = Contrat::all();
         foreach ($contrats as $contrat) {
