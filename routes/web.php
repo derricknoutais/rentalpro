@@ -43,6 +43,7 @@ Route::get('/test', function (Request $request) {
         'labels' => $data->reverse()->keys()
     ];
 });
+
 Route::get('/t', function () {
     // CreateMetricEntries::dispatch();
     Metric::query()->delete();

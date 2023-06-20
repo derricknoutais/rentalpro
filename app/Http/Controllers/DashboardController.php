@@ -67,6 +67,8 @@ class DashboardController extends Controller
         $contrats = null;
         $offres = null;
         $contractables = null;
+
+
         if (isset($compagnie)) {
             $contrats = $compagnie->contrats;
             $offres = $compagnie->offres;
