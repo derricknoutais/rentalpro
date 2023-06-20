@@ -49,7 +49,7 @@ Route::get('/test', function (Request $request) {
 Route::get('/t', function () {
     // CreateMetricEntries::dispatch();
     Metric::query()->delete();
-    MetricCrawler::dispatch(Contrat::all());
+    MetricCrawler::dispatch(Contrat::where('id', '<', 500));
     // Metric::query()->delete();
     return Metric::all();
 });

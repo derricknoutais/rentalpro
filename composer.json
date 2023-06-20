@@ -18,6 +18,7 @@
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.4",
         "laravel/jetstream": "*",
+        "laravel/telescope": "^4.14",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
         "livewire/livewire": "^2.5",
