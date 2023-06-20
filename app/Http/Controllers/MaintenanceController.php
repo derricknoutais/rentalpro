@@ -24,8 +24,12 @@ class MaintenanceController extends Controller
     {
         // Charge la collection des maintenances de la compagnie de l'utilisateur connecte
         $maintenances = Auth::user()->compagnie->maintenances;
+
         // Charge les relations associes aux maintenances
-        $maintenances->loadMissing(['contractable', 'technicien', 'pannes']);
+        if(sizeof($maintenances))
+            $maintenances->loadMissing(['contractable', 'technicien', 'pannes']);
+
+
         // $maintenances = Maintenance::with(['voiture', 'technicien','pannes'])->latest()->get();
         return view('maintenances.index', compact('maintenances'));
     }
@@ -132,13 +136,13 @@ class MaintenanceController extends Controller
      * @param  \App\Maintenance  $maintenance
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Maintenance $maintenance)
-    {
+    public function destroy(Maintenance $maintenance){
         $deleted = $maintenance->delete();
         if($deleted){
             return redirect()->back();
         }
     }
+
     public function envoyerMaintenanceGescash(Maintenance $maintenance){
         $done = DB::transaction(function () use ($maintenance){
             $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();

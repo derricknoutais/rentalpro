@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Jobs\CreateMetricEntries;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,22 +13,25 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
+        CreateMetricEntries::dispatch();
         $documents = ['Carte Grise', 'Visite Technique', 'Assurance', 'Carte Extincteur'];
         $accessoires = ['Crick', 'Triangle', 'Manivelle', 'Calle Métallique', 'Pneu Secours', 'Extincteur', 'Gilet', 'Trousse Secours'];
 
         $sta = App\Compagnie::factory()->create([
-            'nom' => 'Orisha Inn',
-            'type' => 'hôtel'
-        ]);
-        $orisha = App\Compagnie::factory()->create([
             'nom' => 'STA',
             'type' => 'véhicules'
         ]);
 
+        $orisha = App\Compagnie::factory()->create([
+            'nom' => 'Orisha Inn',
+            'type' => 'hôtel'
+        ]);
+
+
         App\User::factory()->create([
             'name' => 'Kevin',
             'email' => 'kevin@gmail.com',
-            // 'compagnie_id' => 2,
+            'compagnie_id' => 1,
             'email_verified_at' => now(),
             'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
 
@@ -35,7 +39,7 @@ class DatabaseSeeder extends Seeder
         App\User::factory()->create([
             'name' => 'Amoure',
             'email' => 'amoure@gmail.com',
-            // 'compagnie_id' => 1,
+            'compagnie_id' => 2,
             'email_verified_at' => now(),
             'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
 
@@ -61,17 +65,19 @@ class DatabaseSeeder extends Seeder
         for ($i=0; $i < 9; $i++) {
             $chambre = App\Chambre::create([
                 'nom' => '10' . $i,
-                'compagnie_id' => 1,
+                'compagnie_id' => 2,
                 'type' => $chambre_type[$rand = rand(0, 1)],
                 'prix_journalier' => $prix[$rand]
             ]);
-            App\Contrat::factory()->count(1)->create([
-                'compagnie_id' => 1,
-                'contractable_id' => $chambre->id,
-                'contractable_type' => 'App\\Chambre',
-                'client_id' => rand(0,9),
-                'prix_journalier' => $chambre->prix_journalier,
-            ]);
+            // App\Contrat::factory()->count(1)->create([
+            //     'compagnie_id' => 1,
+            //     'contractable_id' => $chambre->id,
+            //     'contractable_type' => 'App\\Chambre',
+            //     'client_id' => rand(0,9),
+            //     'prix_journalier' => $chambre->prix_journalier,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
         }
 
 

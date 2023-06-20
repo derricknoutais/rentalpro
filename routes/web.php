@@ -4,7 +4,6 @@ use App\Panne;
 use App\Client;
 use App\Contrat;
 use App\Voiture;
-
 use App\Document;
 use App\Paiement;
 use Carbon\Carbon;
@@ -13,7 +12,12 @@ use App\Contractable;
 use App\Technicien;
 use App\Maintenance;
 use App\Events\ContratCree;
+use App\Jobs\CreateMetricEntries;
+use App\Jobs\MetricCrawler;
+use App\Metric;
 use App\Offre;
+use App\Reporting;
+use App\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
@@ -22,34 +26,55 @@ use Spatie\Permission\Models\Permission;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
-if(env('APP_ENV') == 'local')
-    Auth::loginUsingID(2);
 
+if(env('APP_ENV') == 'local')
+    Auth::loginUsingID(1);
+
+Route::get('/test', function(Request $request){
+    if($request['type'] === 'annee'){
+        $data = Metric::where('type', 'annee')->orderBy('annee', 'desc')->take(4)->pluck($request['data_requested'], 'annee');
+    } elseif( $request['type'] === 'mois' ) {
+        $data =  Metric::where(['type' => 'mois'])->orderBy('annee', 'desc')->orderBy('mois', 'desc')->take(4)->pluck($request['data_requested'], 'mois_label');
+    } elseif($request['type'] === 'jour'){
+        $data = Metric::where(['type' => 'jour'])->orderBy('annee', 'desc')->orderBy('mois', 'desc')->orderBy('jour', 'desc')->take(7)->pluck($request['data_requested'], 'jour_semaine_court');
+    }
+    return [
+        'data' => $data->reverse()->values(),
+        'labels' => $data->reverse()->keys()
+    ];
+});
+Route::get('/t', function(){
+    // CreateMetricEntries::dispatch();
+    Metric::query()->delete();
+    MetricCrawler::dispatch(Contrat::all());
+    // Metric::query()->delete();
+    return Metric::all();
+});
 Auth::routes();
 
 Route::get('/add-offers', function(){
     Offre::create([
-        'compagnie_id' => 1,
+        'compagnie_id' => 2,
         'nom' => 'H24 Classique',
         'montant' => 20000
     ]);
     Offre::create([
-        'compagnie_id' => 1,
+        'compagnie_id' => 2,
         'nom' => 'H24 VIP',
         'montant' => 35000
     ]);
     Offre::create([
-        'compagnie_id' => 1,
+        'compagnie_id' => 2,
         'nom' => 'Nuitee Classique',
         'montant' => 15000
     ]);
     Offre::create([
-        'compagnie_id' => 1,
+        'compagnie_id' => 2,
         'nom' => 'Nuitee VIP',
         'montant' => 20000
     ]);
     Offre::create([
-        'compagnie_id' => 1,
+        'compagnie_id' => 2,
         'nom' => 'Detente',
         'montant' => 10000
     ]);
@@ -137,13 +162,12 @@ Route::group(['middleware' => ['auth']], function () {
             'lien_photo_avant' => $liste_nom[2],
             'lien_photo_arriere' => $liste_nom[3],
         ]);
-
         return redirect('/contrat/' . $request->contrat_id);
-
     });
 
     // VOITURES
-    Route::get('/contractables', 'VoitureController@index');
+    Route::get('/contractables', 'ContractableController@index');
+    Route::get('/contractables/{contractable_id}', 'ContractableController@show');
     Route::get('/voiture/{voiture}', 'VoitureController@show');
     Route::post( '/voiture/reception', 'VoitureController@reception');
     // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');
@@ -201,12 +225,10 @@ Route::group(['middleware' => ['auth']], function () {
             if($request->au){
                 $query->where('au', 'like',  $request->au . '%' );
             }
-
             // Date au
             if($request->du){
                 $query->where('du', 'like',  $request->du . '%' );
             }
-
             // Etat
             if($request->etat === 'en-cours'){
                 $query->whereNull('real_check_out');
@@ -227,13 +249,20 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrat/{contrat}/print', 'ContratController@print');
     Route::get('/contrat/{contrat}/print-{type_compagnie}-{size}', 'PrintController@print');
 
+
+    //  Reservation
+
+    Route::get('/reservations', 'ReservationController@index');
+    Route::get('/reservations/create', 'ReservationController@create');
+    Route::post('/reservations/store', 'ReservationController@store');
     // Paramètres
     Route::get('/mes-paramètres', function(){
-        $documents = Document::all();
-        $accessoires = Accessoire::all();
+        $documents = Auth::user()->documents;
+        $accessoires = Auth::user()->accessoires;
         $voitures = Voiture::with('documents', 'accessoires')->get();
+        $contractables = Auth::user()->contractables;
         $techniciens = Technicien::where('compagnie_id', Auth::user()->compagnie_id)->get();
-        return view( 'paramètres.index', compact('documents', 'accessoires', 'voitures', 'techniciens'));
+        return view( 'paramètres.index', compact('documents', 'accessoires', 'contractables', 'techniciens'));
     });
 
     Route::get('/update-date-contrats', function(){
@@ -320,19 +349,16 @@ Route::group(['middleware' => ['auth']], function () {
             }
         }
         return redirect()->back();
-
-
-
     });
 
     // Pannes
     Route::post('/voitures/{voiture}/ajoute-pannes', 'PanneController@store');
+    Route::post('/pannes', 'PanneController@storeApi');
 
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
     Route::get('/maintenance/{maintenance}', 'MaintenanceController@show');
     Route::get('/maintenance/{maintenance}/edit', 'MaintenanceController@edit');
-    Route::get('/maintenance/new', 'MaintenanceController@create');
     Route::get('/maintenances/create', 'MaintenanceController@create');
     Route::get('/maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');
     Route::post('/maintenances/store', 'MaintenanceController@store');
@@ -412,44 +438,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
     });
-    Route::get('/dashboard', function(){
-        $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(
-            DB::raw('sum(montant) as sums'),
-            DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"),
-        )->orderBy('months')->groupBy('months')->get();
-
-        $contrats_in_year_ids = Contrat::whereYear('du', now()->format('Y'))->pluck('id');
-        $last_year_contrats_ids = Contrat::whereYear('du', now()->format('Y') - 1 )->pluck('id');
-
-        // 1st Card
-        $dashboard['paiements_annuels'] = Paiement::whereIn('contrat_id', $contrats_in_year_ids)->sum('montant');
-        $dashboard['last_year_payments'] = Paiement::whereIn('contrat_id', $last_year_contrats_ids)->sum('montant');
-
-        // 2nd Card
-        $dashboard['nb_locations'] = Contrat::whereYear('du', now()->format('Y'))->sum('nombre_jours');
-        $dashboard['last_year_nb_locations'] = Contrat::whereYear('du', now()->format('Y') - 1)->sum('nombre_jours');
-
-        // 3rd Card
-        if( Contrat::whereYear('du', now()->format('Y'))->sum('total')) {
-            $dashboard['payment_rate'] = ($dashboard['paiements_annuels'] / Contrat::whereYear('du', now()->format('Y'))->sum('total')) * 100;
-        }
-        $dashboard['last_year_payment_rate'] = null;
-        if(Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total')){
-            $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1 )->sum('total') * 100;
-        }
-
-        // return Paiement::all()->sum('montant');
-        $columnChartModel =
-        (new LineChartModel())
-        ->setTitle('Paiements');
-        foreach($paiements_by_months as $pay){
-            $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
-        }
-
-        $contractables = Contractable::query()->get();
-
-        return view('dashboard.index', compact('dashboard', 'columnChartModel', 'contractables'));
-    });
+    Route::get('/dashboard',  'DashboardController@index');
     Route::get('/my-feeds', function(){
         $contrats = Contrat::all();
         foreach ($contrats as $contrat ) {

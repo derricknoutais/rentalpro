@@ -95,6 +95,7 @@ class ContratController extends Controller
         } else {
             $contractablesDisponibles = Chambre::all();
         }
+
         $contrat = $contrats[0];
         $voitures = Voiture::all();
         $compagnie->isHotel() ? $contractables = Chambre::all() : $contractables = Voiture::all();
@@ -103,6 +104,7 @@ class ContratController extends Controller
         foreach($clients as $client){
             $client->nom_complet = $client->nom . ' ' . $client->prenom;
         }
+
 
         return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'clients', 'contractablesDisponibles', 'contractables']));
     }
@@ -144,7 +146,6 @@ class ContratController extends Controller
     }
 
     public function store(Request $request){
-
         if(Auth::user()->compagnie->type == 'véhicules'){
             $type = 'App\\Voiture';
         } else if (Auth::user()->compagnie->type == 'hôtel') {
@@ -224,7 +225,8 @@ class ContratController extends Controller
         });
         if ($request->paiement != null && $request->paiement !== 0) {
             Paiement::create([
-                'contrat_id' => $contrat->id,
+                'payable_id' => $contrat->id,
+                'payable_type' => 'App\\Contrat',
                 'montant' => $request->paiement,
                 'type_paiement' => $request->type_paiement,
                 'note' => $request->note_paiement
@@ -301,9 +303,9 @@ class ContratController extends Controller
         //     }
 
 
-        //     // Mail::to('derricknoutais@gmail.com')->cc('kougblenouleonce@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
-        //     // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
-        //     //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
+            Mail::to('derricknoutais@gmail.com')->cc('noutaiaugustin@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
+            // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
+            //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
         // }
         return Auth::user()->compagnie->isVehicules() ?
@@ -519,13 +521,13 @@ class ContratController extends Controller
         DB::transaction(function () use ($request, $contrat){
             // Retrouve la voiture a remplacer
             $voiture = Voiture::find( $request->voiture );
+
             $contrat->contractable->etat('disponible');
             if( $voiture->etat === 'disponible' ){
                 $contrat->update([
                     'contractable_id' => $request->voiture
                 ]);
             }
-
             $voiture->etat('loué');
         });
         return redirect()->back();
@@ -537,7 +539,13 @@ class ContratController extends Controller
         $contrat->contractable->update([
             'etat' => 'disponible'
         ]);
+        if($paiements = $contrat->paiements){
+            $paiements->each(function($paiement){
+                $paiement->delete();
+            });
+        }
         $contrat->delete();
+        return redirect()->back();
     }
 
     public function download(Contrat $contrat){
@@ -586,7 +594,6 @@ class ContratController extends Controller
 
     public function terminer(Contrat $contrat, Request $request){
         DB::transaction(function () use ($contrat, $request) {
-
             $nb_jours = Carbon::parse($request->date_fin)->startOfDay()->diffInDays(Carbon::parse($contrat->du)->startOfDay());
             if($nb_jours == 0 ){
                 $nb_jours = 1;
@@ -599,7 +606,6 @@ class ContratController extends Controller
             $contrat->contractable->update([
                 'etat' => 'disponible'
             ]);
-
         });
         return redirect()->back();
     }

@@ -31,7 +31,7 @@ class PanneController extends Controller
 
     public function store(Request $request, Voiture $voiture){
 
-        for ($i=0; $i < $request->nombrePannes; $i++) { 
+        for ($i=0; $i < $request->nombrePannes; $i++) {
             $data[] = [
                 'voiture_id' => $voiture->id,
                 'compagnie_id' => Auth::user()->compagnie_id,
@@ -44,6 +44,15 @@ class PanneController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function storeApi(Request $request){
+        $panne = Panne::create([
+            'compagnie_id' => Auth::user()->compagnie_id,
+            'contractable_id' => $request['contractable_id'],
+            'description' => $request['description']
+        ]);
+        return $panne;
     }
 
     /**

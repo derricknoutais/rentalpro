@@ -3,11 +3,11 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="mt-5 text-center">Paramètres</h1>
-        <div class="row">
+        <h1 class="mt-5 text-4xl font-semibold">Paramètres</h1>
+        <div class="row mt-10">
             {{-- Sidebar --}}
             <div class="col-2">
-                <h3 class="" style="visibility: hidden">Mes Documents</h3>
+                <h3 class="text-2xl" style="visibility: hidden">Documents</h3>
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ajouterTypeDocument">
                     Ajouter Type Document
@@ -72,20 +72,25 @@
 
             <div class="col-10">
                 <div class="row">
+
                     <div class="text-center col-4">
-                        <h3>Mes Documents</h3>
+                        <h3 class="text-2xl text-left">Mes Documents</h3>
                         <div class="list-group">
-                            @foreach ($documents as $document)
+                            @isset($documents)
+                                @forelse ($documents as $document)
                                 <div class="list-group-item list-group-item-action">{{ $document->type }}
                                     <a href="#" class="float-right ml-2">
-                                        <i class="fas fa-times text-danger" data-toggle="modal" data-target="#{{ str_replace(' ', '', $document->type) }}"></i>
+                                        <i class="fas fa-times text-danger" data-toggle="modal"
+                                            data-target="#{{ str_replace(' ', '', $document->type) }}"></i>
                                     </a>
                                     <a href="#" class="float-right mx-2">
-                                        <i class="fas fa-edit text-primary" data-toggle="modal" data-target="#edit{{ str_replace(' ', '', $document->type) }}"></i>
+                                        <i class="fas fa-edit text-primary" data-toggle="modal"
+                                            data-target="#edit{{ str_replace(' ', '', $document->type) }}"></i>
                                     </a>
                                 </div>
                                 <!-- Modal -->
-                                <div class="modal fade" id="{{ str_replace(' ', '', $document->type) }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="{{ str_replace(' ', '', $document->type) }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -109,7 +114,8 @@
                                 </div>
 
                                 <!-- Modal -->
-                                <div class="modal fade" id="edit{{ str_replace(' ', '', $document->type) }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="edit{{ str_replace(' ', '', $document->type) }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -123,7 +129,8 @@
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <label for="">Type</label>
-                                                        <input type="text" class="form-control" name="type" placeholder="Manivelle" value="{{ $document->type }}">
+                                                        <input type="text" class="form-control" name="type" placeholder="Manivelle"
+                                                            value="{{ $document->type }}">
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -134,24 +141,32 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                                @empty
+                                <p>Aucun Document Disponible. Veuillez en creer</p>
+                                @endforelse
+                            @endisset
+
 
                         </div>
                     </div>
                     <div class="text-center col-4">
                         <h3>Mes Accessoires</h3>
                         <div class="list-group">
-                            @foreach ($accessoires as $accessoire)
+                            @isset($accessoires)
+                                @forelse ($accessoires as $accessoire)
                                 <div class="list-group-item list-group-item-action">{{ $accessoire->type }}
                                     <a href="#" class="float-right ml-2">
-                                        <i class="fas fa-times text-danger" data-toggle="modal" data-target="#{{ str_replace(' ', '', $accessoire->type) }}"></i>
+                                        <i class="fas fa-times text-danger" data-toggle="modal"
+                                            data-target="#{{ str_replace(' ', '', $accessoire->type) }}"></i>
                                     </a>
                                     <a href="#" class="float-right mx-2">
-                                        <i class="fas fa-edit text-primary" data-toggle="modal" data-target="#edit{{ str_replace(' ', '', $accessoire->type) }}"></i>
+                                        <i class="fas fa-edit text-primary" data-toggle="modal"
+                                            data-target="#edit{{ str_replace(' ', '', $accessoire->type) }}"></i>
                                     </a>
                                 </div>
                                 <!-- Modal -->
-                                <div class="modal fade" id="{{ str_replace(' ', '', $accessoire->type) }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="{{ str_replace(' ', '', $accessoire->type) }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -174,7 +189,8 @@
                                     </div>
                                 </div>
                                 <!-- Modal -->
-                                <div class="modal fade" id="edit{{ str_replace(' ', '', $accessoire->type) }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="edit{{ str_replace(' ', '', $accessoire->type) }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -188,7 +204,8 @@
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <label for="">Type</label>
-                                                        <input type="text" class="form-control" name="type" placeholder="Manivelle" value="{{ $accessoire->type }}">
+                                                        <input type="text" class="form-control" name="type" placeholder="Manivelle"
+                                                            value="{{ $accessoire->type }}">
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -199,18 +216,22 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                                @empty
+                                <p>Veuillez Creer des Accessoires</p>
+                                @endforelse
+                            @endisset
+
 
                         </div>
                     </div>
                     <div class="col-4">
-                        <h3 class="text-center">Mes Voitures</h3>
+                        <h3 class="text-center">Mes Voitures / Mes Chambres</h3>
                         <div class="list-group">
-                            @foreach ($voitures as $voiture)
-                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#voiture{{ $voiture->id }}" href="#">{{ $voiture->immatriculation }} </a>
+                            @foreach ($contractables as $contractable)
+                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#voiture{{ $contractable->id }}" href="#">{{ $contractable->nom() }} </a>
 
                                 <!-- Modal -->
-                                <div class="modal fade" id="voiture{{ $voiture->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="voiture{{ $contractable->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -219,66 +240,80 @@
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <form action="/{{ $voiture->id }}/voiture-documents-accessoires" method="POST">
+                                            <form action="/{{ $contractable->id }}/voiture-documents-accessoires" method="POST">
                                                 @csrf
                                                 <div class="modal-body row">
                                                     <div class="col-6">
-                                                        @foreach ($documents as $document)
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                    name="{{ str_replace(' ', '',  $document->type) }}"
-                                                                    @foreach ($voiture->documents as $voit_document)
-                                                                        @if ($voit_document->type === $document->type)
-                                                                            checked
-                                                                        @endif
-                                                                    @endforeach
-                                                                    value="{{ $document->id }}"
-                                                                    >
-                                                                    {{ $document->type }}
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-group col-6">
-                                                                <input type="date" class="form-control"
-                                                                name="date{{ str_replace(' ', '', $document->type) }}"
-                                                                    @foreach ($voiture->documents as $voit_doc)
-                                                                        @if ($voit_doc->type === $document->type)
-                                                                            value="{{ $voit_doc->pivot->date_expiration }}"
-                                                                        @endif
-                                                                    @endforeach
+                                                    @isset($documents)
+                                                        @forelse ($documents as $document)
+                                                        <div class="form-check">
+                                                            <label class="form-check-label">
+                                                                <input type="checkbox" class="form-check-input" name="{{ str_replace(' ', '',  $document->type) }}"
+                                                                    @isset($contractable->documents)
+                                                                @foreach ($contractable->documents as $voit_document)
+                                                                @if ($voit_document->type === $document->type)
+                                                                checked
+                                                                @endif
+                                                                @endforeach
+                                                                @endisset
+
+                                                                value="{{ $document->id }}"
                                                                 >
-                                                            </div>
-                                                        @endforeach
+                                                                {{ $document->type }}
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group col-6">
+                                                            <input type="date" class="form-control" name="date{{ str_replace(' ', '', $document->type) }}"
+                                                                @isset($contractable->documents)
+                                                            @foreach ($contractable->documents as $voit_doc)
+                                                            @if ($voit_doc->type === $document->type)
+                                                            value="{{ $voit_doc->pivot->date_expiration }}"
+                                                            @endif
+                                                            @endforeach
+                                                            @endisset
+
+                                                            >
+                                                        </div>
+                                                        @empty
+                                                        <div>
+                                                            Aucun Document
+                                                        </div>
+                                                        @endforelse
+                                                    @endisset
+
                                                     </div>
                                                     <div class="col-6">
-                                                        @foreach ($accessoires as $accessoire)
-                                                            <div class="form-check">
-                                                                <label class="form-check-label">
-                                                                    <input type="checkbox" class="form-check-input"
-                                                                    name="{{ str_replace(' ', '', $accessoire->type) }}"
-                                                                    value="{{ $accessoire->id }}"
-                                                                    @foreach ($voiture->accessoires as $voit_access)
+                                                        @isset($accessoires)
+                                                            @foreach ($accessoires as $accessoire)
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="checkbox" class="form-check-input" name="{{ str_replace(' ', '', $accessoire->type) }}"
+                                                                            value="{{ $accessoire->id }}" @isset($contractable->accessoires)
+                                                                        @foreach ($contractable->accessoires as $voit_access)
                                                                         @if ($voit_access->type === $accessoire->type)
-                                                                            checked
+                                                                        checked
                                                                         @endif
-                                                                    @endforeach
-                                                                    >
-                                                                    {{ $accessoire->type }}
-                                                                </label>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <input type="number" class="form-control" min=0 max=3
-                                                                    name="quantité{{ str_replace(' ', '', $accessoire->type) }}"
-                                                                    @foreach ($voiture->accessoires as $voit_access)
-                                                                        @if ($voit_access->type === $accessoire->type)
-                                                                            value="{{ $voit_access->pivot->quantité }}"
-                                                                        @endif
-                                                                    @endforeach
-                                                                >
-                                                            </div>
-                                                        @endforeach
-                                                    </div>
+                                                                        @endforeach
+                                                                        @endisset
 
+                                                                        >
+                                                                        {{ $accessoire->type }}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <input type="number" class="form-control" min=0 max=3 name="quantité{{ str_replace(' ', '', $accessoire->type) }}"
+                                                                        @isset($contractable->accessoires)
+                                                                            @foreach ($contractable->accessoires as $voit_access)
+                                                                                @if ($voit_access->type === $accessoire->type)
+                                                                                value="{{ $voit_access->pivot->quantité }}"
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @endisset
+                                                                    >
+                                                                </div>
+                                                            @endforeach
+                                                        @endisset
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>

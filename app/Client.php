@@ -36,4 +36,8 @@ class Client extends Model
     public function troisDerniersContrats(){
         return Contrat::where('client_id', $this->id)->take(3)->latest()->get();
     }
+
+    public function nom(){
+        return $this->nom . ' ' . $this->prenom;
+    }
 }
