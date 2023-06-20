@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Panne;
 use App\Scopes\VoitureScope;
 use Rinvex\Bookings\Traits\Bookable;
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Voiture extends Model
@@ -35,13 +37,14 @@ class Voiture extends Model
         return $this->morphMany('App\Contrat', 'contractable');
         // ->orderBy('id', 'desc');
     }
-    public function paiements(){
-        return $this->hasManyThrough(Paiement::class, Contrat::class, 'contractable_id', 'contrat_id'  );
+    public function paiements()
+    {
+        return $this->hasManyThrough(Paiement::class, Contrat::class, 'contractable_id', 'contrat_id');
     }
 
     public function pannes()
     {
-        return $this->hasMany('App\Panne');
+        return $this->morphMany('App\Panne', 'contractable');
     }
 
     public function maintenances()
@@ -72,7 +75,8 @@ class Voiture extends Model
         return Panne::where(['etat' => 'résolue' ,'voiture_id' => $this->id])->get();
     }
 
-    public function pannesEnMaintenance(){
+    public function pannesEnMaintenance()
+    {
         return Panne::where(['etat' => 'en-maintenance' ,'voiture_id' => $this->id])->get();
     }
 

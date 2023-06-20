@@ -2,15 +2,17 @@
 
 namespace App;
 
-use App\Scopes\ContratScope;
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Auth;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Scopes\ContratScope;
 use Illuminate\Support\Facades\DB;
+
+use Auth;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Models\Activity;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Contrat extends Model
 {
@@ -19,6 +21,22 @@ class Contrat extends Model
     protected $guarded = [];
     protected static $logUnguarded = true;
     protected $dates = ['au', 'du'];
+
+    public static function boot(){
+        parent::boot();
+        static::created(function(Contrat $contrat){
+            Metric::insere($contrat);
+        });
+        static::updating(function(Contrat $contrat){
+            Metric::maj($contrat, $contrat->oldAttributes);
+            // Metric::updateDepuis(new Contrat($contrat->oldAttributes), 'dec');
+            // $contrat->total = $contrat->total();
+            // Metric::updateDepuis($contrat, 'inc');
+        });
+        static::deleting(function(Contrat $contrat){
+            Metric::supprime($contrat);
+        });
+    }
 
     protected static function booted(){
         static::addGlobalScope(new ContratScope);
@@ -40,26 +58,28 @@ class Contrat extends Model
     }
     public function paiements()
     {
-        return $this->hasMany('App\Paiement');
+        return $this->morphMany(Paiement::class, 'payable' );
     }
-    public function total(){
+    public function total()
+    {
         return $this->nombre_jours * $this->prix_journalier + $this->demi_journee + $this->montant_chauffeur ;
     }
-    public function payé(){
+    public function payé()
+    {
         $total_payé = 0;
         foreach ($this->paiements as $paiement ) {
             $total_payé += $paiement->montant;
         }
         return $total_payé;
     }
-    public function solde(){
+    public function solde()
+    {
         return $this->total() - $this->payé();
     }
     public function logs()
     {
         return $this->morphToMany(Activity::class, 'activity_log');
     }
-
 
     // Methods
     // protected static function numéro(){
@@ -75,19 +95,13 @@ class Contrat extends Model
     // }
 
     public static function numéro(){
-
         $numéro = '';
         $numéro =  DB::transaction(function () use ($numéro) {
             $contrats_du_mois = Contrat::where('compagnie_id', Auth::user()->compagnie->id)->whereMonth( 'created_at', Carbon::now()->month )->whereYear( 'created_at', Carbon::now()->year )->get();
-
             // Si nous sommes le premier du mois ...
-
             if( Carbon::today()->isSameDay(new Carbon('first day of this month')) ) {
-
                 // ... & aucun contrat n'est établi
-
                 if( sizeof( $contrats_du_mois )  === 0){
-
                     // reinitialise la numérotation du contrat a 1
                     Auth::user()->compagnie->update([
                         'numero_contrat' => 1
@@ -96,7 +110,6 @@ class Contrat extends Model
             };
             // Récupérer le numero de contrat actuel
             $numero_contrat = Auth::user()->compagnie->numero_contrat;
-
             if($numero_contrat < 10){
                 $numéro = '00' . $numero_contrat;
             } else if( $numero_contrat >= 10 && $numero_contrat < 100 ){

@@ -3,6 +3,10 @@ require('./alpine');
 require('./apex');
 window.Vue = require('vue');
 
+
+
+
+
 window.writtenNumber = require('written-number');
 writtenNumber.defaults.lang = 'fr';
 
@@ -32,12 +36,16 @@ Vue.component('multiselect', Multiselect)
 import VueAlertify from 'vue-alertify';
 Vue.use(VueAlertify);
 
-import Vuetable from 'vuetable-2'
-Vue.component('vuetable', Vuetable);
+
 
 const files = require.context('./', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+import Chart from './components/Chart.vue'
+import LineChart from './components/LineChart.js'
+Vue.component('chart', Chart)
+
+// Vue.component('linechart', LineChart)
 
 const app = new Vue({
     el: '#app',
@@ -92,7 +100,6 @@ const app = new Vue({
     },
     mounted() {
         this.test = false
-
     },
     created(){
         window.Echo.channel('contrats').listen('ContratCree', e => {

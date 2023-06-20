@@ -148,7 +148,6 @@
                         <select type="number" class="form-control" name="type_paiement" placeholder="Type Paiement" >
                             <option v-for="type in types_paiements ">@{{ type }}</option>
                         </select>
-
                     </div>
                     <div class="w-1/3">
                         <label for="">Solde</label>

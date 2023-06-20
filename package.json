@@ -22,7 +22,7 @@
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.58.0",
         "sass-loader": "^7.1.0",
-        "vue": "^2.5.17",
+        "vue": "^2.7",
         "vue-template-compiler": "^2.6.4"
     },
     "dependencies": {
@@ -32,7 +32,7 @@
         "alpinejs": "^3.2.4",
         "animate.css": "^3.7.0",
         "apexcharts": "^3.27.3",
-        "chart.js": "^4.2.1",
+        "chart.js": "^3.5.1",
         "dotenv": "^8.2.0",
         "jquery": "^3.6.3",
         "laravel-echo": "^1.5.4",
@@ -40,7 +40,6 @@
         "tailwindcss": "npm:@tailwindcss/postcss7-compat",
         "vue-alertify": "^1.1.0",
         "vue-carousel": "^0.17.0",
-        "vue-chartjs": "^5.2.0",
         "vue-currency-filter": "^3.4.2",
         "vue-fullcalendar": "^1.0.9",
         "vue-google-charts": "^0.3.2",

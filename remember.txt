@@ -1,0 +1,55 @@
+private static function insereDepuisContrat(Contrat $contrat){
+        $array_of_checksums = Metric::generateChecksumsFrom($contrat->created_at);
+
+        // Increment la valeur de chaque Metric pour la periode correspondante a chaque array de checksums
+        foreach($array_of_checksums as $type => $checksum){
+
+            $metric = Metric::where('checksum', $checksum)->first()
+                ? $metric = Metric::where('checksum', $checksum)->first() :
+            $metric = Metric::createMetric( $contrat->created_at, $checksum );
+
+            $metric->increment('chiffre_affaires', $contrat->total());
+            $metric->increment('nombre_jours', $contrat->nombre_jours);
+            $metric->increment('nombre_locations');
+        }
+    }
+    private static function insereDepuisPaiement(Paiement $paiement){
+        $array_of_checksums = Metric::generateChecksumsFrom($paiement->created_at);
+        foreach($array_of_checksums as $type => $checksum){
+            $metric = Metric::where('checksum', $checksum)->first()
+                ? '' :
+            $metric = Metric::createMetric($paiement->created_at, $checksum);
+            $metric->increment('paiements_percus' , $paiement->montant);
+        }
+    }
+    private static function insereDepuisMaintenance(Maintenance $maintenance){
+        $array_of_checksums = Metric::generateChecksumsFrom($maintenance->created_at);
+        foreach($array_of_checksums as $type => $checksum){
+            $metric = Metric::where('checksum', $checksum)->first()
+                ? '' :
+            $metric = Metric::createMetric($maintenance->created_at, $checksum);
+            $metric->increment('cout_main_oeuvre' , $maintenance->coût);
+            $metric->increment('cout_pieces' , $maintenance->coût_pièces);
+            $metric->increment('nombre_maintenances' , 1);
+            $metric->increment('nombre_pannes', $maintenance->pannes->count());
+
+        }
+    }
+    protected static function insereDepuis($model){
+        $class = get_class($model);
+        switch ($class) {
+            case 'App\\Contrat':
+                // dd($class);
+
+                Metric::insereDepuisContrat( $model );
+                break;
+            case 'App\\Paiement':
+                Metric::insereDepuisPaiement( $model );
+                break;
+            case 'App\\Maintenance':
+                Metric::insereDepuisMaintenance( $model );
+                break;
+            default :
+                break;
+        }
+    }

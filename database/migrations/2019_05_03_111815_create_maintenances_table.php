@@ -13,7 +13,7 @@ class CreateMaintenancesTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('compagnie_id');
-            $table->unsignedInteger('voiture_id');
+            $table->unsignedInteger('voiture_id')->nullable();
             $table->unsignedInteger('contractable_id');
             $table->string('contractable_type');
             $table->string('titre')->nullable();

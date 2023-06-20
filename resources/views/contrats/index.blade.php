@@ -430,67 +430,67 @@
                                     </td>
                                     {{-- Client --}}
                                     <td class="">
-                                        {{-- Nom --}}
-                                        <div class="flex flex-col p-2 bg-gray-300">
-                                            <a class="text-blue-500" target="_blank" href="/clients/{{ $contrat->client->id }}">{{ $contrat->client['nom'] . ' ' . $contrat->client['prenom']}}</a>
-                                        </div>
-
-                                        {{-- Numéros de Téléphone --}}
-                                        <div class="flex px-2 py-3 mt-2 bg-green-300 rounded-sm">
-                                            <span class="">Nº Téléphone: {{ $contrat->client['phone1'] }}</span>
-                                            @if ($contrat->client['phone2'])
+                                        @isset($contrat->client)
+                                            {{-- Nom --}}
+                                            <div class="flex flex-col p-2 bg-gray-300">
+                                                <a class="text-blue-500" target="_blank" href="/clients/{{ $contrat->client->id }}">{{ $contrat->client['nom'] .
+                                                    ' ' . $contrat->client['prenom']}}</a>
+                                            </div>
+                                            {{-- Numéros de Téléphone --}}
+                                            <div class="flex px-2 py-3 mt-2 bg-green-300 rounded-sm">
+                                                <span class="">Nº Téléphone: {{ $contrat->client['phone1'] }}</span>
+                                                @if ($contrat->client['phone2'])
                                                 <span> / {{ $contrat->client['phone2'] }}</span>
-                                            @endif
-                                        </div>
-                                        {{-- Adresse --}}
-                                        <div class="flex flex-col px-2 py-1 mt-4 bg-green-600">
-                                            Adresse:
-                                            @if ($contrat->client->adresse)
+                                                @endif
+                                            </div>
+                                            {{-- Adresse --}}
+                                            <div class="flex flex-col px-2 py-1 mt-4 bg-green-600">
+                                                Adresse:
+                                                @if ($contrat->client->adresse)
                                                 <span class="">{{ $contrat->client['adresse'] }}</span>
-                                            @endif
-                                        </div>
-                                        {{-- Derniers Contrats --}}
-                                        <div class="flex flex-col p-2">
-                                            <p class="mb-2 text-center">Derniers Contrats</p>
-                                            @foreach ($contrat->client->troisDerniersContrats() as $ct)
-                                            <div class="flex justify-between">
-                                                <a class="text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">
+                                                @endif
+                                            </div>
+                                            {{-- Derniers Contrats --}}
+                                            <div class="flex flex-col p-2">
+                                                <p class="mb-2 text-center">Derniers Contrats</p>
+                                                @foreach ($contrat->client->troisDerniersContrats() as $ct)
+                                                <div class="flex justify-between">
+                                                    <a class="text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">
+                                                        <span>
+                                                            {{ $ct->numéro }}
+                                                        </span>
+                                                    </a>
                                                     <span>
-                                                        {{ $ct->numéro }}
+                                                        Solde: {{ $ct->solde() }}
                                                     </span>
-                                                </a>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                        @endisset
+                                    </td>
+
+
+
+                                    {{-- Contractable : Chambre Ou Hotel --}}
+                                    <td>
+                                        <div class="flex flex-col">
+                                            <div class="flex flex-col p-2 bg-gray-300">
                                                 <span>
-                                                    Solde: {{ $ct->solde() }}
+                                                    @isset($contrat->contractable)
+                                                        {{ $contrat->contractable->nom() }}
+                                                    @endisset
                                                 </span>
                                             </div>
-                                            @endforeach
-                                        </div>
-                                    </td>
-                                    {{-- Contractable : Chambre Ou Hotel --}}
-                                    @if ($compagnie->type === 'hôtel')
-                                        <td class="">{{ $contrat->contractable->nom }}</td>
-                                    @else
-                                        <td>
-                                            <div class="flex flex-col">
-                                                <div class="flex flex-col p-2 bg-gray-300">
-                                                <span>
-                                                @isset($contrat->contractable)
-                                                    {{ $contrat->contractable->immatriculation }}
-                                                @endisset
-
-                                                </span>
-                                                </div>
-                                                <div class="flex flex-col p-2 mt-3 bg-red-300">
+                                            <div class="flex flex-col p-2 mt-3 bg-red-300">
                                                 <span>
                                                     Créé par
-                                                    @if (($activity = $contrat->activities->where('description', 'created')->first()))
+                                                    @if (($activity = $contrat->activities->where('description', 'created')->first()) && $activity->causer)
                                                         {{ $activity->causer->name }} le {{ $activity->created_at->format('d-M-Y à H\Hi') }}
                                                     @endif
                                                 </span>
-                                                </div>
                                             </div>
-                                        </td>
-                                    @endif
+                                        </div>
+                                    </td>
                                     {{-- Actions --}}
                                     <td class="flex flex-col">
                                         @if($contrat->deleted_at !== NULL)

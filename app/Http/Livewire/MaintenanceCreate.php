@@ -37,19 +37,22 @@ class MaintenanceCreate extends Component
                 'titre' => $this->titre,
                 'compagnie_id' => Auth::user()->compagnie_id,
                 'contractable_id' => $this->contractable_id,
-                'contractable_type' => Auth::user()->compagnie->isVehicules() ? 'App\\Vehicules' : 'App\\Chambre',
+                'contractable_type' => Auth::user()->compagnie->isVehicules() ? 'App\\Voiture' : 'App\\Chambre',
                 'technicien_id' => $this->technicien_id,
                 'coût' => $this->coût,
                 'coût_pièces' => $this->coût_pièces,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->created_at
             ]);
+            Auth::user()->compagnie->isHotel() ? $type = 'App\\Chambre' : $type = 'App\\Voiture';
 
-            foreach( $this->pannes as &$panne) {
+            foreach( $this->pannes as &$panne ) {
                 $panne['compagnie_id'] = Auth::user()->compagnie_id;
                 $panne['contractable_id'] = $maintenance->contractable_id;
+                $panne['contractable_type'] = $type;
                 $panne['etat'] = 'non-résolue';
             };
+
 
             $pannes = $maintenance->pannes()->createMany($this->pannes);
 

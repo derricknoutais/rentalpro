@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Contrat;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ContratFactory extends Factory
@@ -27,11 +28,12 @@ class ContratFactory extends Factory
 
         'numéro' => strtoupper($faker->bothify('CL###/##/2019')),
         'compagnie_id' => 1,
-        'au' => $faker->dateTimeThisYear($max = 'now'),
-        'du' => $faker->dateTimeThisYear($max = 'now'),
+        'au' => $au = $faker->dateTimeThisYear($max = 'now'),
+        'du' => $du = $faker->dateTimeThisYear($max = 'now'),
+        'nombre_jours' => Carbon::parse($au)->startOfDay()->diffInDays(Carbon::parse($du)->startOfDay()),
         'prix_journalier' => $prix_journalier,
         'caution' => 100000,
-        'created_at' => $faker->dateTimeThisYear($max = 'now'),
+        'created_at' => now(),
         'cashier_facture_id' => rand(1,10)
         ];
     }
