@@ -46,12 +46,14 @@ Route::get('/test', function (Request $request) {
     ];
 });
 
+
 Route::get('/t', function () {
-    // CreateMetricEntries::dispatch();
-    Metric::query()->delete();
-    MetricCrawler::dispatch(Contrat::where('id', '<', 500));
+
+    // // CreateMetricEntries::dispatch();
     // Metric::query()->delete();
-    return Metric::all();
+    // MetricCrawler::dispatch(Contrat::where('id', '<', 500)->get());
+    // // Metric::query()->delete();
+    // return Metric::all();
 });
 Auth::routes();
 

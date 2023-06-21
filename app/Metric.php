@@ -12,7 +12,8 @@ class Metric extends Model
     public $columns = ['annee', 'trimestre', 'mois', 'semaine', 'jour'];
     use HasFactory;
 
-    public static function boot(){
+    public static function boot()
+    {
         parent::boot();
         // static::creating( function(Metric $reporting){
         //     $reporting->checksum = $this->generateCheckSum($reporting);
@@ -21,51 +22,54 @@ class Metric extends Model
 
 
 
-    protected static function insere($model){
+    protected static function insere($model)
+    {
+
         $columnsToUpdate = Metric::columnsToUpdate($model);
         $array_of_checksums = Metric::generateChecksumsFrom($model->created_at);
 
-        foreach($array_of_checksums as $type => $checksum){
+        foreach ($array_of_checksums as $type => $checksum) {
             $metric = Metric::where('checksum', $checksum)->first() ?
                 $metric = Metric::where('checksum', $checksum)->first() :
                 $metric = Metric::createMetric($model->created_at, $checksum);
 
-            foreach($columnsToUpdate as $key => $value ){
-                $metric->increment($key , $value);
+            foreach ($columnsToUpdate as $key => $value) {
+                $metric->increment($key, $value);
             }
         }
     }
-    protected static function maj($model, $oldAttributes){
+    protected static function maj($model, $oldAttributes)
+    {
         $array_of_checksums = Metric::generateChecksumsFrom($model->created_at);
-        foreach($array_of_checksums as  $checksum){
+        foreach ($array_of_checksums as  $checksum) {
             $metric = Metric::where('checksum', $checksum)->first();
-
-            $columnsToUpdate = Metric::columnsToUpdate($model, $oldAttributes);
-            foreach($columnsToUpdate as $column => $value ){
-                $metric->decrement($column , $value);
+            if ($metric) {
+                $columnsToUpdate = Metric::columnsToUpdate($model, $oldAttributes);
+                foreach ($columnsToUpdate as $column => $value) {
+                    $metric->decrement($column, $value);
+                }
+                $columnsToUpdate = Metric::columnsToUpdate($model);
+                foreach ($columnsToUpdate as $column => $value) {
+                    $metric->increment($column, $value);
+                }
             }
-            $columnsToUpdate = Metric::columnsToUpdate($model);
-            foreach($columnsToUpdate as $column => $value ){
-                $metric->increment($column , $value);
-            }
-
-
         }
     }
-    protected static function supprime(Contrat $contrat){
+    protected static function supprime(Contrat $contrat)
+    {
         $array_of_checksums = Metric::generateChecksumsFrom($contrat->created_at);
-        $check = [];
-        foreach($array_of_checksums as $checksum){
+        // $check = [];
+        foreach ($array_of_checksums as $checksum) {
 
             $reporting = Metric::where('checksum', $checksum)->first();
             $reporting->decrementFrom($contrat);
             // $check[] = $reporting;
         }
-
     }
 
 
-    public static function renderColumns($date){
+    public static function renderColumns($date)
+    {
         return [
             'annee' => $date->year,
             'trimestre' => $date->quarter,
@@ -74,25 +78,27 @@ class Metric extends Model
             'jour' => $date->day,
         ];
     }
-    protected static function generateCheckSum($dateTime){
+    protected static function generateCheckSum($dateTime)
+    {
         $checkSum = '';
         $columns = ['annee', 'trimestre', 'mois', 'semaine', 'jour'];
-        if(!is_array($dateTime)){
+        if (!is_array($dateTime)) {
             $dateTime = Metric::renderColumns($dateTime);
         }
-        foreach($dateTime as $key => $val){
-            if( in_array($key, $columns)){
+        foreach ($dateTime as $key => $val) {
+            if (in_array($key, $columns)) {
 
-                if($val === NULL){
+                if ($val === NULL) {
                     $checkSum .=  '-' . 0;
                 } else {
-                    $checkSum .=  '-' .$val;
+                    $checkSum .=  '-' . $val;
                 }
             }
         }
         return substr($checkSum, 1);
     }
-    protected static function generateChecksumsFrom($date){
+    protected static function generateChecksumsFrom($date)
+    {
         // Render Full Array of Checksums Values [ 'annee' => '2023' , ... , 'jour' => '31'  ]
         $array_columns = Metric::renderColumns($date);
 
@@ -104,7 +110,8 @@ class Metric extends Model
         // ['annee' => '2023', 'trimestre' => '2023-3', 'mois' => '2023-3-8'7]
         return Metric::generateAllCheckSumsToReport($checkSum);
     }
-    protected static function generateAllCheckSumsToReport($checkSum){
+    protected static function generateAllCheckSumsToReport($checkSum)
+    {
         // 2023-1-11
         $checks = [];
         $columns = ['annee', 'trimestre', 'mois', 'semaine', 'jour'];
@@ -114,23 +121,22 @@ class Metric extends Model
         $finalChecks = [];
 
 
-        foreach($columns as $col){
-            $finalChecks[$col] = $col === 'annee' ? $explodedCheckSum[$col] : $temp . '-' . $explodedCheckSum[$col] ;
+        foreach ($columns as $col) {
+            $finalChecks[$col] = $col === 'annee' ? $explodedCheckSum[$col] : $temp . '-' . $explodedCheckSum[$col];
             $temp = $finalChecks[$col];
         }
-        $weeklyCheck = explode('-',$finalChecks['semaine']);
+        $weeklyCheck = explode('-', $finalChecks['semaine']);
         $weeklyCheck[1] = $weeklyCheck[2] = '0';
         $finalWeeklyCheck = '';
-        foreach($weeklyCheck as $period){
+        foreach ($weeklyCheck as $period) {
             $finalWeeklyCheck .= '-' . $period;
         }
         $finalChecks['semaine'] = substr($finalWeeklyCheck, 1);
         return ($finalChecks);
-
-
     }
 
-    protected static function createMetric($date, $checksum){
+    protected static function createMetric($date, $checksum)
+    {
         $date_parsed = Carbon::parse($date);
         $count = substr_count($checksum, '-');
         $ex = explode('-', $checksum);
@@ -179,12 +185,13 @@ class Metric extends Model
         );
     }
 
-    protected static function columnsToUpdate($model, $data = null ){
+    protected static function columnsToUpdate($model, $data = null)
+    {
         $class = get_class($model);
 
         switch ($class) {
             case 'App\\Contrat':
-                if($data)
+                if ($data)
                     $model = new Contrat($data);
                 return [
                     'chiffre_affaires' => $model->total(),
@@ -205,7 +212,7 @@ class Metric extends Model
                     'nombre_pannes' => $model->pannes->count()
                 ];
                 break;
-            default :
+            default:
                 break;
         }
     }
