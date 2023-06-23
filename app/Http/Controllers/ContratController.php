@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\ApiSetting;
-use Illuminate\Http\Request;
-use App\Contrat;
 use App\Client;
-use App\Events\ContratCree;
-use App\Voiture;
-use Carbon\Carbon;
 use App\Chambre;
-use DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ContratCréé;
-use App\Maintenance;
-use App\Prolongation;
-use PDF;
-use Nexmo\Laravel\Facade\Nexmo;
-use NumberFormatter;
+use App\Contrat;
+use App\Voiture;
 use App\Paiement;
+use Carbon\Carbon;
+use App\ApiSetting;
+use App\Maintenance;
+use NumberFormatter;
+use App\Prolongation;
+use Barryvdh\DomPDF\PDF;
+use App\Mail\ContratCréé;
+use App\Events\ContratCree;
+use Illuminate\Http\Request;
+use Nexmo\Laravel\Facade\Nexmo;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class ContratController extends Controller
 {
@@ -576,10 +577,10 @@ class ContratController extends Controller
 
     public function ajoutePhotos(Request $request, Contrat $contrat)
     {
-        $path_droit = \Storage::disk('public_uploads')->put("/", $request->file('droit'));
-        $path_gauche = \Storage::disk('public_uploads')->put("/", $request->file('gauche'));
-        $path_avant = \Storage::disk('public_uploads')->put("/", $request->file('avant'));
-        $path_arriere = \Storage::disk('public_uploads')->put("/", $request->file('arriere'));
+        $path_droit = Storage::disk('public_uploads')->put("/", $request->file('droit'));
+        $path_gauche = Storage::disk('public_uploads')->put("/", $request->file('gauche'));
+        $path_avant = Storage::disk('public_uploads')->put("/", $request->file('avant'));
+        $path_arriere = Storage::disk('public_uploads')->put("/", $request->file('arriere'));
         $contrat->update([
             'lien_photo_avant' => $path_avant,
             'lien_photo_arriere' => $path_arriere,

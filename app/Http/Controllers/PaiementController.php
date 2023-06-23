@@ -41,15 +41,16 @@ class PaiementController extends Controller
     public function store(Request $request)
     {
 
-        $done = DB::transaction(function () use ($request){
+        $done = DB::transaction(function () use ($request) {
             $contrat = Contrat::find($request->contrat_id);
-            if( $contrat->solde() < $request->montant ){
+            if ($contrat->solde() < $request->montant) {
                 flash('Le Montant Imputé est supérieur au solde. Veuillez imputer une valeur inférieure ou égale au solde.')->error();
                 return redirect()->back();
             }
-            if($request->payer_avec_caution){
+            if ($request->payer_avec_caution) {
                 $paiement = Paiement::create([
-                    'contrat_id' => $request->contrat_id,
+                    'payable_id' => $request->contrat_id,
+                    'payable_type' => 'App\\Contrat',
                     'montant' => $request->montant,
                     'note' => 'Retiré de la caution'
                 ]);
@@ -58,14 +59,16 @@ class PaiementController extends Controller
                 ]);
             } else {
                 $paiement = Paiement::create([
-                    'contrat_id' => $request->contrat_id,
+                    'payable_id' => $request->contrat_id,
+                    'payable_type' => 'App\\Contrat',
                     'montant' => $request->montant,
                     'note' => $request->note
                 ]);
             }
             $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
-            if($paiement && $contrat->gescash_transaction_id){
-                $response = Http::post( env('GESCASH_BASE_URL') . '/api/v1/transaction/' . $contrat->gescash_transaction_id . '/entry',
+            if ($paiement && $contrat->gescash_transaction_id) {
+                $response = Http::post(
+                    env('GESCASH_BASE_URL') . '/api/v1/transaction/' . $contrat->gescash_transaction_id . '/entry',
                     [
                         'entries' =>
                         [
@@ -87,22 +90,21 @@ class PaiementController extends Controller
 
                     ]
                 );
-                if($response->status() == 201){
+                if ($response->status() == 201) {
                     $updated = $paiement->update([
                         'gescash_entry_id' => $response->json()['id']
                     ]);
-                    if($updated){
+                    if ($updated) {
                         return true;
                     }
                 }
             }
             return true;
         });
-        if($done){
+        if ($done) {
             flash('Paiement effectué avec succès')->success();
             return redirect()->back();
         }
-
     }
 
     /**
@@ -138,7 +140,7 @@ class PaiementController extends Controller
     {
         $contrat = Contrat::find($paiement->contrat_id);
 
-        if( $contrat->solde() <= $request->montant  ){
+        if ($contrat->solde() <= $request->montant) {
             flash('Le Montant Imputé est supérieur au solde. Veuillez imputer une valeur inférieure ou égale au solde.')->error();
             return redirect()->back();
         }
