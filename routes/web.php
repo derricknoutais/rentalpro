@@ -29,8 +29,8 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 
-// if(env('APP_ENV') == 'local')
-//     Auth::loginUsingID(1);
+if (env('APP_ENV') == 'local')
+    Auth::loginUsingID(1);
 
 Route::get('/test', function (Request $request) {
     if ($request['type'] === 'annee') {
@@ -48,7 +48,7 @@ Route::get('/test', function (Request $request) {
 
 
 Route::get('/t', function () {
-
+    return view('');
     // // CreateMetricEntries::dispatch();
     // Metric::query()->delete();
     // MetricCrawler::dispatch(Contrat::where('id', '<', 500)->get());
@@ -161,18 +161,13 @@ Route::group(['middleware' => ['auth']], function () {
         App\User::find($user->id)->assignRole('admin');
         App\User::find(2)->assignRole('gérant');
     });
-
     Route::get('/', function () {
         return redirect('/dashboard');
     });
-
     Route::get('/home', 'HomeController@index')->name('home');
-
-
     Route::get('/test-upload/{contrat}', function (Contrat $contrat) {
         return view('test', compact('contrat'));
     });
-
     Route::post('/upload', function (Request $request) {
         $array = ['cote_droit', 'cote_gauche', 'arriere', 'avant'];
         $liste_nom = [];

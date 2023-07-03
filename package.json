@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "development": "cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "npm run development -- --watch",
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -33,6 +33,7 @@
         "animate.css": "^3.7.0",
         "apexcharts": "^3.27.3",
         "chart.js": "^3.5.1",
+        "cross-env": "^7.0.3",
         "dotenv": "^8.2.0",
         "jquery": "^3.6.3",
         "laravel-echo": "^1.5.4",
