@@ -36,6 +36,11 @@ Vue.component('multiselect', Multiselect)
 import VueAlertify from 'vue-alertify';
 Vue.use(VueAlertify);
 
+import vueFilePond from 'vue-filepond';
+import 'filepond/dist/filepond.min.css';
+
+
+
 
 
 const files = require.context('./', true, /\.vue$/i)
@@ -49,6 +54,7 @@ Vue.component('chart', Chart)
 
 const app = new Vue({
     el: '#app',
+    
     data: {
         test: false,
         print_options : false,

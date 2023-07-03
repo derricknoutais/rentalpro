@@ -270,6 +270,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contrat/{contrat}/ajouter-demi-journee', 'ContratController@ajouterDemiJournee');
     Route::post('/contrat/{contrat}/ajouter-montant-chauffeur', 'ContratController@ajouterMontantChauffeur');
 
+
+
+    Route::resource('/image', 'ImageController');
+    // Route::post('/image', 'ImageController@store');
+
     // Impression Contrat
     Route::get('/contrat/{contrat}/print', 'ContratController@print');
     Route::get('/contrat/{contrat}/print-{type_compagnie}-{size}', 'PrintController@print');

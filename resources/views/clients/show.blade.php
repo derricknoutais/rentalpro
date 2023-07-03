@@ -56,7 +56,8 @@
 
                 </div>
                 <div class="w-1/3">
-                    <img src="/uploads/{{ $client->permis }}" width="100%" />
+                    <img src="/app/public/images/{{ $client->image->name }}" alt="">
+                    {{-- <img src="/uploads/{{ $client->permis }}" width="100%" /> --}}
                 </div>
 
         </div>

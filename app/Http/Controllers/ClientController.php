@@ -10,27 +10,30 @@ use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         // return Auth::user();
 
-        if( isset(Auth::user()->compagnie)){
+        if (isset(Auth::user()->compagnie)) {
             $clients = Auth::user()->compagnie->clients;
             return view('clients.index', compact('clients'));
-        }
-        else {
+        } else {
             return redirect('/compagnies/create');
         }
-
     }
-    public function show(Client $client){
-        $client->loadMissing('contrats', 'contrats.compagnie', 'compagnie');
+    public function show(Client $client)
+    {
+        $client->loadMissing('contrats', 'contrats.compagnie', 'compagnie', 'image');
+        // return $client;
         return view('clients.show', compact('client'));
     }
-    public function edit(Client $client){
+    public function edit(Client $client)
+    {
 
         return view('clients.update', compact('client'));
     }
-    public function update(Request $request, Client $client){
+    public function update(Request $request, Client $client)
+    {
         $client->update([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
@@ -42,9 +45,9 @@ class ClientController extends Controller
             'mail' => $request->mail,
             'ville' => $request->ville,
         ]);
-        if($request->hasFile('permis')){
+        if ($request->hasFile('permis')) {
             $image = $request->file('permis');
-            $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
+            $nom = time() . uniqid() . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/uploads');
             $image->move($destinationPath, $nom);
             $client->update([
@@ -53,8 +56,9 @@ class ClientController extends Controller
         }
         return redirect('/clients/' . $client->id);
     }
-    public function store(Request $request){
-        $client = DB::transaction(function () use ($request){
+    public function store(Request $request)
+    {
+        $client = DB::transaction(function () use ($request) {
             $client = Client::create([
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
@@ -69,9 +73,9 @@ class ClientController extends Controller
                 'cashier_id' => $request->cashier_id
             ]);
 
-            if($request->hasFile('permis')){
+            if ($request->hasFile('permis')) {
                 $image = $request->file('permis');
-                $nom = time(). uniqid() . '.'.$image->getClientOriginalExtension();
+                $nom = time() . uniqid() . '.' . $image->getClientOriginalExtension();
                 $destinationPath = public_path('/uploads');
                 $image->move($destinationPath, $nom);
                 $client->update([
@@ -82,6 +86,5 @@ class ClientController extends Controller
         });
 
         return redirect('/clients/' . $client->id);
-
     }
 }

@@ -41,6 +41,19 @@
                     <input type="text" class="form-control" name="nom" placeholder="Nom" v-model="client.nom">
                     <input type="text" class="form-control" name="prenom" placeholder="Prénom" v-model="client.prenom">
                     <input type="text" class="form-control" name="numero_telephone" placeholder="Nº Téléphone" v-model="client.numero_telephone">
+                    <input type="text" class="form-control" name="image_id" placeholder="Nº Téléphone" v-model="client.image_id">
+                    {{-- <FilePond name="pond/> --}}
+                    <file-pond 
+                        class="mt-5"
+                        name="clientId"
+                        ref="clientId"
+                        label-idle="Sauvegarder le Scan"
+                        captureMethod="camera"
+                        allowImagePreview="true"
+                        accepted-file-types="image/*"
+                        @init="filepondInitialized"
+                        @processfile="handleProcessedFile"
+                    ></file-pond>
                 </div>
                 {{-- Ancien Client --}}
                 <div class="flex flex-col mt-3" v-else>

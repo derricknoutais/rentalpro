@@ -49,7 +49,6 @@ class CreateMetricsTable extends Migration
             $table->smallInteger('nombre_pannes')->default(0)->nullable();
 
             $table->timestamps();
-
         });
     }
 
@@ -60,6 +59,6 @@ class CreateMetricsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reportings');
+        Schema::dropIfExists('metrics');
     }
 }

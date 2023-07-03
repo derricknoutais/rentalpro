@@ -171,6 +171,7 @@ class ContratController extends Controller
                     'mail' => $request->mail,
                     'ville' => $request->ville,
                     'cashier_id' => $request->cashier_id,
+                    'image_id' => $request->image_id
 
                 ]);
                 if ($request->hasFile('permis')) {
