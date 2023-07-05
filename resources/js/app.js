@@ -33,8 +33,10 @@ Vue.use(require('vue-moment'), {
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect)
 
-import VueAlertify from 'vue-alertify';
-Vue.use(VueAlertify);
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+Vue.use(VueSweetalert2);
+
 
 import vueFilePond from 'vue-filepond';
 import 'filepond/dist/filepond.min.css';

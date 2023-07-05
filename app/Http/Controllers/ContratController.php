@@ -127,13 +127,19 @@ class ContratController extends Controller
         return view('contrats.show', compact('contrat'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $clients = Client::all();
         $clients->toArray();
         $compagnie = Auth::user()->compagnie;
         $contrats = $compagnie;
         $offres = $compagnie->offres;
+
+        if ($request->has('client_id')) {
+            $client = Client::find($request->client_id);
+        } else {
+            $client = Client::first();
+        }
 
         $contractables = $compagnie->contractables;
 
@@ -142,7 +148,7 @@ class ContratController extends Controller
             // if( $compagnie->isHotel() ){
             //     return view('contrats.create-hotel', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie'));
             // }
-            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie'));
+            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie', 'client'));
         } else {
             return view('contrats.create_no_cars');
         }
