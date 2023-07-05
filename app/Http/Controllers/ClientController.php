@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use DB;
 use App\Client;
 use App\Contrat;
-use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
 {
@@ -46,6 +47,12 @@ class ClientController extends Controller
             'ville' => $request->ville,
             'image_id' => $request->image_id
         ]);
+
+        $client->loadMissing('image');
+        $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
+        Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
+
+
         if ($request->hasFile('permis')) {
             $image = $request->file('permis');
             $nom = time() . uniqid() . '.' . $image->getClientOriginalExtension();
