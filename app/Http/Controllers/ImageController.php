@@ -6,6 +6,7 @@ use App\Client;
 use App\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
@@ -48,7 +49,10 @@ class ImageController extends Controller
             'clientId' => 'required|file|image'
         ]);
         // Save
-        $path = $request->file('clientId')->store('public/images');
+        // $path = $request->file('clientId')->store('public/images');
+
+        $path = Storage::disk('do_spaces')->putFile('permis', $uploadedFile);
+
         if (!$path) {
             return response()->json([
                 'error' => 'The file could not be saved'

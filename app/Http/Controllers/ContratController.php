@@ -178,18 +178,13 @@ class ContratController extends Controller
                     'ville' => $request->ville,
                     'cashier_id' => $request->cashier_id,
                     'image_id' => $request->image_id
-
                 ]);
-                if ($request->hasFile('permis')) {
-                    $image = $request->file('permis');
-                    $nom = time() . uniqid() . '.' . $image->getClientOriginalExtension();
-                    $destinationPath = public_path('/uploads');
-                    $image->move($destinationPath, $nom);
-                    $client->update([
-                        'permis' => $nom
-                    ]);
-                }
+
                 $client_id = $client->id;
+                $client->loadMissing('image');
+                $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
+                Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
+                $client->image->update(['name' => $imageName]);
             } else {
                 $client_id = $request->client_id;
             }

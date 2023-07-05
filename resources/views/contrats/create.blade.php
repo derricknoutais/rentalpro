@@ -44,7 +44,8 @@
                     <input type="text" class="form-control" name="numero_telephone" placeholder="Nº Téléphone" v-model="client.numero_telephone">
                     <input type="hidden" class="form-control" name="image_id" placeholder="Nº Téléphone" v-model="client.image_id">
                     {{-- <FilePond name="pond/> --}}
-                    <permis-pond @file-processed="attributeImageId" ></permis-pond>
+                    
+                    <permis-pond  @file-processed="attributeImageId" ></permis-pond>
                     
                 </div>
                 {{-- Ancien Client --}}

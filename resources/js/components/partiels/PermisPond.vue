@@ -27,7 +27,7 @@ setOptions({
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
 export default {
-    props: ["ref_prop"],
+    props: ["ref_prop", "client_name"],
 
     data() {
         return {
@@ -40,6 +40,7 @@ export default {
     },
 
     methods: {
+
         filepondInitialized() {
             console.log(this.$refs.createPond)
         },
@@ -48,7 +49,7 @@ export default {
                 console.log(error)
                 return;
             }
-            console.log(file.serverId)
+            console.log(file)
             this.$emit('file-processed', file.serverId)
         }
     },

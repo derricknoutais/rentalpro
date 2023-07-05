@@ -29,8 +29,8 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 
-// if (env('APP_ENV') == 'local')
-//     Auth::loginUsingID(1);
+if (env('APP_ENV') == 'local')
+    Auth::loginUsingID(1);
 
 Route::get('/test', function (Request $request) {
 
