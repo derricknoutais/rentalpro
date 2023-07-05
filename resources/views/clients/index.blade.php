@@ -5,14 +5,25 @@
     <clients-index inline-template>
         <div>
 
-            <h1 class="text-center tw-text-3xl my-5">Clients</h1>
+            <h1 class="text-3xl my-5">Clients</h1>
 
             {{-- Tableau index sur les clients --}}
 
             <div class="container">
+
+                    <form action="/clients" class="row">
+                        <div class="col-6">
+                            <input type="text" name="client" class="form-control" > 
+                        </div>
+                        <div class="col">
+
+                            <button class="btn btn-primary">Chercher</button>
+                        </div>
+                    </form>
+
                 <div class="row mt-5">
                     <div class="col">
-
+                        
                         {{-- Tableau des clients --}}
                         <table class="table table-hover">
                             <thead>

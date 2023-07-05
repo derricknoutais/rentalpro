@@ -36,22 +36,21 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($contractables as $contractable)
-
-                                    <tr @if ($loop->odd)
-                                        class="bg-white"
-                                        @else
-                                        class="bg-gray-50"
-                                        @endif
+                                        <tr @if ($loop->odd)
+                                            class="bg-white"
+                                            @else
+                                            class="bg-gray-50"
+                                            @endif
                                         >
-                                        <td
-                                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                                            <a href="/contractables/{{ $contractable->id }}" class="text-blue-500">{{ $contractable->nom() }}</a>
-                                            </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
-                                            $contractable->type }}</td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
-                                            $contractable->etat }}</td>
-                                    </tr>
+                                            <td
+                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
+                                                <a href="/contractables/{{ $contractable->id }}" class="text-blue-500">{{ $contractable->nom() }}</a>
+                                                </td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
+                                                $contractable->type }}</td>
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{
+                                                $contractable->etat }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

@@ -11,12 +11,23 @@ use Illuminate\Support\Facades\Storage;
 
 class ClientController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // return Auth::user();
 
         if (isset(Auth::user()->compagnie)) {
             $clients = Auth::user()->compagnie->clients;
+            if ($request->has('client')) {
+                $clients = Client::where('compagnie_id', Auth::user()->compagnie_id)->where(
+                    'nom',
+                    'like',
+                    '%' . $request->client . '%'
+                )->orWhere('prenom', 'like', '%' . $request->client . '%')
+                    ->orWhere('phone1', 'like', '%' . $request->client . '%')
+                    ->orWhere('phone2', 'like', '%' . $request->client . '%')->get();
+            }
+
+
             return view('clients.index', compact('clients'));
         } else {
             return redirect('/compagnies/create');
