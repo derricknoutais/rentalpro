@@ -29,10 +29,11 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 
-if (env('APP_ENV') == 'local')
-    Auth::loginUsingID(1);
+// if (env('APP_ENV') == 'local')
+//     Auth::loginUsingID(1);
 
 Route::get('/test', function (Request $request) {
+
     if ($request['type'] === 'annee') {
         $data = Metric::where('type', 'annee')->orderBy('annee', 'desc')->take(4)->pluck($request['data_requested'], 'annee');
     } elseif ($request['type'] === 'mois') {
@@ -207,7 +208,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/clients/ajout-client', 'ClientController@store');
     Route::get('/clients/{client}/edit', 'ClientController@edit');
     Route::post('/clients/{client}/update', 'ClientController@update');
-
+    Route::delete('/clients/{client}', 'ClientController@delete');
 
     //  CONTRATS
     Route::get('/contrats/menu', 'ContratController@menu');
@@ -273,6 +274,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     Route::resource('/image', 'ImageController');
+    Route::delete('/image/{image}/client/{client}', 'ImageController@destroy');
     // Route::post('/image', 'ImageController@store');
 
     // Impression Contrat

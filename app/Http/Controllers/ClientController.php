@@ -29,8 +29,8 @@ class ClientController extends Controller
     }
     public function edit(Client $client)
     {
-
-        return view('clients.update', compact('client'));
+        $client->loadMissing('image');
+        return view('clients.edit', compact('client'));
     }
     public function update(Request $request, Client $client)
     {
@@ -44,6 +44,7 @@ class ClientController extends Controller
             'phone3' => $request->numero_telephone3,
             'mail' => $request->mail,
             'ville' => $request->ville,
+            'image_id' => $request->image_id
         ]);
         if ($request->hasFile('permis')) {
             $image = $request->file('permis');
@@ -86,5 +87,9 @@ class ClientController extends Controller
         });
 
         return redirect('/clients/' . $client->id);
+    }
+    public function delete(Client $client)
+    {
+        return $client->delete();
     }
 }
