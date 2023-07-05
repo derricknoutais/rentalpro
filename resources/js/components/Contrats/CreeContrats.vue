@@ -1,31 +1,10 @@
 
 <script>
-import vueFilePond, { setOptions } from 'vue-filepond';
-import 'filepond/dist/filepond.min.css';
-import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 
-
-setOptions({
-    server: {
-        process: {
-
-            url: '../../image',
-            headers: {
-                'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
-            }
-        }
-    }
-})
-
-const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
 export default {
-    components: {
-        FilePond
-    },
-    props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop"],
+
+    props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop", "client_requested"],
     data() {
         return {
             contractables: this.contractables_prop,
@@ -146,6 +125,10 @@ export default {
             }
             console.log(file.serverId)
             this.client.image_id = file.serverId
+        },
+        attributeImageId(id) {
+            this.client.image_id = id
+            this.$forceUpdate();
         },
         appliquerOffreDetente() {
             var now = new Date();
@@ -268,6 +251,11 @@ export default {
             this.clients.map(client => {
                 client.nom_complet = client.nom + ' ' + client.prenom
             })
+        }
+        if (this.client_requested) {
+            this.client_requested.nom_complet = this.client_requested.nom + ' ' + this.client_requested.prenom
+            this.client = this.client_requested
+            this.$forceUpdate()
         }
     }
 };
