@@ -90,9 +90,13 @@
                                         <td scope="row">
                                             <a href="/contrat/{{ $contrat->id }}">{{ $contrat->numéro }}</a>
                                         </td>
-                                        <td>
-                                            <a href="/voiture/{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</a>
-                                        </td>
+                                        @if ($contrat->contractable)    
+                                            <td>
+                                                <a href="/voiture/{{ $contrat->contractable->id }}">{{ $contrat->contractable->immatriculation }}</a>
+                                            </td>
+                                        @else
+                                            <td>Voiture Supprimée</td>
+                                        @endif
                                         @if($contrat->checkout)
                                             <td>{{ $contrat->au->format('d-M-Y')  }}</td>
                                         @else
