@@ -47,7 +47,7 @@ class ClientController extends Controller
             'ville' => $request->ville,
             'image_id' => $request->image_id
         ]);
-
+        // sd;
         $client->loadMissing('image');
         $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
         Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
