@@ -15,7 +15,7 @@
                         <div class="form-group">
                             <label for="">Nom <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" name="nom" v-model="client.nom">
-                            <input type="text" class="form-control" name="image_id" v-model="client.image_id">
+                            <input type="hidden" class="form-control" name="image_id" v-model="client.image_id">
                         </div>
                     </div>
                     <div class="col">

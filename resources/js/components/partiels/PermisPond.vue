@@ -1,6 +1,6 @@
 <template>
     <file-pond class="mt-5" name="clientId" ref="clientId" label-idle="Sauvegarder le Scan" captureMethod="camera"
-        allowImagePreview="true" accepted-file-types="image/*" @init="filepondInitialized"
+        allowImagePreview="true" accepted-file-types="image/*" @init="filepondInitialized" allowImageCrop="true"
         @processfile="handleProcessedFile"></file-pond>
 </template>
 <script>
@@ -9,6 +9,7 @@ import 'filepond/dist/filepond.min.css';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+import FilePondPluginImageCrop from 'filepond-plugin-image-crop';
 import { ref } from 'vue';
 
 
@@ -24,7 +25,7 @@ setOptions({
     }
 })
 
-const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginImageCrop);
 
 export default {
     props: ["ref_prop", "client_name"],
