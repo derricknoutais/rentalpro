@@ -51,7 +51,7 @@ class ImageController extends Controller
         // Save
         // $path = $request->file('clientId')->store('public/images');
 
-        $path = Storage::disk('do_spaces')->putFile('permis', $uploadedFile);
+        $path = Storage::disk('do_spaces')->putFile('permis', $uploadedFile, 'public');
 
         if (!$path) {
             return response()->json([

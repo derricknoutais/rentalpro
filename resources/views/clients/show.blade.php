@@ -58,7 +58,7 @@
                     </div>
                     <div class="w-1/3">
                         @if ($client->image)
-                            <img src="/app/public/images/{{ $client->image->name }}" alt="">
+                            <img src="https://rentalpro.fra1.digitaloceanspaces.com/permis/{{ $client->image->name }}" alt="">
                         @endif
                         {{-- <img src="/uploads/{{ $client->permis }}" width="100%" /> --}}
                     </div>
