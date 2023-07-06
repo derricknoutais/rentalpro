@@ -53,7 +53,7 @@ export default {
                                 'Client supprimé',
                                 'success'
                             )
-                            window.location = '/clients/' + this.prop_client
+                            window.location = '/clients/' + this.prop_client.id
                         })
 
                 }
