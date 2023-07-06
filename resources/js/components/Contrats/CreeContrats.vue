@@ -4,7 +4,7 @@
 
 export default {
 
-    props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop", "client_requested"],
+    props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop", "client_requested", "contractable_requested"],
     data() {
         return {
             contractables: this.contractables_prop,
@@ -256,6 +256,9 @@ export default {
             this.client_requested.nom_complet = this.client_requested.nom + ' ' + this.client_requested.prenom
             this.client = this.client_requested
             this.$forceUpdate()
+        }
+        if (this.contractable_requested) {
+            this.contractable = this.contractable_requested
         }
     }
 };

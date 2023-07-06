@@ -134,21 +134,25 @@ class ContratController extends Controller
         $compagnie = Auth::user()->compagnie;
         $contrats = $compagnie;
         $offres = $compagnie->offres;
-
+        $contractables = $compagnie->contractables->where('etat', 'disponible')->values();
+        $client = Client::first();
+        $contractable = $contractables->first();
         if ($request->has('client_id')) {
             $client = Client::find($request->client_id);
-        } else {
-            $client = Client::first();
+        } elseif ($request->has('contractable_id')) {
+            $contractable = $contractables->find($request->contractable_id);
+            if (!$contractable)
+                return "Erreur! Ce véhicule n'est pas disponible";
         }
 
-        $contractables = $compagnie->contractables;
+
 
         if (sizeof($contractables) > 0) {
             $contractables->toArray();
             // if( $compagnie->isHotel() ){
             //     return view('contrats.create-hotel', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie'));
             // }
-            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie', 'client'));
+            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie', 'client', 'contractable'));
         } else {
             return view('contrats.create_no_cars');
         }

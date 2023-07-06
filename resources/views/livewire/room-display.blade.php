@@ -3,10 +3,12 @@
         @foreach ($contractables as $contractable)
             <div
 
-                @if ($contractable->etat === 'Disponible')
+                @if ($contractable->etat === 'disponible')
                     class="border border-black p-5 bg-green-200 mb-3 mr-3 cursor-pointer"
-                @else
+                @elseif($contractable->etat === 'loué')
                     class="border border-black p-5 bg-red-200 mb-3 mr-3 cursor-pointer"
+                @elseif($contractable->etat === 'maintenance')   
+                    class="border border-black p-5 bg-black mb-3 mr-3 cursor-pointer text-white"
                 @endif
                 wire:click="afficheContractable({{ $contractable->id }})"
             >
@@ -16,10 +18,12 @@
     </div>
 
     <div class="
-            @if ( $display && $display->etat === 'Disponible' )
+            @if ( $display && $display->etat === 'disponible' )
                 bg-green-100
-            @elseif( $display && $display->etat === 'Loué' )
+            @elseif( $display && $display->etat === 'loué' )
                 bg-red-100
+            @elseif( $display && $display->etat === 'maintenance' )
+                bg-black-100
             @endif
             w-2/3 border border-black px-5
         "
@@ -28,64 +32,14 @@
             <h1 class="text-4xl  text-center font-bold mt-12">{{ $display->nom() }}</h1>
             <p class="text-2xl mt-12">Type : {{ $display->type }}</p>
             <p class="text-2xl">Etat Actuel : {{ $display->etat }}</p>
-            <p class="text-2xl mt-5">Offres :</p>
-            @if ($display->type === 'Budget')
-            @foreach($offers as $offer)
-                <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <li class="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow">
-                        <div class="flex flex-1 flex-col p-8">
-                            <img class="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
-                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
-                                alt="">
-                            <h3 class="mt-6 text-sm font-medium text-gray-900">Jane Cooper</h3>
-                            <dl class="mt-1 flex flex-grow flex-col justify-between">
-                                <dt class="sr-only">Title</dt>
-                                <dd class="text-sm text-gray-500">Paradigm Representative</dd>
-                                <dt class="sr-only">Role</dt>
-                                <dd class="mt-3">
-                                    <span class="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">Admin</span>
-                                </dd>
-                            </dl>
-                        </div>
-                        <div>
-                            <div class="-mt-px flex divide-x divide-gray-200">
-                                <div class="flex w-0 flex-1">
-                                    <a href="mailto:janecooper@example.com"
-                                        class="relative -mr-px inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-bl-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path
-                                                d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
-                                            <path
-                                                d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
-                                        </svg>
-                                        Email
-                                    </a>
-                                </div>
-                                <div class="-ml-px flex w-0 flex-1">
-                                    <a href="tel:+1-202-555-0170"
-                                        class="relative inline-flex w-0 flex-1 items-center justify-center gap-x-3 rounded-br-lg border border-transparent py-4 text-sm font-semibold text-gray-900">
-                                        <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                        Call
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- More people... -->
-                </ul>
-            @endforeach
-                <p class="text-2xl"> Detente : 10.000 F CFA ( 04H00 ) </p>
-                <p class="text-2xl"> Nuitee : 15.000 F CFA ( 22h00 - 08h00 ) </p>
-                <p class="text-2xl"> H24 : 20.000 F CFA ( 13h00 - 12h59 ) </p>
-                <p class="text-2xl"> W48 : 35.000 F CFA ( 04H00 ) </p>
-                <p class="text-2xl"> W72 : 50.000 F CFA ( 04H00 ) </p>
-                <p class="text-2xl"> 7J : 110.000 F CFA ( 04H00 ) </p>
+            @if ($display->etat === 'disponible')
+                <a class="btn btn-primary mt-5" href="/contrats/create?contractable_id={{$display->id}}">Créer un contrat</a>
+            @elseif($display->etat === 'loué')
+                <div>
+                    Dernier Contrat 
+                </div>
             @endif
+            
         @else
         <div class="w-full flex flex-col justify-center items-center ">
             <img src="img/orishainn_logo.png" alt="" class="w-1/2">

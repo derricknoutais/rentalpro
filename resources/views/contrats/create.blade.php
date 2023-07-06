@@ -11,6 +11,7 @@
         :offres_prop="{{ $offres }}"
         :compagnie_prop="{{ $compagnie }}"
         :client_requested="{{ $client }}"
+        :contractable_requested="{{ $contractable }}"
     >
         <div class="flex justify-center">
             <form
