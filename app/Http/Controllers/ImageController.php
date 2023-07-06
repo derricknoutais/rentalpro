@@ -109,7 +109,7 @@ class ImageController extends Controller
      */
     public function destroy(Image $image, Client $client)
     {
-        File::delete($image->name);
+        Storage::disk('do_spaces')->delete('permis/' . $image->name);
         $image->delete();
         return $client->update(['image_id' => null]);
     }
