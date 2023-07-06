@@ -61,7 +61,7 @@ class ClientController extends Controller
         // sd;
         $client->loadMissing('image');
         $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
-        str_replace('/', ' ', $imageName);
+        $imageName = str_replace('/', ' ', $imageName);
         if ($client->image) {
             Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
             $client->image->update(['name' => $imageName]);
