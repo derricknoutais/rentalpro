@@ -62,19 +62,11 @@ class ClientController extends Controller
         $client->loadMissing('image');
         $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
         str_replace('/', ' ', $imageName);
-
-        Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
-        $client->image->update(['name' => $imageName]);
-
-        if ($request->hasFile('permis')) {
-            $image = $request->file('permis');
-            $nom = time() . uniqid() . '.' . $image->getClientOriginalExtension();
-            $destinationPath = public_path('/uploads');
-            $image->move($destinationPath, $nom);
-            $client->update([
-                'permis' => $nom
-            ]);
+        if ($client->image) {
+            Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
+            $client->image->update(['name' => $imageName]);
         }
+
         return redirect('/clients/' . $client->id);
     }
     public function store(Request $request)
