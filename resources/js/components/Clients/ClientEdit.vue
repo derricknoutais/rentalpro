@@ -53,7 +53,7 @@ export default {
                                 'Client supprimé',
                                 'success'
                             )
-                            window.location = '/clients/'
+                            window.location.reload()
                         })
 
                 }
