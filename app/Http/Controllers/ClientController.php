@@ -46,6 +46,11 @@ class ClientController extends Controller
     }
     public function update(Request $request, Client $client)
     {
+        if (str_contains($request->numero_telephone, '/')) {
+            $numeros = explode('/', $request->numero_telephone);
+            $request->numero_telephone = $numeros[0];
+            $request->numero_telephone2 = $numeros[1];
+        }
         $client->update([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
