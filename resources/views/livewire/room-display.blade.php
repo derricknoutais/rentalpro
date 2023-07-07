@@ -2,7 +2,6 @@
     <div class="w-1/3 grid grid-cols-3 flex justify-between mt-3">
         @foreach ($contractables as $contractable)
             <div
-
                 @if ($contractable->etat === 'disponible')
                     class="border border-black p-5 bg-green-200 mb-3 mr-3 cursor-pointer"
                 @elseif($contractable->etat === 'loué')

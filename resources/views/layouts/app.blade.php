@@ -88,7 +88,7 @@
                                     <ul role="list" class="-mx-2 space-y-1">
                                         <li>
                                             <!-- Current: "bg-gray-50 text-blue-600", Default: "text-gray-700 hover:text-blue-600 hover:bg-gray-50" -->
-                                            <a href="#"
+                                            <a href="/"
                                                 class="bg-gray-50 text-blue-600 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
                                                 <svg class="h-6 w-6 shrink-0 text-blue-600" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -212,8 +212,10 @@
             <!-- Sidebar component, swap this element with another sidebar if you like -->
             <div class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 min-h-screen">
                 <div class="flex h-16 shrink-0 items-center mt-3">
-                    <img class="h-16 w-auto" src="/img/logoonly.png"
-                        alt="Your Company">
+                    <a href="/">
+                        <img class="h-16 w-auto" src="/img/logoonly.png"
+                            alt="Your Company">
+                    </a>
                 </div>
                 <nav class="flex flex-1 flex-col">
                     <ul role="list" class="flex flex-1 flex-col gap-y-7">

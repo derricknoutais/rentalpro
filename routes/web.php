@@ -163,7 +163,7 @@ Route::group(['middleware' => ['auth']], function () {
         App\User::find(2)->assignRole('gérant');
     });
     Route::get('/', function () {
-        return redirect('/dashboard');
+        return view('landing_page');
     });
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/test-upload/{contrat}', function (Contrat $contrat) {
