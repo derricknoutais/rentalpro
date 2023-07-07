@@ -36,7 +36,40 @@
                 <a class="btn btn-primary mt-5" href="/contrats/create?contractable_id={{$display->id}}">Créer un contrat</a>
             @elseif($display->etat === 'loué')
                 <div>
-                    Dernier Contrat 
+
+                    <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+                        <dt class="sticky top-0 text-xl font-medium text-gray-500">
+                            Derniers Contrats
+                        </dt>
+                        <dd class="max-h-screen mt-10 overflow-y-auto text-sm text-gray-900 sm:mt-10 sm:col-span-2">
+                            <ul role="list" class="border border-gray-300 bg-white divide-y divide-gray-200 rounded-md">
+                                @foreach ($display->contrats->take(5)->reverse() as $contrat)
+                                    <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+                                        <div class="flex items-center flex-1 w-0">
+                                            @isset($contrat->client)
+                                                <span class="flex-1 w-0 ml-2 truncate">
+                                                    {{ $contrat->client->nom }} {{ $contrat->client->prenom }}
+                                                </span>
+                                            @endisset
+                                            <span class="flex-1 w-0 ml-2 text-red-400 truncate">
+                                                {{ $contrat->du->format('d/m/Y') }} - {{ $contrat->au->format('d/m/Y') }}
+                                            </span>
+
+                                        </div>
+                                        <div class="flex-shrink-0 ml-4">
+                                            <a target="_blank" href="/contrat/{{ $contrat->id }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                                Voir Contrat
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endforeach
+
+                            </ul>
+                        </dd>
+                    </div>
+
+                    <a href="/contractables/{{ $display->id }}" class="btn btn-primary">Voir Plus</a>
+                    
                 </div>
             @endif
             

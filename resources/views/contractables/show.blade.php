@@ -22,10 +22,10 @@
             <div
                 class="flex flex-col-reverse mt-6 space-y-4 space-y-reverse justify-stretch sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
 
-                <button type="button"
+                <a href="/contrats/create?contractable_id={{ $contractable->id }}"
                     class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                     Faire Louer
-                </button>
+                </a>
                 <button type="button"
                     class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
                     Envoyer en Maintenance
@@ -53,9 +53,11 @@
                                 @foreach ($contractable->contrats->reverse()->take(3) as $contrat)
                                 <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
                                     <div class="flex items-center flex-1 w-0">
-                                        <span class="flex-1 w-0 ml-2 truncate">
-                                            {{ $contrat->client->nom }} {{ $contrat->client->prenom }}
-                                        </span>
+                                        @isset($contrat->client)
+                                            <span class="flex-1 w-0 ml-2 truncate">
+                                                {{ $contrat->client->nom }} {{ $contrat->client->prenom }}
+                                            </span>
+                                        @endisset
                                         <span class="flex-1 w-0 ml-2 text-red-400 truncate">
                                             {{ $contrat->du->format('d/m/Y') }} - {{ $contrat->au->format('d/m/Y') }}
                                         </span>

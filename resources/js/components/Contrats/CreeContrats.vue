@@ -111,7 +111,8 @@ export default {
                     break;
             }
 
-        }
+        },
+
 
     },
     methods: {
@@ -247,6 +248,7 @@ export default {
         }
     },
     mounted() {
+        // console.log(1)
         if (this.clients) {
             this.clients.map(client => {
                 client.nom_complet = client.nom + ' ' + client.prenom
@@ -260,6 +262,12 @@ export default {
         if (this.contractable_requested) {
             this.contractable = this.contractable_requested
         }
+        var now = new Date();
+        now.setSeconds(0)
+        this.formulaire.du = now.toISOString().split('.')[0];
+        console.log(now.toISOString().split('.')[0])
+        now.setDate(now.getDate() + 1)
+        this.formulaire.au = now.toISOString().split('.')[0];
     }
 };
 </script>

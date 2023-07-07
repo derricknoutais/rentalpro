@@ -12,7 +12,7 @@ use App\ApiSetting;
 use App\Maintenance;
 use NumberFormatter;
 use App\Prolongation;
-use Barryvdh\DomPDF\PDF;
+use PDF;
 use App\Mail\ContratCréé;
 use App\Events\ContratCree;
 use Illuminate\Http\Request;
@@ -114,16 +114,6 @@ class ContratController extends Controller
     public function show(Contrat $contrat)
     {
         $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements');
-        $du = $contrat->du->format('d-M-Y');
-        $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
-        $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
-        $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
-        $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
-        if ($contrat->compagnie->type === 'véhicules') {
-            $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-        } else if ($contrat->compagnie->type === 'hôtel') {
-            $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-        }
         return view('contrats.show', compact('contrat'));
     }
 
