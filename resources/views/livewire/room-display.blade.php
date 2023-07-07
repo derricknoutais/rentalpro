@@ -43,7 +43,7 @@
                         </dt>
                         <dd class="max-h-screen mt-10 overflow-y-auto text-sm text-gray-900 sm:mt-10 sm:col-span-2">
                             <ul role="list" class="border border-gray-300 bg-white divide-y divide-gray-200 rounded-md">
-                                @foreach ($display->contrats->take(5)->reverse() as $contrat)
+                                @foreach ($display->contrats->take(5) as $contrat)
                                     <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
                                         <div class="flex items-center flex-1 w-0">
                                             @isset($contrat->client)
