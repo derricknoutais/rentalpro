@@ -15,6 +15,7 @@ use App\Contractable;
 use App\Events\ContratCree;
 use App\Jobs\CreateMetricEntries;
 use App\Jobs\MetricCrawler;
+use App\Mail\ContratCréé;
 use App\Metric;
 use App\Reporting;
 use App\User;
@@ -28,28 +29,43 @@ use Spatie\Permission\Models\Permission;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
-
-if (env('APP_ENV') == 'local')
+if (env('APP_ENV') == 'local') {
     Auth::loginUsingID(1);
+}
 
 Route::get('/test', function (Request $request) {
-
     if ($request['type'] === 'annee') {
-        $data = Metric::where('type', 'annee')->orderBy('annee', 'desc')->take(4)->pluck($request['data_requested'], 'annee');
+        $data = Metric::where('type', 'annee')
+            ->orderBy('annee', 'desc')
+            ->take(4)
+            ->pluck($request['data_requested'], 'annee');
     } elseif ($request['type'] === 'mois') {
-        $data =  Metric::where(['type' => 'mois'])->orderBy('annee', 'desc')->orderBy('mois', 'desc')->take(4)->pluck($request['data_requested'], 'mois_label');
+        $data = Metric::where(['type' => 'mois'])
+            ->orderBy('annee', 'desc')
+            ->orderBy('mois', 'desc')
+            ->take(4)
+            ->pluck($request['data_requested'], 'mois_label');
     } elseif ($request['type'] === 'jour') {
-        $data = Metric::where(['type' => 'jour'])->orderBy('annee', 'desc')->orderBy('mois', 'desc')->orderBy('jour', 'desc')->take(7)->pluck($request['data_requested'], 'jour_semaine_court');
+        $data = Metric::where(['type' => 'jour'])
+            ->orderBy('annee', 'desc')
+            ->orderBy('mois', 'desc')
+            ->orderBy('jour', 'desc')
+            ->take(7)
+            ->pluck($request['data_requested'], 'jour_semaine_court');
     }
     return [
         'data' => $data->reverse()->values(),
-        'labels' => $data->reverse()->keys()
+        'labels' => $data->reverse()->keys(),
     ];
 });
-
-
+Route::get('/tt', function () {
+    return view('emails.contrat_créé', ['contrat' => Contrat::find(12)]);
+});
 Route::get('/t', function () {
-    return view('');
+    Mail::to('derricknoutais@gmail.com')
+        ->cc('noutaiaugustin@gmail.com')
+        ->bcc('servicesazimuts@gmail.com')
+        ->send(new ContratCréé(Contrat::find(12)));
     // // CreateMetricEntries::dispatch();
     // Metric::query()->delete();
     // MetricCrawler::dispatch(Contrat::where('id', '<', 500)->get());
@@ -62,32 +78,31 @@ Route::get('/add-offers', function () {
     Offre::create([
         'compagnie_id' => 2,
         'nom' => 'H24 Classique',
-        'montant' => 20000
+        'montant' => 20000,
     ]);
     Offre::create([
         'compagnie_id' => 2,
         'nom' => 'H24 VIP',
-        'montant' => 35000
+        'montant' => 35000,
     ]);
     Offre::create([
         'compagnie_id' => 2,
         'nom' => 'Nuitee Classique',
-        'montant' => 15000
+        'montant' => 15000,
     ]);
     Offre::create([
         'compagnie_id' => 2,
         'nom' => 'Nuitee VIP',
-        'montant' => 20000
+        'montant' => 20000,
     ]);
     Offre::create([
         'compagnie_id' => 2,
         'nom' => 'Detente',
-        'montant' => 10000
+        'montant' => 10000,
     ]);
 });
 
 Route::group(['middleware' => ['auth']], function () {
-
     Route::get('/role-et-permissions', function () {
         $role1 = Role::create(['name' => 'admin']);
         $role2 = Role::create(['name' => 'gérant']);
@@ -110,59 +125,18 @@ Route::group(['middleware' => ['auth']], function () {
         $permission14 = Permission::create(['name' => 'editer client']);
         $permission15 = Permission::create(['name' => 'supprimer client']);
 
-        $role1->syncPermissions(
-            $permission0,
-            $permission1,
-            $permission2,
-            $permission3,
-            $permission4,
-            $permission5,
-            $permission6,
-            $permission7,
-            $permission8,
-            $permission9,
-            $permission10,
-            $permission11,
-            $permission12,
-            $permission13,
-            $permission14,
-            $permission15
-        );
-        $role2->syncPermissions(
-            $permission0,
-            $permission1,
-            $permission2,
-            $permission3,
-            $permission5,
-            $permission6,
-            $permission7,
-            $permission8,
-            $permission9,
-            $permission11,
-            $permission12,
-            $permission13,
-            $permission14,
-            $permission15
-        );
-        $role3->syncPermissions(
-            $permission0,
-            $permission1,
-            $permission2,
-            $permission6,
-            $permission5,
-            $permission7,
-            $permission8,
-            $permission11,
-            $permission12,
-            $permission13,
-            $permission14
-        );
+        $role1->syncPermissions($permission0, $permission1, $permission2, $permission3, $permission4, $permission5, $permission6, $permission7, $permission8, $permission9, $permission10, $permission11, $permission12, $permission13, $permission14, $permission15);
+        $role2->syncPermissions($permission0, $permission1, $permission2, $permission3, $permission5, $permission6, $permission7, $permission8, $permission9, $permission11, $permission12, $permission13, $permission14, $permission15);
+        $role3->syncPermissions($permission0, $permission1, $permission2, $permission6, $permission5, $permission7, $permission8, $permission11, $permission12, $permission13, $permission14);
 
         $user = Auth::user();
         App\User::find($user->id)->assignRole('admin');
         App\User::find(2)->assignRole('gérant');
     });
     Route::get('/', function () {
+        if (Auth::user()) {
+            return redirect('/dashboard');
+        }
         return view('landing_page');
     });
     Route::get('/home', 'HomeController@index')->name('home');
@@ -201,7 +175,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/voitures/ajout-voiture', 'VoitureController@store');
     Route::post('/contractable/{contractable}/rendre-disponible', 'VoitureController@rendreDisponible');
 
-
     // CLIENTS
     Route::get('/clients', 'ClientController@index');
     Route::get('/clients/{client}', 'ClientController@show');
@@ -232,14 +205,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contrats/{contrat}/prolonger', 'ContratController@prolonger');
     Route::post('/contrats/{contrat}/changer-voiture', 'ContratController@changerVoiture');
     Route::get('/contrats/recherche', function (Request $request) {
-        $contrats = Contrat::when($request, function ($query,  $request) {
+        $contrats = Contrat::when($request, function ($query, $request) {
             // Contrat
             if ($request->contrat) {
                 $query->where('numéro', 'like', '%' . $request->contrat . '%');
             }
             // Client
             if ($request->client) {
-                $clients = Client::where('nom', 'like', '%' .  $request->client . '%')
+                $clients = Client::where('nom', 'like', '%' . $request->client . '%')
                     ->orWhere('prenom', 'like', '%' . $request->client . '%')
                     ->orWhere('phone1', 'like', '%' . $request->client . '%')
                     ->orWhere('phone2', 'like', '%' . $request->client . '%')
@@ -249,29 +222,32 @@ Route::group(['middleware' => ['auth']], function () {
             }
             // Date du
             if ($request->au) {
-                $query->where('au', 'like',  $request->au . '%');
+                $query->where('au', 'like', $request->au . '%');
             }
             // Date au
             if ($request->du) {
-                $query->where('du', 'like',  $request->du . '%');
+                $query->where('du', 'like', $request->du . '%');
             }
             // Etat
             if ($request->etat === 'en-cours') {
                 $query->whereNull('real_check_out');
-            } else if ($request->etat === 'terminé') {
+            } elseif ($request->etat === 'terminé') {
                 $query->whereNotNull('real_check_out');
             }
             return $query;
-        })->orderBy('id', 'desc')->paginate(20);
+        })
+            ->orderBy('id', 'desc')
+            ->paginate(20);
         $voitures = Voiture::all();
         return view('contrats.index', compact(['contrats', 'voitures']));
     });
     Route::delete('/contrats/{contrat}', 'ContratController@destroy');
     Route::get('/contrat/{contrat}/envoyer-gescash', 'ContratController@envoyerContratGescash');
     Route::post('/contrat/{contrat}/ajouter-demi-journee', 'ContratController@ajouterDemiJournee');
+    Route::post('/contrat/{contrat}/update-demi-journee', 'ContratController@updateDemiJournee');
     Route::post('/contrat/{contrat}/ajouter-montant-chauffeur', 'ContratController@ajouterMontantChauffeur');
-
-
+    Route::post('/contrat/{contrat}/update-montant-chauffeur', 'ContratController@updateMontantChauffeur');
+    Route::delete('/contrat/{contrat}/delete/{data}', 'ContratController@resetDataToNull');
 
     Route::resource('/image', 'ImageController');
     Route::delete('/image/{image}/client/{client}', 'ImageController@destroy');
@@ -280,7 +256,6 @@ Route::group(['middleware' => ['auth']], function () {
     // Impression Contrat
     Route::get('/contrat/{contrat}/print', 'ContratController@print');
     Route::get('/contrat/{contrat}/print-{type_compagnie}-{size}', 'PrintController@print');
-
 
     //  Reservation
 
@@ -306,7 +281,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/documents', function (Request $request) {
         $document = Document::create([
             'type' => $request->type,
-            'compagnie_id' => Auth::user()->compagnie_id
+            'compagnie_id' => Auth::user()->compagnie_id,
         ]);
 
         if ($document) {
@@ -315,69 +290,72 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::post('/documents/{document}/destroy', function (Document $document) {
         $deleted = $document->delete();
-        if ($deleted)
+        if ($deleted) {
             return redirect('/mes-paramètres');
+        }
     });
     Route::post('/documents/{document}/update', function (Document $document, Request $request) {
         $updated = $document->update([
-            'type' => $request->type
+            'type' => $request->type,
         ]);
-        if ($updated)
+        if ($updated) {
             return redirect('/mes-paramètres');
+        }
     });
 
     // Accessoires
     Route::post('/accessoires', function (Request $request) {
         $accessoire = Accessoire::create([
             'type' => $request->type,
-            'compagnie_id' => Auth::user()->compagnie_id
+            'compagnie_id' => Auth::user()->compagnie_id,
         ]);
-        if ($accessoire)
+        if ($accessoire) {
             return redirect('/mes-paramètres');
+        }
     });
     Route::post('/accessoires/{accessoire}/destroy', function (Accessoire $accessoire) {
         $deleted = $accessoire->delete();
-        if ($deleted)
+        if ($deleted) {
             return redirect('/mes-paramètres');
+        }
     });
     Route::post('/accessoires/{accessoire}/update', function (Accessoire $accessoire, Request $request) {
         $updated = $accessoire->update([
-            'type' => $request->type
+            'type' => $request->type,
         ]);
-        if ($updated)
+        if ($updated) {
             return redirect('/mes-paramètres');
+        }
     });
     Route::post('/{voiture}/voiture-documents-accessoires', function (Request $request, Voiture $voiture) {
         $documents = Document::all();
         $docKeys = [];
         $accessoires = Accessoire::all();
         $accKeys = [];
-        foreach ($documents as  $document) {
+        foreach ($documents as $document) {
             array_push($docKeys, str_replace(' ', '', $document->type));
         }
-        foreach ($accessoires as  $accessoire) {
+        foreach ($accessoires as $accessoire) {
             array_push($accKeys, str_replace(' ', '', $accessoire->type));
         }
         // return $request;
         for ($i = 0; $i < sizeof($documents); $i++) {
             if (isset($request[$docKeys[$i]]) && isset($request['date' . $docKeys[$i]])) {
-                DB::table('voiture_documents')->updateOrInsert(
-                    ['voiture_id' => $voiture->id, 'document_id' => $request[$docKeys[$i]]],
-                    ['voiture_id' => $voiture->id, 'document_id' => $request[$docKeys[$i]], 'date_expiration' => $request['date' . $docKeys[$i]]]
-                );
+                DB::table('voiture_documents')->updateOrInsert(['voiture_id' => $voiture->id, 'document_id' => $request[$docKeys[$i]]], ['voiture_id' => $voiture->id, 'document_id' => $request[$docKeys[$i]], 'date_expiration' => $request['date' . $docKeys[$i]]]);
             } else {
-                DB::table('voiture_documents')->where(['voiture_id' => $voiture->id, 'document_id' => $documents[$i]->id])->delete();
+                DB::table('voiture_documents')
+                    ->where(['voiture_id' => $voiture->id, 'document_id' => $documents[$i]->id])
+                    ->delete();
             }
         }
 
         for ($i = 0; $i < sizeof($accessoires); $i++) {
             if (isset($request[$accKeys[$i]]) && isset($request['quantité' . $accKeys[$i]])) {
-                DB::table('voiture_accessoires')->updateOrInsert(
-                    ['voiture_id' => $voiture->id, 'accessoire_id' => $request[$accKeys[$i]]],
-                    ['voiture_id' => $voiture->id, 'accessoire_id' => $request[$accKeys[$i]], 'quantité' => $request['quantité' . $accKeys[$i]]]
-                );
+                DB::table('voiture_accessoires')->updateOrInsert(['voiture_id' => $voiture->id, 'accessoire_id' => $request[$accKeys[$i]]], ['voiture_id' => $voiture->id, 'accessoire_id' => $request[$accKeys[$i]], 'quantité' => $request['quantité' . $accKeys[$i]]]);
             } else {
-                DB::table('voiture_accessoires')->where(['voiture_id' => $voiture->id, 'accessoire_id' => $accessoires[$i]->id])->delete();
+                DB::table('voiture_accessoires')
+                    ->where(['voiture_id' => $voiture->id, 'accessoire_id' => $accessoires[$i]->id])
+                    ->delete();
             }
         }
         return redirect()->back();
@@ -399,12 +377,12 @@ Route::group(['middleware' => ['auth']], function () {
         foreach ($request->pannes as $panne) {
             $panne = Panne::find($panne);
             $panne->update([
-                'etat' => 'résolue'
+                'etat' => 'résolue',
             ]);
         }
         $maintenance->update([
             'coût' => $request->montant,
-            'coût_pièces' => $request->pièces_détachées
+            'coût_pièces' => $request->pièces_détachées,
         ]);
         $maintenance->loadMissing('voiture');
 
@@ -414,7 +392,6 @@ Route::group(['middleware' => ['auth']], function () {
     });
     Route::delete('/maintenances/{maintenance}', 'MaintenanceController@destroy');
 
-
     Route::get('/paiements-cashier', function () {
         $ids = Contrat::pluck('id')->toArray();
         $contrats = Contrat::all();
@@ -423,7 +400,7 @@ Route::group(['middleware' => ['auth']], function () {
         foreach ($test as $paiement) {
             $contrat_id = $contrats->where('cashier_facture_id', $paiement['facture_id'])->first()['id'];
 
-            if ($contrat_id)
+            if ($contrat_id) {
                 $paiements[] = [
                     'contrat_id' => $contrat_id,
                     'montant' => $paiement['montant'],
@@ -431,19 +408,21 @@ Route::group(['middleware' => ['auth']], function () {
                     'created_at' => $paiement['created_at'],
                     'updated_at' => $paiement['updated_at'],
                 ];
+            }
         }
         DB::table('paiements')->insert($paiements);
         // return $test;
     });
 
-
     // Reporting
     Route::get('/reporting/voitures', function () {
         $voitures = Voiture::with(['contrats', 'contrats.paiements', 'maintenances'])->get();
         // return $voitures;
-        $contrats =  Contrat::all()->sortBy('created_at')->groupBy(function ($contrat) {
-            return Carbon::parse($contrat->created_at)->format('m');
-        });
+        $contrats = Contrat::all()
+            ->sortBy('created_at')
+            ->groupBy(function ($contrat) {
+                return Carbon::parse($contrat->created_at)->format('m');
+            });
         $contrat_ordered_by_month = [];
         for ($i = 1; $i < 13; $i++) {
             if ($i < 10) {
@@ -469,7 +448,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
     });
-    Route::get('/dashboard',  'DashboardController@index');
+    Route::get('/dashboard', 'DashboardController@index');
     Route::get('/my-feeds', function () {
         $contrats = Contrat::all();
         foreach ($contrats as $contrat) {
@@ -481,7 +460,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // COMPAGNIES
     Route::view('/compagnies/create', 'compagnies.create');
-
 
     // PAIEMENTS
     Route::resource('paiement', 'PaiementController');

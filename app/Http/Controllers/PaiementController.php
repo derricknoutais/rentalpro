@@ -40,7 +40,6 @@ class PaiementController extends Controller
      */
     public function store(Request $request)
     {
-
         $done = DB::transaction(function () use ($request) {
             $contrat = Contrat::find($request->contrat_id);
             if ($contrat->solde() < $request->montant) {
@@ -52,47 +51,42 @@ class PaiementController extends Controller
                     'payable_id' => $request->contrat_id,
                     'payable_type' => 'App\\Contrat',
                     'montant' => $request->montant,
-                    'note' => 'Retiré de la caution'
+                    'note' => 'Retiré de la caution',
                 ]);
                 $contrat->update([
-                    'caution' => $contrat->caution - $request->montant
+                    'caution' => $contrat->caution - $request->montant,
                 ]);
             } else {
                 $paiement = Paiement::create([
                     'payable_id' => $request->contrat_id,
                     'payable_type' => 'App\\Contrat',
                     'montant' => $request->montant,
-                    'note' => $request->note
+                    'note' => $request->note,
                 ]);
             }
             $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();
             if ($paiement && $contrat->gescash_transaction_id) {
-                $response = Http::post(
-                    env('GESCASH_BASE_URL') . '/api/v1/transaction/' . $contrat->gescash_transaction_id . '/entry',
-                    [
-                        'entries' =>
+                $response = Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction/' . $contrat->gescash_transaction_id . '/entry', [
+                    'entries' => [
+                        // Client Entry Credit
                         [
-                            // Client Entry Credit
-                            [
-                                'account_id' => $apiSettings->gescash_client_account_id,
-                                'label' => 'Paiment Contrat ' . $contrat->numéro,
-                                'credit' => $request->montant,
-                                'debit' => NULL
-                            ],
-                            // Caisse Entry Debit
-                            [
-                                'account_id' => $apiSettings->gescash_cash_account_id,
-                                'label' => 'Paiment Contrat ' . $contrat->numéro,
-                                'debit' => $request->montant,
-                                'credit' => NULL
-                            ],
-                        ]
-
-                    ]
-                );
+                            'account_id' => $apiSettings->gescash_client_account_id,
+                            'label' => 'Paiment Contrat ' . $contrat->numéro,
+                            'credit' => $request->montant,
+                            'debit' => null,
+                        ],
+                        // Caisse Entry Debit
+                        [
+                            'account_id' => $apiSettings->gescash_cash_account_id,
+                            'label' => 'Paiment Contrat ' . $contrat->numéro,
+                            'debit' => $request->montant,
+                            'credit' => null,
+                        ],
+                    ],
+                ]);
                 if ($response->status() == 201) {
                     $updated = $paiement->update([
-                        'gescash_entry_id' => $response->json()['id']
+                        'gescash_entry_id' => $response->json()['id'],
                     ]);
                     if ($updated) {
                         return true;
@@ -138,7 +132,7 @@ class PaiementController extends Controller
      */
     public function update(Request $request, Paiement $paiement)
     {
-        $contrat = Contrat::find($paiement->contrat_id);
+        $contrat = Contrat::find($paiement->payable_id);
 
         if ($contrat->solde() <= $request->montant) {
             flash('Le Montant Imputé est supérieur au solde. Veuillez imputer une valeur inférieure ou égale au solde.')->error();
@@ -146,7 +140,7 @@ class PaiementController extends Controller
         }
         $paiement->update([
             'montant' => $request->montant,
-            'note' => $request->note
+            'note' => $request->note,
         ]);
         flash('Paiement Modifié avec succès')->success();
         return redirect()->back();
@@ -160,8 +154,9 @@ class PaiementController extends Controller
      */
     public function destroy(Paiement $paiement)
     {
+        // return $paiement;
         $paiement->delete();
-        flash('Paiement supprimé avec succès')->success();
-        return redirect()->back();
+        // flash('Paiement supprimé avec succès')->success();
+        // return redirect()->back();
     }
 }

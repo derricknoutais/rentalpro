@@ -29,6 +29,6 @@ class ContratCréé extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.contrat_créé', compact($this->contrat));
+        return $this->view('emails.contrat_créé', ['contrat' => $this->contrat]);
     }
 }

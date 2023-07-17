@@ -3,7 +3,8 @@
 @section('content')
     <div class="md:flex md:items-center md:justify-center mb-5 w-full">
         <div class="flex w-2/3 ">
-            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Ajouter Reservation</h2>
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Ajouter
+                Reservation</h2>
         </div>
 
     </div>
@@ -11,7 +12,7 @@
         :chambres_prop="{{ $contractables }}" :clients_prop="{{ $clients }}" :offres_prop="{{ $offres }}"
         :compagnie_prop="{{ $compagnie }}">
         <div class="flex justify-center">
-            <form class="flex flex-col w-2/3" action="/reservation/store" method="POST" enctype="multipart/form-data"
+            <form class="flex flex-col w-2/3" action="/reservations/store" method="POST" enctype="multipart/form-data"
                 id="clientForm" {{-- @submit.prevent="enregistreClientDansCashier()" --}}>
                 @csrf
                 <div class="flex mt-5">
@@ -33,7 +34,8 @@
                 <input type="hidden" name="client_id" v-model.number="client.id">
                 {{-- Nouveau Client --}}
                 <div class="flex flex-col mt-3" v-if="display.nouveau_client">
-                    <input type="hidden" class="form-control" id="cashier_id" name="cashier_id" v-model="client.cashier_id">
+                    <input type="hidden" class="form-control" id="cashier_id" name="cashier_id"
+                        v-model="client.cashier_id">
                     <input type="text" class="form-control" name="nom" placeholder="Nom" v-model="client.nom">
                     <input type="text" class="form-control" name="prenom" placeholder="Prénom" v-model="client.prenom">
                     <input type="text" class="form-control" name="numero_telephone" placeholder="Nº Téléphone"
@@ -54,20 +56,18 @@
                 <div class="w-full mt-3">
                     <label for="">
                         @if ($compagnie->isHotel())
-                        Selectionner Chambre
+                            Selectionner Chambre
                         @elseif($compagnie->isVehicules())
-                        Selectionner Voiture
+                            Selectionner Voiture
                         @endif
 
                     </label>
                     <div class="flex w-full">
-                        <multiselect :show-labels="true" :options="contractables" @if ($compagnie->isHotel())
-                            label="nom"
+                        <multiselect :show-labels="true" :options="contractables"
+                            @if ($compagnie->isHotel()) label="nom"
                             @elseif($compagnie->isVehicules())
-                            label="immatriculation"
-                            @endif
-                            v-model="contractable"
-                            >
+                            label="immatriculation" @endif
+                            v-model="contractable">
                             <template slot="noResult"> Cette voiture n'existe pas </template>
                         </multiselect>
                         <button type="button" v-if="contractable.etat === 'loué' "
@@ -76,15 +76,16 @@
                     </div>
                 </div>
                 @if ($compagnie->isHotel())
-                <div class="w-full mt-3">
-                    <label for="">Selectionner Offre</label>
-                    <input type="hidden" name="offre_id" v-model="formulaire.offre.id" v-if="formulaire.offre">
-                    <div class="flex w-full">
-                        <multiselect :show-labels="true" :options="offres" label="nom" v-model="formulaire.offre">
-                            <template slot="noResult"> Cette voiture n'existe pas </template>
-                        </multiselect>
+                    <div class="w-full mt-3">
+                        <label for="">Selectionner Offre</label>
+                        <input type="hidden" name="offre_id" v-model="formulaire.offre.id" v-if="formulaire.offre">
+                        <div class="flex w-full">
+                            <multiselect :show-labels="true" :options="offres" label="nom"
+                                v-model="formulaire.offre">
+                                <template slot="noResult"> Cette voiture n'existe pas </template>
+                            </multiselect>
+                        </div>
                     </div>
-                </div>
                 @endif
 
 
@@ -105,13 +106,13 @@
                     </div>
                     <div class="w-1/3">
                         @if ($compagnie->isVehicules())
-                        <label for="">Nombre Jours</label>
-                        <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours"
-                            :value="nb_jours" readonly>
+                            <label for="">Nombre Jours</label>
+                            <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours"
+                                :value="nb_jours" readonly>
                         @else
-                        <label for="">Nombre Jours (Offres)</label>
-                        <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours"
-                            v-model="formulaire.nb_jours">
+                            <label for="">Nombre Jours (Offres)</label>
+                            <input type="text" class="form-control" name="nombre_jours" placeholder="Nombre de Jours"
+                                v-model="formulaire.nb_jours">
                         @endif
 
                     </div>
@@ -122,8 +123,8 @@
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">
                         <label for="">Montant Journalier</label>
-                        <input type="number" class="form-control" name="prix_journalier" placeholder="Montant Journalier"
-                            v-model="formulaire.prix_journalier">
+                        <input type="number" class="form-control" name="prix_journalier"
+                            placeholder="Montant Journalier" v-model="formulaire.prix_journalier">
                     </div>
                     <div class="w-1/3" v-show="display.halfDay">
                         <label for="">Montant 1/2 Journee</label>
@@ -132,13 +133,14 @@
                     </div>
                     <div class="w-1/3" v-show="display.driver">
                         <label for="">Chauffeur</label>
-                        <input type="number" class="form-control" name="montant_chauffeur" placeholder="Montant Chauffeur"
-                            v-model.number="formulaire.chauffeur">
+                        <input type="number" class="form-control" name="montant_chauffeur"
+                            placeholder="Montant Chauffeur" v-model.number="formulaire.chauffeur">
                     </div>
                 </div>
                 <div class="w-full">
                     <label for="">Total</label>
-                    <input type="text" class="form-control" name="" placeholder="Total Contrat" :value="total" readonly>
+                    <input type="text" class="form-control" name="" placeholder="Total Contrat"
+                        :value="total" readonly>
                 </div>
                 <div class="flex w-full mt-3">
                     <div class="w-1/3">
@@ -154,7 +156,8 @@
                     </div>
                     <div class="w-1/3">
                         <label for="">Solde</label>
-                        <input type="text" class="form-control" name="" placeholder="Solde" :value="solde" readonly>
+                        <input type="text" class="form-control" name="" placeholder="Solde"
+                            :value="solde" readonly>
                     </div>
                 </div>
                 <div class="flex">
@@ -185,8 +188,8 @@
 
                 </div>
             </form>
-            <div class="modal fade" id="rendreVehiculeDisponible" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-                aria-hidden="true">
+            <div class="modal fade" id="rendreVehiculeDisponible" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">

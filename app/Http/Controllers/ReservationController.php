@@ -45,7 +45,6 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-
         $contractable_type = Auth::user()->compagnie->isHotel() ? 'App\\Hotel' : 'App\\Voiture';
         $reservation = Reservation::create([
             'contractable_id' => $request->contractable,
@@ -56,18 +55,18 @@ class ReservationController extends Controller
             'demi_journee' => $request->demi_journee,
             'montant_chauffeur' => $request->montant_chauffeur,
             'caution' => $request->caution,
-            'note' => $request->note
+            'note' => $request->note,
         ]);
 
-        if($reservation && $request->paiement){
+        if ($reservation && $request->paiement) {
             $paiement = Paiement::create([
-                'payable_id' => $reservation->id ,
+                'payable_id' => $reservation->id,
                 'payable_type' => 'App\\Reservation',
                 'montant' => $request->paiement,
             ]);
         }
 
-        return redirect('/reservation');
+        return redirect('/reservations');
     }
 
     /**

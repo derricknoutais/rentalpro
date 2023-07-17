@@ -20,18 +20,13 @@ class Metric extends Model
         // });
     }
 
-
-
     protected static function insere($model)
     {
-
         $columnsToUpdate = Metric::columnsToUpdate($model);
         $array_of_checksums = Metric::generateChecksumsFrom($model->created_at);
 
         foreach ($array_of_checksums as $type => $checksum) {
-            $metric = Metric::where('checksum', $checksum)->first() ?
-                $metric = Metric::where('checksum', $checksum)->first() :
-                $metric = Metric::createMetric($model->created_at, $checksum);
+            $metric = Metric::where('checksum', $checksum)->first() ? ($metric = Metric::where('checksum', $checksum)->first()) : ($metric = Metric::createMetric($model->created_at, $checksum));
 
             foreach ($columnsToUpdate as $key => $value) {
                 $metric->increment($key, $value);
@@ -41,7 +36,7 @@ class Metric extends Model
     protected static function maj($model, $oldAttributes)
     {
         $array_of_checksums = Metric::generateChecksumsFrom($model->created_at);
-        foreach ($array_of_checksums as  $checksum) {
+        foreach ($array_of_checksums as $checksum) {
             $metric = Metric::where('checksum', $checksum)->first();
             if ($metric) {
                 $columnsToUpdate = Metric::columnsToUpdate($model, $oldAttributes);
@@ -60,23 +55,23 @@ class Metric extends Model
         $array_of_checksums = Metric::generateChecksumsFrom($contrat->created_at);
         // $check = [];
         foreach ($array_of_checksums as $checksum) {
-
             $reporting = Metric::where('checksum', $checksum)->first();
             $reporting->decrementFrom($contrat);
             // $check[] = $reporting;
         }
     }
 
-
     public static function renderColumns($date)
     {
-        return [
-            'annee' => $date->year,
-            'trimestre' => $date->quarter,
-            'mois' => $date->month,
-            'semaine' => $date->week,
-            'jour' => $date->day,
-        ];
+        if ($date) {
+            return [
+                'annee' => $date->year,
+                'trimestre' => $date->quarter,
+                'mois' => $date->month,
+                'semaine' => $date->week,
+                'jour' => $date->day,
+            ];
+        }
     }
     protected static function generateCheckSum($dateTime)
     {
@@ -85,13 +80,14 @@ class Metric extends Model
         if (!is_array($dateTime)) {
             $dateTime = Metric::renderColumns($dateTime);
         }
-        foreach ($dateTime as $key => $val) {
-            if (in_array($key, $columns)) {
-
-                if ($val === NULL) {
-                    $checkSum .=  '-' . 0;
-                } else {
-                    $checkSum .=  '-' . $val;
+        if ($dateTime) {
+            foreach ($dateTime as $key => $val) {
+                if (in_array($key, $columns)) {
+                    if ($val === null) {
+                        $checkSum .= '-' . 0;
+                    } else {
+                        $checkSum .= '-' . $val;
+                    }
                 }
             }
         }
@@ -116,23 +112,26 @@ class Metric extends Model
         $checks = [];
         $columns = ['annee', 'trimestre', 'mois', 'semaine', 'jour'];
         $checks = explode('-', $checkSum); // 2023 - 1 - 11
-        $explodedCheckSum = array_combine($columns, $checks);
+        $explodedCheckSum = array_combine(array_splice($columns, 0, sizeof($checks)), $checks);
         $temp = '';
         $finalChecks = [];
 
-
         foreach ($columns as $col) {
-            $finalChecks[$col] = $col === 'annee' ? $explodedCheckSum[$col] : $temp . '-' . $explodedCheckSum[$col];
-            $temp = $finalChecks[$col];
+            if (isset($finalChecks[$col])) {
+                $finalChecks[$col] = $col === 'annee' ? $explodedCheckSum[$col] : $temp . '-' . $explodedCheckSum[$col];
+                $temp = $finalChecks[$col];
+            }
         }
-        $weeklyCheck = explode('-', $finalChecks['semaine']);
-        $weeklyCheck[1] = $weeklyCheck[2] = '0';
-        $finalWeeklyCheck = '';
-        foreach ($weeklyCheck as $period) {
-            $finalWeeklyCheck .= '-' . $period;
+        if (isset($finalChecks['semaine'])) {
+            $weeklyCheck = explode('-', $finalChecks['semaine']);
+            $weeklyCheck[1] = $weeklyCheck[2] = '0';
+            $finalWeeklyCheck = '';
+            foreach ($weeklyCheck as $period) {
+                $finalWeeklyCheck .= '-' . $period;
+            }
+            $finalChecks['semaine'] = substr($finalWeeklyCheck, 1);
         }
-        $finalChecks['semaine'] = substr($finalWeeklyCheck, 1);
-        return ($finalChecks);
+        return $finalChecks;
     }
 
     protected static function createMetric($date, $checksum)
@@ -141,35 +140,77 @@ class Metric extends Model
         $count = substr_count($checksum, '-');
         $ex = explode('-', $checksum);
         $type = '';
-        $trimestre_label = NULL;
-        $semaine_label = NULL;
-        $mois_label = NULL;
-        $jour_semaine_court = NULL;
-        $jour_semaine_long = NULL;
+        $trimestre_label = null;
+        $semaine_label = null;
+        $mois_label = null;
+        $jour_semaine_court = null;
+        $jour_semaine_long = null;
         switch ($count) {
             case 0:
                 $type = 'annee';
                 break;
             case 1:
                 $type = 'trimestre';
-                $trimestre_label = Carbon::parse($date)->startOfQuarter()->format('d M') . ' - ' . Carbon::parse($date)->endOfQuarter()->format('d M');
+                $trimestre_label =
+                    Carbon::parse($date)
+                        ->startOfQuarter()
+                        ->format('d M') .
+                    ' - ' .
+                    Carbon::parse($date)
+                        ->endOfQuarter()
+                        ->format('d M');
                 break;
             case 2:
                 $type = 'mois';
                 $mois_label = Carbon::parse($date)->format('M');
-                $trimestre_label = Carbon::parse($date)->startOfQuarter()->format('d M') . ' - ' . Carbon::parse($date)->endOfQuarter()->format('d M');
+                $trimestre_label =
+                    Carbon::parse($date)
+                        ->startOfQuarter()
+                        ->format('d M') .
+                    ' - ' .
+                    Carbon::parse($date)
+                        ->endOfQuarter()
+                        ->format('d M');
                 break;
             case 3:
                 $type = 'semaine';
                 $mois_label = Carbon::parse($date)->format('M');
-                $semaine_label = Carbon::parse($date)->startOfWeek()->format('d M') . ' - ' . Carbon::parse($date)->endOfWeek()->format('d M');
-                $trimestre_label = Carbon::parse($date)->startOfQuarter()->format('d M') . ' - ' . Carbon::parse($date)->endOfQuarter()->format('d M');
+                $semaine_label =
+                    Carbon::parse($date)
+                        ->startOfWeek()
+                        ->format('d M') .
+                    ' - ' .
+                    Carbon::parse($date)
+                        ->endOfWeek()
+                        ->format('d M');
+                $trimestre_label =
+                    Carbon::parse($date)
+                        ->startOfQuarter()
+                        ->format('d M') .
+                    ' - ' .
+                    Carbon::parse($date)
+                        ->endOfQuarter()
+                        ->format('d M');
                 break;
             case 4:
                 $type = 'jour';
-                $trimestre_label = Carbon::parse($date)->startOfQuarter()->format('d M') . ' - ' . Carbon::parse($date)->endOfQuarter()->format('d M');
+                $trimestre_label =
+                    Carbon::parse($date)
+                        ->startOfQuarter()
+                        ->format('d M') .
+                    ' - ' .
+                    Carbon::parse($date)
+                        ->endOfQuarter()
+                        ->format('d M');
                 $mois_label = Carbon::parse($date)->format('M');
-                $semaine_label = Carbon::parse($date)->startOfWeek()->format('d M') . ' - ' . Carbon::parse($date)->endOfWeek()->format('d M');
+                $semaine_label =
+                    Carbon::parse($date)
+                        ->startOfWeek()
+                        ->format('d M') .
+                    ' - ' .
+                    Carbon::parse($date)
+                        ->endOfWeek()
+                        ->format('d M');
                 $jour_semaine_court = Carbon::parse($date)->isoFormat('ddd');
                 $jour_semaine_long = Carbon::parse($date)->isoFormat('dddd');
                 break;
@@ -177,12 +218,7 @@ class Metric extends Model
                 break;
         }
 
-        return Metric::create(
-            array_merge(
-                Metric::renderColumns($date),
-                compact('checksum', 'type', 'trimestre_label', 'mois_label', 'semaine_label', 'jour_semaine_court', 'jour_semaine_long')
-            )
-        );
+        return Metric::create(array_merge(Metric::renderColumns($date), compact('checksum', 'type', 'trimestre_label', 'mois_label', 'semaine_label', 'jour_semaine_court', 'jour_semaine_long')));
     }
 
     protected static function columnsToUpdate($model, $data = null)
@@ -191,8 +227,9 @@ class Metric extends Model
 
         switch ($class) {
             case 'App\\Contrat':
-                if ($data)
+                if ($data) {
                     $model = new Contrat($data);
+                }
                 return [
                     'chiffre_affaires' => $model->total(),
                     'nombre_jours' => $model->nombre_jours,
@@ -201,7 +238,7 @@ class Metric extends Model
                 break;
             case 'App\\Paiement':
                 return [
-                    'paiements_percus' => $model->montant
+                    'paiements_percus' => $model->montant,
                 ];
                 break;
             case 'App\\Maintenance':
@@ -209,7 +246,7 @@ class Metric extends Model
                     'cout_main_oeuvre' => $model->coût,
                     'cout_pieces' => $model->coût_pièces,
                     'nombre_maintenances' => 1,
-                    'nombre_pannes' => $model->pannes->count()
+                    'nombre_pannes' => $model->pannes->count(),
                 ];
                 break;
             default:

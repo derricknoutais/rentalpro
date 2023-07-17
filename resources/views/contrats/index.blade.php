@@ -2,7 +2,8 @@
 
 
 @section('content')
-    <contrats-index  inline-template :contrats="{{ json_encode($contrats) }}" env="{{ config('app.env') }}" :voitures_prop="{{ $contractables }}" :clients_prop="{{ $clients }}">
+    <contrats-index inline-template :contrats_prop="{{ json_encode($contrats) }}" env="{{ config('app.env') }}"
+        :voitures_prop="{{ $contractables }}" :clients_prop="{{ $clients }}">
         <div>
             <h1 class="my-20 text-4xl text-center">Contrats</h1>
 
@@ -17,7 +18,7 @@
                             <input type="hidden" name="chambre" v-model="filters.chambre.id">
                         @endif
 
-                        <div class="w-1/4 form-group" >
+                        <div class="w-1/4 form-group">
                             <label for="">
                                 @if ($compagnie->isVehicules())
                                     Voiture
@@ -27,39 +28,39 @@
 
                             </label>
                             <multiselect :options="{{ $contractables }}"
-                                @if ($compagnie->isVehicules())
-                                    label="immatriculation"
+                                @if ($compagnie->isVehicules()) label="immatriculation"
                                     v-model="filters.voiture"
                                 @else
                                    label="nom"
-                                   v-model="filters.chambre"
-                                @endif
-                            ></multiselect>
+                                   v-model="filters.chambre" @endif>
+                            </multiselect>
                         </div>
                         {{-- FILTRE CLIENT --}}
-                        <input type="hidden" name="client" v-model="filters.client.id" >
+                        <input type="hidden" name="client" v-model="filters.client.id">
                         <div class="w-1/4 ml-3 form-group">
                             <label for="">Client</label>
-                            <multiselect :options="{{ $clients }}" allow-empty="true" label="nom_complet" v-model="filters.client">
+                            <multiselect :options="{{ $clients }}" allow-empty="true" label="nom_complet"
+                                v-model="filters.client">
                             </multiselect>
                         </div>
                         {{-- FILTRE ETAT CONTRAT --}}
                         <input type="hidden" name="etat" v-model="filters.etat">
                         <div class="w-1/4 ml-3 form-group">
                             <label for="">État Contrat</label>
-                            <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']" v-model="filters.etat">
+                            <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']"
+                                v-model="filters.etat">
                             </multiselect>
                         </div>
 
                     </div>
                     <div class="flex items-center justify-center w-full mt-3">
                         <div class="flex flex-col w-1/4 form-group">
-                          <label for="">Du</label>
-                          <input type="date" class="py-2 rounded-md" name="du">
+                            <label for="">Du</label>
+                            <input type="date" class="py-2 rounded-md" name="du">
                         </div>
                         <div class="flex flex-col w-1/4 ml-3 form-group">
-                          <label for="">Au</label>
-                          <input type="date" class="py-2 rounded-md" name="au">
+                            <label for="">Au</label>
+                            <input type="date" class="py-2 rounded-md" name="au">
                         </div>
                         <div class="flex items-center justify-center w-1/4">
                             <button type="submit" class="px-10 py-2 bg-yellow-300 rounded">Filtrer</button>
@@ -78,138 +79,168 @@
                     </thead>
 
                     <tbody>
-                        @if (sizeof($contrats) > 0)
-                            @foreach ($contrats as $contrat)
-                                <tr>
 
-                                    {{-- Contrat --}}
-                                    <td scope="row" class="">
-                                        {{-- Numéro de Contrat --}}
-                                        <div class="flex items-center px-2 py-2 bg-yellow-200">
-                                            <a class="text-blue-400" href="/contrat/{{ $contrat->id }}" class="font-semibold ">
-                                                {{ $contrat->numéro }}
-                                            </a>
-                                            <span></span>
+                        <tr v-for="contrat in contrats">
+
+                            {{-- Contrat --}}
+                            <td scope="row" class="">
+                                {{-- Numéro de Contrat --}}
+                                <div class="flex items-center px-2 py-2 bg-yellow-200">
+                                    <a class="text-blue-400" :href="'/contrat/' + contrat.id" class="font-semibold ">
+                                        @{{ contrat.numéro }}
+                                    </a>
+                                    <span></span>
+                                </div>
+                                {{-- Dates --}}
+                                <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
+                                    <span class="mr-1">
+                                        Du:
+                                    </span>
+                                    <span class="px-5 text-white rounded bg-success">
+                                        @{{ contrat.du }}
+                                    </span>
+                                    <span class="ml-3">
+                                        Au :
+                                    </span>
+                                    <span class="px-5 mx-1 text-white rounded bg-danger" v-if="contrat.au">
+                                        @{{ contrat.au }}
+                                    </span>
+                                    <span class="mr-1">
+                                        Soit:
+                                    </span>
+                                    <span class="px-5 text-white rounded bg-primary">
+                                        @{{ contrat.nombre_jours }} Jours
+                                        <span v-if="contrat.demi_journee">
+                                            1/2
+                                        </span>
+                                    </span>
+
+                                </div>
+                                {{-- Caution --}}
+                                <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
+                                    <span class="mr-1">
+                                        Caution:
+
+                                        <span class="px-2 " v-if="contrat.caution">
+                                            @{{ contrat.caution }}
+                                        </span>
+
+                                    </span>
+
+                                    <span class="px-5 text-white rounded bg-primary" v-if="contrat.type_caution">
+                                        @{{ contrat.type_caution }}
+                                    </span>
+
+
+
+                                </div>
+                                {{-- Montant Location --}}
+
+                                <div class="flex justify-between py-1 pl-2 mt-3 bg-blue-100 rounded rounded-b-none pr-14">
+                                    <p class="font-semibold">Montant Location</p>
+                                    <span class="font-semibold">@{{ contrat.prix_journalier * contrat.nombre_jours }} F CFA</span>
+                                </div>
+
+                                {{-- Option 1/2 Journee --}}
+
+                                <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14"
+                                    v-if="contrat.demi_journee">
+                                    <p class="font-semibold">Option 1/2 Journee</p>
+                                    <div>
+                                        <span class="font-semibold">@{{ contrat.demi_journee }} F CFA</span>
+                                        @can('editer paiements')
+                                            <button class="mx-1 text-blue-400" data-toggle="modal"
+                                                data-target="#editer-demi-journee-modal"
+                                                @click="passDataToModal('contrat', contrat)"><i
+                                                    class="fas fa-edit"></i></button>
+                                        @endcan
+                                        @can('supprimer paiements')
+                                            <button class="ml-1 text-red-400"
+                                                @click="deleteData('/contrat/' + contrat.id + '/delete/demi_journee')"><i
+                                                    class="fas fa-trash"></i></button>
+                                        @endcan
+                                    </div>
+                                </div>
+
+
+                                {{-- Option Chauffeur --}}
+
+                                <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14"
+                                    v-if="contrat.montant_chauffeur">
+                                    <p class="font-semibold">Option Chauffeur</p>
+                                    <div>
+                                        <span class="font-semibold">@{{ contrat.montant_chauffeur }} F CFA</span>
+                                        @can('editer paiements')
+                                            <button class="mx-1 text-blue-400" data-toggle="modal"
+                                                data-target="#editer-montant-chauffeur-modal"
+                                                @click="passDataToModal('contrat', contrat)"><i
+                                                    class="fas fa-edit"></i></button>
+                                        @endcan
+                                        @can('supprimer paiements')
+                                            <button class="ml-1 text-red-400"
+                                                @click="deleteData('/contrat/' + contrat.id + '/delete/montant_chauffeur')"><i
+                                                    class="fas fa-trash"></i></button>
+                                        @endcan
+                                    </div>
+
+                                </div>
+
+
+                                {{-- Montant Total --}}
+
+                                <div class="flex justify-between py-1 pl-2 mt-1 bg-blue-200 rounded rounded-b-none pr-14">
+                                    <p class="font-semibold">Montant Total</p>
+                                    <span class="font-semibold">@{{ total(contrat) }} F CFA</span>
+                                </div>
+
+                                {{-- Paiements --}}
+
+                                <div class="flex flex-col justify-between py-1 pl-3 mt-2 pr-14 bg-green-100"
+                                    v-if="contrat.paiements.length > 0">
+
+                                    <p class="mt-1 mb-3 font-semibold underline text-md">Paiements</p>
+
+
+                                    <div class="flex justify-between" v-for="paiement in contrat.paiements">
+                                        <span>@{{ paiement.created_at }}</span>
+
+
+                                        <span v-if="paiement.type_paiement">@{{ paiement.type_paiement }}</span>
+
+                                        <span v-if="paiement.note">@{{ paiement.note }}</span>
+                                        <div>
+                                            <span class="font-semibold">@{{ paiement.montant }} F CFA</span>
+                                            @can('editer paiements')
+                                                <button class="mx-1 text-blue-400" data-toggle="modal"
+                                                    data-target="#editPaiementModal"
+                                                    @click="passDataToModal('paiement', paiement)"><i
+                                                        class="fas fa-edit"></i></button>
+                                            @endcan
+                                            @can('supprimer paiements')
+                                                <button class="ml-1 text-red-400" @click="deletePayment(paiement)"><i
+                                                        class="fas fa-trash"></i></button>
+                                            @endcan
                                         </div>
-                                        {{-- Dates --}}
-                                        <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
-                                            <span class="mr-1">
-                                                Du:
-                                            </span>
-                                            <span class="px-5 text-white rounded bg-success">
-                                                {{ $contrat->du->format('d-M-Y') }}
-                                            </span>
-                                            <span class="ml-3">
-                                                Au :
-                                            </span>
-                                            @if ($contrat->au)
-                                                <span class="px-5 mx-1 text-white rounded bg-danger" >
-                                                    {{ $contrat->au->format('d-M-Y') }}
-                                                </span>
-                                            @else
-                                                <span class="mx-1" >
-                                                    <i class="fas fa-infinity "></i>
-                                                </span>
-                                            @endif
-                                            <span class="mr-1">
-                                                Soit:
-                                            </span>
-                                            <span class="px-5 text-white rounded bg-primary">
-                                                {{ $contrat->nombre_jours }} Jours
-                                                @if ($contrat->demi_journee)
-                                                    1/2
-                                                @endif
-                                            </span>
-
-                                        </div>
-                                        {{-- Caution --}}
-                                        <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
-                                            <span class="mr-1">
-                                                Caution:
-                                                @if (isset($contrat->caution))
-                                                    <span class="px-2 ">
-                                                        {{ $contrat->caution }}
-                                                    </span>
-                                                @endif
-                                            </span>
-                                            @if (isset($contrat->type_caution))
-                                            <span class="px-5 text-white rounded bg-primary">
-                                                {{ $contrat->type_caution }}
-                                            </span>
-                                            @endif
+                                    </div>
 
 
-                                        </div>
-                                        {{-- Montant Location --}}
-                                        <div class="flex justify-between py-1 pl-2 mt-3 bg-blue-100 rounded rounded-b-none pr-14">
-                                            <p class="font-semibold">Montant Location</p>
-                                            <span class="font-semibold">{{ $contrat->prix_journalier * $contrat->nombre_jours }} F CFA</span>
-                                        </div>
-                                        {{-- Option 1/2 Journee --}}
-                                        @if ($contrat->demi_journee)
-                                            <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14">
-                                                <p class="font-semibold">Option 1/2 Journee</p>
-                                                <span class="font-semibold">{{ $contrat->demi_journee }} F CFA</span>
-                                            </div>
-                                        @endif
 
-                                        {{-- Option Chauffeur --}}
-                                        @if ($contrat->montant_chauffeur)
-                                            <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14">
-                                                <p class="font-semibold">Option Chauffeur</p>
-                                                <span class="font-semibold">{{ $contrat->montant_chauffeur }} F CFA</span>
-                                            </div>
-                                        @endif
+                                </div>
 
-                                        {{-- Montant Total --}}
-                                        <div class="flex justify-between py-1 pl-2 mt-1 bg-blue-200 rounded rounded-b-none pr-14">
-                                            <p class="font-semibold">Montant Total</p>
-                                            <span class="font-semibold">{{ $contrat->total() }} F CFA</span>
-                                        </div>
+                                {{-- Solde Si il y a Paiements --}}
 
-                                        {{-- Paiements --}}
-                                        @if (sizeof($contrat->paiements) > 0)
-                                            <div class="flex flex-col justify-between py-1 pl-3 mt-2 pr-14 bg-green-100">
+                                <div class="flex justify-between py-1 bg-blue-200 rounded rounded-t-none px-14"
+                                    v-if="contrat.paiements.length > 0">
+                                    <p class="font-semibold text-md">Solde</p>
+                                    <div>
+                                        <span class="w-1/4 font-semibold">@{{ solde(contrat) }} F CFA</span>
+                                    </div>
+                                </div>
 
-                                                <p class="mt-1 mb-3 font-semibold underline text-md">Paiements</p>
+                                {{-- Bouttons --}}
 
-                                                @foreach ($contrat->paiements as $paiement)
-                                                    <div class="flex justify-between">
-                                                        <span >{{ $paiement->created_at->format('d-M-Y') }}</span>
-                                                        @isset($paiement->type_paiement)
-
-                                                        <span>{{ $paiement->type_paiement }}</span>
-                                                        @endisset
-                                                        <span>{{ $paiement->note }}</span>
-                                                        <div>
-                                                            <span class="font-semibold">{{ $paiement->montant }} F CFA</span>
-                                                            @can('editer paiements')
-                                                                <button class="mx-1 text-blue-400" data-toggle="modal" data-target="#updatePaiement{{ $paiement->id }}"><i class="fas fa-edit"></i></button>
-                                                            @endcan
-                                                            @can('supprimer paiements')
-                                                                <button class="mr-1 text-red-400" data-toggle="modal" data-target="#supprimerModal"><i class="fas fa-trash"></i></button>
-                                                            @endcan
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-
-
-                                            </div>
-                                        @endif
-                                        {{-- Solde Si il y a Paiements --}}
-                                        @if (sizeof($contrat->paiements) > 0 )
-                                            <div class="flex justify-between py-1 bg-blue-200 rounded rounded-t-none px-14">
-                                                <p class="font-semibold text-md">Solde</p>
-                                                <div>
-                                                    <span class="w-1/4 font-semibold"
-                                                    >{{ $contrat->solde()}} F CFA</span>
-                                                </div>
-                                            </div>
-                                        @endif
-                                        {{-- Bouttons --}}
-                                        @if ($contrat->deleted_at === NULL)
-                                            <div class="flex px-1 py-3 bg-gray-100 rounded" >
-                                                @if(! $contrat->gescash_transaction_id)
+                                <div class="flex px-1 py-3 bg-gray-100 rounded" v-if="contrat.deleted_at === null">
+                                    {{-- @if (!$contrat->gescash_transaction_id)
                                                     <a class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
                                                         href="/contrat/{{ $contrat->id }}/envoyer-gescash"
                                                     >
@@ -219,403 +250,582 @@
                                                     <a href="{{ env('GESCASH_BASE_URL') . '/transaction/' . $contrat->gescash_transaction_id }}">
                                                         <span class="mx-1 badge badge-pill badge-success">Envoyé à Gescash</span>
                                                     </a>
-                                                @endif
-                                                @can('créer paiement')
-                                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
-                                                        data-toggle="modal" data-target="#paiement{{ $contrat->id }}"
-                                                        @click="showModal('paiement')"
-                                                    >
-                                                        Effectuer Paiement
-                                                    </button>
-                                                @endcan
-
-                                                @if (! $contrat->demi_journee)
-                                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn" data-toggle="modal"
-                                                        data-target="#ajouter-demi-journee{{ $contrat->id }}" >
-                                                        Ajouter 1/2 Journee
-                                                    </button>
-                                                @endif
-
-                                                @if (! $contrat->montant_chauffeur)
-                                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn" data-toggle="modal"
-                                                        data-target="#ajouter-montant-chauffeur{{ $contrat->id }}">
-                                                        Ajouter Chauffeur
-                                                    </button>
-                                                @endif
-
-                                                <!-- Si le contrat n'est plus en cours -->
-                                                @if( $contrat->real_check_out )
-                                                    <span class="mx-1 badge badge-pill badge-success">Terminé</span>
-                                                <!-- Si le contrat est en cours -->
-                                                @else
-                                                    @can('prolonger contrat')
-                                                        <button type="button" class="px-1 py-0 mr-2 btn btn-primary btn-sm " data-toggle="modal" data-target="#prolongation{{ $contrat->id }}">
-                                                            <i class="fas fa-clock"></i> Prolonger Contrat
-                                                        </button>
-                                                    @endcan
-                                                    @can('editer contrat')
-                                                        <button type="button" class="px-1 py-0 btn btn-secondary btn-sm" data-toggle="modal" data-target="#changervoiture{{ $contrat->id }}">
-                                                            <i class="mr-1 fas fa-exchange-alt"></i> Changer Voiture
-                                                        </button>
-                                                    @endcan
-                                                    <span class="ml-4 badge badge-pill badge-warning">En Location</span>
-                                                @endif
-
-                                                {{-- COMPAGNIE TYPE V --}}
-                                                @if ( $compagnie->type === 'véhicules' )
-                                                    {{-- MODAL CHANGER VOITURE  --}}
-                                                    <div class="modal fade" id="changervoiture{{ $contrat->id }}" tabindex="-1" role="dialog" >
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Changer Véhicule</h5>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">&times;</span>
-                                                                    </button>
-                                                                </div>
-                                                                <form action="/contrats/{{ $contrat->id }}/changer-voiture" method="POST" v-if="">
-                                                                    @csrf
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label for="">Sélectionner Voiture</label>
-                                                                            <select class="custom-select" name="voiture">
-                                                                                @isset($contrat->contractable)
-                                                                                    <option value="{{ $contrat->contractable->id }}" selected>{{ $contrat->contractable->immatriculation }}</option>
-                                                                                @endisset
-
-                                                                                @foreach ($voitures as $voiture)
-                                                                                    @if($voiture->etat === 'disponible')
-                                                                                        <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary" >Submit</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    {{-- MODAL PROLONGATION --}}
-                                                    <div class="modal fade" id="prolongation{{ $contrat->id }}" tabindex="-1" role="dialog">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">Prolonger Contrat</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                </div>
-                                                                <form action="/contrats/{{ $contrat->id }}/prolonger" method="POST">
-                                                                    @csrf
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label for="">Nouvelle Date Prolongation</label>
-                                                                            <input type="date" class="form-control" name="du">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label for="">Montant</label>
-                                                                            <input type="number" step=5000 class="form-control" name="prix_journalier" value="{{ $contrat->prix_journalier }}">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label for="">Sélectionner Voiture</label>
-                                                                            <select class="custom-select" name="voiture">
-                                                                                @isset($contrat->contractable)
-                                                                                    <option value="{{ $contrat->contractable->id }}" selected>{{ $contrat->contractable->immatriculation }}</option>
-                                                                                @endisset
-                                                                                @foreach ($voitures as $voiture)
-                                                                                    @if($voiture->etat === 'disponible')
-                                                                                        <option value="{{ $voiture->id }}">{{ $voiture->immatriculation }}</option>
-                                                                                    @endif
-                                                                                @endforeach
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                        <button type="submit" class="btn btn-primary" >Submit</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endif
-
-                                            </div>
-                                        @endif
-                                        <!-- Modal Paiement -->
-                                        <div class="modal fade" id="paiement{{ $contrat->id }}"
-                                            tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-                                            aria-hidden="true" >
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Paiement Contrat</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <livewire:payment-form :contrat="$contrat">
-                                                    </div>
+                                                @endif --}}
+                                    @can('créer paiement')
+                                        <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
+                                            data-toggle="modal" data-target="#ajouter-paiement-modal"
+                                            @click="passDataToModal('contrat', contrat)">
+                                            Effectuer Paiement
+                                        </button>
+                                    @endcan
 
 
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
+                                        data-toggle="modal" data-target="#demi-journee-modal"
+                                        @click="passDataToModal('contrat', contrat)" v-if="! contrat.demi_journee">
+                                        Ajouter 1/2 Journee
+                                    </button>
 
-                                        <!-- Modal 1/2 Journee -->
-                                        <div class="modal fade" id="ajouter-demi-journee{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Ajouter 1/2 Journee</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <form action="/contrat/{{ $contrat->id }}/ajouter-demi-journee" method="POST">
-                                                        @csrf
-                                                        <div class="modal-body">
+                                    <button type="button" v-if="! contrat.montant_chauffeur"
+                                        class="px-1 py-0 mr-2 text-white bg-blue-500 btn" data-toggle="modal"
+                                        data-target="#montant-chauffeur-modal"
+                                        @click="passDataToModal('contrat', contrat)">
+                                        Ajouter Chauffeur
+                                    </button>
 
-                                                            <div class="form-group">
-                                                                <label for="">Montant</label>
-                                                                <input type="number" step=5000 class="form-control" name="demi_journee"
-                                                                    value="{{ $contrat->prix_journalier / 2 }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                            <button type="submit" class="btn btn-primary">Ajouter 1/2 Journee</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <!-- Si le contrat n'est plus en cours -->
 
-                                        <!-- Modal Montant Chauffeur -->
-                                        <div class="modal fade" id="ajouter-montant-chauffeur{{ $contrat->id }}" tabindex="-1" role="dialog"
-                                            aria-labelledby="modelTitleId" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Ajouter 1/2 Journee</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <form action="/contrat/{{ $contrat->id }}/ajouter-montant-chauffeur" method="POST">
-                                                        @csrf
-                                                        <div class="modal-body">
+                                    <span class="mx-1 badge badge-pill badge-success"
+                                        v-if="contrat.real_check_out">Terminé</span>
 
-                                                            <div class="form-group">
-                                                                <label for="">Montant Total Chauffeur</label>
-                                                                <input type="number" step=5000 class="form-control" name="montant_chauffeur"
-                                                                    value="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                            <button type="submit" class="btn btn-primary">Ajouter Chauffeur</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    {{-- Client --}}
-                                    <td class="">
-                                        @isset($contrat->client)
-                                            {{-- Nom --}}
-                                            <div class="flex flex-col p-2 bg-gray-300">
-                                                <a class="text-blue-500" target="_blank" href="/clients/{{ $contrat->client->id }}">{{ $contrat->client['nom'] .
-                                                    ' ' . $contrat->client['prenom']}}</a>
-                                            </div>
-                                            {{-- Numéros de Téléphone --}}
-                                            <div class="flex px-2 py-3 mt-2 bg-green-300 rounded-sm">
-                                                <span class="">Nº Téléphone: {{ $contrat->client['phone1'] }}</span>
-                                                @if ($contrat->client['phone2'])
-                                                <span> / {{ $contrat->client['phone2'] }}</span>
-                                                @endif
-                                            </div>
-                                            {{-- Adresse --}}
-                                            <div class="flex flex-col px-2 py-1 mt-4 bg-green-600">
-                                                Adresse:
-                                                @if ($contrat->client->adresse)
-                                                <span class="">{{ $contrat->client['adresse'] }}</span>
-                                                @endif
-                                            </div>
-                                            {{-- Derniers Contrats --}}
-                                            <div class="flex flex-col p-2">
-                                                <p class="mb-2 text-center">Derniers Contrats</p>
-                                                @foreach ($contrat->client->troisDerniersContrats() as $ct)
-                                                <div class="flex justify-between">
-                                                    <a class="text-blue-500" target="_blank" href="/contrat/{{ $ct->id }}">
-                                                        <span>
-                                                            {{ $ct->numéro }}
-                                                        </span>
-                                                    </a>
-                                                    <span>
-                                                        Solde: {{ $ct->solde() }}
-                                                    </span>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                        @endisset
-                                    </td>
+                                    <!-- Si le contrat est en cours -->
+
+                                    @can('prolonger contrat')
+                                        <button type="button" class="px-1 py-0 mr-2 btn btn-primary btn-sm "
+                                            data-toggle="modal" data-target="#prolongation-modal"
+                                            @click="passDataToModal('contrat', contrat)">
+                                            <i class="fas fa-clock"></i> Prolonger Contrat
+                                        </button>
+                                    @endcan
+                                    @can('editer contrat')
+                                        <button type="button" class="px-1 py-0 btn btn-secondary btn-sm" data-toggle="modal"
+                                            data-target="#changer-voiture-modal" @click="passDataToModal('contrat', contrat)">
+                                            <i class="mr-1 fas fa-exchange-alt"></i> Changer Voiture
+                                        </button>
+                                    @endcan
+                                    <span class="ml-4 badge badge-pill badge-warning">En Location</span>
 
 
+                            </td>
 
-                                    {{-- Contractable : Chambre Ou Hotel --}}
-                                    <td>
-                                        <div class="flex flex-col">
-                                            <div class="flex flex-col p-2 bg-gray-300">
+
+                            {{-- Client --}}
+                            <td>
+                                <template v-if="contrat.client">
+
+                                    Nom
+                                    <div class="flex flex-col p-2 bg-gray-300">
+                                        <a class="text-blue-500" target="_blank" :href="'/clients/' + contrat.client.id">
+                                            @{{ contrat.client['nom'] + ' ' + contrat.client['prenom'] }}
+                                        </a>
+                                    </div>
+                                    Numéros de Téléphone
+                                    <div class="flex px-2 py-3 mt-2 bg-green-300 rounded-sm">
+                                        <span class="">Nº Téléphone: @{{ contrat.client['phone1'] }}</span>
+                                        <span v-if="contrat.client['phone2']"> / @{{ contrat.client['phone2'] }}</span>
+                                        <span v-if="contrat.client['phone3']"> / @{{ contrat.client['phone3'] }}</span>
+                                    </div>
+                                    Adresse
+                                    <div class="flex flex-col px-2 py-1 mt-4 bg-green-600">
+                                        Adresse:
+
+                                        <span class="" v-if="contrat.client.adresse">@{{ contrat.client['adresse'] }}</span>
+
+                                    </div>
+                                    {{-- Derniers Contrats --}}
+                                    <div class="flex flex-col p-2">
+                                        <p class="mb-2 text-center">Derniers Contrats</p>
+
+                                        <div class="flex justify-between" v-for="ct in contrat.client.derniers_contrats">
+                                            <a class="text-blue-500" target="_blank" :href="'/contrat/' + ct.id">
                                                 <span>
-                                                    @isset($contrat->contractable)
-                                                        {{ $contrat->contractable->nom() }}
-                                                    @endisset
+                                                    @{{ ct.numéro }}
                                                 </span>
-                                            </div>
-                                            <div class="flex flex-col p-2 mt-3 bg-red-300">
-                                                <span>
-                                                    Créé par
-                                                    @if (($activity = $contrat->activities->where('description', 'created')->first()) && $activity->causer)
-                                                        {{ $activity->causer->name }} le {{ $activity->created_at->format('d-M-Y à H\Hi') }}
-                                                    @endif
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    {{-- Actions --}}
-                                    <td class="flex flex-col">
-                                        @if($contrat->deleted_at !== NULL)
-                                            <span class="py-5 mt-5 text-center text-red-100 bg-red-400">
-                                                <i class="fas fa-ban "></i>
-                                                Contrat Annulé
-                                            </span>
-                                        @elseif($contrat->real_check_out !== NULL )
-                                            <span class="py-5 mt-5 text-center text-white bg-green-400">
-                                                Contrat Terminé
-                                            </span>
-                                        @else
-                                            @can('terminer contrat')
-                                                <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" data-toggle="modal" data-target="#terminerContrat{{ $contrat->id }}">
-                                                    <i class="fas fa-ban "></i>
-                                                    Terminer Contrat
-                                                </button>
-                                            @endcan
-                                            @can('editer contrat')
-                                                <a class="px-2 py-1 mt-2 text-center text-blue-100 no-underline bg-blue-400 rounded" href="/contrat/{{ $contrat->id }}/edit">
-                                                    <i class="fas fa-edit "></i>
-                                                    Editer
-                                                </a>
-                                            @endcan
-                                            @can('annuler contrat')
-                                                <button class="px-2 py-1 mt-2 text-red-100 bg-red-400 rounded" @click="annulerContrat({{ $contrat }})">
-                                                    <i class="fas fa-ban "></i>
-                                                    Annuler
-                                                </button>
-                                            @endcan
-
-                                            <a target="_blank" class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded" href="/contrat/{{ $contrat->id }}">
-                                                <i class="fas fa-file-invoice "></i>
-                                                Voir Contrat
                                             </a>
-                                            <div class="relative flex-shrink-0">
-                                                <div class="w-full">
-                                                    <button type="button" @click="toggle('print_options')"
-                                                        class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded w-full"
-                                                        id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                                        <span class="sr-only">Open user menu</span>
-                                                        <i class="fas fa-print "></i>
-                                                        Imprimer
-                                                    </button>
-                                                </div>
-                                                <!--
-                                                    Dropdown menu, show/hide based on menu state.
+                                            <span>
+                                                Solde: @{{ solde(ct) }}
+                                            </span>
+                                        </div>
 
-                                                    Entering: "transition ease-out duration-100"
-                                                        From: "transform opacity-0 scale-95"
-                                                        To: "transform opacity-100 scale-100"
-                                                    Leaving: "transition ease-in duration-75"
-                                                        From: "transform opacity-100 scale-100"
-                                                        To: "transform opacity-0 scale-95"
-                                                -->
-                                                <div class="absolute left-0 w-48 py-1 mt-2 origin-top-right bg-gray-400 rounded-md shadow-lg ring-1
-                                                    ring-black ring-opacity-5 focus:outline-none" role="menu"
-                                                    aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" v-show="print_options"
-                                                >
-                                                    <!-- Active: "bg-gray-100", Not Active: "" -->
-                                                    <a target="_blank" href="/contrat/{{ $contrat->id }}/print" class="block px-4 py-2 text-sm text-white" role="menuitem" tabindex="-1">
-                                                        Template Location
-                                                    </a>
-                                                    <a target="_blank" href="/contrat/{{ $contrat->id }}/print-hotel-A5" class="block px-4 py-2 text-sm text-white" role="menuitem" tabindex="-1">
-                                                        Template Orisha
-                                                    </a>
-
-                                                </div>
-                                            </div>
+                                    </div>
+                                </template>
+                            </td>
 
 
-                                            <div class="modal fade" id="terminerContrat{{ $contrat->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="text-lg modal-title">Êtes-vous sûr de vouloir terminer ce contrat? </h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form action="/contrat/{{ $contrat->id }}/terminer" method="POST">
-                                                            @csrf
-                                                            <div class="modal-body">
-                                                                <div>
-                                                                    <input name="date_fin" type="date" class="form-control">
-                                                                </div>
-                                                                <p class="text-sm">
-                                                                    L'heure et Date de Fin de Contrat seront enregistrées
-                                                                    et ne pourront plus être modifiées ultérieurement
-                                                                </p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                                <button type="submit" class="text-white bg-green-500 btn">Terminer</button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
+                            {{-- Contractable : Chambre Ou Hotel --}}
+                            <td>
+                                <div class="flex flex-col">
+                                    <div class="flex flex-col p-2 bg-gray-300">
+                                        <a class="text-blue-500" :href="'/contractables/' + contrat.contractable.id"
+                                            v-if="contrat.contractable">
 
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
+                                            @{{ contrat.contractable.nom }}
+
+                                        </a>
+                                    </div>
+                                    <div class="flex flex-col p-2 mt-3 bg-red-300">
+                                        <span>
+                                            Créé par
+                                            <span v-if="contrat.activity">
+                                                @{{ contrat.activity.causer.name }}
+                                                @{{ contrat.activity.created_at }}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            {{-- Actions --}}
+                            <td class="flex flex-col">
+
+                                <span class="py-5 mt-5 text-center text-red-100 bg-red-400" v-if="contrat.deleted_at">
+                                    <i class="fas fa-ban "></i>
+                                    Contrat Annulé
+                                </span>
+
+                                <span class="py-5 mt-5 text-center text-white bg-green-400"
+                                    v-else-if="contrat.real_check_out !== null">
+                                    Contrat Terminé
+                                </span>
+                                <div class="flex flex-col" v-else>
+                                    @can('terminer contrat')
+                                        <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" data-toggle="modal"
+                                            data-target="#terminer-contrat-modal"
+                                            @click="passDataToModal('contrat', contrat)">
+                                            <i class="fas fa-ban "></i>
+                                            Terminer Contrat
+                                        </button>
+                                    @endcan
+                                    @can('editer contrat')
+                                        <a class="px-2 py-1 mt-2 text-center text-blue-100 no-underline bg-blue-400 rounded"
+                                            :href="'/contrat/' + contrat.id + '/edit'">
+                                            <i class="fas fa-edit"></i>
+                                            Editer
+                                        </a>
+                                    @endcan
+                                    @can('annuler contrat')
+                                        <button class="px-2 py-1 mt-2 text-red-100 bg-red-400 rounded"
+                                            @click="annulerContrat(contrat)">
+                                            <i class="fas fa-ban "></i>
+                                            Annuler
+                                        </button>
+                                    @endcan
+                                    @can('envoyer mail')
+                                        <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" data-toggle="modal"
+                                            data-target="#mail-contrat-modal" @click="passDataToModal('contrat', contrat)">
+                                            <i class="fas fa-ban "></i>
+                                            Terminer Contrat
+                                        </button>
+                                    @endcan
+
+                                    <a target="_blank"
+                                        class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded"
+                                        :href="'/contrat/' + contrat.id">
+                                        <i class="fas fa-file-invoice "></i>
+                                        Voir Contrat
+                                    </a>
+                                    <div class="relative flex-shrink-0">
+                                        <div class="w-full">
+                                            <button type="button" @click="toggle('print_options')"
+                                                class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded w-full"
+                                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                                <span class="sr-only">Open user menu</span>
+                                                <i class="fas fa-print "></i>
+                                                Imprimer
+                                            </button>
+                                        </div>
+
+                                        <div class="absolute left-0 w-48 py-1 mt-2 origin-top-right bg-gray-400 rounded-md shadow-lg ring-1
+                                                        ring-black ring-opacity-5 focus:outline-none"
+                                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
+                                            tabindex="-1" v-show="print_options">
+                                            <!-- Active: "bg-gray-100", Not Active: "" -->
+                                            <a target="_blank" :href="'/contrat/' + contrat.id + '/print'"
+                                                class="block px-4 py-2 text-sm text-white" role="menuitem"
+                                                tabindex="-1">
+                                                Template Location
+                                            </a>
+                                            <a target="_blank" :href="'/contrat/' + contrat.id + '/print-hotel-A5'"
+                                                class="block px-4 py-2 text-sm text-white" role="menuitem"
+                                                tabindex="-1">
+                                                Template Orisha
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+
+
                     </tbody>
                 </table>
-
+                {{-- Pagination --}}
                 <div class="flex justify-center pt-10 pb-24">
                     {{ $contrats->appends(request()->input())->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
 
+            {{-- PLUS BUTTON -- AJOUTER CONTRAT --}}
             <div class="sticky flex justify-end px-40 bottom-16">
 
-                    <a href="/contrats/create">
+                <a href="/contrats/create">
 
                     <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
                 </a>
             </div>
+            {{-- MODAL EDIT PAIEMENT --}}
+            <div class="modal fade" id="editPaiementModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Paiement Contrat</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" v-if="modalData.paiement">
+                            <form :action="'/paiement/' + modalData.paiement.id" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <div class="flex flex-col items-start">
+                                    <label for="">Montant</label>
+                                    <input type="number" class="w-full p-2 border border-gray-300 rounded-md"
+                                        name="montant" v-model="modalData.paiement.montant">
+                                </div>
+                                <div class="flex flex-col items-start">
+                                    <label for="">Note</label>
+                                    <textarea type="number" class="w-full px-2 py-6 border border-gray-300 rounded-md" name="note"
+                                        v-model="modalData.paiement.note"></textarea>
+                                </div>
+                                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                                    <button type="submit"
+                                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
+                                        Payer
+                                    </button>
+                                    <button type="button" @click="closeModal()"
+                                        class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
 
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            {{-- COMPAGNIE TYPE V --}}
+            @if ($compagnie->type === 'véhicules')
+                {{-- MODAL CHANGER VOITURE  --}}
+                <div class="modal fade" id="changer-voiture-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Changer Véhicule</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form :action="'/contrats/' + modalData.contrat.id + '/changer-voiture'" method="POST"
+                                v-if="modalData.contrat">
+                                @csrf
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="">Sélectionner
+                                            Voiture</label>
+                                        <select class="custom-select" name="voiture">
+
+                                            <option :value="modalData.contrat.contractable.id" selected
+                                                v-if="modalData.contrat.contractable">
+                                                @{{ modalData.contrat.contractable.immatriculation }}
+                                            </option>
+
+                                            @foreach ($voitures as $voiture)
+                                                @if ($voiture->etat === 'disponible')
+                                                    <option value="{{ $voiture->id }}">
+                                                        {{ $voiture->immatriculation }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- MODAL PROLONGATION --}}
+                <div class="modal fade" id="prolongation-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Prolonger Contrat</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form :action="'/contrats/' + modalData.contrat.id + '/prolonger'" method="POST"
+                                v-if="modalData.contrat">
+                                @csrf
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="">Nouvelle Date
+                                            Prolongation</label>
+                                        <input type="date" class="form-control" name="du">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Montant</label>
+                                        <input type="number" step=5000 class="form-control" name="prix_journalier"
+                                            :value="modalData.contrat.prix_journalier">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Sélectionner
+                                            Voiture</label>
+                                        <select class="custom-select" name="voiture">
+
+                                            <option :value="modalData.contrat.contractable.id" selected
+                                                v-if="modalData.contrat.contractable">
+                                                @{{ modalData.contrat.contractable.immatriculation }}
+                                            </option>
+
+                                            @foreach ($voitures as $voiture)
+                                                @if ($voiture->etat === 'disponible')
+                                                    <option value="{{ $voiture->id }}">
+                                                        {{ $voiture->immatriculation }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            <!-- Modal Paiement -->
+            <div class="modal fade" id="ajouter-paiement-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Paiement Contrat</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/paiement" method="post" v-if="modalData.contrat">
+                                @csrf
+
+                                <div class="flex items-center justify-start ">
+                                    <input type="checkbox" class="mr-4" name="payer_avec_caution"
+                                        v-model="ajouterPaiement.payer_avec_caution">
+                                    <label for="" class="m-0">Payer avec Caution
+
+                                        <span v-if="ajouterPaiement.payer_avec_caution && ajouterPaiement.montant ">
+                                            ( @{{ modalData.contrat.caution - ajouterPaiement.montant | currency }} )
+                                        </span>
+
+                                    </label>
+                                </div>
+
+                                <input type="hidden" :value="modalData.contrat.id" name="contrat_id">
+
+
+                                <div class="flex flex-col items-start">
+                                    <label for="">Montant</label>
+                                    <input type="number" class="w-full p-2 border border-gray-300 rounded-md"
+                                        name="montant" v-model="ajouterPaiement.montant">
+                                </div>
+                                <div class="flex flex-col items-start">
+                                    <label for="">Note</label>
+                                    <textarea type="number" class="w-full px-2 py-6 border border-gray-300 rounded-md" name="note"></textarea>
+                                </div>
+                                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                                    <button type="submit"
+                                        class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
+                                        Payer
+                                    </button>
+                                    <button type="button" @click="closeModal()"
+                                        class="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
+                                        Cancel
+                                    </button>
+                                </div>
+
+                            </form>
+
+                            {{-- <livewire:payment-form :contrat="$contrat"> --}}
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal 1/2 Journee -->
+            <div class="modal fade" id="demi-journee-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ajouter 1/2 Journee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form :action="'/contrat/' + modalData.contrat.id + '/ajouter-demi-journee'" method="POST"
+                            v-if="modalData.contrat">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="">Montant</label>
+                                    <input type="number" step=5000 class="form-control" name="demi_journee"
+                                        :value="modalData.contrat.prix_journalier / 2">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Ajouter 1/2
+                                    Journee</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Editer 1/2 Journee -->
+            <div class="modal fade" id="editer-demi-journee-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Editer Montant 1/2 Journee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form :action="'/contrat/' + modalData.contrat.id + '/update-demi-journee'" method="POST"
+                            v-if="modalData.contrat">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="">Montant</label>
+                                    <input type="number" step=5000 class="form-control" name="demi_journee"
+                                        :value="modalData.contrat.demi_journee">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Ajouter 1/2
+                                    Journee</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Montant Chauffeur -->
+            <div class="modal fade" id="montant-chauffeur-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ajouter 1/2 Journee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form :action="'/contrat/' + this.modalData.contrat.id + '/ajouter-montant-chauffeur'"
+                            method="POST" v-if="modalData.contrat">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="">Montant Total Chauffeur</label>
+                                    <input type="number" step=5000 class="form-control" name="montant_chauffeur"
+                                        value="">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Ajouter
+                                    Chauffeur</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Editer Montant Chauffeur -->
+            <div class="modal fade" id="editer-montant-chauffeur-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ajouter 1/2 Journee</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form :action="'/contrat/' + this.modalData.contrat.id + '/update-montant-chauffeur'"
+                            method="POST" v-if="modalData.contrat">
+                            @csrf
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="">Montant Total Chauffeur</label>
+                                    <input type="number" step=5000 class="form-control" name="montant_chauffeur"
+                                        :value="modalData.contrat.montant_chauffeur">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Ajouter
+                                    Chauffeur</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="terminer-contrat-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-lg modal-title">Êtes-vous sûr de vouloir
+                                terminer ce contrat? </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form :action="'/contrat/' + modalData.contrat.id + '/terminer'" method="POST"
+                            v-if="modalData.contrat">
+                            @csrf
+                            <div class="modal-body">
+                                <div>
+                                    <input name="date_fin" type="date" class="form-control">
+                                </div>
+                                <p class="text-sm">
+                                    L'heure et Date de Fin de Contrat seront enregistrées
+                                    et ne pourront plus être modifiées ultérieurement
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="submit" class="text-white bg-green-500 btn">Terminer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </contrats-index>
-
-
 @endsection
 
 @section('js')

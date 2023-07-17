@@ -33,36 +33,39 @@ class ContratController extends Controller
     public function index(Request $request)
     {
         $compagnie = Auth::user()->compagnie;
-        $contrats_compagnie = Contrat::withTrashed()->where('compagnie_id', $compagnie->id)->latest()->get();
+        $contrats_compagnie = Contrat::withTrashed()
+            ->where('compagnie_id', $compagnie->id)
+            ->latest()
+            ->get();
         $query = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'));
 
-
         if (sizeof($request->all()) > 0) {
-            if ($request->has('voiture') && $request->voiture !== NULL) {
+            if ($request->has('voiture') && $request->voiture !== null) {
                 $query->where([
                     'contractable_id' => $request->voiture,
-                    'contractable_type' => 'App\\Voiture'
+                    'contractable_type' => 'App\\Voiture',
                 ]);
             }
 
-            if ($request->has('chambre') && $request->chambre !== NULL) {
+            if ($request->has('chambre') && $request->chambre !== null) {
                 $query->where([
                     'contractable_id' => $request->chambre,
-                    'contractable_type' => 'App\\Chambre'
+                    'contractable_type' => 'App\\Chambre',
                 ]);
             }
 
-
-
-            if ($request->has('client') && $request->client !== NULL) {
+            if ($request->has('client') && $request->client !== null) {
                 $query->where([
                     'client_id' => $request->client,
                 ]);
             }
-            if ($request->has('etat') && $request->etat !== NULL) {
+            if ($request->has('etat') && $request->etat !== null) {
                 switch ($request->etat) {
                     case 'En cours':
-                        $query->whereDate('du', '<=', today())->whereDate('au', '>=', today())->whereNull('real_check_out');
+                        $query
+                            ->whereDate('du', '<=', today())
+                            ->whereDate('au', '>=', today())
+                            ->whereNull('real_check_out');
                         break;
                     case 'Terminé':
                         $query->whereNotNull('real_check_out');
@@ -82,16 +85,26 @@ class ContratController extends Controller
                         break;
                 }
             }
-            if ($request->has('du') && $request->du !== NULL) {
+            if ($request->has('du') && $request->du !== null) {
                 $query->whereDate('du', '>=', $request->du);
             }
-            if ($request->has('au') && $request->au !== NULL) {
+            if ($request->has('au') && $request->au !== null) {
                 $query->whereDate('au', '<=', $request->au);
             }
         }
 
         $contrats = $query->orderBy('updated_at', 'desc')->paginate(10);
         $contrats->loadMissing(['client', 'contractable', 'paiements']);
+        $contrats->map(function ($contrat) {
+            $activity = $contrat->activities->where('description', 'created')->first();
+            if ($activity && $activity->causer) {
+                $contrat->activity = $activity;
+            }
+            $contrat->contractable->nom = $contrat->contractable->nom();
+            if ($contrat->client) {
+                $contrat->client->derniers_contrats = $contrat->client->troisDerniersContrats();
+            }
+        });
         if ($compagnie->type === 'véhicules') {
             $contractablesDisponibles = Voiture::all();
         } else {
@@ -100,14 +113,17 @@ class ContratController extends Controller
 
         $contrat = $contrats[0];
         $voitures = Voiture::all();
-        $compagnie->isHotel() ? $contractables = Chambre::all() : $contractables = Voiture::all();
-
+        $compagnie->isHotel() ? ($contractables = Chambre::all()) : ($contractables = Voiture::all());
+        $contractables->map(function ($contractable) {
+            return $contractable->nom = $contractable->nom();
+        });
+        // return $contractables;
         $clients = Client::all();
-        foreach ($clients as $client) {
+        $clients->map(function ($client) {
             $client->nom_complet = $client->nom . ' ' . $client->prenom;
-        }
-
-
+        });
+        // return $clients;
+        // Activity Log
         return view('contrats.index', compact(['contrats', 'voitures', 'compagnie', 'clients', 'contractablesDisponibles', 'contractables']));
     }
 
@@ -131,11 +147,10 @@ class ContratController extends Controller
             $client = Client::find($request->client_id);
         } elseif ($request->has('contractable_id')) {
             $contractable = $contractables->find($request->contractable_id);
-            if (!$contractable)
+            if (!$contractable) {
                 return "Erreur! Ce véhicule n'est pas disponible";
+            }
         }
-
-
 
         if (sizeof($contractables) > 0) {
             $contractables->toArray();
@@ -152,7 +167,7 @@ class ContratController extends Controller
     {
         if (Auth::user()->compagnie->type == 'véhicules') {
             $type = 'App\\Voiture';
-        } else if (Auth::user()->compagnie->type == 'hôtel') {
+        } elseif (Auth::user()->compagnie->type == 'hôtel') {
             $type = 'App\\Chambre';
         }
         date_default_timezone_set('Africa/Libreville');
@@ -171,7 +186,7 @@ class ContratController extends Controller
                     'mail' => $request->mail,
                     'ville' => $request->ville,
                     'cashier_id' => $request->cashier_id,
-                    'image_id' => $request->image_id
+                    'image_id' => $request->image_id,
                 ]);
 
                 $client_id = $client->id;
@@ -184,8 +199,8 @@ class ContratController extends Controller
             }
             // Pour gérer les contrats ouverts
             $au = $request['au'];
-            if ($request['au'] == NULL) {
-                $au = NULL;
+            if ($request['au'] == null) {
+                $au = null;
             }
             $contrat = Contrat::create([
                 'contractable_id' => $request['contractable'],
@@ -196,7 +211,7 @@ class ContratController extends Controller
                 'offre_id' => $request['offre_id'],
                 'du' => $request['du'],
                 'au' => $request['au'],
-                'real_check_out' => NULL,
+                'real_check_out' => null,
                 'prix_journalier' => $request['prix_journalier'],
                 'caution' => $request['caution'],
                 'demi_journee' => $request['demi_journee'],
@@ -207,15 +222,15 @@ class ContratController extends Controller
                 'cashier_facture_id' => $request['cashier_id'],
                 'etat_accessoires' => $request['accessoireString'],
                 'etat_documents' => $request['documentString'],
-                'note' => $request['note_contrat']
+                'note' => $request['note_contrat'],
             ]);
             if (Auth::user()->compagnie->isHotel()) {
                 Chambre::find($request['contractable'])->update([
-                    'etat' => 'loué'
+                    'etat' => 'loué',
                 ]);
             } else {
                 $voiture = Voiture::find($request['contractable'])->update([
-                    'etat' => 'loué'
+                    'etat' => 'loué',
                 ]);
             }
 
@@ -229,7 +244,7 @@ class ContratController extends Controller
                 'payable_type' => 'App\\Contrat',
                 'montant' => $request->paiement,
                 'type_paiement' => $request->type_paiement,
-                'note' => $request->note_paiement
+                'note' => $request->note_paiement,
             ]);
         }
         // if($contrat && env('APP_ENV') !== 'local'){
@@ -302,31 +317,27 @@ class ContratController extends Controller
         //         return redirect('/contrat/' . $contrat->id . '/print');
         //     }
 
-
         // Mail::to('derricknoutais@gmail.com')->cc('noutaiaugustin@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new ContratCréé($contrat));
         // $message = $contrat->client->nom . ' ' . $contrat->client->prenom .  ', votre contrat de location sur la ' . $contrat->voiture->immatriculation . ' pour la période du '
         //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
         // }
-        return Auth::user()->compagnie->isVehicules() ?
-            redirect('/contrat/' . $contrat->id . '/print') :
-            redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
+        return Auth::user()->compagnie->isVehicules() ? redirect('/contrat/' . $contrat->id . '/print') : redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
     }
 
     public function print(Contrat $contrat)
     {
         $contrat->loadMissing('contractable', 'client');
-        isset($contrat->contractable->documents) ? $documents = $contrat->contractable->documents : $documents = [];
-        isset($contrat->contractable->accessoires) ? $accessoires = $contrat->contractable->accessoires : $accessoires = [];
+        isset($contrat->contractable->documents) ? ($documents = $contrat->contractable->documents) : ($documents = []);
+        isset($contrat->contractable->accessoires) ? ($accessoires = $contrat->contractable->accessoires) : ($accessoires = []);
         return view('contrats.print', compact('contrat', 'documents', 'accessoires'));
     }
 
     public function storeContratRapide(Request $request)
     {
-
         if (Auth::user()->compagnie->type == 'véhicules') {
             $type = 'App\\Voiture';
-        } else if (Auth::user()->compagnie->type == 'hôtel') {
+        } elseif (Auth::user()->compagnie->type == 'hôtel') {
             $type = 'App\\Chambre';
         }
         date_default_timezone_set('Africa/Libreville');
@@ -346,7 +357,7 @@ class ContratController extends Controller
                     'phone3' => $request->numero_telephone3,
                     'mail' => $request->mail,
                     'ville' => $request->ville,
-                    'cashier_id' => $request->cashier_id
+                    'cashier_id' => $request->cashier_id,
                 ]);
 
                 if ($request->hasFile('permis')) {
@@ -355,15 +366,15 @@ class ContratController extends Controller
                     $destinationPath = public_path('/uploads');
                     $image->move($destinationPath, $nom);
                     $client->update([
-                        'permis' => $nom
+                        'permis' => $nom,
                     ]);
                 }
             }
 
             // Pour gérer les contrats ouverts
             $au = $request['au'];
-            if ($request['au'] == NULL) {
-                $au = NULL;
+            if ($request['au'] == null) {
+                $au = null;
             }
             if ($client) {
                 $contrat = Contrat::create([
@@ -374,9 +385,9 @@ class ContratController extends Controller
                     'compagnie_id' => Auth::user()->compagnie->id,
                     'au' => $au,
                     'du' => $request['du'] . date('H:i:s'),
-                    'real_check_out' => NULL,
+                    'real_check_out' => null,
                     'prix_journalier' => $request['prix_journalier'],
-                    'caution' => NULL,
+                    'caution' => null,
                     'nombre_jours' => $request['nombre_jours'],
                     'total' => $request['prix_journalier'] * $request['nombre_jours'],
                     'cashier_facture_id' => $request['cashier_id'],
@@ -392,19 +403,19 @@ class ContratController extends Controller
                     'compagnie_id' => Auth::user()->compagnie->id,
                     'au' => $au,
                     'du' => $request['du'] . date('H:i:s'),
-                    'real_check_out' => NULL,
+                    'real_check_out' => null,
                     'prix_journalier' => $request['prix_journalier'],
-                    'caution' => NULL,
+                    'caution' => null,
                     'nombre_jours' => $request['nombre_jours'],
                     'total' => $request['prix_journalier'] * $request['nombre_jours'],
                     'cashier_facture_id' => $request['cashier_id'],
                     'etat_accessoires' => $request['accessoireString'],
-                    'etat_documents' => $request['documentString']
+                    'etat_documents' => $request['documentString'],
                 ]);
             }
 
             $contractableUpdated = $contrat->contractable->update([
-                'etat' => 'loué'
+                'etat' => 'loué',
             ]);
 
             if ($contrat && $contractableUpdated) {
@@ -412,18 +423,18 @@ class ContratController extends Controller
             }
         });
         if ($contrat) {
-            if ($request->paiement != NULL) {
+            if ($request->paiement != null) {
                 Paiement::create([
                     'contrat_id' => $contrat->id,
-                    'montant' => $request->paiement
+                    'montant' => $request->paiement,
                 ]);
             }
             $contrat->loadMissing('contractable', 'client', 'paiements');
-            $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
+            $formatter = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
             $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
             if (Auth::user()->compagnie->type == 'véhicules') {
                 $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-            } else if (Auth::user()->compagnie->type == 'hôtel') {
+            } elseif (Auth::user()->compagnie->type == 'hôtel') {
                 $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
             }
             return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
@@ -440,33 +451,38 @@ class ContratController extends Controller
 
     public function update(Contrat $contrat, Request $request)
     {
-
         $stored = DB::transaction(function () use ($contrat, $request) {
             if ($contrat->contractable_id != $request->contractable) {
                 $prolongation = Prolongation::create([
                     'contrat_id' => $contrat->id,
-                    'du'  => $contrat->au,
-                    'au' => $request->date
+                    'du' => $contrat->au,
+                    'au' => $request->date,
                 ]);
             }
-            $diffInDays = Carbon::parse($request->date)->startOfDay()->diffInDays(Carbon::parse($contrat->du)->startOfDay());
+            $diffInDays = Carbon::parse($request->date)
+                ->startOfDay()
+                ->diffInDays(Carbon::parse($contrat->du)->startOfDay());
             if ($contrat->nombre_jours < $diffInDays || ($contrat->nombre_jours > $diffInDays && Auth::user()->hasAnyRole(['admin', 'gérant']))) {
                 $contrat->update([
                     'au' => $request->date,
                     'contractable_id' => $request->contractable,
-                    'nombre_jours' => $diffInDays
+                    'nombre_jours' => $diffInDays,
                 ]);
             } else {
                 flash("Vous n'avez pas la possibilité de racourcir la duré d'un contrat. Veuillez contacter un Manager")->error();
                 return redirect()->back();
             }
         });
-        return redirect()->back()->withFlash(['test' => 'micro']);
+        return redirect()
+            ->back()
+            ->withFlash(['test' => 'micro']);
     }
 
     public function updateAll(Contrat $contrat, Request $request)
     {
-        $diffInDays = Carbon::parse($request->au)->startOfDay()->diffInDays(Carbon::parse($request->du)->startOfDay());
+        $diffInDays = Carbon::parse($request->au)
+            ->startOfDay()
+            ->diffInDays(Carbon::parse($request->du)->startOfDay());
 
         $contrat->update([
             'client_id' => $request->client,
@@ -475,7 +491,7 @@ class ContratController extends Controller
             'prix_journalier' => $request->prix_journalier,
             'contractable_id' => $request->contractable,
             'nombre_jours' => $diffInDays,
-            'caution' => $request->caution
+            'caution' => $request->caution,
         ]);
         return redirect('/contrats');
     }
@@ -483,8 +499,9 @@ class ContratController extends Controller
     public function prolonger(Request $request, Contrat $contrat)
     {
         $contrat = DB::transaction(function () use ($request, $contrat) {
-
-            $nombre_jours = Carbon::parse($request->du)->endOfDay()->diffInDays($contrat->du->endOfDay());
+            $nombre_jours = Carbon::parse($request->du)
+                ->endOfDay()
+                ->diffInDays($contrat->du->endOfDay());
             // $nouveauContrat = Contrat::create([
             //     'contractable_id' => $request->voiture,
             //     'contractable_type' => 'App\\Voiture',
@@ -531,7 +548,7 @@ class ContratController extends Controller
             $contrat->contractable->etat('disponible');
             if ($voiture->etat === 'disponible') {
                 $contrat->update([
-                    'contractable_id' => $request->voiture
+                    'contractable_id' => $request->voiture,
                 ]);
             }
             $voiture->etat('loué');
@@ -542,7 +559,7 @@ class ContratController extends Controller
     public function destroy(Contrat $contrat)
     {
         $contrat->contractable->update([
-            'etat' => 'disponible'
+            'etat' => 'disponible',
         ]);
         if ($paiements = $contrat->paiements) {
             $paiements->each(function ($paiement) {
@@ -550,17 +567,17 @@ class ContratController extends Controller
             });
         }
         $contrat->delete();
-        return redirect()->back();
+        return $contrat;
     }
 
     public function download(Contrat $contrat)
     {
         $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
-        $formatter = new NumberFormatter("fr", NumberFormatter::SPELLOUT);
+        $formatter = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
         $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
         if ($contrat->compagnie->type == 'véhicules') {
             $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-        } else if ($contrat->compagnie->type == 'hôtel') {
+        } elseif ($contrat->compagnie->type == 'hôtel') {
             $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
         }
         return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
@@ -573,10 +590,10 @@ class ContratController extends Controller
 
     public function ajoutePhotos(Request $request, Contrat $contrat)
     {
-        $path_droit = Storage::disk('public_uploads')->put("/", $request->file('droit'));
-        $path_gauche = Storage::disk('public_uploads')->put("/", $request->file('gauche'));
-        $path_avant = Storage::disk('public_uploads')->put("/", $request->file('avant'));
-        $path_arriere = Storage::disk('public_uploads')->put("/", $request->file('arriere'));
+        $path_droit = Storage::disk('public_uploads')->put('/', $request->file('droit'));
+        $path_gauche = Storage::disk('public_uploads')->put('/', $request->file('gauche'));
+        $path_avant = Storage::disk('public_uploads')->put('/', $request->file('avant'));
+        $path_arriere = Storage::disk('public_uploads')->put('/', $request->file('arriere'));
         $contrat->update([
             'lien_photo_avant' => $path_avant,
             'lien_photo_arriere' => $path_arriere,
@@ -589,31 +606,33 @@ class ContratController extends Controller
     public function updateCashier(Request $request, Contrat $contrat)
     {
         $contrat->update([
-            'cashier_facture_id' => $request->id
+            'cashier_facture_id' => $request->id,
         ]);
     }
 
     public function updateCashierId(Request $request, Contrat $contrat)
     {
         $contrat->update([
-            'cashier_facture_id' => $request->cashier_id
+            'cashier_facture_id' => $request->cashier_id,
         ]);
     }
 
     public function terminer(Contrat $contrat, Request $request)
     {
         DB::transaction(function () use ($contrat, $request) {
-            $nb_jours = Carbon::parse($request->date_fin)->startOfDay()->diffInDays(Carbon::parse($contrat->du)->startOfDay());
+            $nb_jours = Carbon::parse($request->date_fin)
+                ->startOfDay()
+                ->diffInDays(Carbon::parse($contrat->du)->startOfDay());
             if ($nb_jours == 0) {
                 $nb_jours = 1;
             }
             $contrat->update([
                 'real_check_out' => $request->date_fin,
                 'au' => $request->date_fin,
-                'nombre_jours' => $nb_jours
+                'nombre_jours' => $nb_jours,
             ]);
             $contrat->contractable->update([
-                'etat' => 'disponible'
+                'etat' => 'disponible',
             ]);
         });
         return redirect()->back();
@@ -635,23 +654,23 @@ class ContratController extends Controller
                     'account_id' => $apiSettings->gescash_client_account_id,
                     'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
                     'debit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                    'credit' => NULL,
+                    'credit' => null,
                     'created_at' => $contrat->created_at,
-                    'updated_at' => now()
+                    'updated_at' => now(),
                 ],
                 // Service Entry Credit
                 [
                     'account_id' => $apiSettings->gescash_service_account_id,
                     'label' => 'Location ' . $contrat->contractable->immatriculation . ' à ' . $contrat->client->nom . ' ' . $contrat->client->prenom,
                     'credit' => $contrat->nombre_jours * $contrat->prix_journalier,
-                    'debit' => NULL,
+                    'debit' => null,
                     'created_at' => $contrat->created_at,
-                    'updated_at' => now()
-                ]
-            ]
+                    'updated_at' => now(),
+                ],
+            ],
         ];
         if (isset($contrat->paiements)) {
-            foreach ($contrat->paiements as  $paiement) {
+            foreach ($contrat->paiements as $paiement) {
                 array_push(
                     $transactionData['entries'],
                     // Caisse Entry Debit
@@ -659,19 +678,19 @@ class ContratController extends Controller
                         'account_id' => $apiSettings->gescash_cash_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro,
                         'debit' => $paiement->montant,
-                        'credit' => NULL,
+                        'credit' => null,
                         'created_at' => $contrat->created_at,
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ],
                     // Client Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_client_account_id,
                         'label' => 'Paiment Contrat ' . $contrat->numéro,
                         'credit' => $paiement->montant,
-                        'debit' => NULL,
+                        'debit' => null,
                         'created_at' => $contrat->created_at,
-                        'updated_at' => now()
-                    ]
+                        'updated_at' => now(),
+                    ],
                 );
             }
         }
@@ -680,7 +699,7 @@ class ContratController extends Controller
 
         if ($response->status() == 201) {
             $contrat->update([
-                'gescash_transaction_id' => $response->json()['id']
+                'gescash_transaction_id' => $response->json()['id'],
             ]);
             flash('Transféré vers Gescash avec succès')->success();
             return redirect()->back();
@@ -691,7 +710,14 @@ class ContratController extends Controller
     public function ajouterDemiJournee(Contrat $contrat, Request $request)
     {
         $contrat->update([
-            'demi_journee' => $request['demi_journee']
+            'demi_journee' => $request['demi_journee'],
+        ]);
+        return redirect()->back();
+    }
+    public function updateDemiJournee(Contrat $contrat, Request $request)
+    {
+        $contrat->update([
+            'demi_journee' => $request['demi_journee'],
         ]);
         return redirect()->back();
     }
@@ -699,7 +725,21 @@ class ContratController extends Controller
     public function ajouterMontantChauffeur(Contrat $contrat, Request $request)
     {
         $contrat->update([
-            'montant_chauffeur' => $request['montant_chauffeur']
+            'montant_chauffeur' => $request['montant_chauffeur'],
+        ]);
+        return redirect()->back();
+    }
+    public function updateMontantChauffeur(Contrat $contrat, Request $request)
+    {
+        $contrat->update([
+            'montant_chauffeur' => $request['montant_chauffeur'],
+        ]);
+        return redirect()->back();
+    }
+    public function resetDataToNull(Contrat $contrat, $data)
+    {
+        return $contrat->update([
+            $data => null,
         ]);
     }
 }
