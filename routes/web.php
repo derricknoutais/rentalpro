@@ -167,7 +167,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     // VOITURES
     Route::get('/contractables', 'ContractableController@index');
+    Route::get('/contractables/create', 'ContractableController@create');
     Route::get('/contractables/{contractable_id}', 'ContractableController@show');
+
     Route::get('/voiture/{voiture}', 'VoitureController@show');
     Route::post('/voiture/reception', 'VoitureController@reception');
     // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');

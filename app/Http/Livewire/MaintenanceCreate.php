@@ -13,25 +13,37 @@ class MaintenanceCreate extends Component
 {
     public $contractables, $techniciens;
 
-    public $titre, $contractable_id, $technicien_id, $coût = 0, $coût_pièces = 0, $created_at, $description_panne, $pannes = [];
+    public $titre,
+        $contractable_id,
+        $technicien_id,
+        $coût = 0,
+        $coût_pièces = 0,
+        $created_at,
+        $description_panne,
+        $pannes = [];
 
-    public function mount($contractables, $techniciens){
+    public function mount($contractables, $techniciens)
+    {
         $this->created_at = now()->format('Y-m-d');
 
         $this->contractables = $contractables;
         $this->techniciens = $techniciens;
 
-        if(sizeof($this->contractables) > 0)
+        if (sizeof($this->contractables) > 0) {
             $this->contractable_id = $contractables[0]->id;
+        }
 
-        if(sizeof($this->techniciens) > 0)
+        if (sizeof($this->techniciens) > 0) {
             $this->technicien_id = $techniciens[0]->id;
+        }
     }
-    public function ajouterPanne(){
+    public function ajouterPanne()
+    {
         array_push($this->pannes, ['description' => $this->description_panne]);
-        $this->description_panne = '' ;
+        $this->description_panne = '';
     }
-    public function creerMaintenance(){
+    public function creerMaintenance()
+    {
         DB::transaction(function () {
             $maintenance = Maintenance::create([
                 'titre' => $this->titre,
@@ -42,17 +54,20 @@ class MaintenanceCreate extends Component
                 'coût' => $this->coût,
                 'coût_pièces' => $this->coût_pièces,
                 'created_at' => $this->created_at,
-                'updated_at' => $this->created_at
+                'updated_at' => $this->created_at,
             ]);
-            Auth::user()->compagnie->isHotel() ? $type = 'App\\Chambre' : $type = 'App\\Voiture';
+            Auth::user()->compagnie->isHotel() ? ($type = 'App\\Chambre') : ($type = 'App\\Voiture');
 
-            foreach( $this->pannes as &$panne ) {
+            foreach ($this->pannes as &$panne) {
                 $panne['compagnie_id'] = Auth::user()->compagnie_id;
                 $panne['contractable_id'] = $maintenance->contractable_id;
                 $panne['contractable_type'] = $type;
                 $panne['etat'] = 'non-résolue';
-            };
+            }
 
+            if (!Auth::user()->compagnie->isHotel()) {
+                Voiture::find($this->contractable_id)->etat('maintenance');
+            }
 
             $pannes = $maintenance->pannes()->createMany($this->pannes);
 
@@ -88,11 +103,12 @@ class MaintenanceCreate extends Component
             // $maintenance->update([
             //     'gescash_transaction_id' => $sent->json()['id'],
             // ]);
-            $this->cleanVariables();
 
+            $this->cleanVariables();
         });
     }
-    private function cleanVariables(){
+    private function cleanVariables()
+    {
         $this->titre = null;
         $this->contractable_id = null;
         $this->technicien_id = null;
@@ -101,7 +117,6 @@ class MaintenanceCreate extends Component
         $this->description_panne = null;
         $this->pannes = [];
     }
-
 
     public function render()
     {
