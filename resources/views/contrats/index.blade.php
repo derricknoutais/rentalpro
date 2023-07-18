@@ -92,18 +92,18 @@
                                     <span></span>
                                 </div>
                                 {{-- Dates --}}
-                                <div class="flex px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
+                                <div class="flex items-center px-2 py-3 mt-2 bg-yellow-100 rounded rounded-b-none">
                                     <span class="mr-1">
                                         Du:
                                     </span>
-                                    <span class="px-5 text-white rounded bg-success">
-                                        @{{ contrat.du }}
+                                    <span class="px-3 text-white rounded bg-success">
+                                        @{{ contrat.du | moment('DD MMM YYYY') }}
                                     </span>
                                     <span class="ml-3">
                                         Au :
                                     </span>
-                                    <span class="px-5 mx-1 text-white rounded bg-danger" v-if="contrat.au">
-                                        @{{ contrat.au }}
+                                    <span class="px-3 mx-1 text-white rounded bg-danger" v-if="contrat.au">
+                                        @{{ contrat.au | moment('DD MMM YYYY') }}
                                     </span>
                                     <span class="mr-1">
                                         Soit:
@@ -202,7 +202,7 @@
 
 
                                     <div class="flex justify-between" v-for="paiement in contrat.paiements">
-                                        <span>@{{ paiement.created_at }}</span>
+                                        <span>@{{ paiement.created_at | moment('DD MMM YYYY') }}</span>
 
 
                                         <span v-if="paiement.type_paiement">@{{ paiement.type_paiement }}</span>
