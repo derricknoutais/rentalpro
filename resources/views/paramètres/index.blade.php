@@ -2,6 +2,83 @@
 
 
 @section('content')
+
+    <parametres-index inline-template :documents_prop="{{ $documents }}" :accessoires_prop="{{ $accessoires }}"
+        :techniciens_prop="{{ $techniciens }}" :contractables_prop="{{ $contractables }}">
+        <div class="mx-auto max-w-7xl pt-16 lg:flex lg:gap-x-16 lg:px-8">
+            <main class="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
+                <div class="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+                    {{-- Documents --}}
+                    <div>
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Documents Véhicules</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-500">Liste de Documents Administratifs du véhicule</p>
+
+                        <dl class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+                            <div class="pt-6 sm:flex" v-for="document in documents">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">@{{ document.type }}
+                                </dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">Tom Cook</div>
+                                    <button type="button"
+                                        class="font-semibold text-indigo-600 hover:text-indigo-500">Update</button>
+                                </dd>
+                            </div>
+
+                        </dl>
+                        <div class="flex border-t border-gray-100 pt-6">
+                            <button type="button"
+                                class="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500"><span
+                                    aria-hidden="true">+</span> Ajouter un Type de Document</button>
+                        </div>
+                    </div>
+                    {{-- Accessoires --}}
+                    <div>
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Accessoires Véhicules</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-500">Liste des Accessoires du Véhicule</p>
+
+                        <dl class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+                            <div class="pt-6 sm:flex" v-for="accessoire in accessoires">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">@{{ accessoire.type }}
+                                </dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">Tom Cook</div>
+                                    <button type="button"
+                                        class="font-semibold text-indigo-600 hover:text-indigo-500">Update</button>
+                                </dd>
+                            </div>
+
+                        </dl>
+                    </div>
+                    {{-- Techniciens --}}
+                    <div>
+                        <h2 class="text-base font-semibold leading-7 text-gray-900">Techniciens & Fournisseurs</h2>
+                        <p class="mt-1 text-sm leading-6 text-gray-500">Liste des Techniciens et des Fournisseurs</p>
+
+                        <dl class="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+                            <div class="pt-6 sm:flex" v-for="technicien in techniciens">
+                                <dt class="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">@{{ technicien.type }}
+                                </dt>
+                                <dd class="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                                    <div class="text-gray-900">Tom Cook</div>
+                                    <button type="button"
+                                        class="font-semibold text-indigo-600 hover:text-indigo-500">Update</button>
+                                </dd>
+                            </div>
+
+                        </dl>
+                    </div>
+
+
+                </div>
+            </main>
+        </div>
+    </parametres-index>
+
+
+
+
+
+
     <div class="container-fluid">
         <h1 class="mt-5 text-4xl font-semibold">Paramètres</h1>
         <div class="row mt-10">
@@ -9,7 +86,8 @@
             <div class="col-2">
                 <h3 class="text-2xl" style="visibility: hidden">Documents</h3>
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#ajouterTypeDocument">
+                <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                    data-target="#ajouterTypeDocument">
                     Ajouter Type Document
                 </button>
                 <!-- Modal -->
@@ -61,7 +139,8 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="">Type</label>
-                                        <input type="text" class="form-control" name="type" placeholder="Manivelle">
+                                        <input type="text" class="form-control" name="type"
+                                            placeholder="Manivelle">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -396,6 +475,10 @@
 
 
     </div>
+
+
+
+
 
 
 

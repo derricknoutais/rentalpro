@@ -364,6 +364,7 @@
                                     </div>
                                 </div>
                             </td>
+
                             {{-- Actions --}}
                             <td class="flex flex-col">
 
@@ -399,11 +400,11 @@
                                             Annuler
                                         </button>
                                     @endcan
-                                    @can('envoyer mail')
+                                    @can('terminer contrat')
                                         <button class="px-2 py-1 mt-5 bg-green-400 rounded text-green-50" data-toggle="modal"
                                             data-target="#mail-contrat-modal" @click="passDataToModal('contrat', contrat)">
-                                            <i class="fas fa-ban "></i>
-                                            Terminer Contrat
+                                            <i class="fas fa-envelope"></i>
+                                            Envoyer Mail
                                         </button>
                                     @endcan
 
@@ -819,6 +820,43 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                 <button type="submit" class="text-white bg-green-500 btn">Terminer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Mail -->
+            <div class="modal fade" id="mail-contrat-modal" tabindex="-1" role="dialog"
+                aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="text-lg modal-title">Envoyer Contrat par Mail </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form :action="'/contrat/' + modalData.contrat.id + '/send-mail'" method="POST"
+                            v-if="modalData.contrat">
+                            @csrf
+                            <div class="modal-body">
+                                <p class="text-sm mb-3">
+                                    Entrez l'adresse Mail
+                                </p>
+                                <div v-if="modalData.contrat.client.mail">
+                                    <input name="mail" type="text" class="form-control"
+                                        :value="modalData.contrat.client.mail">
+                                </div>
+                                <div v-else>
+                                    <input name="mail" type="text" class="form-control">
+                                    <label><input type="checkbox" name="save_mail"> Enregistrer l'adresse sur le
+                                        client</label>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                <button type="submit" class="text-white bg-green-500 btn">Envoyer</button>
                             </div>
                         </form>
                     </div>

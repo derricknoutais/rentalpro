@@ -18,7 +18,7 @@
     <h1 class="text-4xl mt-5 text-center">Nouveau Contrat Créé</h1>
     <div class="flex flex-col items-center mt-1">
         {{-- CONTRAT --}}
-        <div class="items-center bg-white w-1/3 rounded-md p-3">
+        <div class="items-center bg-white w-2/3 rounded-md p-3">
             <h2 class="text-2xl">Contrat Nº {{ $contrat->numéro }}</h2>
             <div class="grid grid-cols-2 w-2/3 mt-3">
 
@@ -40,7 +40,7 @@
             </div>
         </div>
         {{-- CLIENT --}}
-        <div class="bg-white w-1/3 rounded-md p-3 mt-3 ">
+        <div class="bg-white w-2/3 rounded-md p-3 mt-3 ">
             <h3 class="text-2xl my-3">Client</h3>
             <div class="grid grid-cols-2 w-2/3">
                 <dt class="text-lg text-gray-400">Nom & Prénom:</dt>
@@ -65,7 +65,7 @@
 
         </div>
         {{-- CONTRACTABLE --}}
-        <div class="bg-white w-1/3 rounded-md p-3 mt-3 ">
+        <div class="bg-white w-2/3 rounded-md p-3 mt-3 ">
             <h3 class="text-2xl my-3">Contractable</h3>
             <div class="grid grid-cols-2 w-2/3">
                 <dt class="text-lg text-gray-400">Immatriculation :</dt>

@@ -14,13 +14,14 @@ class Voiture extends Model
     use HasFactory;
     protected $guarded = [];
 
-    protected static function booted(){
-        static::addGlobalScope(new VoitureScope);
+    protected static function booted()
+    {
+        static::addGlobalScope(new VoitureScope());
     }
 
     public function scopeNonVendu($query)
     {
-        return $query->where('etat', '<>' ,'vendu');
+        return $query->where('etat', '<>', 'vendu');
     }
 
     public function documents()
@@ -39,7 +40,7 @@ class Voiture extends Model
     }
     public function paiements()
     {
-        return $this->hasManyThrough(Paiement::class, Contrat::class, 'contractable_id', 'contrat_id');
+        return $this->hasManyThrough(Paiement::class, Contrat::class, 'contractable_id', 'payable_id');
     }
 
     public function pannes()
@@ -52,37 +53,43 @@ class Voiture extends Model
         return $this->hasMany('App\Maintenance');
     }
 
-    public static function compteVoitures($etat){
+    public static function compteVoitures($etat)
+    {
         return Voiture::where('etat', $etat)->count();
     }
-    public static function moinsPerformante(){
-
+    public static function moinsPerformante()
+    {
     }
-    public function etat($etat){
+    public function etat($etat)
+    {
         $this->update([
-            'etat' => $etat
+            'etat' => $etat,
         ]);
     }
-    public function pannesActuelles(){
-        return Panne::where(['etat' => 'non-résolue' ,'voiture_id' => $this->id])->orWhere(['etat' => 'en-maintenance', 'voiture_id' => $this->id])->get();
+    public function pannesActuelles()
+    {
+        return Panne::where(['etat' => 'non-résolue', 'voiture_id' => $this->id])
+            ->orWhere(['etat' => 'en-maintenance', 'voiture_id' => $this->id])
+            ->get();
     }
 
-    public function pannesNonResolues(){
-        return Panne::where(['etat' => 'non-résolue' ,'voiture_id' => $this->id])->get();
+    public function pannesNonResolues()
+    {
+        return Panne::where(['etat' => 'non-résolue', 'voiture_id' => $this->id])->get();
     }
 
-    public function pannesResolues(){
-        return Panne::where(['etat' => 'résolue' ,'voiture_id' => $this->id])->get();
+    public function pannesResolues()
+    {
+        return Panne::where(['etat' => 'résolue', 'voiture_id' => $this->id])->get();
     }
 
     public function pannesEnMaintenance()
     {
-        return Panne::where(['etat' => 'en-maintenance' ,'voiture_id' => $this->id])->get();
+        return Panne::where(['etat' => 'en-maintenance', 'voiture_id' => $this->id])->get();
     }
 
-    public function nom(){
+    public function nom()
+    {
         return $this->immatriculation;
     }
-
-
 }

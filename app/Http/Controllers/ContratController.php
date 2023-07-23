@@ -742,4 +742,19 @@ class ContratController extends Controller
             $data => null,
         ]);
     }
+
+    public function sendMail(Contrat $contrat, Request $request)
+    {
+        if (
+            $request->validate([
+                'mail' => 'required|email',
+            ])
+        ) {
+            Mail::to($request->mail)->send(new ContratCréé($contrat));
+        }
+        if ($request->has('save_mail') && $request->save_mail) {
+            $contrat->client->update(['mail' => $request->mail]);
+        }
+        return redirect()->back();
+    }
 }

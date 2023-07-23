@@ -191,11 +191,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrats/create', 'ContratController@create');
     Route::get('/contrat/{contrat}', 'ContratController@show');
 
+    Route::post('/contrat/{contrat}/send-mail', 'ContratController@sendMail');
+
     Route::get('/contrat/{contrat}/download', 'ContratController@download');
     Route::post('/contrat/{contrat}/terminer', 'ContratController@terminer');
     Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
     Route::get('/contrat/{contrat}/edit', 'ContratController@edit');
     Route::put('/contrat/{contrat}/update', 'ContratController@update');
+
     Route::put('/contrat/{contrat}/update-all', 'ContratController@updateAll');
     Route::post('/contrats/{contrat}/ajoute-photos', 'ContratController@ajoutePhotos')->where('contrat', '[0-9]+');
     Route::post('/contrats/{contrat}/update-cashier', 'ContratController@updateCashier')->where('contrat', '[0-9]+');
@@ -266,11 +269,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/reservations/store', 'ReservationController@store');
     // Paramètres
     Route::get('/mes-paramètres', function () {
-        $documents = Auth::user()->documents;
-        $accessoires = Auth::user()->accessoires;
-        $voitures = Voiture::with('documents', 'accessoires')->get();
-        $contractables = Auth::user()->contractables;
-        $techniciens = Technicien::where('compagnie_id', Auth::user()->compagnie_id)->get();
+        $documents = Auth::user()->compagnie->documents;
+        $accessoires = Auth::user()->compagnie->accessoires;
+        // $voitures = Voiture::with('documents', 'accessoires')->get();
+        $contractables = Auth::user()->contractables->loadMissing('documents', 'accessoires');
+        $techniciens = Auth::user()->compagnie->techniciens;
         return view('paramètres.index', compact('documents', 'accessoires', 'contractables', 'techniciens'));
     });
 
