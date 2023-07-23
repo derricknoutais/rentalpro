@@ -13,7 +13,8 @@
                     Ajouter Type Document
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="ajouterTypeDocument" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal fade" id="ajouterTypeDocument" tabindex="-1" role="dialog"
+                    aria-labelledby="modelTitleId" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -27,7 +28,8 @@
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="">Type</label>
-                                        <input type="text" class="form-control" name="type" placeholder="Visite Technique">
+                                        <input type="text" class="form-control" name="type"
+                                            placeholder="Visite Technique">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -39,11 +41,13 @@
                     </div>
                 </div>
 
-                <button type="button" class="mt-3 btn btn-primary btn-block" data-toggle="modal" data-target="#ajouterTypeAccessoire">
+                <button type="button" class="mt-3 btn btn-primary btn-block" data-toggle="modal"
+                    data-target="#ajouterTypeAccessoire">
                     Ajouter Accessoire
                 </button>
                 <!-- Modal -->
-                <div class="modal fade" id="ajouterTypeAccessoire" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal fade" id="ajouterTypeAccessoire" tabindex="-1" role="dialog"
+                    aria-labelledby="modelTitleId" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -78,71 +82,75 @@
                         <div class="list-group">
                             @isset($documents)
                                 @forelse ($documents as $document)
-                                <div class="list-group-item list-group-item-action">{{ $document->type }}
-                                    <a href="#" class="float-right ml-2">
-                                        <i class="fas fa-times text-danger" data-toggle="modal"
-                                            data-target="#{{ str_replace(' ', '', $document->type) }}"></i>
-                                    </a>
-                                    <a href="#" class="float-right mx-2">
-                                        <i class="fas fa-edit text-primary" data-toggle="modal"
-                                            data-target="#edit{{ str_replace(' ', '', $document->type) }}"></i>
-                                    </a>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade" id="{{ str_replace(' ', '', $document->type) }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="modelTitleId" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Attention</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="/documents/{{ $document->id }}/destroy" method="POST">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    Voulez-vous vraiment supprimer "{{ $document->type }}"?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                    <button type="submit" class="btn btn-primary">Supprimer</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                    <div class="list-group-item list-group-item-action">{{ $document->type }}
+                                        <a href="#" class="float-right ml-2">
+                                            <i class="fas fa-times text-danger" data-toggle="modal"
+                                                data-target="#{{ str_replace(' ', '', $document->type) }}"></i>
+                                        </a>
+                                        <a href="#" class="float-right mx-2">
+                                            <i class="fas fa-edit text-primary" data-toggle="modal"
+                                                data-target="#edit{{ str_replace(' ', '', $document->type) }}"></i>
+                                        </a>
                                     </div>
-                                </div>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="edit{{ str_replace(' ', '', $document->type) }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="modelTitleId" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Modifier Document</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="/documents/{{ $document->id }}/update" method="POST">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="">Type</label>
-                                                        <input type="text" class="form-control" name="type" placeholder="Manivelle"
-                                                            value="{{ $document->type }}">
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="{{ str_replace(' ', '', $document->type) }}" tabindex="-1"
+                                        role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Attention</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="/documents/{{ $document->id }}/destroy" method="POST">
+                                                    @csrf
+                                                    <div class="modal-body">
+                                                        Voulez-vous vraiment supprimer "{{ $document->type }}"?
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                    <button type="submit" class="btn btn-primary">Ajouter</button>
-                                                </div>
-                                            </form>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Fermer</button>
+                                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="edit{{ str_replace(' ', '', $document->type) }}"
+                                        tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Modifier Document</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="/documents/{{ $document->id }}/update" method="POST">
+                                                    @csrf
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="">Type</label>
+                                                            <input type="text" class="form-control" name="type"
+                                                                placeholder="Manivelle" value="{{ $document->type }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Fermer</button>
+                                                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @empty
-                                <p>Aucun Document Disponible. Veuillez en creer</p>
+                                    <p>Aucun Document Disponible. Veuillez en creer</p>
                                 @endforelse
                             @endisset
 
@@ -154,70 +162,74 @@
                         <div class="list-group">
                             @isset($accessoires)
                                 @forelse ($accessoires as $accessoire)
-                                <div class="list-group-item list-group-item-action">{{ $accessoire->type }}
-                                    <a href="#" class="float-right ml-2">
-                                        <i class="fas fa-times text-danger" data-toggle="modal"
-                                            data-target="#{{ str_replace(' ', '', $accessoire->type) }}"></i>
-                                    </a>
-                                    <a href="#" class="float-right mx-2">
-                                        <i class="fas fa-edit text-primary" data-toggle="modal"
-                                            data-target="#edit{{ str_replace(' ', '', $accessoire->type) }}"></i>
-                                    </a>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade" id="{{ str_replace(' ', '', $accessoire->type) }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="modelTitleId" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Attention</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="/accessoires/{{ $accessoire->id }}/destroy" method="POST">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    Voulez-vous vraiment supprimer "{{ $accessoire->type }}"?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                    <button type="submit" class="btn btn-primary">Supprimer</button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                    <div class="list-group-item list-group-item-action">{{ $accessoire->type }}
+                                        <a href="#" class="float-right ml-2">
+                                            <i class="fas fa-times text-danger" data-toggle="modal"
+                                                data-target="#{{ str_replace(' ', '', $accessoire->type) }}"></i>
+                                        </a>
+                                        <a href="#" class="float-right mx-2">
+                                            <i class="fas fa-edit text-primary" data-toggle="modal"
+                                                data-target="#edit{{ str_replace(' ', '', $accessoire->type) }}"></i>
+                                        </a>
                                     </div>
-                                </div>
-                                <!-- Modal -->
-                                <div class="modal fade" id="edit{{ str_replace(' ', '', $accessoire->type) }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="modelTitleId" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Modifier Accessoires</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="/accessoires/{{ $accessoire->id }}/update" method="POST">
-                                                @csrf
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="">Type</label>
-                                                        <input type="text" class="form-control" name="type" placeholder="Manivelle"
-                                                            value="{{ $accessoire->type }}">
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="{{ str_replace(' ', '', $accessoire->type) }}"
+                                        tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Attention</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="/accessoires/{{ $accessoire->id }}/destroy" method="POST">
+                                                    @csrf
+                                                    <div class="modal-body">
+                                                        Voulez-vous vraiment supprimer "{{ $accessoire->type }}"?
                                                     </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                                                    <button type="submit" class="btn btn-primary">Modifier</button>
-                                                </div>
-                                            </form>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Fermer</button>
+                                                        <button type="submit" class="btn btn-primary">Supprimer</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="edit{{ str_replace(' ', '', $accessoire->type) }}"
+                                        tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Modifier Accessoires</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form action="/accessoires/{{ $accessoire->id }}/update" method="POST">
+                                                    @csrf
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="">Type</label>
+                                                            <input type="text" class="form-control" name="type"
+                                                                placeholder="Manivelle" value="{{ $accessoire->type }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-dismiss="modal">Fermer</button>
+                                                        <button type="submit" class="btn btn-primary">Modifier</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @empty
-                                <p>Veuillez Creer des Accessoires</p>
+                                    <p>Veuillez Creer des Accessoires</p>
                                 @endforelse
                             @endisset
 
@@ -228,58 +240,61 @@
                         <h3 class="text-center">Mes Voitures / Mes Chambres</h3>
                         <div class="list-group">
                             @foreach ($contractables as $contractable)
-                                <a class="list-group-item list-group-item-action" data-toggle="modal" data-target="#voiture{{ $contractable->id }}" href="#">{{ $contractable->nom() }} </a>
+                                <a class="list-group-item list-group-item-action" data-toggle="modal"
+                                    data-target="#voiture{{ $contractable->id }}"
+                                    href="#">{{ $contractable->nom() }} </a>
 
                                 <!-- Modal -->
-                                <div class="modal fade" id="voiture{{ $contractable->id }}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                                <div class="modal fade" id="voiture{{ $contractable->id }}" tabindex="-1"
+                                    role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Attacher Accessoire & Documents</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
-                                            <form action="/{{ $contractable->id }}/voiture-documents-accessoires" method="POST">
+                                            <form action="/{{ $contractable->id }}/voiture-documents-accessoires"
+                                                method="POST">
                                                 @csrf
                                                 <div class="modal-body row">
                                                     <div class="col-6">
-                                                    @isset($documents)
-                                                        @forelse ($documents as $document)
-                                                        <div class="form-check">
-                                                            <label class="form-check-label">
-                                                                <input type="checkbox" class="form-check-input" name="{{ str_replace(' ', '',  $document->type) }}"
-                                                                    @isset($contractable->documents)
+                                                        @isset($documents)
+                                                            @forelse ($documents as $document)
+                                                                <div class="form-check">
+                                                                    <label class="form-check-label">
+                                                                        <input type="checkbox" class="form-check-input"
+                                                                            name="{{ str_replace(' ', '', $document->type) }}"
+                                                                            @isset($contractable->documents)
                                                                 @foreach ($contractable->documents as $voit_document)
                                                                 @if ($voit_document->type === $document->type)
                                                                 checked
                                                                 @endif
                                                                 @endforeach
                                                                 @endisset
-
-                                                                value="{{ $document->id }}"
-                                                                >
-                                                                {{ $document->type }}
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-group col-6">
-                                                            <input type="date" class="form-control" name="date{{ str_replace(' ', '', $document->type) }}"
-                                                                @isset($contractable->documents)
+                                                                            value="{{ $document->id }}">
+                                                                        {{ $document->type }}
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-group col-6">
+                                                                    <input type="date" class="form-control"
+                                                                        name="date{{ str_replace(' ', '', $document->type) }}"
+                                                                        @isset($contractable->documents)
                                                             @foreach ($contractable->documents as $voit_doc)
                                                             @if ($voit_doc->type === $document->type)
                                                             value="{{ $voit_doc->pivot->date_expiration }}"
                                                             @endif
                                                             @endforeach
-                                                            @endisset
-
-                                                            >
-                                                        </div>
-                                                        @empty
-                                                        <div>
-                                                            Aucun Document
-                                                        </div>
-                                                        @endforelse
-                                                    @endisset
+                                                            @endisset>
+                                                                </div>
+                                                            @empty
+                                                                <div>
+                                                                    Aucun Document
+                                                                </div>
+                                                            @endforelse
+                                                        @endisset
 
                                                     </div>
                                                     <div class="col-6">
@@ -287,36 +302,37 @@
                                                             @foreach ($accessoires as $accessoire)
                                                                 <div class="form-check">
                                                                     <label class="form-check-label">
-                                                                        <input type="checkbox" class="form-check-input" name="{{ str_replace(' ', '', $accessoire->type) }}"
-                                                                            value="{{ $accessoire->id }}" @isset($contractable->accessoires)
+                                                                        <input type="checkbox" class="form-check-input"
+                                                                            name="{{ str_replace(' ', '', $accessoire->type) }}"
+                                                                            value="{{ $accessoire->id }}"
+                                                                            @isset($contractable->accessoires)
                                                                         @foreach ($contractable->accessoires as $voit_access)
                                                                         @if ($voit_access->type === $accessoire->type)
                                                                         checked
                                                                         @endif
                                                                         @endforeach
-                                                                        @endisset
-
-                                                                        >
+                                                                        @endisset>
                                                                         {{ $accessoire->type }}
                                                                     </label>
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <input type="number" class="form-control" min=0 max=3 name="quantité{{ str_replace(' ', '', $accessoire->type) }}"
+                                                                    <input type="number" class="form-control" min=0 max=3
+                                                                        name="quantité{{ str_replace(' ', '', $accessoire->type) }}"
                                                                         @isset($contractable->accessoires)
                                                                             @foreach ($contractable->accessoires as $voit_access)
                                                                                 @if ($voit_access->type === $accessoire->type)
                                                                                 value="{{ $voit_access->pivot->quantité }}"
                                                                                 @endif
                                                                             @endforeach
-                                                                        @endisset
-                                                                    >
+                                                                        @endisset>
                                                                 </div>
                                                             @endforeach
                                                         @endisset
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Fermer</button>
                                                     <button type="submit" class="btn btn-primary">Attacher</button>
                                                 </div>
                                             </form>
@@ -339,7 +355,8 @@
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="ajouteTechnicien" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                    <div class="modal fade" id="ajouteTechnicien" tabindex="-1" role="dialog"
+                        aria-labelledby="modelTitleId" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -352,12 +369,13 @@
                                     @csrf
                                     <div class="modal-body">
                                         <div class="form-group">
-                                          <label for="">Nom</label>
-                                          <input type="text" class="form-control" name="nom">
+                                            <label for="">Nom</label>
+                                            <input type="text" class="form-control" name="nom">
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </form>
@@ -367,7 +385,7 @@
                     </div>
                 </h3>
                 <ul class="list-group">
-                    @foreach($techniciens as $technicien)
+                    @foreach ($techniciens as $technicien)
                         <li class="list-group-item">{{ $technicien->nom }}</li>
                     @endforeach
 
