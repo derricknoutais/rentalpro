@@ -14,12 +14,8 @@ class User extends Authenticatable
 {
     use Notifiable, HasRoles, HasFactory, CausesActivity;
 
-    protected $fillable = [
-        'name', 'email', 'password'
-    ];
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    protected $fillable = ['name', 'email', 'password'];
+    protected $hidden = ['password', 'remember_token'];
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -28,8 +24,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Compagnie');
     }
-    public function contractables(){
+
+    public function contractables()
+    {
         return $this->compagnie->contractables();
     }
-
 }
