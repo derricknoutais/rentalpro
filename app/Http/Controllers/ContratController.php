@@ -191,9 +191,11 @@ class ContratController extends Controller
 
                 $client_id = $client->id;
                 $client->loadMissing('image');
-                $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
-                Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
-                $client->image->update(['name' => $imageName]);
+                if ($client->image) {
+                    $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
+                    Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
+                    $client->image->update(['name' => $imageName]);
+                }
             } else {
                 $client_id = $request->client_id;
             }

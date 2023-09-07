@@ -25,7 +25,6 @@ class TechnicienController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
@@ -38,10 +37,9 @@ class TechnicienController extends Controller
     {
         $technicien = Technicien::create([
             'nom' => $request->nom,
-            'compagnie_id' => Auth::user()->compagnie_id
-            
+            'compagnie_id' => Auth::user()->compagnie_id,
         ]);
-        if($technicien){
+        if ($technicien) {
             return redirect()->back();
         }
     }
@@ -77,7 +75,9 @@ class TechnicienController extends Controller
      */
     public function update(Request $request, Technicien $technicien)
     {
-        //
+        $technicien->update([
+            'nom' => $request->nom,
+        ]);
     }
 
     /**
@@ -88,6 +88,6 @@ class TechnicienController extends Controller
      */
     public function destroy(Technicien $technicien)
     {
-        //
+        $technicien->delete();
     }
 }

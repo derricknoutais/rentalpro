@@ -169,7 +169,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contractables', 'ContractableController@index');
     Route::get('/contractables/create', 'ContractableController@create');
     Route::get('/contractables/{contractable_id}', 'ContractableController@show');
-
     Route::get('/voiture/{voiture}', 'VoitureController@show');
     Route::post('/voiture/reception', 'VoitureController@reception');
     // Route::get('/voiture/{voiture}/reception', 'VoitureController@reception');
@@ -307,6 +306,7 @@ Route::group(['middleware' => ['auth']], function () {
             return redirect('/mes-paramètres');
         }
     });
+    Route::delete('/documents/{document}', 'DocumentController@destroy');
 
     // Accessoires
     Route::post('/accessoires', function (Request $request) {
@@ -318,11 +318,8 @@ Route::group(['middleware' => ['auth']], function () {
             return redirect('/mes-paramètres');
         }
     });
-    Route::post('/accessoires/{accessoire}/destroy', function (Accessoire $accessoire) {
-        $deleted = $accessoire->delete();
-        if ($deleted) {
-            return redirect('/mes-paramètres');
-        }
+    Route::delete('/accessoires/{accessoire}', function (Accessoire $accessoire) {
+        $accessoire->delete();
     });
     Route::post('/accessoires/{accessoire}/update', function (Accessoire $accessoire, Request $request) {
         $updated = $accessoire->update([
@@ -478,5 +475,5 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     // Techniciens
-    Route::post('techniciens', 'TechnicienController@store');
+    Route::resource('techniciens', 'TechnicienController');
 });

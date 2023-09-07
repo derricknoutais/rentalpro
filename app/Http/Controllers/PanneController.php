@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Panne;
 use App\Voiture;
+use App\Contractable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,13 +30,13 @@ class PanneController extends Controller
         //
     }
 
-    public function store(Request $request, Voiture $voiture){
-
-        for ($i=0; $i < $request->nombrePannes; $i++) {
+    public function store(Request $request, Voiture $voiture)
+    {
+        for ($i = 0; $i < $request->nombrePannes; $i++) {
             $data[] = [
                 'voiture_id' => $voiture->id,
                 'compagnie_id' => Auth::user()->compagnie_id,
-                'description' => $request['panne' . $i ],
+                'description' => $request['panne' . $i],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -43,14 +44,14 @@ class PanneController extends Controller
         Panne::insert($data);
 
         return redirect()->back();
-
     }
 
-    public function storeApi(Request $request){
+    public function storeApi(Request $request)
+    {
         $panne = Panne::create([
             'compagnie_id' => Auth::user()->compagnie_id,
             'contractable_id' => $request['contractable_id'],
-            'description' => $request['description']
+            'description' => $request['description'],
         ]);
         return $panne;
     }

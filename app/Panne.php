@@ -9,11 +9,12 @@ class Panne extends Model
 {
     protected $guarded = [];
 
-    public static function boot(){
+    public static function boot()
+    {
         parent::boot();
-        static::creating(function(Panne $panne){
+        static::creating(function (Panne $panne) {
             $panne->compagnie_id = Auth::user()->compagnie_id;
-            $panne->contractable_type = Contractable::type();
+            $panne->contractable_type = 'App\\' . Contractable::type();
         });
     }
 
@@ -26,22 +27,25 @@ class Panne extends Model
         return $this->morphTo();
     }
 
-    public function estRésolue(){
-        if( $this->etat === 'résolue'){
+    public function estRésolue()
+    {
+        if ($this->etat === 'résolue') {
             return true;
         } else {
             return false;
         }
     }
-    public function estNonRésolue(){
-        if( $this->etat === 'non-résolue'){
+    public function estNonRésolue()
+    {
+        if ($this->etat === 'non-résolue') {
             return true;
         } else {
             return false;
         }
     }
-    public function estEnMaintenance(){
-        if( $this->etat === 'en-maintenance'){
+    public function estEnMaintenance()
+    {
+        if ($this->etat === 'en-maintenance') {
             return true;
         } else {
             return false;

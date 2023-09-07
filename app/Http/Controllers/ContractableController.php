@@ -15,7 +15,10 @@ class ContractableController extends Controller
     public function show($contractable_id)
     {
         $contractable = Auth::user()->compagnie->contractables->find($contractable_id);
-        return view('contractables.show', compact('contractable'));
+        $contractable->loadMissing('contrats', 'contrats.client');
+        $contrats = $contractable->contrats->reverse()->take(3);
+
+        return view('contractables.show', compact('contractable', 'contrats'));
     }
     public function create()
     {

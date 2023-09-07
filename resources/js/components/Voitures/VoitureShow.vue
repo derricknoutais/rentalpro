@@ -1,23 +1,24 @@
 
 <script>
 export default {
-	props: ["voiture"],
+	props: ["voiture_prop"],
 	data() {
 		return {
+			voiture: null,
 			nombrePannes: 1,
 			technicien: null,
-			timer : 0,
+			timer: 0,
 			interval: null
 		};
 	},
 	methods: {
-		incrementNombrePannes(){
+		incrementNombrePannes() {
 			this.nombrePannes += 1
 		},
 		receptionnerVoiture() {
 			axios.get("/voiture/" + this.voiture.id + "/reception").then(response => {
 				console.log(response.data)
-			}).catch(error => {});
+			}).catch(error => { });
 		},
 		envoyerEnMaintenance() {
 			axios.get("/voiture/" + this.voiture.id + "/maintenance").then(response => {
@@ -26,9 +27,9 @@ export default {
 				console.log(error);
 			});
 		},
-		decrementTimer(){
+		decrementTimer() {
 			this.interval = setInterval(() => {
-				if(this.timer > 0){
+				if (this.timer > 0) {
 					this.timer -= 1;
 				} else {
 					clearInterval(this.interval)
@@ -36,10 +37,10 @@ export default {
 				}
 			}, 1000);
 		},
-		toggleMaintenanceModal(voiture){
-			if(voiture.pannes.length === 0){
+		toggleMaintenanceModal(voiture) {
+			if (voiture.pannes.length === 0) {
 				$('#pasDePannes').modal('show');
-				this.timer = 3; 
+				this.timer = 3;
 				this.decrementTimer();
 				$('#panneSignalisation').modal('show');
 			} else {
@@ -47,6 +48,6 @@ export default {
 			}
 		}
 	},
-  	mounted() {}
+	mounted() { }
 };
 </script>

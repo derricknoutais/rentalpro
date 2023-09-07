@@ -21,10 +21,11 @@ class CreateContratsTable extends Migration
             $table->unsignedInteger('compagnie_id');
             $table->unsignedInteger('offre_id')->nullable();
             $table->string('numéro')->nullable();
+
             $table->dateTime('du')->nullable();
             $table->dateTime('au')->nullable();
-
             $table->dateTime('real_check_out')->nullable();
+
             $table->double('prix_journalier');
             $table->integer('nombre_jours')->nullable();
             $table->double('demi_journee')->nullable();
@@ -48,7 +49,12 @@ class CreateContratsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
+            $table
+                ->foreign('compagnie_id')
+                ->references('id')
+                ->on('compagnies')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
