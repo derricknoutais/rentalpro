@@ -100,7 +100,9 @@ class ContratController extends Controller
             if ($activity && $activity->causer) {
                 $contrat->activity = $activity;
             }
-            $contrat->contractable->nom = $contrat->contractable->nom();
+            if ($contrat->contractable) {
+                $contrat->contractable->nom = $contrat->contractable->nom();
+            }
             if ($contrat->client) {
                 $contrat->client->derniers_contrats = $contrat->client->troisDerniersContrats();
             }
