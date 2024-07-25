@@ -18,6 +18,8 @@ class CreateOffresTable extends Migration
             $table->foreignId('compagnie_id');
             $table->string('nom');
             $table->double('montant');
+
+            $table->double('duree');
             $table->timestamps();
         });
     }

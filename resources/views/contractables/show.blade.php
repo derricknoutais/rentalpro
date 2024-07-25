@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <contractable-show inline-template :contractable_prop="{{ $contractable }}" :pannes_prop="{{ $contractable->pannes }}"
+    <contractable-show inline-template :contractable_prop="{{ $contractable }}" {{-- :pannes_prop="{{ $contractable->pannes }}" --}}
         :contrats_prop="{{ $contrats }}">
         <div>
             <div class="mt-10 md:flex md:items-center md:justify-between md:space-x-5">

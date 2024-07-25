@@ -30,7 +30,7 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 if (env('APP_ENV') == 'local') {
-    Auth::loginUsingID(1);
+    Auth::loginUsingID(2);
 }
 
 Route::get('/test', function (Request $request) {
@@ -166,6 +166,7 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     // VOITURES
+
     Route::get('/contractables', 'ContractableController@index');
     Route::get('/contractables/create', 'ContractableController@create');
     Route::get('/contractables/{contractable_id}', 'ContractableController@show');

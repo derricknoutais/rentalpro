@@ -62,10 +62,7 @@ class ContratController extends Controller
             if ($request->has('etat') && $request->etat !== null) {
                 switch ($request->etat) {
                     case 'En cours':
-                        $query
-                            ->whereDate('du', '<=', today())
-                            ->whereDate('au', '>=', today())
-                            ->whereNull('real_check_out');
+                        $query->whereDate('du', '<=', today())->whereDate('au', '>=', today())->whereNull('real_check_out');
                         break;
                     case 'Terminé':
                         $query->whereNotNull('real_check_out');
@@ -131,15 +128,16 @@ class ContratController extends Controller
 
     public function show(Contrat $contrat)
     {
-        $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements');
+        $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements', 'activities');
+        // return $contrat->activities;
         return view('contrats.show', compact('contrat'));
     }
 
     public function create(Request $request)
     {
-        $clients = Client::all();
-        $clients->toArray();
+        // $clients->toArray();
         $compagnie = Auth::user()->compagnie;
+        $clients = $compagnie->clients;
         $contrats = $compagnie;
         $offres = $compagnie->offres;
         $contractables = $compagnie->contractables->where('etat', 'disponible')->values();
@@ -150,7 +148,7 @@ class ContratController extends Controller
         } elseif ($request->has('contractable_id')) {
             $contractable = $contractables->find($request->contractable_id);
             if (!$contractable) {
-                return "Erreur! Ce véhicule n'est pas disponible";
+                return "Erreur! Cette chambre n'est pas disponible";
             }
         }
 
@@ -243,13 +241,16 @@ class ContratController extends Controller
             }
         });
         if ($request->paiement != null && $request->paiement !== 0) {
-            Paiement::create([
+            $paiement = Paiement::create([
                 'payable_id' => $contrat->id,
                 'payable_type' => 'App\\Contrat',
                 'montant' => $request->paiement,
                 'type_paiement' => $request->type_paiement,
                 'note' => $request->note_paiement,
             ]);
+            if ($paiement) {
+                // Mail::to('derricknoutais@gmail.com')->cc('noutaiaugustin@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new PaiementCréé($contrat, $paiement));
+            }
         }
         // if($contrat && env('APP_ENV') !== 'local'){
         //     $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->compagnie->id)->first();

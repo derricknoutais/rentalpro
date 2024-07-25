@@ -19,6 +19,7 @@ class Contrat extends Model
 
     protected $guarded = [];
     protected static $logUnguarded = true;
+    protected static $logOnlyDirty = true;
     protected $dates = ['au', 'du'];
 
     public static function boot()
@@ -40,7 +41,7 @@ class Contrat extends Model
 
     protected static function booted()
     {
-        static::addGlobalScope(new ContratScope);
+        static::addGlobalScope(new ContratScope());
     }
     // Relationships
 
@@ -98,23 +99,26 @@ class Contrat extends Model
     public static function numéro()
     {
         $numéro = '';
-        $numéro =  DB::transaction(function () use ($numéro) {
-            $contrats_du_mois = Contrat::where('compagnie_id', Auth::user()->compagnie->id)->whereMonth('created_at', Carbon::now()->month)->whereYear('created_at', Carbon::now()->year)->get();
+        $numéro = DB::transaction(function () use ($numéro) {
+            $contrats_du_mois = Contrat::where('compagnie_id', Auth::user()->compagnie->id)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->get();
             // Si nous sommes le premier du mois ...
             if (Carbon::today()->isSameDay(new Carbon('first day of this month'))) {
                 // ... & aucun contrat n'est établi
-                if (sizeof($contrats_du_mois)  === 0) {
+                if (sizeof($contrats_du_mois) === 0) {
                     // reinitialise la numérotation du contrat a 1
                     Auth::user()->compagnie->update([
-                        'numero_contrat' => 1
+                        'numero_contrat' => 1,
                     ]);
                 }
-            };
+            }
             // Récupérer le numero de contrat actuel
             $numero_contrat = Auth::user()->compagnie->numero_contrat;
             if ($numero_contrat < 10) {
                 $numéro = '00' . $numero_contrat;
-            } else if ($numero_contrat >= 10 && $numero_contrat < 100) {
+            } elseif ($numero_contrat >= 10 && $numero_contrat < 100) {
                 $numéro = '0' . $numero_contrat;
             } else {
                 $numéro = $numero_contrat;
@@ -124,6 +128,6 @@ class Contrat extends Model
             return $numéro;
         });
 
-        return $nouveau_numéro =  $numéro . '/' . date('m') . '/' . date('Y');
+        return $nouveau_numéro = $numéro . '/' . date('m') . '/' . date('Y');
     }
 }

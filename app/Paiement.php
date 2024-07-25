@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Mail\PaiementCréé;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Paiement extends Model
 {
@@ -14,39 +16,40 @@ class Paiement extends Model
     protected $guarded = [];
     protected static $logUnguarded = true;
 
-    public static function boot(){
+    public static function boot()
+    {
         parent::boot();
 
-        static::created(function(Paiement $paiement){
+        static::created(function (Paiement $paiement) {
             Metric::insere($paiement);
+            Mail::to('derricknoutais@gmail.com')
+                ->cc('noutaiaugustin@gmail.com')
+                ->send(new PaiementCréé(($contrat = $paiement->payable), $paiement));
         });
 
-        static::updated(function (Paiement $paiement){
+        static::updated(function (Paiement $paiement) {
             Paiement::decrementMetric(new Paiement($paiement->oldAttributes));
             Paiement::incrementMetric($paiement);
         });
-        static::deleted(function(Paiement $paiement){
+        static::deleted(function (Paiement $paiement) {
             Paiement::decrementMetric($paiement);
         });
-
     }
-    public static function incrementMetric($paiement){
+    public static function incrementMetric($paiement)
+    {
         $array_checksums = Metric::generateChecksumsFrom($paiement->created_at);
-        foreach ($array_checksums as  $checksum) {
+        foreach ($array_checksums as $checksum) {
             $reporting = Metric::where('checksum', $checksum)->first();
-            $reporting->increment(
-                'paiements_percus' , $paiement->montant
-            );
+            $reporting->increment('paiements_percus', $paiement->montant);
         }
     }
-    public static function decrementMetric($paiement){
+    public static function decrementMetric($paiement)
+    {
         $array_checksums = Metric::generateChecksumsFrom($paiement->created_at);
-            foreach ($array_checksums as  $checksum) {
-                $reporting = Metric::where('checksum', $checksum)->first();
-                $reporting->decrement(
-                    'paiements_percus' , $paiement->montant
-                );
-            }
+        foreach ($array_checksums as $checksum) {
+            $reporting = Metric::where('checksum', $checksum)->first();
+            $reporting->decrement('paiements_percus', $paiement->montant);
+        }
     }
     // public function voiture(){
     //     return $this->contrat->contractable;
@@ -54,7 +57,8 @@ class Paiement extends Model
     // public function contrat(){
     //     return $this->belongsTo('App\Contrat');
     // }
-    public function payable(){
+    public function payable()
+    {
         return $this->morphTo();
     }
 }
