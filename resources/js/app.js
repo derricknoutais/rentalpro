@@ -66,9 +66,16 @@ const app = new Vue({
           start : '2019-08-25',
           end : '2020-07-27'
         },
+        isOpen : {
+            mobileMenu : false
+
+        }
 
     },
     methods: {
+        toggleMobileMenu(){
+            this.isOpen.mobileMenu = ! this.isOpen.mobileMenu
+        },
         toggle(data){
             this[data] = ! this[data];
             this.$forceUpdate();

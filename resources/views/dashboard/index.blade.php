@@ -19,7 +19,7 @@
         <Reporting inline-template @hide-modal="hideModal()" {{-- :reporting_props={{ $reporting }} --}}>
             <div class="flex">
                 {{-- Carte Reporting Graph --}}
-                <div class="overflow-hidden bg-white shadow sm:rounded-lg w-1/2 mr-2">
+                <div class="overflow-hidden bg-white shadow sm:rounded-lg w-1/2 sm:w-full mr-2">
                     <div class="flex ">
                         <div class="px-4 py-2 sm:px-6">
                             <h3 class="text-base font-semibold leading-6 text-gray-900">Salut {{ Auth::user()->name }}, </h3>
