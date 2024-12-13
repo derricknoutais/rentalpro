@@ -37,6 +37,15 @@ export default {
 
     },
     methods: {
+        displayModal(modal, data) {
+            this.modalData.contrat = data
+
+
+            this.modal = modal
+            this.$forceUpdate()
+
+
+        },
         relocateTo(location) {
             window.location = location
         },
@@ -122,7 +131,9 @@ export default {
         },
         passDataToModal(type, data) {
             this.modalData[type] = data
-            console.log(data)
+            this.$forceUpdate()
+            console.log(this.modalData)
+            this.showModal('prolongation-modal')
         },
         deletePayment(paiement) {
             this.$swal({

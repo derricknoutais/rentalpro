@@ -760,6 +760,6 @@ class ContratController extends Controller
         if ($request->has('save_mail') && $request->save_mail) {
             $contrat->client->update(['mail' => $request->mail]);
         }
-        return redirect()->back();
+        return redirect('/contrats');
     }
 }

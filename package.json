@@ -12,7 +12,7 @@
     "devDependencies": {
         "autoprefixer": "9",
         "axios": "^0.18",
-        "bootstrap": "^4.0.0",
+        "bootstrap": "^4.6.1",
         "browser-sync": "^2.26.3",
         "browser-sync-webpack-plugin": "2.0.1",
         "laravel-mix": "^4.0.7",
@@ -26,7 +26,7 @@
         "vue-template-compiler": "^2.6.4"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.8.2",
+        "@fortawesome/fontawesome-free": "^6",
         "@inertiajs/vue2": "^1.0.9",
         "@tailwindcss/forms": "^0.3",
         "@tailwindcss/typography": "^0.4",

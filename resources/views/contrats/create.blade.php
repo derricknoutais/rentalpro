@@ -8,9 +8,10 @@
             :compagnie_prop="{{ $compagnie }}" :client_requested="{{ $client }}"
             :contractable_requested="{{ $contractable }}">
             <div class="flex justify-center">
-                <form class="flex flex-col w-2/3" action="/contrats/store" method="POST" enctype="multipart/form-data"
+                <form class="flex flex-col w-full" action="/contrats/store" method="POST" enctype="multipart/form-data"
                     id="clientForm" {{-- @submit.prevent="enregistreClientDansCashier()" --}}>
                     @csrf
+                    {{-- Checks  --}}
                     <div class="flex mt-5">
                         <label class="form-check-label flex items-center">
                             <input type="checkbox" @click="toggleNewCustomerForm">
@@ -124,18 +125,18 @@
                     </div>
 
                     {{-- Montant Journalier Total --}}
-                    <div class="flex w-full mt-3">
-                        <div class="w-1/3">
+                    <div class="flex w-full mt-3 sm:max-md:flex-col">
+                        <div class="w-full">
                             <label for="">Montant Journalier</label>
                             <input type="number" class="form-control" name="prix_journalier"
                                 placeholder="Montant Journalier" v-model="formulaire.prix_journalier">
                         </div>
-                        <div class="w-1/3" v-show="display.halfDay">
+                        <div class="w-full" v-show="display.halfDay">
                             <label for="">Montant 1/2 Journee</label>
                             <input type="number" class="form-control" name="demi_journee"
                                 placeholder="Montant 1/2 Journee" v-model.number="formulaire.demi_journee">
                         </div>
-                        <div class="w-1/3" v-show="display.driver">
+                        <div class="w-full" v-show="display.driver">
                             <label for="">Chauffeur</label>
                             <input type="number" class="form-control" name="montant_chauffeur"
                                 placeholder="Montant Chauffeur" v-model.number="formulaire.chauffeur">
