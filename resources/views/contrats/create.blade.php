@@ -100,7 +100,7 @@
                         :value="chambreADetailler.id">
 
                     {{-- Champs Du Au Nombre Jours --}}
-                    <div class="flex w-full mt-3">
+                    <div class="sm:flex sm:flex-col lg:flex w-full mt-3">
                         <div class="w-1/3">
                             <label for="">Du</label>
                             <input type="datetime-local" class="form-control" name="du" v-model="formulaire.du">
