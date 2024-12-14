@@ -461,8 +461,8 @@
                                 <div class="w-full border-t border-gray-300"></div>
                             </div>
                             <div class="relative flex justify-center">
-                                <span class="isolate inline-flex -space-x-px rounded-md shadow-sm"
-                                    v-if="contrat.real_check_out === null" lg:hidden>
+                                <span class="isolate inline-flex -space-x-px rounded-md shadow-sm lg:hidden"
+                                    v-if="contrat.real_check_out === null">
 
                                     <button type="button"
                                         class="relative inline-flex items-center bg-green-300 px-3 py-2 text-gray-800 sm:text-lg ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
