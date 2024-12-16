@@ -224,13 +224,13 @@
                                     </div>
                                 </div>
                                 {{-- Bouttons --}}
-                                <div class="sm:hidden lg:flex px-1 py-3 bg-gray-100 rounded"
+                                <div class="sm:hidden md:hidden lg:flex px-1 py-3 bg-gray-100 rounded"
                                     v-if="contrat.deleted_at === null">
 
                                     @can('créer paiement')
                                         <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
                                             data-toggle="modal" data-target="#ajouter-paiement-modal"
-                                            @click="passDataToModal('contrat', contrat)">
+                                            @click="displayModal('paiement',contrat)">
                                             Effectuer Paiement
                                         </button>
                                     @endcan
@@ -257,13 +257,13 @@
                                     @can('prolonger contrat')
                                         <button type="button" class="px-1 py-0 mr-2 btn btn-primary btn-sm "
                                             data-toggle="modal" data-target="#prolongation-modal"
-                                            @click="passDataToModal('contrat', contrat)">
+                                            @click="displayModal('prolongation',contrat)">
                                             <i class="fas fa-clock"></i> Prolonger Contrat
                                         </button>
                                     @endcan
                                     @can('editer contrat')
-                                        <button type="button" class="px-1 py-0 btn btn-secondary btn-sm" data-toggle="modal"
-                                            data-target="#changer-voiture-modal" @click="passDataToModal('contrat', contrat)">
+                                        <button type="button" class="px-1 py-0 btn btn-secondary btn-sm"
+                                            @click="displayModal('changer-voiture',contrat)">
                                             <i class="mr-1 fas fa-exchange-alt"></i> Changer Voiture
                                         </button>
                                     @endcan
@@ -338,7 +338,7 @@
                             </div>
 
                             {{-- Actions --}}
-                            <div class="sm:hidden lg:flex lg:flex-col lg:w-1/6 lg:ml-1">
+                            <div class="sm:hidden md:hidden lg:flex lg:flex-col lg:w-1/6 lg:ml-1">
 
                                 <span class="py-5 sm:mt-5 lg:mt-5 text-center text-red-100 bg-red-400"
                                     v-if="contrat.deleted_at">
@@ -552,7 +552,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="">Montant</label>
-                                            <input type="number" step=5000 class="form-control" name="prix_journalier"
+                                            <input type="number" step=500 class="form-control" name="prix_journalier"
                                                 :value="modalData.contrat.prix_journalier">
                                         </div>
                                         <div class="form-group">
@@ -590,8 +590,6 @@
                         <Modal v-if="modal === 'terminer' ">
                             <template v-slot:title>TERMINER LE CONTRAT</template>
                             <div class="mt-2">
-
-
                                 <form :action="'/contrat/' + modalData.contrat.id + '/terminer'" method="POST"
                                     v-if="modalData.contrat">
                                     @csrf
@@ -608,6 +606,42 @@
                                         <button type="button" class="btn btn-secondary"
                                             @click="closeModal()">Annuler</button>
                                         <button type="submit" class="text-white bg-green-500 btn">Terminer</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </Modal>
+                        <Modal v-if="modal === 'changer-voiture' ">
+                            <template v-slot:title>TERMINER LE CONTRAT</template>
+                            <div class="mt-2">
+                                <form :action="'/contrats/' + modalData.contrat.id + '/changer-voiture'" method="POST"
+                                    v-if="modalData.contrat">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="">Sélectionner
+                                                Voiture</label>
+                                            <select class="custom-select" name="voiture">
+
+                                                <option :value="modalData.contrat.contractable.id" selected
+                                                    v-if="modalData.contrat.contractable">
+                                                    @{{ modalData.contrat.contractable.immatriculation }}
+                                                </option>
+
+                                                @foreach ($voitures as $voiture)
+                                                    @if ($voiture->etat === 'disponible')
+                                                        <option value="{{ $voiture->id }}">
+                                                            {{ $voiture->immatriculation }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            @click="closeModal()">Close</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </form>
 
@@ -662,7 +696,7 @@
                         {{-- COMPAGNIE TYPE V --}}
                         @if ($compagnie->type === 'véhicules')
                             {{-- MODAL CHANGER VOITURE  --}}
-                            {{-- <div class="modal fade" id="changer-voiture-modal" tabindex="-1" role="dialog">
+                            <div class="modal fade" id="changer-voiture-modal" tabindex="-1" role="dialog">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -704,7 +738,7 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         @endif
                         <!-- Modal Paiement -->
                         {{-- <div class="modal fade" id="ajouter-paiement-modal" tabindex="-1" role="dialog"
