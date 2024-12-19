@@ -1,5 +1,5 @@
 <template>
-    <file-pond class="mt-5" name="clientId" ref="clientId" label-idle="Sauvegarder le Scan" captureMethod="camera"
+    <file-pond class="" name="clientId" ref="clientId" :label-idle="label" captureMethod="camera"
         allowImagePreview="true" accepted-file-types="image/*" @init="filepondInitialized" allowImageCrop="true"
         @processfile="handleProcessedFile"></file-pond>
 </template>
@@ -28,7 +28,7 @@ setOptions({
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginImageCrop);
 
 export default {
-    props: ["ref_prop", "client_name"],
+    props: ["ref_prop", "client_name", 'label'],
 
     data() {
         return {

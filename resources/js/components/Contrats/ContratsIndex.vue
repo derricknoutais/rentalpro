@@ -34,17 +34,12 @@ export default {
                 etat: 'En Cours'
             }
         }
-
     },
     methods: {
         displayModal(modal, data) {
             this.modalData.contrat = data
-
-
             this.modal = modal
             this.$forceUpdate()
-
-
         },
         relocateTo(location) {
             window.location = location

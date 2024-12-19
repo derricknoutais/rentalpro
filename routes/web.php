@@ -253,6 +253,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contrat/{contrat}/ajouter-montant-chauffeur', 'ContratController@ajouterMontantChauffeur');
     Route::post('/contrat/{contrat}/update-montant-chauffeur', 'ContratController@updateMontantChauffeur');
     Route::delete('/contrat/{contrat}/delete/{data}', 'ContratController@resetDataToNull');
+    Route::get('/contrat/{contrat}/check-out', 'ContratController@checkout');
+    Route::post('/contrats/{contrat}/save-photos', 'ContratController@savePhotos');
 
     Route::resource('/image', 'ImageController');
     Route::delete('/image/{image}/client/{client}', 'ImageController@destroy');
@@ -263,10 +265,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/contrat/{contrat}/print-{type_compagnie}-{size}', 'PrintController@print');
 
     //  Reservation
-
     Route::get('/reservations', 'ReservationController@index');
     Route::get('/reservations/create', 'ReservationController@create');
     Route::post('/reservations/store', 'ReservationController@store');
+
     // Paramètres
     Route::get('/mes-paramètres', function () {
         $documents = Auth::user()->compagnie->documents;

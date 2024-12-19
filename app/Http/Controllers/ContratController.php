@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use App\Image;
 use App\Client;
 use App\Chambre;
 use App\Contrat;
@@ -12,7 +14,6 @@ use App\ApiSetting;
 use App\Maintenance;
 use NumberFormatter;
 use App\Prolongation;
-use PDF;
 use App\Mail\ContratCréé;
 use App\Events\ContratCree;
 use Illuminate\Http\Request;
@@ -761,5 +762,27 @@ class ContratController extends Controller
             $contrat->client->update(['mail' => $request->mail]);
         }
         return redirect('/contrats');
+    }
+
+    public function checkout(Contrat $contrat)
+    {
+        $contrat->loadMissing('contractable', 'contractable.documents', 'contractable.accessoires', 'client');
+        return view('contrats.checkout', compact('contrat'));
+    }
+    public function savePhotos(Contrat $contrat, Request $request)
+    {
+        $contrat->loadMissing('contractable', 'client');
+        $images = [];
+        array_push($images, $request->avant, $request->droite, $request->arriere, $request->gauche);
+        $index = 0;
+        foreach ($images as $image_id) {
+            if ($image = Image::find($image_id)) {
+                $imageName = $contrat->id . ' - ' . $contrat->contractable->immatriculation . ' - ' . $index;
+                Storage::disk('do_spaces')->rename('permis/' . $image->name, 'contrats/' . $imageName);
+                $image->update(['name' => $imageName]);
+            }
+            $index++;
+        }
+        return $request->all();
     }
 }

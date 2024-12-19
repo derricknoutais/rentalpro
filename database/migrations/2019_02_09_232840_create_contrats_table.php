@@ -49,12 +49,7 @@ class CreateContratsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table
-                ->foreign('compagnie_id')
-                ->references('id')
-                ->on('compagnies')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+            $table->foreign('compagnie_id')->references('id')->on('compagnies')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

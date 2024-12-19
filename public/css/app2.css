@@ -734,9 +734,9 @@ select {
   width: 100%;
 }
 
-@media (min-width: 320px) {
+@media (min-width: 160px) {
   .container {
-    max-width: 320px;
+    max-width: 160px;
   }
 }
 
@@ -8386,7 +8386,7 @@ select {
 }
 
 .max-w-screen-sm {
-  max-width: 320px;
+  max-width: 160px;
 }
 
 .max-w-screen-md {
@@ -32681,14 +32681,14 @@ select {
   content: none;
 }
 
-@media (min-width: 320px) {
+@media (min-width: 160px) {
   .sm\:container {
     width: 100%;
   }
 
-  @media (min-width: 320px) {
+  @media (min-width: 160px) {
     .sm\:container {
-      max-width: 320px;
+      max-width: 160px;
     }
   }
 
@@ -40338,7 +40338,7 @@ select {
   }
 
   .sm\:max-w-screen-sm {
-    max-width: 320px;
+    max-width: 160px;
   }
 
   .sm\:max-w-screen-md {
@@ -64255,9 +64255,9 @@ select {
     width: 100%;
   }
 
-  @media (min-width: 320px) {
+  @media (min-width: 160px) {
     .md\:container {
-      max-width: 320px;
+      max-width: 160px;
     }
   }
 
@@ -71907,7 +71907,7 @@ select {
   }
 
   .md\:max-w-screen-sm {
-    max-width: 320px;
+    max-width: 160px;
   }
 
   .md\:max-w-screen-md {
@@ -95824,9 +95824,9 @@ select {
     width: 100%;
   }
 
-  @media (min-width: 320px) {
+  @media (min-width: 160px) {
     .lg\:container {
-      max-width: 320px;
+      max-width: 160px;
     }
   }
 
@@ -103476,7 +103476,7 @@ select {
   }
 
   .lg\:max-w-screen-sm {
-    max-width: 320px;
+    max-width: 160px;
   }
 
   .lg\:max-w-screen-md {
@@ -127393,9 +127393,9 @@ select {
     width: 100%;
   }
 
-  @media (min-width: 320px) {
+  @media (min-width: 160px) {
     .xl\:container {
-      max-width: 320px;
+      max-width: 160px;
     }
   }
 
@@ -135045,7 +135045,7 @@ select {
   }
 
   .xl\:max-w-screen-sm {
-    max-width: 320px;
+    max-width: 160px;
   }
 
   .xl\:max-w-screen-md {
@@ -158962,9 +158962,9 @@ select {
     width: 100%;
   }
 
-  @media (min-width: 320px) {
+  @media (min-width: 160px) {
     .\32xl\:container {
-      max-width: 320px;
+      max-width: 160px;
     }
   }
 
@@ -166614,7 +166614,7 @@ select {
   }
 
   .\32xl\:max-w-screen-sm {
-    max-width: 320px;
+    max-width: 160px;
   }
 
   .\32xl\:max-w-screen-md {
