@@ -775,14 +775,17 @@ class ContratController extends Controller
         $images = [];
         array_push($images, $request->avant, $request->droite, $request->arriere, $request->gauche);
         $index = 0;
+        $imageNames = [];
         foreach ($images as $image_id) {
             if ($image = Image::find($image_id)) {
-                $imageName = $contrat->id . ' - ' . $contrat->contractable->immatriculation . ' - ' . $index;
+                $imageName = str_replace('/', '-', $contrat->numéro) . '*' . $contrat->contractable->immatriculation . '*' . $index;
+                array_push($imageNames, $imageName);
                 Storage::disk('do_spaces')->rename('permis/' . $image->name, 'contrats/' . $imageName);
                 $image->update(['name' => $imageName]);
             }
             $index++;
         }
-        return $request->all();
+        $contrat->update(['checkout' => json_encode($imageNames)]);
+        // return $request->all();
     }
 }

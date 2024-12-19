@@ -22,6 +22,8 @@ class Contrat extends Model
     protected static $logOnlyDirty = true;
     protected $dates = ['au', 'du'];
 
+    protected $casts = ['checkout' => 'array'];
+
     public static function boot()
     {
         parent::boot();

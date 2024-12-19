@@ -104,6 +104,19 @@
                                 </ul>
                             </dd>
                         </div>
+                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Images</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                @foreach ($contrat->checkout as $imageName)
+                                    <div class="sm:flex">
+                                        <div class="mb-4 shrink-0 sm:mb-0 sm:mr-4">
+                                            <img
+                                                src="https://rentalpro.fra1.digitaloceanspaces.com/contrats/{{ $imageName }}">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             </div>
