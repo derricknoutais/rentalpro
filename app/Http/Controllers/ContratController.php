@@ -131,6 +131,7 @@ class ContratController extends Controller
     {
         $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements', 'activities');
         // return $contrat->activities;
+        // return str_getcsv($contrat->checkout->documents);
         return view('contrats.show', compact('contrat'));
     }
 
@@ -712,7 +713,6 @@ class ContratController extends Controller
         }
         return redirect()->back();
     }
-
     public function ajouterDemiJournee(Contrat $contrat, Request $request)
     {
         $contrat->update([
@@ -727,7 +727,6 @@ class ContratController extends Controller
         ]);
         return redirect()->back();
     }
-
     public function ajouterMontantChauffeur(Contrat $contrat, Request $request)
     {
         $contrat->update([
@@ -785,7 +784,8 @@ class ContratController extends Controller
             }
             $index++;
         }
-        $contrat->update(['checkout' => json_encode($imageNames)]);
+
+        $contrat->update(['checkout' => ['images' => $imageNames, 'documents' => $request->documents, 'accessoires' => $request->accessoires]]);
         // return $request->all();
     }
 }

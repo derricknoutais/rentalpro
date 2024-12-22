@@ -22,7 +22,10 @@ class Contrat extends Model
     protected static $logOnlyDirty = true;
     protected $dates = ['au', 'du'];
 
-    protected $casts = ['checkout' => 'array'];
+    public function getCheckoutAttribute($checkout)
+    {
+        return json_decode($checkout);
+    }
 
     public static function boot()
     {

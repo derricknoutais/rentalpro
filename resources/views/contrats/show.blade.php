@@ -7,7 +7,10 @@
             <div class="overflow-hidden bg-white shadow sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-2xl font-medium leading-6 text-gray-900">Contrat {{ $contrat->numéro }}</h3>
-                    @if ($contrat->activities && ($causer = $contrat->activities->where('description', 'created')->first()->causer))
+                    @if (
+                        $contrat->activities &&
+                            $contrat->activities->where('description', 'created')->first() &&
+                            ($causer = $contrat->activities->where('description', 'created')->first()->causer))
                         <p class="max-w-2xl mt-1 text-sm text-gray-500">Créé par {{ $causer->name }} le
                             {{ $contrat->created_at->format('d-m-Y') }}</p>
                     @endif
@@ -104,21 +107,105 @@
                                 </ul>
                             </dd>
                         </div>
-                        <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Images</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                @foreach ($contrat->checkout as $imageName)
-                                    <div class="sm:flex">
-                                        <div class="mb-4 shrink-0 sm:mb-0 sm:mr-4">
-                                            <img
-                                                src="https://rentalpro.fra1.digitaloceanspaces.com/contrats/{{ $imageName }}">
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </dd>
-                        </div>
+
+
+
                     </dl>
+                    <ul role="list"
+                        class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+                        @if ($contrat->checkout !== null)
+                            @foreach ($contrat->checkout->images as $imageName)
+                                <li class="relative">
+                                    {{-- @dd($contrat->checkout) --}}
+                                    <div
+                                        class="group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+                                        <img src="https://rentalpro.fra1.digitaloceanspaces.com/contrats/{{ $imageName }}"
+                                            alt=""
+                                            class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+                                        <button type="button" class="absolute inset-0 focus:outline-none">
+                                            <span class="sr-only">View details for IMG_4985.HEIC</span>
+                                        </button>
+                                    </div>
+                                    <p class="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
+                                        IMG_4985.HEIC
+                                    </p>
+                                    <p class="pointer-events-none block text-sm font-medium text-gray-500">3.9 MB</p>
+                                </li>
+                            @endforeach
+                        @endif
+
+                    </ul>
+                    <div class="px-4 sm:px-6 lg:px-8">
+
+                        <div class="mt-8 flow-root">
+                            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                    <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
+                                        <table class="min-w-full divide-y divide-gray-300">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col"
+                                                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                        Name</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200 bg-white">
+                                                @if ($contrat->checkout)
+                                                    @foreach (str_getcsv($contrat->checkout->documents) as $document)
+                                                        <tr>
+                                                            <td
+                                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                {{ $document }}</td>
+
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-4 sm:px-6 lg:px-8">
+
+                        <div class="mt-8 flow-root">
+                            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                    <div class="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg">
+                                        <table class="min-w-full divide-y divide-gray-300">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th scope="col"
+                                                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                                                        Name</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-200 bg-white">
+                                                @if ($contrat->checkout)
+                                                    @foreach (str_getcsv($contrat->checkout->accessoires) as $accessoire)
+                                                        <tr>
+                                                            <td
+                                                                class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                                                                {{ $accessoire }}</td>
+
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
+
             </div>
 
         </div>
