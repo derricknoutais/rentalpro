@@ -329,7 +329,7 @@ class ContratController extends Controller
         //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
         // }
-        return Auth::user()->compagnie->isVehicules() ? redirect('/contrat/' . $contrat->id . '/print') : redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
+        return Auth::user()->compagnie->isVehicules() ? redirect('/contrat/' . $contrat->id . '/check-out') : redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
     }
 
     public function print(Contrat $contrat)
@@ -787,5 +787,6 @@ class ContratController extends Controller
 
         $contrat->update(['checkout' => ['images' => $imageNames, 'documents' => $request->documents, 'accessoires' => $request->accessoires]]);
         // return $request->all();
+        return redirect('/contrat/' . $contrat->id);
     }
 }
