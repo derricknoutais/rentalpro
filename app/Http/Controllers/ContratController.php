@@ -623,7 +623,6 @@ class ContratController extends Controller
             'cashier_facture_id' => $request->cashier_id,
         ]);
     }
-
     public function terminer(Contrat $contrat, Request $request)
     {
         DB::transaction(function () use ($contrat, $request) {
@@ -644,7 +643,6 @@ class ContratController extends Controller
         });
         return redirect()->back();
     }
-
     public function envoyerContratGescash(Contrat $contrat)
     {
         $apiSettings = ApiSetting::where('compagnie_id', Auth::user()->id)->first();
