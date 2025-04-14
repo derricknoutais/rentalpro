@@ -16,7 +16,7 @@ class Voiture extends Model
 
     protected static function booted()
     {
-        // static::addGlobalScope(new VoitureScope());
+        static::addGlobalScope(new VoitureScope());
     }
 
     public function scopeNonVendu($query)
@@ -57,9 +57,7 @@ class Voiture extends Model
     {
         return Voiture::where('etat', $etat)->count();
     }
-    public static function moinsPerformante()
-    {
-    }
+    public static function moinsPerformante() {}
     public function etat($etat)
     {
         $this->update([

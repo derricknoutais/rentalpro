@@ -25,7 +25,7 @@
             <div class="flex justify-end w-1/3 px-4 pt-4 mt-12 border border-gray-800">
                 <p class="flex flex-col text-lg">
                     <span class="text-xl font-medium underline">Client:</span>
-                    <span class="">{{ $contrat->client->nom .  ' '  . $contrat->client->prenom }} </span>
+                    <span class="">{{ $contrat->client->nom . ' ' . $contrat->client->prenom }} </span>
                     <span>{{ $contrat->client->phone1 }}</span>
                 </p>
             </div>
@@ -53,17 +53,23 @@
                             </thead>
                             <tbody>
                                 <tr class="bg-white">
-                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap">{{ number_format($contrat->nombre_jours, 0, ',' , '.') }}</td>
-                                    <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">{{ number_format($contrat->prix_journalier, 0, ',', '.' ) }} F CFA</td>
-                                    <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">{{ number_format($contrat->total(), 0, ',', '.') }} F CFA</td>
+                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap">
+                                        {{ number_format($contrat->nombre_jours, 0, ',', '.') }}</td>
+                                    <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">
+                                        {{ number_format($contrat->prix_journalier, 0, ',', '.') }} F CFA</td>
+                                    <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">
+                                        {{ number_format($contrat->total(), 0, ',', '.') }} F CFA</td>
                                 </tr>
 
                                 <!-- 1/2 Journee -->
                                 @if ($contrat->demi_journee)
                                     <tr class="border border-gray-200 bg-white">
                                         <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                        <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Option 1/2 Journee</td>
-                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->demi_journee }} F CFA</td>
+                                        <td
+                                            class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
+                                            Option 1/2 Journee</td>
+                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
+                                            {{ $contrat->demi_journee }} F CFA</td>
                                     </tr>
                                 @endif
 
@@ -71,18 +77,24 @@
                                 @if ($contrat->montant_chauffeur)
                                     <tr class="border border-gray-200 bg-white">
                                         <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                        <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Option Chauffeur</td>
-                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->montant_chauffeur }} F CFA</td>
+                                        <td
+                                            class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
+                                            Option Chauffeur</td>
+                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
+                                            {{ $contrat->montant_chauffeur }} F CFA</td>
                                     </tr>
                                 @endif
 
                                 @if ($contrat->montant_chauffeur || $contrat->demi_journee)
-                                <tr class="border border-gray-200 bg-gray-50">
-                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Montant Total</td>
-                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->total() }} F CFA
-                                    </td>
-                                </tr>
+                                    <tr class="border border-gray-200 bg-gray-50">
+                                        <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
+                                        <td
+                                            class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
+                                            Montant Total</td>
+                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
+                                            {{ $contrat->total() }} F CFA
+                                        </td>
+                                    </tr>
                                 @endif
 
 
@@ -90,16 +102,20 @@
                                 <!-- Paiements -->
                                 <tr class="border border-gray-200 bg-gray-50">
                                     <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Paiements Perçus
+                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
+                                        Paiements Perçus
                                     </td>
-                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->payé() }} F CFA</td>
+                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
+                                        {{ $contrat->payé() }} F CFA</td>
                                 </tr>
                                 <!-- Even row -->
                                 <tr class="bg-gray-50">
                                     <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">Solde
+                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
+                                        Solde
                                     </td>
-                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">{{ $contrat->solde() }} F CFA</td>
+                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
+                                        {{ $contrat->solde() }} F CFA</td>
                                 </tr>
 
                                 <!-- More people... -->
@@ -191,7 +207,8 @@
                 @forelse ($documents as $document)
                     <li class="w-full flex justify-between items-end mt-3">
                         <span class="w-1/2">{{ $document->type }} </span>
-                        <span class="w-1/2 text-right">{{ \Carbon\Carbon::parse($document->pivot->date_expiration)->format('d-M-Y') }}</span>
+                        <span
+                            class="w-1/2 text-right">{{ \Carbon\Carbon::parse($document->pivot->date_expiration)->format('d-M-Y') }}</span>
                     </li>
                 @endforeach
             </ul>
@@ -213,11 +230,11 @@
 @endsection
 
 {{-- @push('script-print') --}}
-    <script>
-        function print (total){
-            return {
-                wn : writtenNumber(total)
-            }
+<script>
+    function print(total) {
+        return {
+            wn: writtenNumber(total)
         }
-    </script>
+    }
+</script>
 {{-- @endpush --}}

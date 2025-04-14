@@ -30,7 +30,7 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 if (env('APP_ENV') == 'local') {
-    Auth::loginUsingID(1);
+    Auth::loginUsingID(10);
 }
 
 Route::get('/test', function (Request $request) {
@@ -255,6 +255,23 @@ Route::group(['middleware' => ['auth']], function () {
 
     // PAIEMENTS
     Route::get('/paiements', 'PaiementController@index');
+
+    // RAPPORT
+    Route::get('/rapports/paiement-journalier', 'RapportController@paiementJournalier');
+
+    Route::get('/paiement-journalier', function () {
+        $paiements_airtelmoney = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
+            ->where('created_at', '<', Carbon::today()->setTime(18, 00, 00))
+            ->where('type_paiement', 'Airtel Money')
+            ->orderBy('type_paiement')
+            ->get();
+        $paiements_espece = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
+            ->where('created_at', '<', Carbon::today()->setTime(18, 00, 00))
+            ->where('type_paiement', 'Espèce')
+            ->orderBy('type_paiement')
+            ->get();
+        return view('rapports.paiement-journalier', compact('paiements_airtelmoney', 'paiements_espece'));
+    });
 
     Route::resource('/image', 'ImageController');
     Route::delete('/image/{image}/client/{client}', 'ImageController@destroy');
