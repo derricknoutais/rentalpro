@@ -1,4 +1,5 @@
 <script>
+
 export default {
     props: ['contrat_prop'],
     data() {

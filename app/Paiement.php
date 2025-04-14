@@ -16,6 +16,10 @@ class Paiement extends Model
     protected $guarded = [];
     protected static $logUnguarded = true;
 
+    protected $casts = [
+        'created_at' => 'datetime:d-M-Y h:i',
+    ];
+
     public static function boot()
     {
         parent::boot();

@@ -34,10 +34,7 @@ class ContratController extends Controller
     public function index(Request $request)
     {
         $compagnie = Auth::user()->compagnie;
-        $contrats_compagnie = Contrat::withTrashed()
-            ->where('compagnie_id', $compagnie->id)
-            ->latest()
-            ->get();
+        $contrats_compagnie = Contrat::withTrashed()->where('compagnie_id', $compagnie->id)->latest()->get();
         $query = Contrat::withTrashed()->whereIn('id', array_pluck($contrats_compagnie, 'id'));
 
         if (sizeof($request->all()) > 0) {
@@ -329,7 +326,7 @@ class ContratController extends Controller
         //     . $contrat->au->format('d-M-Y h:i') . ' au ' . $contrat->du->format('d-M-Y h:i') . ' a été enregistré avec succès. Merci de votre collaboration.
 
         // }
-        return Auth::user()->compagnie->isVehicules() ? redirect('/contrat/' . $contrat->id . '/check-out') : redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
+        return Auth::user()->compagnie->isVehicules() ? redirect('/contrat/' . $contrat->id) : redirect('/contrat/' . $contrat->id . '/print-hotel-A5');
     }
 
     public function print(Contrat $contrat)

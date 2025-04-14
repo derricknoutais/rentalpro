@@ -35,10 +35,7 @@ if (env('APP_ENV') == 'local') {
 
 Route::get('/test', function (Request $request) {
     if ($request['type'] === 'annee') {
-        $data = Metric::where('type', 'annee')
-            ->orderBy('annee', 'desc')
-            ->take(4)
-            ->pluck($request['data_requested'], 'annee');
+        $data = Metric::where('type', 'annee')->orderBy('annee', 'desc')->take(4)->pluck($request['data_requested'], 'annee');
     } elseif ($request['type'] === 'mois') {
         $data = Metric::where(['type' => 'mois'])
             ->orderBy('annee', 'desc')
@@ -255,6 +252,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('/contrat/{contrat}/delete/{data}', 'ContratController@resetDataToNull');
     Route::get('/contrat/{contrat}/check-out', 'ContratController@checkout');
     Route::post('/contrats/{contrat}/save-photos', 'ContratController@savePhotos');
+
+    // PAIEMENTS
+    Route::get('/paiements', 'PaiementController@index');
 
     Route::resource('/image', 'ImageController');
     Route::delete('/image/{image}/client/{client}', 'ImageController@destroy');

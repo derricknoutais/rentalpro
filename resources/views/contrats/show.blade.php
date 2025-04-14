@@ -14,6 +14,12 @@
                         <p class="max-w-2xl mt-1 text-sm text-gray-500">Créé par {{ $causer->name }} le
                             {{ $contrat->created_at->format('d-m-Y') }}</p>
                     @endif
+                    <a href="/contrat/{{ $contrat->id }}/check-out" class="px-1 py-0 mr-2 text-white bg-blue-500 btn">
+                        Effectuer check-out
+                    </a>
+                    <a href="/contrat/{{ $contrat->id }}/print" class="px-1 py-0 mr-2 text-white bg-blue-500 btn">
+                        Imprimer
+                    </a>
                 </div>
                 <div class="px-4 py-5 border-t border-gray-200 sm:p-0">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -47,7 +53,8 @@
                         <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Période</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ $contrat->du->format('d/m/Y h:i:s') . ' - ' . $contrat->au->format('d/m/Y h:i:s') }}</dd>
+                                {{ $contrat->du->format('d/m/Y h:i:s') . ' - ' . $contrat->au->format('d/m/Y h:i:s') }}
+                            </dd>
                         </div>
                         <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Caution</dt>

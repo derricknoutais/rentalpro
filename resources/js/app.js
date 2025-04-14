@@ -1,7 +1,7 @@
 require('./bootstrap');
 require('./alpine');
 require('./apex');
-window.Vue = require('vue');
+window.Vue = require('vue').default;
 
 
 
@@ -41,8 +41,8 @@ Vue.use(VueSweetalert2);
 import vueFilePond from 'vue-filepond';
 import 'filepond/dist/filepond.min.css';
 
-
-
+import VueSignaturePad from 'vue-signature-pad';
+Vue.use(VueSignaturePad);
 
 
 const files = require.context('./', true, /\.vue$/i)
@@ -56,7 +56,9 @@ Vue.component('chart', Chart)
 
 const app = new Vue({
     el: '#app',
-    
+    name : "App",
+    components : {
+    },
     data: {
         test: false,
         print_options : false,
