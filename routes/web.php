@@ -30,7 +30,7 @@ use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
 if (env('APP_ENV') == 'local') {
-    Auth::loginUsingID(10);
+    Auth::loginUsingID(1);
 }
 
 Route::get('/test', function (Request $request) {
@@ -251,7 +251,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/contrat/{contrat}/update-montant-chauffeur', 'ContratController@updateMontantChauffeur');
     Route::delete('/contrat/{contrat}/delete/{data}', 'ContratController@resetDataToNull');
     Route::get('/contrat/{contrat}/check-out', 'ContratController@checkout');
+    Route::get('/contrat/{contrat}/sign', 'ContratController@sign');
     Route::post('/contrats/{contrat}/save-photos', 'ContratController@savePhotos');
+    Route::post('/contrat/{contrat}/store-signature', 'ContratController@storeSignature');
 
     // PAIEMENTS
     Route::get('/paiements', 'PaiementController@index');

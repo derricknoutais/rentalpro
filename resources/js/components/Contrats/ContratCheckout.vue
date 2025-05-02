@@ -16,6 +16,14 @@ export default {
         }
     },
     methods: {
+        undo() {
+            this.$refs.signaturePad.undoSignature();
+        },
+        save() {
+            const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+            console.log(isEmpty);
+            console.log(data);
+        },
 
         photoAvant(id) {
             this.photos.avant = id

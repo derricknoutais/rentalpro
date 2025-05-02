@@ -133,6 +133,7 @@
             <span class="">Francs CFA</span>
         </p>
 
+
         <div class="flex justify-end mt-12 mr-12">
             <p>Le Responsable</p>
         </div>
@@ -226,6 +227,19 @@
     <div class="flex justify-between mt-12">
         <p>Le Client</p>
         <p>Le Responsable</p>
+    </div>
+    <div class="flex justify-between mt-12">
+        <div
+            class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+            <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->signature }}" alt=""
+                class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+            <button type="button" class="absolute inset-0 focus:outline-none">
+                <span class="sr-only">View details for IMG_4985.HEIC</span>
+            </button>
+        </div>
+        <div>
+            ----
+        </div>
     </div>
 @endsection
 

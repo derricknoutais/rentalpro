@@ -5,7 +5,7 @@
 
         <form action="/contrats/{{ $contrat->id }}/save-photos" method="POST">
             @csrf
-            <vue-signature-pad width="500px" height="500px" ref="signaturePad" />
+
             <h1>Photos</h1>
             <input type="hidden" name="avant" v-model="photos.avant">
             <input type="hidden" name="arriere" v-model="photos.arriere">
@@ -49,16 +49,13 @@
             </div>
 
             <h2 class="text-2xl mt-3">Documents</h2>
+
             <input type="hidden" name="documents" v-model="documents">
             <input type="hidden" name="accessoires" v-model="accessoires">
             <fieldset class="border-b border-t border-gray-200">
                 <legend class="sr-only">Notifications</legend>
                 <div class="divide-y divide-gray-200" v-for="document in contrat.contractable.documents">
                     <div class="relative flex gap-3 pb-4 pt-3.5">
-                        <div class="min-w-0 flex-1 text-sm/6">
-                            <label for="comments" class="font-medium text-gray-900">@{{ document.type }}</label>
-                            <p id="comments-description" class="text-gray-500">@{{ document.pivot.date_expiration }}</p>
-                        </div>
                         <div class="flex h-6 shrink-0 items-center">
                             <div class="group grid size-8 grid-cols-1">
                                 <input :id="document.id" aria-describedby="comments-description" type="checkbox"
@@ -72,12 +69,20 @@
                                 </svg>
                             </div>
                         </div>
+                        <div class="min-w-0 flex-1 text-sm/6">
+                            <label for="comments" class="font-medium text-gray-900">@{{ document.type }}</label>
+                            <p id="comments-description" class="text-gray-500">@{{ document.pivot.date_expiration }}</p>
+                        </div>
+
                     </div>
                 </div>
             </fieldset>
+
+
+
             <h2 class="text-2xl mt-3">Accessoires</h2>
 
-            <fieldset class="border-b border-t border-gray-200">
+            <fieldset class="rounded-sm border-b border-t border-gray-200">
                 <legend class="sr-only">Notifications</legend>
                 <div class="divide-y divide-gray-200" v-for="accessoire in contrat.contractable.accessoires">
                     <div class="relative flex gap-3 pb-4 pt-3.5">
@@ -101,7 +106,6 @@
                     </div>
                 </div>
             </fieldset>
-
             <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                 <button type="submit"
                     class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2">Enregistrer</button>

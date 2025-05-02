@@ -133,10 +133,6 @@
                                             <span class="sr-only">View details for IMG_4985.HEIC</span>
                                         </button>
                                     </div>
-                                    <p class="pointer-events-none mt-2 block truncate text-sm font-medium text-gray-900">
-                                        IMG_4985.HEIC
-                                    </p>
-                                    <p class="pointer-events-none block text-sm font-medium text-gray-500">3.9 MB</p>
                                 </li>
                             @endforeach
                         @endif

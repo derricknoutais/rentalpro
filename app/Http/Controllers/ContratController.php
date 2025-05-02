@@ -127,8 +127,6 @@ class ContratController extends Controller
     public function show(Contrat $contrat)
     {
         $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements', 'activities');
-        // return $contrat->activities;
-        // return str_getcsv($contrat->checkout->documents);
         return view('contrats.show', compact('contrat'));
     }
 
@@ -760,7 +758,11 @@ class ContratController extends Controller
 
     public function checkout(Contrat $contrat)
     {
-        $contrat->loadMissing('contractable', 'contractable.documents', 'contractable.accessoires', 'client');
+        if ($contrat->compagnie->isVehicules()) {
+            $contrat->loadMissing('contractable', 'contractable.documents', 'contractable.accessoires', 'client');
+        } else {
+            $contrat->loadMissing('contractable', 'client');
+        }
         return view('contrats.checkout', compact('contrat'));
     }
     public function savePhotos(Contrat $contrat, Request $request)
@@ -781,7 +783,41 @@ class ContratController extends Controller
         }
 
         $contrat->update(['checkout' => ['images' => $imageNames, 'documents' => $request->documents, 'accessoires' => $request->accessoires]]);
+
         // return $request->all();
-        return redirect('/contrat/' . $contrat->id);
+        return redirect('/contrat/' . $contrat->id . '/sign');
+    }
+    public function sign(Contrat $contrat)
+    {
+        return view('contrats.customer-sign', compact('contrat'));
+    }
+    public function storeSignature(Request $request)
+    {
+        $contrat = Contrat::find($request->contrat_id);
+        $image_64 = $request->signature; //your base64 encoded data
+
+        $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1]; // .jpg .png .pdf
+
+        $replace = substr($image_64, 0, strpos($image_64, ',') + 1);
+
+        // find substring fro replace here eg: data:image/png;base64,
+
+        $image = str_replace($replace, '', $image_64);
+
+        $image = str_replace(' ', '+', $image);
+
+        $imageName = 'signature/' . $contrat->client->nom() . '*' . str_replace('/', '-', $contrat->numéro);
+
+        // return Storage::disk('public')->put($imageName, base64_decode($image));
+        Storage::disk('do_spaces')->put('' . $imageName, base64_decode($image), 'public');
+        $checkout = $contrat->checkout;
+        $checkout->signature = $imageName; // Changed to use object notation
+        $contrat->checkout = json_encode($checkout); // Directly encode the object
+        $contrat->updated_at = now(); // Update the timestamp
+        $contrat->save();
+        return response()->json([
+            'message' => 'Signature Enregistrée avec Succès.',
+            'status' => 'success',
+        ]);
     }
 }

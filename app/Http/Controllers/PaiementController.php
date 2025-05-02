@@ -19,7 +19,14 @@ class PaiementController extends Controller
      */
     public function index()
     {
-        $paiements = Paiement::with('payable', 'payable.contractable')->limit(100)->get();
+        $paiements = Paiement::with([
+            'payable',
+            'payable.contractable' => function ($query) {
+                $query->withoutGlobalScopes();
+            },
+        ])
+            ->limit(100)
+            ->get();
 
         return view('paiements.index', compact('paiements'));
     }

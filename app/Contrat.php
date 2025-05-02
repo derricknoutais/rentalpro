@@ -21,6 +21,13 @@ class Contrat extends Model
     protected static $logUnguarded = true;
     protected static $logOnlyDirty = true;
     protected $dates = ['au', 'du'];
+    protected $casts = [
+        'au' => 'datetime',
+        'du' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+    ];
 
     public function getCheckoutAttribute($checkout)
     {
