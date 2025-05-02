@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Mail\PaiementCréé;
+use App\Scopes\PaiementScope;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
-use App\Mail\PaiementCréé;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -23,6 +24,7 @@ class Paiement extends Model
     public static function boot()
     {
         parent::boot();
+        // static::addGlobalScope(new PaiementScope());
 
         static::created(function (Paiement $paiement) {
             Metric::insere($paiement);

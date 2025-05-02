@@ -499,3 +499,15 @@ Route::group(['middleware' => ['auth']], function () {
     // Techniciens
     Route::resource('techniciens', 'TechnicienController');
 });
+
+Route::get('/add-compagnie-id-to-paiements', function () {
+    $paiements = Paiement::all();
+    foreach ($paiements as $paiement) {
+        $contrat = Contrat::find($paiement->payable_id);
+        if ($contrat) {
+            $paiement->update([
+                'compagnie_id' => $contrat->compagnie_id,
+            ]);
+        }
+    }
+});
