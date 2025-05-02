@@ -13,7 +13,7 @@ class CreateCompagniesTable extends Migration
     public function up()
     {
         Schema::create('compagnies', function (Blueprint $table) {
-            $table->bigIncrements('id')->change();
+            $table->increments('id');
             $table->string('nom');
             $table->string('numero_contrat')->nullable();
             $table->enum('type', ['hôtel', 'véhicules']);
