@@ -25,6 +25,7 @@ class PaiementController extends Controller
                 $query->withoutGlobalScopes();
             },
         ])
+            ->latest()
             ->limit(100)
             ->get();
 
