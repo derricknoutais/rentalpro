@@ -14,14 +14,7 @@ class AddSettingsColumnnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table
-                ->json('settings')
-                ->nullable()
-                ->default(
-                    json_encode([
-                        'signature' => null,
-                    ]),
-                );
+            $table->json('settings')->nullable();
         });
     }
 
