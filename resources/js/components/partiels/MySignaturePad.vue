@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="border-top border-bottom">
-            <vue-signature-pad width="100%" height="100%" ref="signaturePad" />
+            <vue-signature-pad width="100%" height="150px" ref="signaturePad" />
         </div>
         <div class="flex w-full">
             <button class="w-1/2 border bg-gray-300" type="button" @click="save">

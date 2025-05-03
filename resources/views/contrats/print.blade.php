@@ -22,7 +22,7 @@
                 <p>Caution : {{ $contrat->caution }} F CFA</p>
 
             </div>
-            <div class="flex justify-end w-1/3 px-4 pt-4 mt-12 border border-gray-800">
+            <div class="flex justify-end w-1/3 px-4 pt-4 mt-2 border border-gray-800">
                 <p class="flex flex-col text-lg">
                     <span class="text-xl font-medium underline">Client:</span>
                     <span class="">{{ $contrat->client->nom . ' ' . $contrat->client->prenom }} </span>
@@ -134,9 +134,18 @@
         </p>
 
 
-        <div class="flex justify-end mt-12 mr-12">
-            <p>Le Responsable</p>
+        <div class="flex flex-col items-end mt-2 mr-12">
+            <p class="mr-24">Le Responsable</p>
+            @if ($contrat->checkout && $contrat->checkout->userSignature)
+                <div
+                    class="mt-6 w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+
+                    <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->userSignature }}"
+                        alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+                </div>
+            @endif
         </div>
+
 
 
 
@@ -148,7 +157,7 @@
         <img src="/img/logosta.png" alt="" class="w-1/2">
     </header>
     {{-- CONTRAT --}}
-    <div class="mt-12 ">
+    <div class="mt-2 ">
         <p class="text-2xl font-medium underline">Terme du contrat</p>
         <ol class="mt-1">
             <li class="ml-6 text-sm">Le véhicule sera restitué à l'heure indiquée sur le contrat.</li>
@@ -203,8 +212,8 @@
 
     <div class="flex">
         <div class="w-2/3">
-            <p class="mt-12 text-2xl font-semibold underline">Documents Vehicule</p>
-            <ul class="mt-12 text-2xl w-full pr-12">
+            <p class="mt-2 text-2xl font-semibold underline">Documents Vehicule</p>
+            <ul class="mt-2 text-2xl w-full pr-12">
                 @forelse ($documents as $document)
                     <li class="w-full flex justify-between items-end mt-3">
                         <span class="w-1/2">{{ $document->type }} </span>
@@ -215,8 +224,8 @@
             </ul>
         </div>
         <div class="w-1/3">
-            <p class="mt-12 text-2xl font-semibold underline">État des Accessoires</p>
-            <ul class="mt-12 text-2xl">
+            <p class="mt-2 text-2xl font-semibold underline">État des Accessoires</p>
+            <ul class="mt-2 text-2xl">
                 @foreach ($accessoires as $acc)
                     <li> {{ $acc->pivot->quantité }} {{ $acc->type }}</li>
                 @endforeach
@@ -240,7 +249,7 @@
         @if ($contrat->checkout && $contrat->checkout->userSignature)
             <div
                 class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-                >
+
                 <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->userSignature }}"
                     alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
             </div>
