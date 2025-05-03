@@ -16,7 +16,7 @@
 <script>
 
 export default {
-    props: ['contrat_id'],
+    props: ['contrat_id', 'user_id'],
     name: 'my-signature-pad',
     data() {
         return {
@@ -32,16 +32,28 @@ export default {
             const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
             console.log(isEmpty);
             console.log(data);
+
+            let link = ''
+            if (this.contrat_id) {
+                link = '/contrat/' + this.contrat_id + '/store-signature';
+            } else if (this.user_id) {
+                link = '/user/' + this.user_id + '/store-signature';
+            } else {
+                alert('Error: Contract ID or User ID is missing.');
+                return;
+            }
+
             this.isLoading = true;
-            axios.post('/contrat/' + this.contrat_id + '/store-signature', {
+            axios.post(link, {
                 signature: data,
-                contrat_id: this.contrat_id
+                contrat_id: this.contrat_id,
+                user_id: this.user_id
             }).then(response => {
                 console.log(response.data);
                 this.isLoading = false;
                 this.$forceUpdate();
                 if (response.data.status === 'success') {
-                    window.location.href = '/contrat/' + this.contrat_id + '/print';
+                    window.location.href = response.data.redirect;
                 } else {
                     alert('Error: ' + response.data.message);
                 }

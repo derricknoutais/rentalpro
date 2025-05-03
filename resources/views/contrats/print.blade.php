@@ -224,21 +224,27 @@
         </div>
 
     </div>
-    <div class="flex justify-between mt-12">
+    <div class="flex justify-between mx-24">
         <p>Le Client</p>
         <p>Le Responsable</p>
     </div>
     <div class="flex justify-between">
-        <div
-            class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-            <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->signature }}" alt=""
-                class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
-            <button type="button" class="absolute inset-0 focus:outline-none">
-                <span class="sr-only">View details for IMG_4985.HEIC</span>
-            </button>
-        </div>
-        <div>
-        </div>
+        @if ($contrat->checkout && $contrat->checkout->signature)
+            <div
+                class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+                <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->signature }}"
+                    alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+
+            </div>
+        @endif
+        @if ($contrat->checkout && $contrat->checkout->userSignature)
+            <div
+                class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
+                >
+                <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->userSignature }}"
+                    alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+            </div>
+        @endif
     </div>
 @endsection
 

@@ -21,7 +21,7 @@
                         Imprimer
                     </a>
                 </div>
-                <div class="px-4 sm:px-6">
+                <div class="px-4 sm:px-6 md:block hidden">
                     {{ $checkout_qrcode }}
 
                 </div>

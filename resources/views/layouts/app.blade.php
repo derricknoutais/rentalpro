@@ -415,8 +415,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/mes-paramètres"
-                                            @if (request()->is('mes-paramètre*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                        <a href="/paramètres/compagnie"
+                                            @if (request()->is('paramètres/compagnie*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
                                             class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -463,20 +463,34 @@
                                 </li>
                             </ul>
                         </li> --}}
-                            <li class="-mx-6 mt-auto">
-                                <a href="#"
-                                    @if (request()->is('')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
-                                        @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                        stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
-                                    <span class="">Votre Profil</span>
-                                    @auth
+                            @auth
+                                <ul class="mt-auto">
+                                    <li class="-mx-6 ">
+                                        <a href="/parametres/mon-compte"
+                                            @if (request()->is('paramètres/mon-compte*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+
+                                            @else
+                                                class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                            <span class="">{{ Auth::user()->name }}</span>
+                                        </a>
+                                    </li>
+                                    <li class="-mx-6 mt-2">
                                         <a href="{{ route('logout') }}"
+                                            @if (request()->is('')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @else
+                                                class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                                            </svg>
+
                                             Se Déconnecter
 
                                         </a>
@@ -484,11 +498,9 @@
                                             style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
-                                        <span aria-hidden="true">Déc{{ Auth::user()->name }}</span>
-                                    @endauth
-
-                                </a>
-                            </li>
+                                    </li>
+                                </ul>
+                            @endauth
                         </ul>
                     </nav>
                 </div>

@@ -225,6 +225,7 @@ class ContratController extends Controller
                 'etat_documents' => $request['documentString'],
                 'note' => $request['note_contrat'],
             ]);
+
             if (Auth::user()->compagnie->isHotel()) {
                 Chambre::find($request['contractable'])->update([
                     'etat' => 'loué',
@@ -783,8 +784,19 @@ class ContratController extends Controller
             }
             $index++;
         }
+        $checkout = [
+            'images' => $imageNames,
+            'documents' => $request->documents,
+            'accessoires' => $request->accessoires,
+        ];
 
-        $contrat->update(['checkout' => ['images' => $imageNames, 'documents' => $request->documents, 'accessoires' => $request->accessoires]]);
+        if (json_decode(Auth::user()->settings)->signature) {
+            $checkout['userSignature'] = json_decode(Auth::user()->settings)->signature;
+        }
+        $contrat->checkout = json_encode($checkout); // Directly encode the object
+
+        $contrat->updated_at = now(); // Update the timestamp
+        $contrat->save();
 
         // return $request->all();
         return redirect('/contrat/' . $contrat->id . '/sign');
@@ -808,7 +820,7 @@ class ContratController extends Controller
 
         $image = str_replace(' ', '+', $image);
 
-        $imageName = 'signature/' . $contrat->client->nom() . '*' . str_replace('/', '-', $contrat->numéro);
+        $imageName = 'signature/contrats/' . $contrat->client->nom() . '*' . str_replace('/', '-', $contrat->numéro);
 
         // return Storage::disk('public')->put($imageName, base64_decode($image));
         Storage::disk('do_spaces')->put('' . $imageName, base64_decode($image), 'public');
@@ -820,6 +832,7 @@ class ContratController extends Controller
         return response()->json([
             'message' => 'Signature Enregistrée avec Succès.',
             'status' => 'success',
+            'redirect' => '/contrat/' . $contrat->id . '/print',
         ]);
     }
 }

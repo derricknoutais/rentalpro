@@ -162,8 +162,13 @@ Route::group(['middleware' => ['auth']], function () {
         return redirect('/contrat/' . $request->contrat_id);
     });
 
-    // VOITURES
+    // USERS
+    Route::prefix('user')->group(function () {
+        Route::post('/{user}/store-signature', 'UserController@storeSignature');
+        Route::delete('/{user}/delete-signature', 'UserController@destroySignature');
+    });
 
+    // VOITURES
     Route::get('/contractables', 'ContractableController@index');
     Route::get('/contractables/create', 'ContractableController@create');
     Route::get('/contractables/{contractable_id}', 'ContractableController@show');
@@ -289,13 +294,19 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/reservations/store', 'ReservationController@store');
 
     // Paramètres
-    Route::get('/mes-paramètres', function () {
-        $documents = Auth::user()->compagnie->documents;
-        $accessoires = Auth::user()->compagnie->accessoires;
-        // $voitures = Voiture::with('documents', 'accessoires')->get();
-        $contractables = Auth::user()->contractables->loadMissing('documents', 'accessoires');
-        $techniciens = Auth::user()->compagnie->techniciens;
-        return view('paramètres.index', compact('documents', 'accessoires', 'contractables', 'techniciens'));
+    Route::prefix('parametres')->group(function () {
+        Route::get('/compagnie', function () {
+            $documents = Auth::user()->compagnie->documents;
+            $accessoires = Auth::user()->compagnie->accessoires;
+            // $voitures = Voiture::with('documents', 'accessoires')->get();
+            $contractables = Auth::user()->contractables->loadMissing('documents', 'accessoires');
+            $techniciens = Auth::user()->compagnie->techniciens;
+            return view('parametres.index', compact('documents', 'accessoires', 'contractables', 'techniciens'));
+        });
+        Route::get('/mon-compte', function () {
+            $user = Auth::user();
+            return view('parametres.mon-compte', compact('user'));
+        });
     });
 
     Route::get('/update-date-contrats', function () {
@@ -311,13 +322,13 @@ Route::group(['middleware' => ['auth']], function () {
         ]);
 
         if ($document) {
-            return redirect('/mes-paramètres');
+            return redirect('/parametres/compagnie');
         }
     });
     Route::post('/documents/{document}/destroy', function (Document $document) {
         $deleted = $document->delete();
         if ($deleted) {
-            return redirect('/mes-paramètres');
+            return redirect('/parametres/compagnie');
         }
     });
     Route::post('/documents/{document}/update', function (Document $document, Request $request) {
@@ -325,7 +336,7 @@ Route::group(['middleware' => ['auth']], function () {
             'type' => $request->type,
         ]);
         if ($updated) {
-            return redirect('/mes-paramètres');
+            return redirect('/parametres/compagnie');
         }
     });
     Route::delete('/documents/{document}', 'DocumentController@destroy');
@@ -337,7 +348,7 @@ Route::group(['middleware' => ['auth']], function () {
             'compagnie_id' => Auth::user()->compagnie_id,
         ]);
         if ($accessoire) {
-            return redirect('/mes-paramètres');
+            return redirect('/parametres/compagnie');
         }
     });
     Route::delete('/accessoires/{accessoire}', function (Accessoire $accessoire) {
@@ -348,7 +359,7 @@ Route::group(['middleware' => ['auth']], function () {
             'type' => $request->type,
         ]);
         if ($updated) {
-            return redirect('/mes-paramètres');
+            return redirect('/parametres/compagnie');
         }
     });
     Route::post('/{voiture}/voiture-documents-accessoires', function (Request $request, Voiture $voiture) {
