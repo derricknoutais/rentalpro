@@ -24,7 +24,7 @@ class Paiement extends Model
     public static function boot()
     {
         parent::boot();
-        // static::addGlobalScope(new PaiementScope());
+        static::addGlobalScope(new PaiementScope());
 
         static::created(function (Paiement $paiement) {
             Metric::insere($paiement);
