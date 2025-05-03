@@ -228,7 +228,7 @@
         <p>Le Client</p>
         <p>Le Responsable</p>
     </div>
-    <div class="flex justify-between mt-12">
+    <div class="flex justify-between">
         <div
             class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
             <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->signature }}" alt=""
@@ -238,7 +238,6 @@
             </button>
         </div>
         <div>
-            ----
         </div>
     </div>
 @endsection

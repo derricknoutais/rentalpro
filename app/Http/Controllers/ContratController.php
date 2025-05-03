@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ContratController extends Controller
 {
@@ -126,8 +127,9 @@ class ContratController extends Controller
 
     public function show(Contrat $contrat)
     {
+        $checkout_qrcode = Qrcode::size(200)->generate(env('APP_URL') . '/contrat/' . $contrat->id . '/check-out');
         $contrat->loadMissing('client', 'contractable', 'compagnie', 'paiements', 'activities');
-        return view('contrats.show', compact('contrat'));
+        return view('contrats.show', compact('contrat', 'checkout_qrcode'));
     }
 
     public function create(Request $request)
