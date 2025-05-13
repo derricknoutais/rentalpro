@@ -28,7 +28,6 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->job(new CreateMetricEntries)->everyMinute();
         $schedule->job(new EnvoieRapportJournalierVente())->dailyAt('18:00')->timezone('Africa/Libreville');
-        $schedule->job(new EnvoieRapportJournalierVente())->everyMinute()->timezone('Africa/Libreville');
     }
 
     /**
