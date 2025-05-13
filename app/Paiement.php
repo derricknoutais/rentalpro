@@ -25,6 +25,9 @@ class Paiement extends Model
     {
         parent::boot();
         // static::addGlobalScope(new PaiementScope());
+        static::creating(function (Paiement $paiement) {
+            $paiement->compagnie_id = auth()->user()->compagnie_id;
+        });
 
         static::created(function (Paiement $paiement) {
             Metric::insere($paiement);
