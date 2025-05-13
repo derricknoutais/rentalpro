@@ -34,11 +34,23 @@ class RapportJournalierVente extends Mailable
         $paiements_airtelmoney = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
             ->where('created_at', '<', Carbon::today()->setTime(18, 00, 00))
             ->where('type_paiement', 'Airtel Money')
+            ->loadMissing('payable', 'payable.contractable')
+            ->with([
+                'payable' => function ($query) {
+                    $query->withoutGlobalScopes();
+                },
+            ])
             ->orderBy('type_paiement')
             ->get();
         $paiements_espece = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
             ->where('created_at', '<', Carbon::today()->setTime(18, 00, 00))
             ->where('type_paiement', 'Espèce')
+            ->loadMissing('payable', 'payable.contractable')
+            ->with([
+                'payable' => function ($query) {
+                    $query->withoutGlobalScopes();
+                },
+            ])
             ->orderBy('type_paiement')
             ->get();
         // $pdf = PDF::loadView('rapports.paiement-journalier', compact('paiements_airtelmoney', 'paiements_espece'));
