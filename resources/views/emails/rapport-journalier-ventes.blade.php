@@ -68,11 +68,11 @@
                     @endforeach
                     <tr>
                         <td colspan="4"
-                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right text-sm font-semibold text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
+                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right text-md font-bold text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                             TOTAL ESPECE
                         </td>
 
-                        <td class="hidden font-bold px-3 py-4 text-sm text-gray-500 lg:table-cell">
+                        <td class="hidden font-bold px-3 py-4 text-md text-gray-500 lg:table-cell">
                             {{ $total_espece = $paiements_espece->sum('montant') }}</td>
                     </tr>
                     <br>
@@ -98,21 +98,21 @@
                     @endforeach
                     <tr>
                         <td colspan="4"
-                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
+                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-md font-bold text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                             TOTAL AIRTEL MONEY
                         </td>
 
-                        <td class="hidden px-3 py-4 font-bold text-sm text-gray-500 lg:table-cell">
+                        <td class="hidden px-3 py-4 font-exbold text-md text-gray-500 lg:table-cell">
                             {{ $total_airtelmoney = $paiements_airtelmoney->sum('montant') }}</td>
                     </tr>
                     <br>
                     <tr class="mt-5">
                         <td colspan="4"
-                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
+                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-lg font-bold text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                             TOTAL JOURNALIER
                         </td>
 
-                        <td class="hidden px-3 py-4 font-bold text-sm text-gray-500 lg:table-cell">
+                        <td class="hidden px-3 py-4 font-extrabold text-lg text-gray-500 lg:table-cell">
                             {{ $total_espece + $total_airtelmoney }}</td>
                     </tr>
                 </tbody>

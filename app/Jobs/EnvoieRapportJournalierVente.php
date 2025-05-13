@@ -32,6 +32,8 @@ class EnvoieRapportJournalierVente implements ShouldQueue
      */
     public function handle()
     {
+        Log::info('Envoi du rapport journalier de vente');
         Mail::to('derricknoutais@gmail.com')->cc('noutaiaugustin@gmail.com')->bcc('servicesazimuts@gmail.com')->send(new RapportJournalierVente());
+        Log::info('Rapport journalier de vente envoyé avec succès');
     }
 }
