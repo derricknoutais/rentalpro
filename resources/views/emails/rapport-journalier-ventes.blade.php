@@ -15,12 +15,13 @@
     <div class="flex justify-center">
         <img src="/img/logosta.png" alt="">
     </div>
-    <h1 class="text-4xl mt-5 text-center">RAPPORT VENTE</h1>
+    <h1 class="text-4xl mt-5 text-center">RAPPORT PAIEMENTS</h1>
     <div class="px-4 sm:px-6 lg:px-8">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto mt-12">
-                <h1 class="text-base font-semibold text-gray-900">Paiements</h1>
-                <p class="mt-2 text-sm text-gray-700">Paiements du {{ Carbon\Carbon::today()->format('d-m-Y') }}</p>
+                <h2 class="text-md font-semibold text-gray-900">Paiements du
+                    {{ Carbon\Carbon::today()->subDay(1)->format('d-m-Y') }} 18:01 au
+                    {{ Carbon\Carbon::today()->format('d-m-Y') }} 18:00</h2>
             </div>
         </div>
         <div class="-mx-4 mt-8 sm:-mx-0">
@@ -31,13 +32,17 @@
                             class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
                             Date</th>
                         <th scope="col"
-                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
-                            Montant
+                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
+                            Type
                         </th>
                         <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                            Type</th>
-                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                            <span class="sr-only">Edit</span>
+                            Nº Contrat</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                            Immatriculation
+                        </th>
+                        <th scope="col"
+                            class=" px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
+                            Montant
                         </th>
                     </tr>
                 </thead>
@@ -63,15 +68,16 @@
                     @endforeach
                     <tr>
                         <td colspan="4"
-                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
+                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right text-sm font-semibold text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                             TOTAL ESPECE
                         </td>
 
                         <td class="hidden font-bold px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                            {{ $paiements_espece->sum('montant') }}</td>
+                            {{ $total_espece = $paiements_espece->sum('montant') }}</td>
                     </tr>
+                    <br>
                     @foreach ($paiements_airtelmoney as $paiement)
-                        <tr>
+                        <tr class="mt-5">
                             <td
                                 class="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                                 {{ $paiement->created_at->format('h:i') }}
@@ -91,17 +97,24 @@
                         </tr>
                     @endforeach
                     <tr>
-                        <td
-                         colspan="4"
+                        <td colspan="4"
                             class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
                             TOTAL AIRTEL MONEY
                         </td>
 
                         <td class="hidden px-3 py-4 font-bold text-sm text-gray-500 lg:table-cell">
-                            {{ $paiements_airtelmoney->sum('montant') }}</td>
+                            {{ $total_airtelmoney = $paiements_airtelmoney->sum('montant') }}</td>
                     </tr>
+                    <br>
+                    <tr class="mt-5">
+                        <td colspan="4"
+                            class="w-full max-w-0 py-4 pl-4 pr-3 text-right  text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-0">
+                            TOTAL JOURNALIER
+                        </td>
 
-                    <!-- More people... -->
+                        <td class="hidden px-3 py-4 font-bold text-sm text-gray-500 lg:table-cell">
+                            {{ $total_espece + $total_airtelmoney }}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

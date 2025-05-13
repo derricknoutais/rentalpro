@@ -803,6 +803,7 @@ class ContratController extends Controller
     }
     public function sign(Contrat $contrat)
     {
+        $contrat->loadMissing('client', 'contractable');
         return view('contrats.customer-sign', compact('contrat'));
     }
     public function storeSignature(Request $request)

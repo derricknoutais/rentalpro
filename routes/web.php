@@ -1,27 +1,28 @@
 <?php
 
+use App\User;
 use App\Offre;
 use App\Panne;
 use App\Client;
+use App\Metric;
 use App\Contrat;
 use App\Voiture;
 use App\Document;
 use App\Paiement;
+use App\Reporting;
 use Carbon\Carbon;
 use App\Accessoire;
 use App\Technicien;
 use App\Maintenance;
 use App\Contractable;
-use App\Events\ContratCree;
-use App\Jobs\CreateMetricEntries;
-use App\Jobs\MetricCrawler;
 use App\Mail\ContratCréé;
-use App\Metric;
-use App\Reporting;
-use App\User;
+use App\Events\ContratCree;
+use App\Jobs\MetricCrawler;
 use Illuminate\Http\Request;
+use App\Jobs\CreateMetricEntries;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use App\Mail\RapportJournalierVente;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -33,28 +34,7 @@ if (env('APP_ENV') == 'local') {
     Auth::loginUsingID(1);
 }
 
-Route::get('/test', function (Request $request) {
-    if ($request['type'] === 'annee') {
-        $data = Metric::where('type', 'annee')->orderBy('annee', 'desc')->take(4)->pluck($request['data_requested'], 'annee');
-    } elseif ($request['type'] === 'mois') {
-        $data = Metric::where(['type' => 'mois'])
-            ->orderBy('annee', 'desc')
-            ->orderBy('mois', 'desc')
-            ->take(4)
-            ->pluck($request['data_requested'], 'mois_label');
-    } elseif ($request['type'] === 'jour') {
-        $data = Metric::where(['type' => 'jour'])
-            ->orderBy('annee', 'desc')
-            ->orderBy('mois', 'desc')
-            ->orderBy('jour', 'desc')
-            ->take(7)
-            ->pluck($request['data_requested'], 'jour_semaine_court');
-    }
-    return [
-        'data' => $data->reverse()->values(),
-        'labels' => $data->reverse()->keys(),
-    ];
-});
+Route::get('/test', function (Request $request) {});
 Route::get('/tt', function () {
     return view('emails.contrat_créé', ['contrat' => Contrat::find(12)]);
 });
