@@ -34,7 +34,7 @@ class RapportJournalierVente extends Mailable
         $paiements_airtelmoney = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
             ->where('created_at', '<', Carbon::today()->setTime(18, 00, 00))
             ->where('type_paiement', 'Airtel Money')
-            ->loadMissing('payable', 'payable.contractable')
+            ->load('payable', 'payable.contractable')
             ->with([
                 'payable' => function ($query) {
                     $query->withoutGlobalScopes();
@@ -45,7 +45,7 @@ class RapportJournalierVente extends Mailable
         $paiements_espece = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
             ->where('created_at', '<', Carbon::today()->setTime(18, 00, 00))
             ->where('type_paiement', 'Espèce')
-            ->loadMissing('payable', 'payable.contractable')
+            ->load('payable', 'payable.contractable')
             ->with([
                 'payable' => function ($query) {
                     $query->withoutGlobalScopes();
