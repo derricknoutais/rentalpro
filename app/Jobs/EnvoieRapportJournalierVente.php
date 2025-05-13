@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
 use App\Mail\RapportJournalierVente;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
