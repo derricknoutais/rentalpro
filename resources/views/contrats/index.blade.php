@@ -350,6 +350,7 @@
                                     v-else-if="contrat.real_check_out !== null">
                                     Contrat Terminé
                                 </span>
+
                                 <div class="flex flex-col" v-else>
                                     @can('terminer contrat')
                                         <button class="px-2 py-1 sm:mt-5 lg:mt-5 bg-green-400 rounded text-green-50"
@@ -374,13 +375,19 @@
                                         </button>
                                     @endcan
                                     @can('terminer contrat')
-                                        <button class="px-2 py-1 sm:mt-5 lg:mt-5 bg-green-400 rounded text-green-50"
+                                        <a class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded"
+                                            :href="'/contrat/' + contrat.id + '/download'">
+                                            <i class="fas fa-download"></i>
+                                            Télécharger Contrat
+                                        </a>
+                                        <button class="px-2 py-1 sm:mt-3 lg:mt-2 bg-yellow-400 rounded text-green-50"
                                             data-toggle="modal" data-target="#mail-contrat-modal"
                                             @click="passDataToModal('contrat', contrat)">
                                             <i class="fas fa-envelope"></i>
                                             Envoyer Mail
                                         </button>
                                     @endcan
+
 
                                     <a target="_blank"
                                         class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded"

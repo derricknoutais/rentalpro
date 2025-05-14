@@ -577,7 +577,12 @@ class ContratController extends Controller
 
     public function download(Contrat $contrat)
     {
-        $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
+        $contrat->loadMissing('contractable', 'client');
+        isset($contrat->contractable->documents) ? ($documents = $contrat->contractable->documents) : ($documents = []);
+        isset($contrat->contractable->accessoires) ? ($accessoires = $contrat->contractable->accessoires) : ($accessoires = []);
+        $pdf = PDF::loadView('contrats.print', compact('contrat', 'documents', 'accessoires'))->setPaper('a4', 'portrait');
+        return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
+        return $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
         $formatter = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
         $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
         if ($contrat->compagnie->type == 'véhicules') {

@@ -27,4 +27,23 @@ class RapportController extends Controller
         // Mail::to('derricknoutais@gmail.com')->send(new RapportJournalierVente());
         return view('rapports.paiement-journalier', compact('paiements_airtelmoney', 'paiements_espece'));
     }
+    public function printPaiementJournalier($date)
+    {
+        // return Carbon::parse($date);
+        $date = Carbon::parse($date);
+
+        $paiements_airtelmoney = Paiement::where('created_at', '>', Carbon::parse($date)->subDay()->startOfDay()->addHours(18))
+            ->where('created_at', '<', Carbon::parse($date)->addDay()->setTime(18, 00, 00))
+            ->where('type_paiement', 'Airtel Money')
+            ->orderBy('type_paiement')
+            ->get();
+
+        $paiements_espece = Paiement::where('created_at', '>', Carbon::parse($date)->subDay()->startOfDay()->addHours(18))
+            ->where('created_at', '<', Carbon::parse($date)->addDay()->setTime(18, 00, 00))
+            ->where('type_paiement', 'Espèce')
+            ->orderBy('type_paiement')
+            ->get();
+
+        return view('print.paiement-journalier', compact('paiements_airtelmoney', 'paiements_espece', 'date'));
+    }
 }

@@ -34,7 +34,9 @@ if (env('APP_ENV') == 'local') {
     Auth::loginUsingID(1);
 }
 
-Route::get('/test', function (Request $request) {});
+Route::get('/test', function (Request $request) {
+    Mail::to('derricknoutais@gmail.com')->send(new RapportJournalierVente());
+});
 Route::get('/tt', function () {
     return view('emails.contrat_créé', ['contrat' => Contrat::find(12)]);
 });
@@ -463,6 +465,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         return view('reporting.voitures', compact('voitures', 'chiffre_DAffaire_Annuel'));
     });
+    Route::get('/rapports/paiements/{date}/print', 'RapportController@printPaiementJournalier');
     Route::get('/dashboard', 'DashboardController@index');
     Route::get('/my-feeds', function () {
         $contrats = Contrat::all();
