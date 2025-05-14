@@ -51,6 +51,7 @@ Route::get('/t', function () {
     // // Metric::query()->delete();
     // return Metric::all();
 });
+Route::get('/contrat/{contrat}/print', 'ContratController@print');
 Auth::routes();
 
 Route::get('/add-offers', function () {
@@ -267,7 +268,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::post('/image', 'ImageController@store');
 
     // Impression Contrat
-    Route::get('/contrat/{contrat}/print', 'ContratController@print');
+
     Route::get('/contrat/{contrat}/print-{type_compagnie}-{size}', 'PrintController@print');
 
     //  Reservation
