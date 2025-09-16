@@ -130,12 +130,12 @@
                                     {{-- @dd($contrat->checkout) --}}
                                     <div
                                         class="group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-                                        <img src="https://rentalpro.fra1.digitaloceanspaces.com/contrats/{{ $imageName }}"
-                                            alt=""
-                                            class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
-                                        <button type="button" class="absolute inset-0 focus:outline-none">
-                                            <span class="sr-only">View details for IMG_4985.HEIC</span>
-                                        </button>
+                                        <a target="_blank" href="https://rentalpro.fra1.digitaloceanspaces.com/contrats/{{ $imageName }}">
+                                            <img src="https://rentalpro.fra1.digitaloceanspaces.com/contrats/{{ $imageName }}"
+                                                alt=""
+                                                class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+                                        </a>
+                                        
                                     </div>
                                 </li>
                             @endforeach

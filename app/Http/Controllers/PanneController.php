@@ -98,6 +98,9 @@ class PanneController extends Controller
      */
     public function destroy(Panne $panne)
     {
-        //
+        $panne->delete();
+        return response()->json([
+            'message' => 'Panne deleted successfully',
+        ]);
     }
 }

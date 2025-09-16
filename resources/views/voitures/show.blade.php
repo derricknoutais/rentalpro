@@ -31,7 +31,6 @@
                 </div>
             </div>
 
-            <!-- This example requires Tailwind CSS v2.0+ -->
             <div class="mt-10">
                 <div>
                     <h3 class="text-lg font-medium leading-6 text-gray-900">
