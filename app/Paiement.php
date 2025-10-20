@@ -30,10 +30,12 @@ class Paiement extends Model
         });
 
         static::created(function (Paiement $paiement) {
-            Metric::insere($paiement);
-            Mail::to('noutaiaugustin@gmail.com')
-                ->cc('derricknoutais@gmail.com')
-                ->send(new PaiementCréé(($contrat = $paiement->payable), $paiement));
+            $paiement->afterCommit(function () use ($paiement) {
+                Metric::insere($paiement);
+                Mail::to('noutaiaugustin@gmail.com')
+                    ->cc('derricknoutais@gmail.com')
+                    ->send(new PaiementCréé(($contrat = $paiement->payable), $paiement));
+            });
         });
 
         static::updated(function (Paiement $paiement) {
