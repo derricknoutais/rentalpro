@@ -35,7 +35,7 @@ if (env('APP_ENV') == 'local') {
 }
 
 Route::get('/test', function (Request $request) {
-    // Mail::to('derricknoutais@gmail.com')->send(new RapportJournalierVente());
+    Mail::to('derricknoutais@gmail.com')->send(new RapportJournalierVente());
 });
 Route::get('/tt', function () {
     return view('emails.contrat_créé', ['contrat' => Contrat::find(12)]);
