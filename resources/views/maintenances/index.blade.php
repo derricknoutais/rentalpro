@@ -2,111 +2,145 @@
 
 
 @section('content')
+    <maintenance-index inline-template>
+        <template>
+            <div class="p-6">
 
-    <div class="min-h-full container-fluid">
-        <div class="flex flex-col">
-            <!-- This example requires Tailwind CSS v2.0+ -->
-            <div class="flex flex-col">
-                <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                        <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Date
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Titre
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Voiture
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Technicien
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Main d'Oeuvre
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                                            Coût Pièces
-                                        </th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($maintenances as $maintenance)
-                                        <tr
-                                            @if ($loop->odd)
-                                                class="bg-white"
-                                            @else
-                                                class="bg-gray-100"
-                                            @endif
-                                        >
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                                {{ $maintenance->created_at->format('d-M-Y') }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
-                                                {{ $maintenance->titre }}
-                                            </td>
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-700">Maintenance</h2>
+                    <button @click="openAddModal()"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-500">
+                        + Ajouter une maintenance
+                    </button>
+                </div>
 
-                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                @isset ( $maintenance->contractable)
-                                                    {{ $maintenance->contractable->nom() }}
-                                                @endisset
-                                            </td>
+                <!-- Filtres -->
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+                    <select v-model="filters.voiture_id" class="border rounded p-2 w-full">
+                        <option value="">-- Voiture --</option>
+                        <option v-for="v in voitures" :key="v.id" :value="v.id">@{{ v.immatriculation }}
+                        </option>
+                    </select>
+
+                    <select v-model="filters.technicien_id" class="border rounded p-2 w-full">
+                        <option value="">-- Technicien --</option>
+                        <option v-for="t in techniciens" :key="t.id" :value="t.id">
+                            @{{ t.nom }}</option>
+                    </select>
+
+                    <input type="date" v-model="filters.start" class="border rounded p-2 w-full" />
+                    <input type="date" v-model="filters.end" class="border rounded p-2 w-full" />
+                </div>
+
+                <!-- Tableau des maintenances -->
+                <div class="overflow-hidden bg-white shadow ring-1 ring-gray-900/5 rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Voiture</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Technicien</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Titre</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Coût</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Coût Pièces</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500">Date</th>
+                                <th class="px-4 py-2"></th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-gray-200">
+                            <tr v-for="m in filteredMaintenances" :key="m.id" class="hover:bg-gray-50">
+                                <td class="px-4 py-2">@{{ m.contractable ? m.contractable.immatriculation : '-' }}</td>
+                                <td class="px-4 py-2">@{{ m.technicien ? m.technicien.nom : '-' }}</td>
+                                <td class="px-4 py-2">@{{ m.titre || '-' }}</td>
+                                <td class="px-4 py-2">@{{ formatMoney(m['coût']) }}</td>
+                                <td class="px-4 py-2">@{{ formatMoney(m['coût_pièces']) }}</td>
+                                <td class="px-4 py-2">@{{ formatDate(m.created_at) }}</td>
+                                <td class="px-4 py-2 flex gap-2">
+                                    <button @click="openEditModal(m)" class="text-indigo-600 text-sm">Modifier</button>
+                                    <button @click="confirmDelete(m.id)" class="text-red-600 text-sm">Supprimer</button>
+                                </td>
+                            </tr>
+
+                            <tr v-if="filteredMaintenances.length === 0">
+                                <td class="px-4 py-6 text-center text-gray-500" colspan="7">Aucune maintenance trouvée.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modal Ajout / Edition -->
+                <div v-if="showModal" class="fixed inset-0 z-40 flex items-start justify-center px-4 pt-10">
+                    <!-- Backdrop -->
+                    <div class="fixed inset-0 bg-black opacity-50" @click="closeModal"></div>
+
+                    <!-- Modal -->
+                    <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl z-50 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                @{{ isEditing ? 'Modifier la maintenance' : 'Ajouter une maintenance' }}
+                            </h3>
+                            <button @click="closeModal" class="text-gray-500 hover:text-gray-700">✕</button>
+                        </div>
+
+                        <div class="p-6 space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Contractable Select -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Contractable</label>
+                                    <select v-model="form.contractable_id" class="border rounded p-2 w-full">
+                                        <option value="">-- Choisir --</option>
+                                        <option v-for="c in contractables" :key="c.id" :value="c.id">
+                                            @{{ c.immatriculation }}
+                                        </option>
+                                    </select>
+                                    <p class="text-xs text-gray-400 mt-1">Type déterminé automatiquement.</p>
+                                </div>
 
 
-                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                @if($maintenance->technicien)
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Titre</label>
+                                    <input type="text" v-model="form.titre" class="border rounded p-2 w-full"
+                                        placeholder="Ex: Révision freins" />
+                                </div>
 
-                                                    {{ $maintenance->technicien->nom }}
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Technicien</label>
+                                    <select v-model="form.technicien_id" class="border rounded p-2 w-full">
+                                        <option value="">-- Aucun --</option>
+                                        <option v-for="t in techniciens" :key="t.id" :value="t.id">
+                                            @{{ t.nom }}</option>
+                                    </select>
+                                </div>
 
-                                                @endif
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
-                                                {{ $maintenance->coût }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                                                {{ $maintenance->coût_pièces }}
-                                            </td>
-                                            <td>
-                                                <a href="/maintenance/{{ $maintenance->id }}/edit" class="bg-blue-300 px-3 py-1 rounded-md mr-3">
-                                                    Modifier
-                                                </a>
-                                                @if (! $maintenance->gescash_transaction_id)
-                                                    <a class="text-white bg-blue-500 px-3 py-1 rounded-md" href="/maintenances/{{ $maintenance->id }}/envoyer-gescash">Envoyer à Gescash</a>
-                                                @else
-                                                    <span class="text-white bg-green-500 rounded-2xl">Envoyé à Gescash</span>
-                                                @endif
-                                                <form action="/maintenances/{{ $maintenance->id }}" method="POST">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <button class="bg-red-300 px-3 py-1 rounded-md mr-3" type="submit" >
-                                                        Supprimer
-                                                    </button>
-                                                </form>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Coût</label>
+                                    <input type="number" v-model.number="form.cout" class="border rounded p-2 w-full"
+                                        placeholder="Ex: 50000" />
+                                </div>
 
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Coût pièces</label>
+                                    <input type="number" v-model.number="form.cout_pieces"
+                                        class="border rounded p-2 w-full" placeholder="Ex: 15000" />
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end gap-2">
+                                <button @click="closeModal" class="px-4 py-2 bg-gray-200 rounded">Annuler</button>
+                                <button @click="submitForm" :disabled="saving"
+                                    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500">
+                                    @{{ saving ? 'Enregistrement...' : (isEditing ? 'Sauvegarder' : 'Créer') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="sticky flex justify-end px-40 bottom-16 container-fluid">
-            <a href="/maintenances/create">
-                <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
-            </a>
-        </div>
-    </div>
 
+            </div>
+        </template>
+
+
+    </maintenance-index>
 @endsection

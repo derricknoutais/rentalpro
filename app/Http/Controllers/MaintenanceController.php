@@ -26,14 +26,22 @@ class MaintenanceController extends Controller
         $maintenances = Auth::user()->compagnie->maintenances;
 
         // Charge les relations associes aux maintenances
-        if (sizeof($maintenances))
-            $maintenances->loadMissing(
-                ['contractable', 'technicien', 'pannes']
-            );
-
+        if (sizeof($maintenances)) {
+            $maintenances->loadMissing(['contractable', 'technicien', 'pannes']);
+        }
 
         // $maintenances = Maintenance::with(['voiture', 'technicien','pannes'])->latest()->get();
         return view('maintenances.index', compact('maintenances'));
+    }
+    public function getApi()
+    {
+        $maintenances = Auth::user()->compagnie->maintenances;
+
+        // Charge les relations associes aux maintenances
+        if (sizeof($maintenances)) {
+            $maintenances->loadMissing(['contractable', 'technicien', 'pannes']);
+        }
+        return response()->json($maintenances);
     }
 
     /**
@@ -57,15 +65,13 @@ class MaintenanceController extends Controller
      */
     public function store(Request $request)
     {
-
         DB::transaction(function () use ($request) {
-
             // Crée une nouvelle maintenance
             $maintenance = Maintenance::create([
                 'titre' => $request->titre,
                 'voiture_id' => $request->voiture,
                 'technicien_id' => $request->technicien,
-                'compagnie_id' => Auth::user()->compagnie_id
+                'compagnie_id' => Auth::user()->compagnie_id,
             ]);
 
             // Attache les pannes sélectionnées a la maintenance créée
@@ -73,7 +79,7 @@ class MaintenanceController extends Controller
                 Panne::find($request->panne[$i])->update([
                     'voiture_id' => $request->voiture,
                     'maintenance_id' => $maintenance->id,
-                    'etat' => 'en-maintenance'
+                    'etat' => 'en-maintenance',
                 ]);
             }
 
@@ -81,6 +87,27 @@ class MaintenanceController extends Controller
             Voiture::find($request->voiture)->etat('maintenance');
         });
         return redirect()->back();
+    }
+    public function storeApi()
+    {
+        // Implémentation similaire à la méthode store mais adaptée pour une requête API
+        $data = request()->all();
+        DB::transaction(function () use ($data) {
+            // Crée une nouvelle maintenance
+            $maintenance = Maintenance::create([
+                'compagnie_id' => Auth::user()->compagnie_id,
+                'titre' => $data['titre'],
+                'coût' => $data['cout'] ?? null,
+                'contractable_id' => $data['contractable_id'],
+                'contractable_type' => Auth::user()->compagnie->contractableType(),
+                'technicien_id' => $data['technicien_id'],
+                'coût_pièces' => $data['cout_pieces'] ?? null,
+            ]);
+
+            // Change l'état du véhicule en maintenance
+            Voiture::find($data['contractable_id'])->etat('maintenance');
+        });
+        return response()->json(['message' => 'Maintenance created successfully'], 201);
     }
 
     /**
@@ -91,7 +118,6 @@ class MaintenanceController extends Controller
      */
     public function show(Maintenance $maintenance)
     {
-
         $maintenance->numero_recu = 116031;
         $sale = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/search?type=sales&invoice_number=' . $maintenance->numero_recu);
         // return $sale;
@@ -159,20 +185,20 @@ class MaintenanceController extends Controller
                         'account_id' => $apiSettings->gescash_maintenance_account_id,
                         'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom,
                         'debit' => $maintenance->coût + $maintenance->coût_pièces,
-                        'credit' => NULL,
+                        'credit' => null,
                         'created_at' => $maintenance->created_at,
-                        'updated_at' => now()
+                        'updated_at' => now(),
                     ],
                     // Service Entry Credit
                     [
                         'account_id' => $apiSettings->gescash_cash_account_id,
                         'label' => 'Maintenance sur ' . $maintenance->voiture->immatriculation . ' pour ' . $maintenance->titre . ' par ' . $maintenance->technicien->nom,
                         'credit' => $maintenance->coût + $maintenance->coût_pièces,
-                        'debit' => NULL,
+                        'debit' => null,
                         'created_at' => $maintenance->created_at,
-                        'updated_at' => now()
-                    ]
-                ]
+                        'updated_at' => now(),
+                    ],
+                ],
             ];
             $sent = Http::post(env('GESCASH_BASE_URL') . '/api/v1/transaction', $transactionData);
             if ($sent->status() == 201) {
@@ -183,7 +209,6 @@ class MaintenanceController extends Controller
             }
         });
         if ($done) {
-
             return redirect()->back();
         }
     }

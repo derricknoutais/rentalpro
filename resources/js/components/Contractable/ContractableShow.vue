@@ -11,11 +11,11 @@ export default {
         return {
             display_formulaire_panne: false,
             pannes: [],
-            form: {
+            form_panne: {
                 description: '',
-                contractable_id: null,
+                contractable_id: this.contractable_prop ? this.contractable_prop.id : null,
             },
-
+            showModal: false,
             contractable: this.contractable_prop,
             contrats: this.contrats_prop,
 
@@ -27,13 +27,17 @@ export default {
             this.display_formulaire_panne = !this.display_formulaire_panne
         },
         submitFormulairePannes() {
-            axios.post('/api/panne', this.form).then((response) => {
+            axios.post('/api/panne', this.form_panne).then((response) => {
                 console.log(response.data)
                 this.pannes.push(response.data)
                 this.$forceUpdate()
             });
         },
-        supprimerPanne(id) {
+        editPanne(panne) {
+            this.form_panne = { ...panne }
+            this.showModal = true
+        },
+        deletePanne(id) {
 
             this.$swal.fire({
                 title: 'Êtes-vous sûr?',
@@ -47,7 +51,10 @@ export default {
                 if (result.isConfirmed) {
                     axios.delete('/api/panne/' + id).then((response) => {
                         console.log(response.data)
-                        this.pannes = this.pannes.filter(panne => panne.id !== id)
+                        const index = this.pannes.findIndex(p => p.id === id);
+                        if (index !== -1) {
+                            this.pannes.splice(index, 1);
+                        }
                         this.$forceUpdate()
                         this.$swal.fire(
                             'Supprimé!',
@@ -71,6 +78,26 @@ export default {
                 this.$forceUpdate()
             });
         },
+        submitFormulairePannes() {
+            if (this.form_panne.id) {
+                // Edition
+                axios.put('/api/panne/' + this.form_panne.id, this.form_panne).then((response) => {
+                    console.log(response.data)
+                    const index = this.pannes.findIndex(p => p.id === this.form_panne.id);
+                    if (index !== -1) {
+                        this.pannes.splice(index, 1, response.data);
+                    }
+                    this.$forceUpdate()
+                    this.showModal = false
+                });
+                return;
+            }
+            axios.post('/api/pannes', this.form_panne).then((response) => {
+                console.log(response.data)
+                this.pannes.push(response.data)
+                this.$forceUpdate()
+            });
+        },
     },
     created() {
         this.documents = this.documents_prop || [];
@@ -83,15 +110,15 @@ export default {
         });
     },
     mounted() {
-        this.form.contractable_id = this.contractable_prop.id
+        this.form_panne.contractable_id = this.contractable_prop.id
 
         if (this.contractable_prop) {
             this.contractable = this.contractable_prop
             this.pannes = this.contractable_prop.pannes
-            this.form.contractable_id = this.contractable.id
+            this.form_panne.contractable_id = this.contractable.id
         } else {
             this.contractable = null
-            this.form.contractable_id = null
+            this.form_panne.contractable_id = null
             this.pannes = []
                 ;
         }

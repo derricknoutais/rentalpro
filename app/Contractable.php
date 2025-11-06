@@ -19,4 +19,12 @@ class Contractable extends Model
     {
         return Auth::user()->compagnie->isVehicules() ? 'Voiture' : 'Chambre';
     }
+    public function nom()
+    {
+        if ($this->type() == 'Voiture') {
+            return $this->immatriculation;
+        } else {
+            return $this->nom;
+        }
+    }
 }

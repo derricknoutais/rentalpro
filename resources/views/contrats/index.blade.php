@@ -604,7 +604,10 @@
                                         <div>
                                             <input name="date_fin" type="date" class="form-control">
                                         </div>
-                                        <p class="text-sm">
+                                        <div v-if="modalData.contrat.caution" class="mt-3">
+                                            <input class="form-control" placeholder="Remboursement Caution" name="remboursement_caution" type="text">
+                                        </div>
+                                        <p class="text-sm mt-2">
                                             L'heure et Date de Fin de Contrat seront enregistrées
                                             et ne pourront plus être modifiées ultérieurement
                                         </p>

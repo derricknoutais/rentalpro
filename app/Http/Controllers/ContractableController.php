@@ -12,6 +12,12 @@ class ContractableController extends Controller
         $contractables = Auth::user()->compagnie->contractables;
         return view('contractables.index', compact('contractables'));
     }
+
+    public function getApi()
+    {
+        $contractables = Auth::user()->compagnie->contractables;
+        return response()->json($contractables);
+    }
     public function show($contractable_id)
     {
         $contractable = Auth::user()->compagnie->contractables->find($contractable_id);

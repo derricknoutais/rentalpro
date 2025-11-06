@@ -33,9 +33,18 @@ use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 if (env('APP_ENV') == 'local') {
     Auth::loginUsingID(1);
 }
-
+Route::get('/test-mail', function () {
+    try {
+        Mail::raw('Test Gmail SMTP', function ($m) {
+            $m->to('derricknoutais@gmail.com')->subject('Test SMTP');
+        });
+        return 'Mail envoyé';
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
+});
 Route::get('/test', function (Request $request) {
-    Mail::to('derricknoutais@gmail.com')->send(new RapportJournalierVente());
+    // Mail::to('derricknoutais@gmail.com')->send(new RapportJournalierVente());
 });
 Route::get('/tt', function () {
     return view('emails.contrat_créé', ['contrat' => Contrat::find(12)]);

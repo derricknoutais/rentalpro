@@ -32,6 +32,7 @@ class CreateContratsTable extends Migration
             $table->double('montant_chauffeur')->nullable();
             $table->double('total')->nullable();
             $table->double('caution')->nullable();
+            $table->double('remboursement_caution')->nullable();
             $table->string('type_caution')->nullable();
             $table->string('carburant')->nullable();
             $table->string('etat_accessoires')->nullable();

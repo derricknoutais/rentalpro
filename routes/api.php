@@ -17,7 +17,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/panne', 'PanneController@storeApi');
+Route::post('/pannes', 'PanneController@storeApi');
+Route::put('/panne/{panne}', 'PanneController@updateApi');
 Route::delete('/panne/{panne}', 'PanneController@destroy');
 
 Route::post('/associer-document', 'DocumentController@associerDocument');
+
+Route::get('/maintenances', 'MaintenanceController@getApi');
+
+Route::post('/maintenances', 'MaintenanceController@storeApi');
+Route::put('/maintenance/{maintenance}', 'MaintenanceController@updateApi');
+Route::delete('/maintenance/{maintenance}', 'MaintenanceController@destroy');
+
+Route::get('/contractables', 'ContractableController@getApi');
+
+Route::get('/techniciens', 'TechnicienController@getApi');

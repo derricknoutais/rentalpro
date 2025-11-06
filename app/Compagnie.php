@@ -29,6 +29,10 @@ class Compagnie extends Model
         }
         return false;
     }
+    public function contractableType()
+    {
+        return $this->isVehicules() ? 'App\Voiture' : 'App\Chambre';
+    }
     public function isVehicules()
     {
         if ($this->type === 'véhicules') {

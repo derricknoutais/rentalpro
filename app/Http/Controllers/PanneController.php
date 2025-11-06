@@ -51,11 +51,19 @@ class PanneController extends Controller
         $panne = Panne::create([
             'compagnie_id' => Auth::user()->compagnie_id,
             'contractable_id' => $request['contractable_id'],
+            'contractable_type' => Auth::user()->compagnie->contractableType(),
             'description' => $request['description'],
         ]);
-        return $panne;
+        return response()->json($panne);
     }
 
+    public function updateApi(Request $request, Panne $panne)
+    {
+        $panne->update([
+            'description' => $request['description'],
+        ]);
+        return response()->json($panne);
+    }
     /**
      * Display the specified resource.
      *

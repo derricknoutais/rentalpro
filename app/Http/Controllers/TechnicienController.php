@@ -23,9 +23,13 @@ class TechnicienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getApi()
     {
+        $techniciens = Auth::user()->compagnie->techniciens;
+        return response()->json($techniciens);
     }
+
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
