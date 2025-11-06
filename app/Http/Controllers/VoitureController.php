@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Panne;
 use App\Chambre;
 use App\Contrat;
+use App\Image;
 use App\Voiture;
 use App\Technicien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class VoitureController extends Controller
 {
@@ -38,7 +41,7 @@ class VoitureController extends Controller
     public function show(Voiture $voiture){
         $techniciens = Technicien::all();
 
-        $voiture->loadMissing('documents', 'accessoires', 'pannes', 'maintenances');
+        $voiture->loadMissing('documents', 'accessoires', 'pannes', 'maintenances', 'images');
 
         $contrats = Contrat::where('contractable_id', $voiture->id)->orderBy('id', 'desc')->paginate(10);
         $derniere_maintenance = null;
@@ -48,7 +51,10 @@ class VoitureController extends Controller
             $derniere_maintenance = \App\Maintenance::where('id', $dernier_contrat_id)->with('pannes')->first();
         }
 
-        return view('voitures.show', compact('voiture', 'techniciens', 'derniere_maintenance', 'contrats'));
+        $documents = Auth::user()->compagnie->documents;
+        $accessoires = Auth::user()->compagnie->accessoires;
+
+        return view('voitures.show', compact('voiture', 'techniciens', 'derniere_maintenance', 'contrats', 'documents', 'accessoires'));
     }
     public function reception(Request $request){
 
@@ -67,16 +73,52 @@ class VoitureController extends Controller
     }
     public function store(Request $request){
 
-        $voiture = Voiture::create([
-            'immatriculation' => $request->immatriculation,
-            'compagnie_id' => Auth::user()->compagnie_id,
-            'chassis' => $request->numero_chassis,
-            'annee' => $request->annee,
-            'marque' => $request->marque,
-            'type' => $request->type,
-            'etat' => 'disponible',
-            'prix' => $request->prix
+        $data = $request->validate([
+            'immatriculation' => 'required|string',
+            'numero_chassis' => 'nullable|string',
+            'annee' => 'nullable|numeric',
+            'marque' => 'nullable|string',
+            'type' => 'nullable|string',
+            'prix' => 'nullable|numeric',
+            'images' => 'nullable|array',
+            'images.*' => 'integer|exists:images,id',
         ]);
+
+        $voiture = DB::transaction(function () use ($data) {
+            $voiture = Voiture::create([
+                'immatriculation' => $data['immatriculation'],
+                'compagnie_id' => Auth::user()->compagnie_id,
+                'chassis' => $data['numero_chassis'] ?? null,
+                'annee' => $data['annee'] ?? null,
+                'marque' => $data['marque'] ?? null,
+                'type' => $data['type'] ?? null,
+                'etat' => 'disponible',
+                'prix' => $data['prix'] ?? null,
+            ]);
+
+            if (!empty($data['images'])) {
+                $images = Image::whereIn('id', $data['images'])->get();
+
+                foreach ($images as $image) {
+                    if ($image->directory !== 'voitures') {
+                        Storage::disk('do_spaces')->rename($image->directory . '/' . $image->name, 'voitures/' . $image->name);
+                        $image->directory = 'voitures';
+                        $image->save();
+                    }
+                }
+
+                $voiture->images()->sync($images->pluck('id')->all());
+                $firstImage = $images->first();
+
+                if ($firstImage) {
+                    $voiture->update([
+                        'photo_url' => $firstImage->url,
+                    ]);
+                }
+            }
+
+            return $voiture;
+        });
 
         return redirect('/voiture/' . $voiture->id);
     }

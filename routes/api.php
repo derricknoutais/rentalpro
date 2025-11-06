@@ -21,13 +21,19 @@ Route::post('/pannes', 'PanneController@storeApi');
 Route::put('/panne/{panne}', 'PanneController@updateApi');
 Route::delete('/panne/{panne}', 'PanneController@destroy');
 
-Route::post('/associer-document', 'DocumentController@associerDocument');
-
 Route::get('/maintenances', 'MaintenanceController@getApi');
 
 Route::post('/maintenances', 'MaintenanceController@storeApi');
 Route::put('/maintenance/{maintenance}', 'MaintenanceController@updateApi');
 Route::delete('/maintenance/{maintenance}', 'MaintenanceController@destroy');
+
+Route::post('/contractables/{contractable}/documents', 'ContractableAssetController@storeDocument');
+Route::put('/contractables/{contractable}/documents/{document}', 'ContractableAssetController@updateDocument');
+Route::delete('/contractables/{contractable}/documents/{document}', 'ContractableAssetController@destroyDocument');
+
+Route::post('/contractables/{contractable}/accessoires', 'ContractableAssetController@storeAccessoire');
+Route::put('/contractables/{contractable}/accessoires/{accessoire}', 'ContractableAssetController@updateAccessoire');
+Route::delete('/contractables/{contractable}/accessoires/{accessoire}', 'ContractableAssetController@destroyAccessoire');
 
 Route::get('/contractables', 'ContractableController@getApi');
 

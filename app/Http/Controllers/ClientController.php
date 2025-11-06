@@ -68,8 +68,15 @@ class ClientController extends Controller
         $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
         $imageName = str_replace('/', ' ', $imageName);
         if ($client->image) {
-            Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
-            $client->image->update(['name' => $imageName]);
+            $currentDirectory = $client->image->directory ?: 'permis';
+            $currentPath = $currentDirectory . '/' . $client->image->name;
+            $newPath = $currentDirectory . '/' . $imageName;
+
+            Storage::disk('do_spaces')->rename($currentPath, $newPath);
+            $client->image->update([
+                'name' => $imageName,
+                'directory' => $currentDirectory,
+            ]);
         }
 
         return redirect('/clients/' . $client->id);

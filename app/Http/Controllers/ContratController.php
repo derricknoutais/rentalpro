@@ -192,8 +192,12 @@ class ContratController extends Controller
                 $client->loadMissing('image');
                 if ($client->image) {
                     $imageName = $client->nom . ' ' . $client->prenom . ' ' . $client->phone1;
-                    Storage::disk('do_spaces')->rename('permis/' . $client->image->name, 'permis/' . $imageName);
-                    $client->image->update(['name' => $imageName]);
+                    $directory = $client->image->directory ?: 'permis';
+                    Storage::disk('do_spaces')->rename($directory . '/' . $client->image->name, $directory . '/' . $imageName);
+                    $client->image->update([
+                        'name' => $imageName,
+                        'directory' => $directory,
+                    ]);
                 }
             } else {
                 $client_id = $request->client_id;
@@ -784,8 +788,12 @@ class ContratController extends Controller
             if ($image = Image::find($image_id)) {
                 $imageName = str_replace('/', '-', $contrat->numéro) . '*' . $contrat->contractable->immatriculation . '*' . $index;
                 array_push($imageNames, $imageName);
-                Storage::disk('do_spaces')->rename('permis/' . $image->name, 'contrats/' . $imageName);
-                $image->update(['name' => $imageName]);
+                $currentDirectory = $image->directory ?: 'permis';
+                Storage::disk('do_spaces')->rename($currentDirectory . '/' . $image->name, 'contrats/' . $imageName);
+                $image->update([
+                    'name' => $imageName,
+                    'directory' => 'contrats',
+                ]);
             }
             $index++;
         }

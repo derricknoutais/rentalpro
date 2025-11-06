@@ -21,7 +21,13 @@ class ContractableController extends Controller
     public function show($contractable_id)
     {
         $contractable = Auth::user()->compagnie->contractables->find($contractable_id);
-        $contractable->loadMissing('contrats', 'contrats.client', 'pannes', 'accessoires', 'documents');
+        $relations = ['contrats', 'contrats.client', 'pannes', 'accessoires', 'documents'];
+
+        if ($contractable && method_exists($contractable, 'images')) {
+            $relations[] = 'images';
+        }
+
+        $contractable?->loadMissing($relations);
         $contrats = $contractable->contrats->reverse()->take(3);
         $documents = Auth::user()->compagnie->documents;
         $accessoires = Auth::user()->compagnie->accessoires;

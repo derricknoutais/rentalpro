@@ -80,7 +80,7 @@
                 <div class="row">
                     <div class="col">
                         @if ($client->image)
-                            <img src="https://rentalpro.fra1.digitaloceanspaces.com/permis/{{ $client->image->name }}" class="w-1/3">
+                            <img src="{{ $client->image->url }}" class="w-1/3">
                             <div class="w-full">
 
                                 <button type="button" class="btn btn-danger block w-1/3" @click="deleteImage">Supprimer Image</button>

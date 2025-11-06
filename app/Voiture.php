@@ -6,7 +6,6 @@ use App\Panne;
 use App\Scopes\VoitureScope;
 use Rinvex\Bookings\Traits\Bookable;
 use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Voiture extends Model
@@ -51,6 +50,11 @@ class Voiture extends Model
     public function maintenances()
     {
         return $this->hasMany('App\Maintenance');
+    }
+
+    public function images()
+    {
+        return $this->belongsToMany(Image::class, 'voiture_images');
     }
 
     public static function compteVoitures($etat)

@@ -46,12 +46,15 @@ class ImageController extends Controller
             ], 400);
         }
         $request->validate([
-            'clientId' => 'required|file|image'
+            'clientId' => 'required|file|image',
+            'folder' => 'nullable|string'
         ]);
+
+        $folder = $request->get('folder', 'permis');
         // Save
         // $path = $request->file('clientId')->store('public/images');
 
-        $path = Storage::disk('do_spaces')->putFile('permis', $uploadedFile, 'public');
+        $path = Storage::disk('do_spaces')->putFile($folder, $uploadedFile, 'public');
 
         if (!$path) {
             return response()->json([
@@ -60,9 +63,10 @@ class ImageController extends Controller
         }
 
         $image = Image::create([
-            'name' => $uploadedFile->hashName(),
+            'name' => basename($path),
             'extension' => $uploadedFile->extension(),
             'size' => $uploadedFile->getSize(),
+            'directory' => $folder,
         ]);
         return $image->id;
     }
@@ -109,7 +113,7 @@ class ImageController extends Controller
      */
     public function destroy(Image $image, Client $client)
     {
-        Storage::disk('do_spaces')->delete('permis/' . $image->name);
+        Storage::disk('do_spaces')->delete($image->directory . '/' . $image->name);
         $image->delete();
         return $client->update(['image_id' => null]);
     }
