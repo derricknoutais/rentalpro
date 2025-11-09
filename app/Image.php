@@ -11,6 +11,7 @@ class Image extends Model
     use HasFactory;
 
     protected $guarded = [];
+    protected $appends = ['url'];
 
     public function voitures()
     {

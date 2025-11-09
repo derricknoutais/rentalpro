@@ -16,6 +16,31 @@ class ContractableController extends Controller
     public function getApi()
     {
         $contractables = Auth::user()->compagnie->contractables;
+        $contractables->loadMissing(['images']);
+        return response()->json($contractables);
+    }
+
+    public function getFullApi()
+    {
+        $compagnie = Auth::user()->compagnie;
+
+        $relations = ['pannes', 'documents', 'accessoires', 'contrats', 'contrats.client'];
+
+        if ($compagnie->isVehicules()) {
+            $relations[] = 'images';
+        }
+
+        $contractables = $compagnie->contractables()->with($relations)->get();
+
+        $contractables->each(function ($contractable) {
+            if ($contractable->relationLoaded('images')) {
+                $contractable->images->transform(function ($image) {
+                    $image->full_url = $image->url;
+                    return $image;
+                });
+            }
+        });
+
         return response()->json($contractables);
     }
     public function show($contractable_id)

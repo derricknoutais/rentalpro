@@ -4,39 +4,64 @@ export default {
     data() {
         return {
             maintenances: [],
-            voitures: [],
             techniciens: [],
-            contractables: [], // {id, display, type}
+            contractables: [],
+            availablePannes: [],
+            currentMaintenancePannes: [],
+            selectedPanneIds: [],
+            loadingPannes: false,
+            statusOptions: [
+                { value: 'en cours', label: 'En cours' },
+                { value: 'en pause', label: 'En pause' },
+                { value: 'terminé', label: 'Terminé' },
+            ],
             filters: {
-                voiture_id: '',
+                contractable_id: '',
                 technicien_id: '',
+                statut: '',
                 start: '',
                 end: ''
             },
             showModal: false,
+            showCompleteModal: false,
             isEditing: false,
             saving: false,
+            completing: false,
+            completionTarget: null,
+            completionSelection: [],
             form: {
                 id: null,
                 contractable_id: '',
-
                 titre: '',
                 technicien_id: null,
-                voiture_id: null,
-                cout: null, // local field mapped to 'coût'
-                cout_pieces: null // mapped to 'coût_pièces'
+                cout: null,
+                cout_pieces: null,
+                note: '',
+                statut: 'en cours'
             }
         };
     },
     computed: {
+        maintenance_total() {
+            return (maintenance) => {
+                const cout = maintenance['coût'] ? Number(maintenance['coût']) : 0;
+                const cout_pieces = maintenance['coût_pièces'] ? Number(maintenance['coût_pièces']) : 0;
+                return cout + cout_pieces;
+            };
+        },
         filteredMaintenances() {
             let list = this.maintenances.slice();
 
-            if (this.filters.voiture_id) {
-                list = list.filter(m => m.voiture && m.voiture.id === Number(this.filters.voiture_id));
+            if (this.filters.contractable_id) {
+                const targetId = Number(this.filters.contractable_id);
+                list = list.filter(m => m.contractable && Number(m.contractable.id) === targetId);
             }
             if (this.filters.technicien_id) {
-                list = list.filter(m => m.technicien && m.technicien.id === Number(this.filters.technicien_id));
+                const techId = Number(this.filters.technicien_id);
+                list = list.filter(m => m.technicien && Number(m.technicien.id) === techId);
+            }
+            if (this.filters.statut) {
+                list = list.filter(m => (m.statut || 'en cours') === this.filters.statut);
             }
             if (this.filters.start) {
                 const start = new Date(this.filters.start);
@@ -44,12 +69,10 @@ export default {
             }
             if (this.filters.end) {
                 const end = new Date(this.filters.end);
-                // include the whole day
                 end.setHours(23, 59, 59, 999);
                 list = list.filter(m => new Date(m.created_at) <= end);
             }
 
-            // newest first
             return list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         }
     },
@@ -58,13 +81,10 @@ export default {
     },
     methods: {
         fetchAll() {
-            // Parallel fetching
             this.fetchMaintenances();
-            this.fetchVoitures();
             this.fetchTechniciens();
             this.fetchContractables();
         },
-
         fetchMaintenances() {
             axios.get('/api/maintenances')
                 .then(res => {
@@ -75,17 +95,6 @@ export default {
                     alert('Erreur en chargeant les maintenances');
                 });
         },
-
-        fetchVoitures() {
-            axios.get('/api/voitures')
-                .then(res => {
-                    this.voitures = res.data;
-                })
-                .catch(err => {
-                    console.error(err);
-                });
-        },
-
         fetchTechniciens() {
             axios.get('/api/techniciens')
                 .then(res => {
@@ -95,9 +104,7 @@ export default {
                     console.error(err);
                 });
         },
-
         fetchContractables() {
-            // contractables should contain type info, ex: { id, display: 'Contrat X', type: 'App\\Models\\Contrat' }
             axios.get('/api/contractables')
                 .then(res => {
                     this.contractables = res.data;
@@ -106,112 +113,161 @@ export default {
                     console.error(err);
                 });
         },
-
         openAddModal() {
             this.resetForm();
             this.isEditing = false;
+            this.availablePannes = [];
+            this.currentMaintenancePannes = [];
+            this.selectedPanneIds = [];
             this.showModal = true;
         },
-
-        openEditModal(m) {
+        openEditModal(maintenance) {
             this.isEditing = true;
             this.showModal = true;
-            // populate form
-            this.form.id = m.id;
-            this.form.contractable_id = m.contractable_id;
-            this.form.contractable_type = m.contractable_type || '';
-            this.form.titre = m.titre;
-            this.form.technicien_id = m.technicien_id || null;
-            this.form.voiture_id = m.voiture_id || null;
-            this.form.cout = m['coût'] || null;
-            this.form.cout_pieces = m['coût_pièces'] || null;
-        },
+            this.availablePannes = [];
+            this.selectedPanneIds = [];
+            this.currentMaintenancePannes = maintenance.pannes || [];
 
+            this.form = {
+                id: maintenance.id,
+                contractable_id: maintenance.contractable_id || (maintenance.contractable ? maintenance.contractable.id : ''),
+                titre: maintenance.titre || '',
+                technicien_id: maintenance.technicien_id || null,
+                cout: maintenance['coût'] ?? null,
+                cout_pieces: maintenance['coût_pièces'] ?? null,
+                note: maintenance.note || '',
+                statut: maintenance.statut || 'en cours'
+            };
+        },
         closeModal() {
             this.showModal = false;
             this.resetForm();
+            this.availablePannes = [];
+            this.currentMaintenancePannes = [];
+            this.selectedPanneIds = [];
         },
-
         resetForm() {
             this.form = {
                 id: null,
                 contractable_id: '',
-                contractable_type: '',
                 titre: '',
                 technicien_id: null,
-                voiture_id: null,
                 cout: null,
-                cout_pieces: null
+                cout_pieces: null,
+                note: '',
+                statut: 'en cours'
             };
             this.saving = false;
         },
-
-
-        submitForm() {
-            // minimal validation: voiture required (you asked voiture obligatoire)
+        handleContractableChange() {
             if (!this.form.contractable_id) {
-                alert('Veuillez sélectionner un contractable.');
+                this.availablePannes = [];
+                this.selectedPanneIds = [];
                 return;
             }
-            this.saving = true;
+            this.loadContractablePannes(this.form.contractable_id);
+        },
+        loadContractablePannes(contractableId) {
+            this.loadingPannes = true;
+            this.availablePannes = [];
+            this.selectedPanneIds = [];
+            axios.get(`/api/contractables/${contractableId}/pannes`)
+                .then(res => {
+                    this.availablePannes = res.data;
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Impossible de charger les pannes pour ce contractable.');
+                })
+                .finally(() => {
+                    this.loadingPannes = false;
+                });
+        },
+        submitForm() {
+            if (this.isEditing) {
+                this.updateMaintenance();
+                return;
+            }
 
-            // build payload and map cout fields to the DB column names containing accents
+            if (!this.form.contractable_id) {
+                alert('Veuillez choisir un contractable.');
+                return;
+            }
+            if (!this.form.technicien_id) {
+                alert('Veuillez sélectionner un technicien.');
+                return;
+            }
+            if (!this.selectedPanneIds.length) {
+                alert('Veuillez sélectionner au moins une panne à traiter.');
+                return;
+            }
+
+            this.saving = true;
             const payload = {
-                contractable_id: this.form.contractable_id || null,
-                contractable_type: this.form.contractable_type || null,
+                contractable_id: this.form.contractable_id,
+                technicien_id: this.form.technicien_id,
                 titre: this.form.titre || null,
-                technicien_id: this.form.technicien_id || null,
-                voiture_id: this.form.voiture_id || null
+                note: this.form.note || null,
+                panne_ids: this.selectedPanneIds
             };
 
-            // send accented keys explicitly
-            payload['coût'] = this.form.cout !== null ? Number(this.form.cout) : null;
-            payload['coût_pièces'] = this.form.cout_pieces !== null ? Number(this.form.cout_pieces) : null;
-
-            if (this.isEditing && this.form.id) {
-                axios.put(`/api/maintenances/${this.form.id}`, payload)
-                    .then(res => {
-                        this.saving = false;
-                        this.showModal = false;
-                        this.fetchMaintenances(); // refresh list
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        this.saving = false;
-                        alert('Erreur lors de la mise à jour.');
-                    });
-            } else {
-                axios.post('/api/maintenances', payload)
-                    .then(res => {
-                        this.saving = false;
-                        this.showModal = false;
-                        this.fetchMaintenances();
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        this.saving = false;
-                        alert('Erreur lors de la création.');
-                    });
-            }
+            axios.post('/api/maintenances', payload)
+                .then(() => {
+                    this.saving = false;
+                    this.closeModal();
+                    this.fetchMaintenances();
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.saving = false;
+                    alert('Erreur lors de la création de la maintenance.');
+                });
         },
+        updateMaintenance() {
+            if (!this.form.id) {
+                return;
+            }
 
+            this.saving = true;
+            const payload = {
+                titre: this.form.titre || null,
+                technicien_id: this.form.technicien_id || null,
+                note: this.form.note || null,
+            };
+
+            payload['coût'] = this.form.cout !== null && this.form.cout !== '' ? Number(this.form.cout) : null;
+            payload['coût_pièces'] = this.form.cout_pieces !== null && this.form.cout_pieces !== '' ? Number(this.form.cout_pieces) : null;
+
+            if (this.form.statut && this.form.statut !== 'terminé') {
+                payload['statut'] = this.form.statut;
+            }
+
+            axios.put(`/api/maintenances/${this.form.id}`, payload)
+                .then(() => {
+                    this.saving = false;
+                    this.closeModal();
+                    this.fetchMaintenances();
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.saving = false;
+                    alert('Erreur lors de la mise à jour.');
+                });
+        },
         confirmDelete(id) {
             if (!confirm('Supprimer cette maintenance ?')) return;
             this.deleteMaintenance(id);
         },
-
         deleteMaintenance(id) {
             axios.delete(`/api/maintenances/${id}`)
                 .then(() => {
-                    // remove locally for snappier UI or refetch
-                    this.maintenances = this.maintenances.filter(m => m.id !== id);
+                    this.fetchMaintenances();
                 })
                 .catch(err => {
                     console.error(err);
                     alert('Erreur lors de la suppression.');
                 });
         },
-
         formatDate(val) {
             if (!val) return '-';
             const d = new Date(val);
@@ -221,15 +277,90 @@ export default {
                 year: 'numeric'
             });
         },
-
         formatMoney(v) {
-            if (v === null || v === undefined) return '-';
+            if (v === null || v === undefined || v === '') return '-';
             return Number(v).toLocaleString('fr-FR') + ' FCFA';
+        },
+        excerpt(text, limit = 80) {
+            if (!text) return '-';
+            if (text.length <= limit) {
+                return text;
+            }
+            return text.substring(0, limit) + '…';
+        },
+        panneLabel(panne) {
+            if (!panne) {
+                return '-';
+            }
+            if (panne.description) {
+                return panne.description;
+            }
+            return 'Panne #' + panne.id;
+        },
+        maintenance_total(maintenance) {
+            const main = Number(maintenance['coût'] || 0);
+            const pieces = Number(maintenance['coût_pièces'] || 0);
+            const total = main + pieces;
+            return total ? total : null;
+        },
+        statusBadge(statut) {
+            const status = statut || 'en cours';
+            const map = {
+                'en cours': {
+                    label: 'En cours',
+                    classes: 'bg-blue-50 text-blue-700 ring-blue-500/20',
+                },
+                'en pause': {
+                    label: 'En pause',
+                    classes: 'bg-yellow-50 text-yellow-700 ring-yellow-500/20',
+                },
+                'terminé': {
+                    label: 'Terminé',
+                    classes: 'bg-green-50 text-green-700 ring-green-500/20',
+                },
+            };
+            return map[status] || map['en cours'];
+        },
+        openCompleteModal(maintenance) {
+            this.completionTarget = maintenance;
+            this.currentMaintenancePannes = maintenance.pannes || [];
+            this.completionSelection = this.currentMaintenancePannes.map(p => p.id);
+            this.showCompleteModal = true;
+        },
+        closeCompleteModal() {
+            this.showCompleteModal = false;
+            this.completionTarget = null;
+            this.completionSelection = [];
+            this.currentMaintenancePannes = [];
+            this.completing = false;
+        },
+        submitCompletion() {
+            if (!this.completionTarget) {
+                return;
+            }
+            if (!this.completionSelection.length) {
+                alert('Veuillez sélectionner au moins une panne résolue.');
+                return;
+            }
+
+            this.completing = true;
+            axios.post(`/api/maintenances/${this.completionTarget.id}/complete`, {
+                pannes_resolues: this.completionSelection,
+            })
+                .then(() => {
+                    this.completing = false;
+                    this.closeCompleteModal();
+                    this.fetchMaintenances();
+                })
+                .catch(err => {
+                    console.error(err);
+                    this.completing = false;
+                    alert('Impossible de terminer cette maintenance.');
+                });
+        },
+        goToMaintenance(id) {
+            window.location = `/maintenance/${id}`;
         }
     }
 };
 </script>
-
-<style scoped>
-/* petits ajustements si besoin */
-</style>
