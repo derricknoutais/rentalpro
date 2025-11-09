@@ -32,9 +32,9 @@ use Spatie\Permission\Models\Permission;
 use Asantibanez\LivewireCharts\Models\LineChartModel;
 use Asantibanez\LivewireCharts\Models\ColumnChartModel;
 
-if (env('APP_ENV') == 'local') {
-    Auth::loginUsingID(1);
-}
+// if (env('APP_ENV') == 'local') {
+//     Auth::loginUsingID(1);
+// }
 Route::get('/test-mail', function () {
     try {
         Mail::raw('Test Gmail SMTP', function ($m) {
@@ -93,7 +93,12 @@ Route::get('/add-offers', function () {
         'montant' => 10000,
     ]);
 });
-
+Route::get('/', function () {
+    if (Auth::user()) {
+        return redirect('/dashboard');
+    }
+    return view('landing_page');
+});
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/role-et-permissions', function () {
         $role1 = Role::create(['name' => 'admin']);
@@ -125,12 +130,7 @@ Route::group(['middleware' => ['auth']], function () {
         App\User::find($user->id)->assignRole('admin');
         App\User::find(2)->assignRole('gérant');
     });
-    Route::get('/', function () {
-        if (Auth::user()) {
-            return redirect('/dashboard');
-        }
-        return view('landing_page');
-    });
+
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/test-upload/{contrat}', function (Contrat $contrat) {
         return view('test', compact('contrat'));

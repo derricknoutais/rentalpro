@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\SendContractExpiryAlerts::class,
     ];
 
     /**
@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->job(new CreateMetricEntries)->everyMinute();
         $schedule->job(new EnvoieRapportJournalierVente())->dailyAt('18:00')->timezone('Africa/Libreville');
+        $schedule->command('contracts:alert-expiring')->hourly();
     }
 
     /**
