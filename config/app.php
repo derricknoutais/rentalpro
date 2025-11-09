@@ -57,6 +57,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Frontend URL
+    |--------------------------------------------------------------------------
+    |
+    | Used for CORS headers to explicitly allow a browser origin. Defaults to
+    | '*' for backwards compatibility but can be overridden per environment.
+    |
+    */
+
+    'frontend_url' => env('FRONTEND_URL', '*'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

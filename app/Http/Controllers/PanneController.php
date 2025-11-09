@@ -111,4 +111,18 @@ class PanneController extends Controller
             'message' => 'Panne deleted successfully',
         ]);
     }
+
+    public function forContractable($contractableId)
+    {
+        $contractable = Auth::user()->compagnie->contractables()->findOrFail($contractableId);
+
+        $pannes = Panne::query()
+            ->where('contractable_id', $contractable->id)
+            ->whereNull('maintenance_id')
+            ->where('etat', 'non-résolue')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return response()->json($pannes);
+    }
 }

@@ -18,6 +18,8 @@
         "laravel/framework": "^8.0",
         "laravel/helpers": "^1.4",
         "laravel/jetstream": "*",
+        "laravel/sanctum": "*",
+        "laravel/socialite": "*",
         "laravel/telescope": "^4.14",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
@@ -40,7 +42,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.0"
+        }
     },
     "extra": {
         "laravel": {

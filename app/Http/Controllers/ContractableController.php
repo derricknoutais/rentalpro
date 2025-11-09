@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ContractableController extends Controller
 {
@@ -17,6 +18,8 @@ class ContractableController extends Controller
     {
         $contractables = Auth::user()->compagnie->contractables;
         $contractables->loadMissing(['images']);
+        $contractables->each(fn($contractable) => $this->appendPhotoUrls($contractable));
+
         return response()->json($contractables);
     }
 
@@ -31,15 +34,7 @@ class ContractableController extends Controller
         }
 
         $contractables = $compagnie->contractables()->with($relations)->get();
-
-        $contractables->each(function ($contractable) {
-            if ($contractable->relationLoaded('images')) {
-                $contractable->images->transform(function ($image) {
-                    $image->full_url = $image->url;
-                    return $image;
-                });
-            }
-        });
+        $contractables->each(fn($contractable) => $this->appendPhotoUrls($contractable));
 
         return response()->json($contractables);
     }
@@ -53,6 +48,7 @@ class ContractableController extends Controller
         }
 
         $contractable?->loadMissing($relations);
+        $this->appendPhotoUrls($contractable);
         $contrats = $contractable->contrats->reverse()->take(3);
         $documents = Auth::user()->compagnie->documents;
         $accessoires = Auth::user()->compagnie->accessoires;
@@ -62,5 +58,56 @@ class ContractableController extends Controller
     public function create()
     {
         return view('contractables.create');
+    }
+
+    protected function appendPhotoUrls($contractable)
+    {
+        if (!$contractable) {
+            return null;
+        }
+
+        if (!method_exists($contractable, 'images')) {
+            $contractable->setAttribute('photo_urls', []);
+            return $contractable;
+        }
+
+        $contractable->loadMissing(['images']);
+
+        $photoUrls = $contractable->images
+            ->map(function ($image) {
+                $url = $image->url ?? $this->buildImageUrl($image->directory ?? null, $image->name ?? null);
+                if (!$url) {
+                    return null;
+                }
+
+                return [
+                    'id' => $image->id ?? null,
+                    'url' => $url,
+                    'name' => $image->name ?? null,
+                    'directory' => $image->directory ?? null,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->toArray();
+
+        $contractable->setAttribute('photo_urls', $photoUrls);
+
+        return $contractable;
+    }
+
+    protected function buildImageUrl(?string $directory, ?string $filename): ?string
+    {
+        if (!$filename) {
+            return null;
+        }
+
+        $path = trim($directory ? "{$directory}/{$filename}" : $filename, '/');
+
+        try {
+            return Storage::disk('do_spaces')->url($path);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }

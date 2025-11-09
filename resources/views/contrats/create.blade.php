@@ -6,11 +6,12 @@
         <cree-contrats inline-template :contractables_prop="{{ $contractables }}" :contrats="{{ $contrats }}"
             :chambres_prop="{{ $contractables }}" :clients_prop="{{ $clients }}" :offres_prop="{{ $offres }}"
             :compagnie_prop="{{ $compagnie }}" :client_requested="{{ $client }}"
-            :contractable_requested="{{ $contractable }}">
+            :contractable_requested="{{ $contractable }}" :reservation_prop='@json($reservation)'>
             <div class="flex justify-center">
                 <form class="flex flex-col w-full" action="/contrats/store" method="POST" enctype="multipart/form-data"
                     id="clientForm" {{-- @submit.prevent="enregistreClientDansCashier()" --}}>
                     @csrf
+                    <input type="hidden" name="reservation_id" :value="reservation_id">
                     {{-- Checks  --}}
                     <div class="flex mt-5">
                         <label class="form-check-label flex items-center">

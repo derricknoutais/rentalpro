@@ -71,12 +71,16 @@ const app = new Vue({
         isOpen : {
             mobileMenu : false
 
-        }
+        },
+        sidebarCollapsed: false
 
     },
     methods: {
         toggleMobileMenu(){
             this.isOpen.mobileMenu = ! this.isOpen.mobileMenu
+        },
+        toggleSidebar(){
+            this.sidebarCollapsed = !this.sidebarCollapsed;
         },
         toggle(data){
             this[data] = ! this[data];
@@ -129,5 +133,4 @@ const app = new Vue({
         })
     }
 });
-
 

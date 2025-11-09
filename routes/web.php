@@ -15,6 +15,8 @@ use App\Accessoire;
 use App\Technicien;
 use App\Maintenance;
 use App\Contractable;
+use App\Http\Controllers\Api\SocialAuthController;
+use App\Http\Controllers\RapportAnalyticsController;
 use App\Mail\ContratCréé;
 use App\Events\ContratCree;
 use App\Jobs\MetricCrawler;
@@ -62,6 +64,7 @@ Route::get('/t', function () {
 });
 Route::get('/contrat/{contrat}/print', 'ContratController@print');
 Auth::routes();
+Route::get('/oauth/{provider}/callback', [SocialAuthController::class, 'handleCallback'])->name('oauth.callback');
 
 Route::get('/add-offers', function () {
     Offre::create([
@@ -255,8 +258,10 @@ Route::group(['middleware' => ['auth']], function () {
     // PAIEMENTS
     Route::get('/paiements', 'PaiementController@index');
 
-    // RAPPORT
+    // RAPPORTS
     Route::get('/rapports/paiement-journalier', 'RapportController@paiementJournalier');
+    Route::get('/rapports/performance', [RapportAnalyticsController::class, 'index'])->name('rapports.analytics.index');
+    Route::get('/rapports/performance/stats', [RapportAnalyticsController::class, 'stats'])->name('rapports.analytics.stats');
 
     Route::get('/paiement-journalier', function () {
         $paiements_airtelmoney = Paiement::where('created_at', '>', Carbon::today()->subDay()->startOfDay()->addHours(18))
@@ -395,6 +400,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Maintenances
     Route::get('maintenances', 'MaintenanceController@index');
     Route::get('/maintenance/{maintenance}', 'MaintenanceController@show');
+    Route::get('/maintenance/{maintenance}/print', 'MaintenanceController@print');
     Route::get('/maintenance/{maintenance}/edit', 'MaintenanceController@edit');
     Route::get('/maintenances/create', 'MaintenanceController@create');
     Route::get('/maintenances/{maintenance}/envoyer-gescash', 'MaintenanceController@envoyerMaintenanceGescash');

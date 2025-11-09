@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\SocialAuthController;
 use Illuminate\Http\Request;
 
 /*
@@ -39,4 +41,23 @@ Route::get('/contractables', 'ContractableController@getApi');
 Route::get('/contractables-full', 'ContractableController@getFullApi');
 Route::get('/contractables/{contractable}/pannes', 'PanneController@forContractable');
 
+Route::get('/reservations', 'ReservationApiController@index');
+Route::post('/reservations', 'ReservationApiController@store');
+Route::put('/reservations/{reservation}', 'ReservationApiController@update');
+Route::delete('/reservations/{reservation}', 'ReservationApiController@destroy');
+Route::post('/reservations/{reservation}/status', 'ReservationApiController@updateStatus');
+Route::post('/reservations/{reservation}/convert', 'ReservationApiController@convert');
+
 Route::get('/techniciens', 'TechnicienController@getApi');
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::prefix('oauth')->group(function () {
+    Route::get('{provider}/url', [SocialAuthController::class, 'redirectUrl']);
+    Route::post('token', [SocialAuthController::class, 'exchangeToken']);
+});

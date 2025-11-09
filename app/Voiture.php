@@ -52,6 +52,11 @@ class Voiture extends Model
         return $this->hasMany('App\Maintenance');
     }
 
+    // public function reservations()
+    // {
+    //     return $this->hasMany('App\Reservation');
+    // }
+
     public function images()
     {
         return $this->belongsToMany(Image::class, 'voiture_images');

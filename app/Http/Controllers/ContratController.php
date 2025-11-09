@@ -8,6 +8,7 @@ use App\Client;
 use App\Chambre;
 use App\Contrat;
 use App\Voiture;
+use App\Reservation;
 use App\Paiement;
 use Carbon\Carbon;
 use App\ApiSetting;
@@ -151,12 +152,32 @@ class ContratController extends Controller
             }
         }
 
+        $reservation = null;
+        if ($request->filled('reservation_id')) {
+            $reservation = Reservation::with(['client', 'contractable'])
+                ->where('compagnie_id', $compagnie->id)
+                ->find($request->reservation_id);
+
+            if ($reservation) {
+                if ($reservation->client) {
+                    $client = $reservation->client;
+                }
+
+                if ($reservation->contractable) {
+                    $contractable = $reservation->contractable;
+                    if (!$contractables->contains('id', $contractable->id)) {
+                        $contractables->push($contractable);
+                    }
+                }
+            }
+        }
+
         if (sizeof($contractables) > 0) {
             $contractables->toArray();
             // if( $compagnie->isHotel() ){
             //     return view('contrats.create-hotel', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie'));
             // }
-            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie', 'client', 'contractable'));
+            return view('contrats.create', compact('clients', 'contractables', 'contrats', 'offres', 'compagnie', 'client', 'contractable', 'reservation'));
         } else {
             return view('contrats.create_no_cars');
         }
@@ -244,6 +265,20 @@ class ContratController extends Controller
                 return $contrat;
             }
         });
+        if ($request->filled('reservation_id')) {
+            $reservation = Reservation::withTrashed()
+                ->where('compagnie_id', Auth::user()->compagnie_id)
+                ->find($request->reservation_id);
+
+            if ($reservation) {
+                $reservation->update([
+                    'statut' => Reservation::STATUS_CONVERTIE,
+                    'contrat_id' => $contrat->id,
+                    'converted_at' => now(),
+                ]);
+            }
+        }
+
         if ($request->paiement != null && $request->paiement !== 0) {
             $paiement = Paiement::create([
                 'payable_id' => $contrat->id,

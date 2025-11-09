@@ -65,49 +65,17 @@ class MaintenanceController extends Controller
      */
     public function store(Request $request)
     {
-        DB::transaction(function () use ($request) {
-            // Crée une nouvelle maintenance
-            $maintenance = Maintenance::create([
-                'titre' => $request->titre,
-                'voiture_id' => $request->voiture,
-                'technicien_id' => $request->technicien,
-                'compagnie_id' => Auth::user()->compagnie_id,
-            ]);
+        $validated = $this->validateCreationRequest($request);
+        $this->createMaintenanceFromPayload($validated);
 
-            // Attache les pannes sélectionnées a la maintenance créée
-            for ($i = 0; $i < sizeof($request->panne); $i++) {
-                Panne::find($request->panne[$i])->update([
-                    'voiture_id' => $request->voiture,
-                    'maintenance_id' => $maintenance->id,
-                    'etat' => 'en-maintenance',
-                ]);
-            }
-
-            // Change l'état du véhicule en maintenance
-            Voiture::find($request->voiture)->etat('maintenance');
-        });
-        return redirect()->back();
+        return redirect()->back()->with('status', 'Maintenance créée');
     }
-    public function storeApi()
+    public function storeApi(Request $request)
     {
-        // Implémentation similaire à la méthode store mais adaptée pour une requête API
-        $data = request()->all();
-        DB::transaction(function () use ($data) {
-            // Crée une nouvelle maintenance
-            $maintenance = Maintenance::create([
-                'compagnie_id' => Auth::user()->compagnie_id,
-                'titre' => $data['titre'],
-                'coût' => $data['cout'] ?? null,
-                'contractable_id' => $data['contractable_id'],
-                'contractable_type' => Auth::user()->compagnie->contractableType(),
-                'technicien_id' => $data['technicien_id'],
-                'coût_pièces' => $data['cout_pieces'] ?? null,
-            ]);
+        $validated = $this->validateCreationRequest($request);
+        $maintenance = $this->createMaintenanceFromPayload($validated);
 
-            // Change l'état du véhicule en maintenance
-            Voiture::find($data['contractable_id'])->etat('maintenance');
-        });
-        return response()->json(['message' => 'Maintenance created successfully'], 201);
+        return response()->json($maintenance, 201);
     }
 
     /**
@@ -118,15 +86,25 @@ class MaintenanceController extends Controller
      */
     public function show(Maintenance $maintenance)
     {
-        $maintenance->numero_recu = 116031;
-        $sale = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/search?type=sales&invoice_number=' . $maintenance->numero_recu);
-        // return $sale;
-        foreach ($sale['data'][0]['line_items'] as $line) {
-            $prods[] = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/products/' . $line['product_id'])['data']['variant_name'];
-        }
-        // return $prods;
+        $maintenance->loadMissing(['contractable', 'technicien', 'pannes']);
 
-        return view('maintenances.print', compact('maintenance', 'sale', 'prods'));
+        $contractableUrl = $maintenance->contractable ? url('/contractables/' . $maintenance->contractable->id) : null;
+        $technicienUrl = $maintenance->technicien ? url('/techniciens/' . $maintenance->technicien->id) : null;
+        $printUrl = url('/maintenance/' . $maintenance->id . '/print');
+
+        return view('maintenances.show', compact('maintenance', 'contractableUrl', 'technicienUrl', 'printUrl'));
+    }
+
+    public function print(Maintenance $maintenance)
+    {
+        // $maintenance->numero_recu = 116031;
+        // $sale = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/search?type=sales&invoice_number=' . $maintenance->numero_recu);
+        // $prods = [];
+        // foreach ($sale['data'][0]['line_items'] as $line) {
+        //     $prods[] = Http::withToken(env('VEND_TOKEN'))->get('https://stapog.vendhq.com/api/2.0/products/' . $line['product_id'])['data']['variant_name'];
+        // }
+
+        // return view('maintenances.print', compact('maintenance'));
     }
 
     /**
@@ -152,21 +130,43 @@ class MaintenanceController extends Controller
      */
     public function update(Request $request, Maintenance $maintenance)
     {
-        //
+        $this->ensureMaintenanceBelongsToCompany($maintenance);
+
+        $data = $this->validateUpdatePayload($request);
+        $maintenance = $this->applyMaintenanceUpdate($maintenance, $data);
+
+        if ($request->wantsJson()) {
+            return response()->json($maintenance);
+        }
+
+        return redirect()->back()->with('status', 'Maintenance mise à jour');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Maintenance  $maintenance
-     * @return \Illuminate\Http\Response
-     */
+    public function updateApi(Request $request, Maintenance $maintenance)
+    {
+        $this->ensureMaintenanceBelongsToCompany($maintenance);
+        $data = $this->validateUpdatePayload($request);
+
+        $maintenance = $this->applyMaintenanceUpdate($maintenance, $data);
+
+        return response()->json($maintenance);
+    }
+
     public function destroy(Maintenance $maintenance)
     {
-        $deleted = $maintenance->delete();
-        if ($deleted) {
-            return redirect()->back();
-        }
+        $this->ensureMaintenanceBelongsToCompany($maintenance);
+        $this->deleteMaintenance($maintenance);
+        return redirect()->back()->with('status', 'Maintenance supprimée');
+    }
+
+    public function destroyApi(Maintenance $maintenance)
+    {
+        $this->ensureMaintenanceBelongsToCompany($maintenance);
+        $this->deleteMaintenance($maintenance);
+
+        return response()->json([
+            'message' => 'Maintenance supprimée',
+        ]);
     }
 
     public function envoyerMaintenanceGescash(Maintenance $maintenance)
@@ -211,5 +211,161 @@ class MaintenanceController extends Controller
         if ($done) {
             return redirect()->back();
         }
+    }
+
+    protected function validateCreationRequest(Request $request): array
+    {
+        return $request->validate([
+            'contractable_id' => 'required|integer',
+            'technicien_id' => 'required|exists:techniciens,id',
+            'titre' => 'nullable|string|max:255',
+            'note' => 'nullable|string',
+            'panne_ids' => 'required|array|min:1',
+            'panne_ids.*' => 'integer|distinct',
+        ]);
+    }
+
+    protected function createMaintenanceFromPayload(array $data)
+    {
+        $compagnie = Auth::user()->compagnie;
+        $contractable = $compagnie->contractables()->findOrFail($data['contractable_id']);
+
+        $panneIds = collect($data['panne_ids'])->unique()->values()->all();
+
+        $pannes = Panne::query()->whereIn('id', $panneIds)->where('contractable_id', $contractable->id)->whereNull('maintenance_id')->where('etat', 'non-résolue')->get();
+
+        if ($pannes->count() !== count($panneIds)) {
+            abort(422, 'Certaines pannes ne sont plus disponibles pour cette maintenance.');
+        }
+
+        return DB::transaction(function () use ($compagnie, $contractable, $data, $pannes) {
+            $maintenance = Maintenance::create([
+                'compagnie_id' => $compagnie->id,
+                'contractable_id' => $contractable->id,
+                'contractable_type' => get_class($contractable),
+                'voiture_id' => $compagnie->isVehicules() ? $contractable->id : null,
+                'technicien_id' => $data['technicien_id'],
+                'titre' => $data['titre'] ?? null,
+                'note' => $data['note'] ?? null,
+                'statut' => 'en cours',
+            ]);
+
+            foreach ($pannes as $panne) {
+                $panne->update([
+                    'maintenance_id' => $maintenance->id,
+                    'etat' => 'en-maintenance',
+                ]);
+            }
+
+            if ($compagnie->isVehicules() && method_exists($contractable, 'etat')) {
+                $contractable->etat('maintenance');
+            }
+
+            return $maintenance->loadMissing(['contractable', 'technicien', 'pannes']);
+        });
+    }
+
+    protected function validateUpdatePayload(Request $request): array
+    {
+        return $request->validate([
+            'titre' => 'nullable|string|max:255',
+            'technicien_id' => 'nullable|exists:techniciens,id',
+            'coût' => 'nullable|numeric|min:0',
+            'coût_pièces' => 'nullable|numeric|min:0',
+            'note' => 'nullable|string',
+            'statut' => 'nullable|in:en cours,en pause',
+        ]);
+    }
+
+    protected function applyMaintenanceUpdate(Maintenance $maintenance, array $data)
+    {
+        $payload = [];
+
+        foreach (['titre', 'technicien_id', 'note', 'statut'] as $field) {
+            if (array_key_exists($field, $data)) {
+                $payload[$field] = $data[$field];
+            }
+        }
+
+        foreach (['coût', 'coût_pièces'] as $costField) {
+            if (array_key_exists($costField, $data)) {
+                $payload[$costField] = $data[$costField];
+            }
+        }
+
+        if (count($payload)) {
+            $maintenance->update($payload);
+        }
+
+        return $maintenance->fresh()->loadMissing(['contractable', 'technicien', 'pannes']);
+    }
+
+    protected function deleteMaintenance(Maintenance $maintenance): void
+    {
+        DB::transaction(function () use ($maintenance) {
+            $maintenance->pannes()->update([
+                'etat' => 'non-résolue',
+                'maintenance_id' => null,
+            ]);
+
+            $maintenance->delete();
+        });
+    }
+
+    protected function ensureMaintenanceBelongsToCompany(Maintenance $maintenance): void
+    {
+        abort_if($maintenance->compagnie_id !== Auth::user()->compagnie_id, 403);
+    }
+
+    public function complete(Request $request, Maintenance $maintenance)
+    {
+        $this->ensureMaintenanceBelongsToCompany($maintenance);
+
+        abort_if($maintenance->statut === 'terminé', 422, 'Cette maintenance est déjà terminée.');
+
+        $data = $request->validate([
+            'pannes_resolues' => 'required|array|min:1',
+            'pannes_resolues.*' => 'integer|distinct',
+        ]);
+
+        $panneIds = collect($data['pannes_resolues'])->unique()->values();
+
+        $maintenance = DB::transaction(function () use ($maintenance, $panneIds) {
+            $pannesAResoudre = $maintenance->pannes()->whereIn('id', $panneIds)->get();
+
+            if ($pannesAResoudre->count() !== $panneIds->count()) {
+                abort(422, 'Certaines pannes sélectionnées ne sont pas associées à cette maintenance.');
+            }
+
+            foreach ($pannesAResoudre as $panne) {
+                $panne->update([
+                    'etat' => 'résolue',
+                ]);
+            }
+
+            $maintenance
+                ->pannes()
+                ->whereNotIn('id', $panneIds)
+                ->update([
+                    'etat' => 'non-résolue',
+                    'maintenance_id' => null,
+                ]);
+
+            $maintenance->update([
+                'statut' => 'terminé',
+            ]);
+
+            if ($maintenance->contractable && method_exists($maintenance->contractable, 'etat')) {
+                $maintenance->contractable->etat('disponible');
+            }
+
+            return $maintenance->fresh()->loadMissing(['contractable', 'technicien', 'pannes']);
+        });
+
+        if ($request->wantsJson()) {
+            return response()->json($maintenance);
+        }
+
+        return redirect()->back()->with('status', 'Maintenance terminée');
     }
 }

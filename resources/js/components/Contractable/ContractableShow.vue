@@ -88,7 +88,8 @@
                 <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     <a v-for="image in galleryImages" :key="image.id || image.url" :href="image.url" target="_blank"
                         class="group relative overflow-hidden rounded-xl border border-gray-100 shadow-sm ring-1 ring-gray-50 hover:ring-indigo-200 dark:border-white/5 dark:hover:ring-indigo-500/30">
-                        <img :src="image.url" :alt="'Photo ' + displayName"
+                        <img :src="image.url"
+                            :alt="'Photo ' + displayName"
                             class="h-40 w-full object-cover transition duration-200 group-hover:scale-105">
                     </a>
                 </div>
@@ -537,6 +538,9 @@ export default {
             if (this.contractable && this.contractable.photo_url) {
                 return this.contractable.photo_url;
             }
+            if (this.galleryImages.length) {
+                return this.galleryImages[0].url;
+            }
             return '/img/car.png';
         },
         typeLabel() {
@@ -549,10 +553,20 @@ export default {
             return this.galleryImages.length > 0;
         },
         galleryImages() {
-            if (this.contractable && Array.isArray(this.contractable.images)) {
-                return this.contractable.images;
+            if (!this.contractable) {
+                return [];
             }
-            return [];
+            const source = Array.isArray(this.contractable.photo_urls) && this.contractable.photo_urls.length
+                ? this.contractable.photo_urls
+                : (Array.isArray(this.contractable.images) ? this.contractable.images : []);
+
+            return source
+                .map(image => {
+                    const payload = typeof image === 'object' ? { ...image } : { url: image };
+                    payload.url = payload.url || this.buildPhotoUrl(payload);
+                    return payload;
+                })
+                .filter(image => !!image.url);
         },
         etatBadge() {
             const etat = this.contractable && this.contractable.etat ? this.contractable.etat : 'non défini';
@@ -640,6 +654,23 @@ export default {
         },
     },
     methods: {
+        buildPhotoUrl(image = {}) {
+            const base = (typeof window !== 'undefined' && window.DO_SPACES_URL)
+                ? window.DO_SPACES_URL
+                : 'https://rentalpro.fra1.digitaloceanspaces.com';
+            const sanitize = value => (value || '').replace(/^\/|\/$/g, '');
+            const directory = sanitize(image.directory);
+            const filename = sanitize(image.name || image.file || '');
+
+            if (!filename) {
+                return '';
+            }
+
+            const normalizedBase = sanitize(base);
+            const segments = [normalizedBase, directory, filename].filter(Boolean);
+
+            return segments.join('/');
+        },
         cloneArray(source) {
             return Array.isArray(source) ? source.map(item => ({ ...item })) : [];
         },

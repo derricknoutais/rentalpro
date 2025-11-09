@@ -10,7 +10,7 @@
     </div>
     <cree-contrats inline-template :contractables_prop="{{ $contractables }}" :contrats="{{ $contrats }}"
         :chambres_prop="{{ $contractables }}" :clients_prop="{{ $clients }}" :offres_prop="{{ $offres }}"
-        :compagnie_prop="{{ $compagnie }}">
+        :compagnie_prop="{{ $compagnie }}" :reservation_prop="null">
         <div class="flex justify-center">
             <form class="flex flex-col w-2/3" action="/reservations/store" method="POST" enctype="multipart/form-data"
                 id="clientForm" {{-- @submit.prevent="enregistreClientDansCashier()" --}}>

@@ -3,7 +3,7 @@
 
 export default {
 
-    props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop", "client_requested", "contractable_requested"],
+    props: ["contrats", "chambres_prop", "clients_prop", "contractables_prop", "offres_prop", "compagnie_prop", "client_requested", "contractable_requested", "reservation_prop"],
     data() {
         return {
             contractables: this.contractables_prop,
@@ -51,7 +51,8 @@ export default {
                 halfDay: false,
                 driver: false
             },
-            compagnie: this.compagnie_prop
+            compagnie: this.compagnie_prop,
+            reservation_id: this.reservation_prop ? this.reservation_prop.id : null
         };
 
     },
@@ -129,6 +130,42 @@ export default {
         attributeImageId(id) {
             this.client.image_id = id
             this.$forceUpdate();
+        },
+        prefillFromReservation(reservation) {
+            if (!reservation) {
+                return;
+            }
+
+            this.reservation_id = reservation.id;
+
+            if (reservation.client) {
+                reservation.client.nom_complet = `${reservation.client.nom || ''} ${reservation.client.prenom || ''}`.trim();
+                this.client = reservation.client;
+                this.display.nouveau_client = false;
+            }
+
+            if (reservation.contractable) {
+                const exists = this.contractables.find(item => item.id === reservation.contractable.id);
+                if (!exists) {
+                    this.contractables.push(reservation.contractable);
+                }
+                this.contractable = reservation.contractable;
+            }
+
+            if (reservation.du) {
+                this.formulaire.du = this.toLocalInput(reservation.du);
+            }
+            if (reservation.au) {
+                this.formulaire.au = this.toLocalInput(reservation.au);
+            }
+            this.formulaire.demi_journee = reservation.demi_journee || null;
+            this.formulaire.chauffeur = reservation.montant_chauffeur || null;
+            this.formulaire.nb_jours = reservation.nombre_jours || this.formulaire.nb_jours;
+        },
+        toLocalInput(value) {
+            const date = new Date(value);
+            date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return date.toISOString().slice(0, 16);
         },
         appliquerOffreDetente() {
             var now = new Date();
@@ -261,12 +298,15 @@ export default {
         if (this.contractable_requested) {
             this.contractable = this.contractable_requested
         }
-        var now = new Date();
-        now.setSeconds(0)
-        this.formulaire.du = now.toISOString().split('.')[0];
-        console.log(now.toISOString().split('.')[0])
-        now.setDate(now.getDate() + 1)
-        this.formulaire.au = now.toISOString().split('.')[0];
+        if (this.reservation_prop) {
+            this.prefillFromReservation(this.reservation_prop);
+        } else {
+            var now = new Date();
+            now.setSeconds(0)
+            this.formulaire.du = now.toISOString().split('.')[0];
+            now.setDate(now.getDate() + 1)
+            this.formulaire.au = now.toISOString().split('.')[0];
+        }
     }
 };
 </script>

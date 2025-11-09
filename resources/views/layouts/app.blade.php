@@ -18,6 +18,37 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app2.css') }}" rel="stylesheet">
     @livewireStyles
+    <style>
+        .desktop-sidebar .nav-link {
+            transition: all .2s ease;
+        }
+
+        .desktop-sidebar .nav-label {
+            transition: opacity .2s ease;
+        }
+
+        .sidebar-collapsed .desktop-sidebar .nav-label {
+            display: none;
+        }
+
+        .sidebar-collapsed .desktop-sidebar .nav-link {
+            justify-content: center;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .sidebar-collapsed .desktop-sidebar img.logo-full {
+            display: none;
+        }
+
+        .sidebar-collapsed .desktop-sidebar img.logo-compact {
+            display: block;
+        }
+
+        .desktop-sidebar img.logo-compact {
+            display: none;
+        }
+    </style>
     {{-- Font Awesome  --}}
     {{-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous"> --}}
@@ -31,7 +62,7 @@
 
 <body class="h-full">
 
-    <div id="app" class="min-h-screen">
+    <div id="app" class="min-h-screen" :class="{ 'sidebar-collapsed': sidebarCollapsed }">
 
 
         <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
@@ -202,6 +233,20 @@
                                             </a>
                                         </li>
                                         <li>
+                                            <a href="/rapports/performance"
+                                                @if (request()->is('rapports/performance*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                        @else
+                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M3 3v18h18M7.5 13.5l3 3 4.5-6L21 18" />
+                                                </svg>
+                                                Rapport performance
+                                            </a>
+                                        </li>
+                                        <li>
                                             <a href="/mes-paramètres"
                                                 @if (request()->is('mes-paramètre*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
@@ -284,14 +329,18 @@
 
         <!-- Static sidebar for desktop -->
         @auth
-            <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-60 lg:flex-col">
-                <!-- Sidebar component, swap this element with another sidebar if you like -->
-                <div
-                    class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 min-h-screen">
-                    <div class="flex h-16 shrink-0 items-center mt-3">
-                        <a href="/">
-                            <img class="h-16 w-auto" src="/img/logoonly.png" alt="Your Company">
+            <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col"
+                :class="sidebarCollapsed ? 'lg:w-20' : 'lg:w-64'">
+                <!-- Sidebar component -->
+                <div class="desktop-sidebar flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 min-h-screen"
+                    :class="sidebarCollapsed ? 'px-3' : 'px-6'">
+                    <div class="flex h-16 shrink-0 items-center mt-3 justify-between">
+                        <a href="/" class="flex items-center justify-center w-full">
+                            <img class="logo-full h-32 w-auto" src="/img/rentalpro_logo.png" alt="Your Company">
+                            <img class="logo-compact h-16 w-auto object-contain" src="/img/rentalpro_logo.png"
+                                alt="Logo compact">
                         </a>
+
                     </div>
                     <nav class="flex flex-1 flex-col">
                         <ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -300,37 +349,37 @@
                                     <li>
                                         <!-- Current: "bg-gray-50 text-blue-600", Default: "text-gray-700 hover:text-blue-600 hover:bg-gray-50" -->
                                         <a href="/dashboard"
-                                            @if (request()->is('dashboard')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('dashboard')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg class="h-6 w-6 shrink-0" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                                             </svg>
-                                            Tableau de Bord
+                                            <span class="nav-label">Tableau de Bord</span>
                                         </a>
                                     </li>
 
                                     <li>
                                         <a href="/contrats"
-                                            @if (request()->is('contrat*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('contrat*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                                 stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
                                             </svg>
-                                            Contrats
+                                            <span class="nav-label">Contrats</span>
                                         </a>
                                     </li>
 
                                     <li>
                                         <a href="/contractables"
-                                            @if (request()->is('contractable*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('contractable*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -338,9 +387,9 @@
                                             </svg>
                                             @auth
                                                 @if (Auth::user()->compagnie->isHotel())
-                                                    Chambres
+                                                    <span class="nav-label">Chambres</span>
                                                 @else
-                                                    Voitures
+                                                    <span class="nav-label">Voitures</span>
                                                 @endif
                                             </a>
                                         @endauth
@@ -348,62 +397,62 @@
 
                                     <li>
                                         <a href="/clients"
-                                            @if (request()->is('client*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('client*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
                                             </svg>
-                                            Clients
+                                            <span class="nav-label">Clients</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/paiements"
-                                            @if (request()->is('paiement*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('paiement*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
                                             </svg>
 
-                                            Paiements
+                                            <span class="nav-label">Paiements</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/reservations"
-                                            @if (request()->is('reservation*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('reservation*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                                 stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                                             </svg>
-                                            Reservations
+                                            <span class="nav-label">Reservations</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/maintenances"
-                                            @if (request()->is('maintenance*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('maintenance*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z" />
                                             </svg>
-                                            Maintenances
+                                            <span class="nav-label">Maintenances</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/rapports"
-                                            @if (request()->is('rapport*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
-                                        @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            @if (request()->is('rapport*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                    @else
+                                        class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                                 stroke="currentColor" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -411,14 +460,28 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
                                             </svg>
-                                            Rapports
+                                            <span class="nav-label">Rapports</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="/rapports/performance"
+                                            @if (request()->is('rapports/performance*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                    @else
+                                        class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M3 3v18h18M7.5 13.5l3 3 4.5-6L21 18" />
+                                            </svg>
+                                            <span class="nav-label">Rapport performance</span>
                                         </a>
                                     </li>
                                     <li>
                                         <a href="/paramètres/compagnie"
-                                            @if (request()->is('paramètres/compagnie*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('paramètres/compagnie*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                         @else
-                                            class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                            class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -426,7 +489,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
-                                            Paramètres
+                                            <span class="nav-label">Paramètres</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -463,36 +526,35 @@
                                 </li>
                             </ul>
                         </li> --}}
+
                             @auth
                                 <ul class="mt-auto">
                                     <li class="-mx-6 ">
                                         <a href="/parametres/mon-compte"
-                                            @if (request()->is('paramètres/mon-compte*')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                                            @if (request()->is('paramètres/mon-compte*')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
 
                                             @else
-                                                class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
+                                                class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                             </svg>
-                                            <span class="">{{ Auth::user()->name }}</span>
+                                            <span class="nav-label">{{ Auth::user()->name }}</span>
                                         </a>
                                     </li>
                                     <li class="-mx-6 mt-2">
                                         <a href="{{ route('logout') }}"
-                                            @if (request()->is('')) class="bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
+                                            @if (request()->is('')) class="nav-link bg-gray-100 text-blue-600 hover:no-underline group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" 
                                             @else
-                                                class="text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif
+                                                class="nav-link text-gray-700 hover:no-underline hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold" @endif
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                                             </svg>
-
-                                            Se Déconnecter
-
+                                            <span class="nav-label">Se Déconnecter</span>
                                         </a>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                             style="display: none;">
@@ -502,6 +564,19 @@
                                 </ul>
                             @endauth
                         </ul>
+                        <div class="flex my-3" :class="sidebarCollapsed ? 'justify-center' : 'justify-end'">
+                            <button type="button"
+                                class="hidden lg:inline-flex items-center justify-center rounded-full border border-gray-200 p-2 text-gray-500 hover:text-gray-900"
+                                @click="toggleSidebar">
+                                <svg class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor"
+                                    :class="sidebarCollapsed ? 'transform rotate-180' : ''">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
+                            </button>
+                        </div>
+
                     </nav>
                 </div>
             </div>
@@ -527,7 +602,7 @@
             </div>
         @endauth
 
-        <main class="sm:py-2 lg:py-10  lg:pl-60">
+        <main class="sm:py-2 lg:py-10" :class="sidebarCollapsed ? 'lg:pl-24' : 'lg:pl-64'">
             <div class="px-4 sm:px-6 lg:px-8">
 
                 @yield('content')

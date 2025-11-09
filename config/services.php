@@ -40,4 +40,19 @@ return [
         ],
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI', env('APP_URL').'/oauth/google/callback'),
+    ],
+
+    'oauth' => [
+        'providers' => array_filter(explode(',', env('OAUTH_PROVIDERS', 'google'))),
+        'frontend_redirect' => env(
+            'OAUTH_FRONTEND_REDIRECT',
+            env('FRONTEND_URL', 'http://localhost:5173').'/oauth/callback'
+        ),
+        'code_ttl' => env('OAUTH_CODE_TTL', 120),
+    ],
+
 ];

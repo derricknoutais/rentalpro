@@ -64,9 +64,9 @@ class DashboardController extends Controller
         $clients = Client::all();
         $clients->toArray();
         $compagnie = Auth::user()->compagnie;
-        $contrats = null;
-        $offres = null;
-        $contractables = null;
+        $contrats = collect();
+        $offres = collect();
+        $contractables = collect();
 
 
         if (isset($compagnie)) {
@@ -83,6 +83,54 @@ class DashboardController extends Controller
 
         $reservations = Reservation::all();
 
-        return view('dashboard.index', compact('dashboard', 'columnChartModel', 'contractables', 'compagnie', 'reservations', 'offres', 'contrats', 'reservations', 'clients'));
+        $today = now();
+        $activeContracts = $contrats->filter(function (Contrat $contrat) use ($today) {
+            if (is_null($contrat->du) || is_null($contrat->au)) {
+                return false;
+            }
+            return $contrat->du->lte($today) && $contrat->au->gte($today);
+        });
+
+        $upcomingReservations = $reservations
+            ->filter(fn ($reservation) => in_array($reservation->statut, [
+                Reservation::STATUS_EN_ATTENTE,
+                Reservation::STATUS_CONFIRME,
+                Reservation::STATUS_EN_COURS,
+            ]))
+            ->sortBy('du')
+            ->take(5);
+
+        $recentPayments = Paiement::latest()->take(5)->get();
+
+        $latestContracts = $contrats->sortByDesc('created_at')->take(5);
+
+        $fleetSize = $contractables->count();
+        $fleetInUse = $activeContracts->pluck('contractable_id')->unique()->count();
+        $fleetUtilization = $fleetSize > 0 ? round(($fleetInUse / $fleetSize) * 100, 1) : null;
+
+        $dashboardSummary = [
+            'revenue' => $dashboard['paiements_annuels'],
+            'payment_rate' => $dashboard['payment_rate'] ?? null,
+            'days_rented' => $dashboard['nb_locations'],
+            'pending_reservations' => $reservations->where('statut', Reservation::STATUS_EN_ATTENTE)->count(),
+            'active_contracts' => $activeContracts->count(),
+            'fleet_utilization' => $fleetUtilization,
+        ];
+
+        return view('dashboard.index', compact(
+            'dashboard',
+            'dashboardSummary',
+            'columnChartModel',
+            'contractables',
+            'compagnie',
+            'reservations',
+            'offres',
+            'contrats',
+            'clients',
+            'activeContracts',
+            'upcomingReservations',
+            'recentPayments',
+            'latestContracts'
+        ));
     }
 }
