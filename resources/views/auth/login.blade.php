@@ -33,7 +33,7 @@
         <div class="flex items-center justify-center px-6 py-12">
             <div class="w-full max-w-md space-y-10">
                 <div class="text-center space-y-4">
-                    <img src="/img/logoonly.png" class="mx-auto h-16" alt="RentalPro">
+                    <img src="/img/rentalpro_logo.png" class="mx-auto h-48" alt="RentalPro">
                     <div>
                         <h2 class="text-2xl font-semibold text-gray-900">Connexion à votre espace</h2>
                         <p class="text-sm text-gray-500">Entrez vos identifiants pour accéder à votre tableau de bord.</p>

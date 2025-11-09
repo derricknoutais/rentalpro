@@ -34,11 +34,7 @@
         <div class="max-w-7xl mx-auto px-6 py-12 md:py-20">
             <nav class="flex items-center justify-between">
                 <div class="flex items-center gap-2 text-lg font-semibold tracking-wide uppercase">
-                    <svg class="h-8 w-8 text-indigo-400" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M4 4h7l9 9v7H4z" opacity=".4" />
-                        <path d="M4 13h7v7H4zm8-9h8v8h-8z" />
-                    </svg>
-                    RentalPro
+                    <img src="/img/rentalpro_logo.png" alt="" class="h-32">
                 </div>
                 <div class="hidden md:flex items-center gap-4 text-sm font-medium">
                     <a href="#features" class="hover:text-indigo-300 transition">Fonctionnalités</a>
