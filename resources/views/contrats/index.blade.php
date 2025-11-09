@@ -1,666 +1,514 @@
 @extends('layouts.app')
 
-
 @section('content')
     <contrats-index inline-template :contrats_prop="{{ json_encode($contrats) }}" env="{{ config('app.env') }}"
         :voitures_prop="{{ $contractables }}" :clients_prop="{{ $clients }}">
-        <div class="w-full ">
-            <h1 class="sm:md:my-2 lg:my-20 text-4xl text-center">Contrats</h1>
-
-
-            <div class="w-full mx-auto">
-                {{-- FILTRES --}}
-                <form class="flex flex-col items-center px-10 py-10 bg-yellow-100" action="/contrats" method="GET">
-
-                    <div class="sm:md:flex sm:md:flex-col lg:flex items-center justify-center w-full">
-                        @if ($compagnie->isVehicules())
-                            <input type="hidden" name="voiture" v-model="filters.voiture.id">
-                        @else
-                            <input type="hidden" name="chambre" v-model="filters.chambre.id">
-                        @endif
-
-                        <div class="w-full lg:w-1/4 form-group">
-                            <label for="">
-                                @if ($compagnie->isVehicules())
-                                    Voiture
-                                @else
-                                    Chambre
-                                @endif
-
-                            </label>
-                            <multiselect :options="{{ $contractables }}"
-                                @if ($compagnie->isVehicules()) label="immatriculation"
-                                    v-model="filters.voiture"
-                                @else
-                                   label="nom"
-                                   v-model="filters.chambre" @endif>
-                            </multiselect>
-                        </div>
-                        {{-- FILTRE CLIENT --}}
-                        <input type="hidden" name="client" v-model="filters.client.id">
-                        <div class="w-full lg:w-1/4 lg:ml-3 form-group">
-                            <label for="">Client</label>
-                            <multiselect :options="{{ $clients }}" label="nom_complet" v-model="filters.client">
-                            </multiselect>
-                        </div>
-                        {{-- FILTRE ETAT CONTRAT --}}
-                        <input type="hidden" name="etat" v-model="filters.etat">
-                        <div class="w-full lg:w-1/4 lg:ml-3 form-group">
-                            <label for="">État Contrat</label>
-                            <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']"
-                                v-model="filters.etat">
-                            </multiselect>
+        <div>
+            <div class="w-full">
+                <div class="px-4 py-8 sm:px-6 lg:px-12 bg-gray-50">
+                    <div class="max-w-7xl mx-auto space-y-8">
+                        <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                            <div>
+                                <p class="text-sm uppercase tracking-wide text-gray-500">Vue d'ensemble</p>
+                                <h1 class="text-3xl font-semibold text-gray-900">Contrats</h1>
+                                <p class="text-sm text-gray-500">
+                                    {{ number_format($contrats->count(), 0, ' ', ' ') }} dossiers dans votre pipeline.
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap gap-3">
+                                <a href="/contrats/create"
+                                    class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                                    </svg>
+                                    Nouveau contrat
+                                </a>
+                                <a href="/reservations/create"
+                                    class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    Réservation rapide
+                                </a>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="sm:md:flex sm:md:flex-col items-center justify-center lg:flex w-full mt-3">
-                        <div class="flex flex-col w-full lg:w-1/4 lg:ml-3 form-group">
-                            <label for="">Du</label>
-                            <input type="date" class="py-2 rounded-md" name="du">
-                        </div>
-                        <div class="flex flex-col w-full lg:w-1/4 lg:ml-3 form-group">
-                            <label for="">Au</label>
-                            <input type="date" class="py-2 rounded-md" name="au">
-                        </div>
-                        <div class="flex items-center justify-center w-full lg:w-1/4 sm:md:mt-2">
-                            <button type="submit" class="px-10 py-2 bg-yellow-300 rounded">Filtrer</button>
-                        </div>
-                    </div>
+                        {{-- Filtres --}}
+                        <form action="/contrats" method="GET" class="bg-white shadow-xl rounded-2xl p-6 space-y-6">
+                            @if ($compagnie->isVehicules())
+                                <input type="hidden" name="voiture" v-model="filters.voiture.id">
+                            @else
+                                <input type="hidden" name="chambre" v-model="filters.chambre.id">
+                            @endif
+                            <input type="hidden" name="client" v-model="filters.client.id">
+                            <input type="hidden" name="etat" v-model="filters.etat">
 
-                </form>
-                {{-- CONTRATS --}}
+                            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-gray-600">
+                                        @if ($compagnie->isVehicules())
+                                            Véhicule
+                                        @else
+                                            Chambre
+                                        @endif
+                                    </label>
+                                    <multiselect :options="{{ $contractables }}"
+                                        @if ($compagnie->isVehicules()) label="immatriculation" v-model="filters.voiture"
+                                    @else label="nom" v-model="filters.chambre" @endif>
+                                    </multiselect>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-gray-600">Client</label>
+                                    <multiselect :options="{{ $clients }}" label="nom_complet"
+                                        v-model="filters.client">
+                                    </multiselect>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-gray-600">État du contrat</label>
+                                    <multiselect :options="['En cours', 'Terminé', 'Annulé', 'Soldé', 'Non-Soldé']"
+                                        v-model="filters.etat">
+                                    </multiselect>
+                                </div>
+                            </div>
 
-
-
-                <div class="w-full ">
-
-                    <div v-for="contrat in contrats">
-
-                        <div scope="row" class="lg:flex lg:justify-between">
-
-
-                            {{-- Contrat --}}
-                            <div class="lg:w-1/2 lg:mr-1 ">
-                                {{-- Numéro de Contrat --}}
-                                <div class="flex items-center sm:mt-5 px-2 py-2 bg-yellow-200 ">
-                                    <a class="text-blue-400" :href="'/contrat/' + contrat.id" class="font-semibold ">
-                                        @{{ contrat.numéro }}
+                            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-gray-600">Du</label>
+                                    <input type="date" name="du"
+                                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-gray-600">Au</label>
+                                    <input type="date" name="au"
+                                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                </div>
+                                <div class="flex items-end gap-3">
+                                    <button type="submit"
+                                        class="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        Appliquer les filtres
+                                    </button>
+                                    <a href="/contrats"
+                                        class="rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">
+                                        Réinitialiser
                                     </a>
-                                    <span></span>
-                                </div>
-                                {{-- Dates --}}
-                                <div
-                                    class="flex items-center px-2 sm:py-2 lg:py-3  lg:mt-2 bg-yellow-100 rounded rounded-b-none">
-                                    <span class="mr-1">
-                                        Du:
-                                    </span>
-                                    <span class="px-3 text-white rounded bg-success">
-                                        @{{ contrat.du | moment('DD MMM YYYY') }}
-                                    </span>
-                                    <span class="ml-3">
-                                        Au :
-                                    </span>
-                                    <span class="px-3 mx-1 text-white rounded bg-danger" v-if="contrat.au">
-                                        @{{ contrat.au | moment('DD MMM YYYY') }}
-                                    </span>
-                                    <span class="mr-1">
-                                        Soit:
-                                    </span>
-                                    <span class="sm:px-3 lg:px-5 text-white rounded bg-primary">
-                                        @{{ contrat.nombre_jours }} Jours
-                                        <span v-if="contrat.demi_journee">
-                                            1/2
-                                        </span>
-                                    </span>
-
-                                </div>
-                                {{-- Caution --}}
-                                <div class="flex px-2 py-2 lg:py-3 sm:mt-5 bg-yellow-100 rounded rounded-b-none">
-                                    <span class="mr-1">
-                                        Caution:
-
-                                        <span class="px-2 " v-if="contrat.caution">
-                                            @{{ contrat.caution }}
-                                        </span>
-
-                                    </span>
-
-                                    <span class="px-5 text-white rounded bg-primary" v-if="contrat.type_caution">
-                                        @{{ contrat.type_caution }}
-                                    </span>
-
-
-
-                                </div>
-                                {{-- Montant Location --}}
-                                <div
-                                    class="flex justify-between py-1 pl-2 sm:mt-0 lg:mt-3 bg-blue-100 rounded rounded-b-none pr-14">
-                                    <p class="font-semibold">Montant Location</p>
-                                    <span class="font-semibold">@{{ contrat.prix_journalier * contrat.nombre_jours }} F CFA</span>
-                                </div>
-                                {{-- Option 1/2 Journee --}}
-                                <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14"
-                                    v-if="contrat.demi_journee">
-                                    <p class="font-semibold">Option 1/2 Journee</p>
-                                    <div>
-                                        <span class="font-semibold">@{{ contrat.demi_journee }} F CFA</span>
-                                        @can('editer paiements')
-                                            <button class="mx-1 text-blue-400" data-toggle="modal"
-                                                data-target="#editer-demi-journee-modal"
-                                                @click="passDataToModal('contrat', contrat)"><i
-                                                    class="fas fa-edit"></i></button>
-                                        @endcan
-                                        @can('supprimer paiements')
-                                            <button class="ml-1 text-red-400"
-                                                @click="deleteData('/contrat/' + contrat.id + '/delete/demi_journee')"><i
-                                                    class="fas fa-trash"></i></button>
-                                        @endcan
-                                    </div>
-                                </div>
-                                {{-- Option Chauffeur --}}
-                                <div class="flex justify-between py-1 pl-2 bg-blue-100 rounded rounded-b-none pr-14"
-                                    v-if="contrat.montant_chauffeur">
-                                    <p class="font-semibold">Option Chauffeur</p>
-                                    <div>
-                                        <span class="font-semibold">@{{ contrat.montant_chauffeur }} F CFA</span>
-                                        @can('editer paiements')
-                                            <button class="mx-1 text-blue-400" data-toggle="modal"
-                                                data-target="#editer-montant-chauffeur-modal"
-                                                @click="passDataToModal('contrat', contrat)"><i
-                                                    class="fas fa-edit"></i></button>
-                                        @endcan
-                                        @can('supprimer paiements')
-                                            <button class="ml-1 text-red-400"
-                                                @click="deleteData('/contrat/' + contrat.id + '/delete/montant_chauffeur')"><i
-                                                    class="fas fa-trash"></i></button>
-                                        @endcan
-                                    </div>
-
-                                </div>
-                                {{-- Montant Total --}}
-                                <div
-                                    class="flex justify-between py-1 pl-2 sm:mt-0 lg:mt-1 bg-blue-200 rounded rounded-b-none pr-14">
-                                    <p class="font-semibold">Montant Total</p>
-                                    <span class="font-semibold">@{{ total(contrat) }} F CFA</span>
-                                </div>
-                                {{-- Paiements --}}
-                                <div class="flex flex-col justify-between py-1 pl-3 mt-2 pr-14 bg-green-100"
-                                    v-if="contrat.paiements.length > 0">
-
-                                    <p class="mt-1 mb-3 font-semibold underline text-md">Paiements</p>
-
-
-                                    <div class="flex justify-between" v-for="paiement in contrat.paiements">
-                                        <span>@{{ paiement.created_at | moment('DD MMM YYYY') }}</span>
-
-
-                                        <span v-if="paiement.type_paiement">@{{ paiement.type_paiement }}</span>
-
-                                        <span v-if="paiement.note">@{{ paiement.note }}</span>
-                                        <div>
-                                            <span class="font-semibold">@{{ paiement.montant }} F CFA</span>
-                                            @can('editer paiements')
-                                                <button class="mx-1 text-blue-400" data-toggle="modal"
-                                                    data-target="#editPaiementModal"
-                                                    @click="passDataToModal('paiement', paiement)"><i
-                                                        class="fas fa-edit"></i></button>
-                                            @endcan
-                                            @can('supprimer paiements')
-                                                <button class="ml-1 text-red-400" @click="deletePayment(paiement)"><i
-                                                        class="fas fa-trash"></i></button>
-                                            @endcan
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-                                {{-- Solde Si il y a Paiements --}}
-                                <div class="flex justify-between py-1 bg-blue-200 rounded rounded-t-none px-14"
-                                    v-if="contrat.paiements.length > 0">
-                                    <p class="font-semibold text-md">Solde</p>
-                                    <div>
-                                        <span class="w-1/4 font-semibold">@{{ solde(contrat) }} F CFA</span>
-                                    </div>
-                                </div>
-                                {{-- Bouttons --}}
-                                <div class="sm:hidden md:hidden lg:flex px-1 py-3 bg-gray-100 rounded"
-                                    v-if="contrat.deleted_at === null">
-
-                                    @can('créer paiement')
-                                        <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
-                                            data-toggle="modal" data-target="#ajouter-paiement-modal"
-                                            @click="displayModal('paiement',contrat)">
-                                            Effectuer Paiement
-                                        </button>
-                                    @endcan
-
-
-                                    {{-- <button type="button" class="sm:hidden px-1 py-0 mr-2 text-white bg-blue-500 btn"
-                                    data-toggle="modal" data-target="#demi-journee-modal"
-                                    @click="passDataToModal('contrat', contrat)" v-if="! contrat.demi_journee">
-                                    Ajouter 1/2 Journee
-                                    </button> --}}
-
-                                    {{-- <button type="button" v-if="! contrat.montant_chauffeur"
-                                        class=" px-1 py-0 mr-2 text-white bg-blue-500 btn" data-toggle="modal"
-                                        data-target="#montant-chauffeur-modal" @click="passDataToModal('contrat', contrat)">
-                                        Ajouter Chauffeur
-                                    </button> --}}
-
-                                    <!-- Si le contrat n'est plus en cours -->
-
-
-
-                                    <!-- Si le contrat est en cours -->
-
-                                    @can('prolonger contrat')
-                                        <button type="button" class="px-1 py-0 mr-2 btn btn-primary btn-sm "
-                                            data-toggle="modal" data-target="#prolongation-modal"
-                                            @click="displayModal('prolongation',contrat)">
-                                            <i class="fas fa-clock"></i> Prolonger Contrat
-                                        </button>
-                                    @endcan
-                                    @can('editer contrat')
-                                        <button type="button" class="px-1 py-0 btn btn-secondary btn-sm"
-                                            @click="displayModal('changer-voiture',contrat)">
-                                            <i class="mr-1 fas fa-exchange-alt"></i> Changer Voiture
-                                        </button>
-                                    @endcan
-                                    {{-- <span class="ml-4 badge badge-pill badge-warning">En Location</span> --}}
-
-
                                 </div>
                             </div>
+                        </form>
 
-
-                            {{-- Client --}}
-                            <div class="lg:w-1/6 lg:mx-1">
-                                <template v-if="contrat.client">
-
-                                    <div class="flex flex-col sm:mt-5 px-2 py-2 lg:p-2 bg-green-600">
-                                        <a class="text-blue-200" target="_blank" :href="'/clients/' + contrat.client.id">
-                                            @{{ contrat.client['nom'] + ' ' + contrat.client['prenom'] }}
-                                        </a>
-                                    </div>
-                                    <div class="flex px-2 sm:py-1 lg:py-3 sm:mt-0 lg:mt-2 bg-green-300 rounded-sm">
-                                        <span class="">Nº Téléphone: @{{ contrat.client['phone1'] }}</span>
-                                        <span v-if="contrat.client['phone2']"> / @{{ contrat.client['phone2'] }}</span>
-                                        <span v-if="contrat.client['phone3']"> / @{{ contrat.client['phone3'] }}</span>
-                                    </div>
-                                    <div class="flex flex-col px-2 py-1 sm:mt-0 lg:mt-4 bg-green-300">
-                                        Adresse:
-
-                                        <span class="" v-if="contrat.client.adresse">@{{ contrat.client['adresse'] }}</span>
-
-                                    </div>
-                                    {{-- Derniers Contrats --}}
-                                    <div class="sm:hidden lg:flex lg:flex-col p-2">
-                                        <p class="mb-2 text-center">Derniers Contrats</p>
-
-                                        <div class="flex justify-between" v-for="ct in contrat.client.derniers_contrats">
-                                            <a class="text-blue-500" target="_blank" :href="'/contrat/' + ct.id">
-                                                <span>
-                                                    @{{ ct.numéro }}
-                                                </span>
-                                            </a>
-                                            <span>
-                                                Solde: @{{ solde(ct) }}
-                                            </span>
-                                        </div>
-
-                                    </div>
-                                </template>
-                            </div>
-
-
-                            {{-- Contractable : Chambre Ou Hotel --}}
-                            <div class="lg:w-1/6 lg:mx-1">
-                                <div class="flex flex-col sm:mt-5">
-                                    <div class="flex flex-col p-2 bg-gray-300">
-                                        <a class="text-blue-500" :href="'/contractables/' + contrat.contractable.id"
-                                            v-if="contrat.contractable">
-
-                                            @{{ contrat.contractable.nom }}
-
-                                        </a>
-                                    </div>
-                                    <div class="flex flex-col p-2 sm:mt-0 lg:mt-3 bg-red-300">
-                                        <span>
-                                            Créé par
-                                            <span v-if="contrat.activity">
-                                                @{{ contrat.activity.causer.name }}
-                                                @{{ contrat.activity.created_at }}
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- Actions --}}
-                            <div class="sm:hidden md:hidden lg:flex lg:flex-col lg:w-1/6 lg:ml-1">
-
-                                <span class="py-5 sm:mt-5 lg:mt-5 text-center text-red-100 bg-red-400"
-                                    v-if="contrat.deleted_at">
-                                    <i class="fas fa-ban "></i>
-                                    Contrat Annulé
-                                </span>
-
-                                <span class="py-5 sm:mt-5 lg:mt-5 text-center text-white bg-green-400"
-                                    v-else-if="contrat.real_check_out !== null">
-                                    Contrat Terminé
-                                </span>
-
-                                <div class="flex flex-col" v-else>
-                                    @can('terminer contrat')
-                                        <button class="px-2 py-1 sm:mt-5 lg:mt-5 bg-green-400 rounded text-green-50"
-                                            data-toggle="modal" data-target="#terminer-contrat-modal"
-                                            @click="displayModal('terminer', contrat)">
-                                            <i class="fas fa-ban "></i>
-                                            Terminer Contrat
-                                        </button>
-                                    @endcan
-                                    @can('editer contrat')
-                                        <a class="px-2 py-1 mt-2 text-center text-blue-100 no-underline bg-blue-400 rounded"
-                                            :href="'/contrat/' + contrat.id + '/edit'">
-                                            <i class="fas fa-edit"></i>
-                                            Editer
-                                        </a>
-                                    @endcan
-                                    @can('annuler contrat')
-                                        <button class="px-2 py-1 mt-2 text-red-100 bg-red-400 rounded"
-                                            @click="annulerContrat(contrat)">
-                                            <i class="fas fa-ban "></i>
-                                            Annuler
-                                        </button>
-                                    @endcan
-                                    @can('terminer contrat')
-                                        <a class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded"
-                                            :href="'/contrat/' + contrat.id + '/download'">
-                                            <i class="fas fa-download"></i>
-                                            Télécharger Contrat
-                                        </a>
-                                        <button class="px-2 py-1 sm:mt-3 lg:mt-2 bg-yellow-400 rounded text-green-50"
-                                            data-toggle="modal" data-target="#mail-contrat-modal"
-                                            @click="passDataToModal('contrat', contrat)">
-                                            <i class="fas fa-envelope"></i>
-                                            Envoyer Mail
-                                        </button>
-                                    @endcan
-
-
-                                    <a target="_blank"
-                                        class="px-2 py-1 mt-2 text-center text-white no-underline bg-purple-400 rounded"
-                                        :href="'/contrat/' + contrat.id">
-                                        <i class="fas fa-file-invoice "></i>
-                                        Voir Contrat
-                                    </a>
-                                    <div class="relative flex-shrink-0">
-                                        <div class="w-full">
-                                            <button type="button" @click="toggle('print_options')"
-                                                class="px-2 py-1 mt-2 text-center text-white no-underline bg-gray-400 rounded w-full"
-                                                id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                                                <span class="sr-only">Open user menu</span>
-                                                <i class="fas fa-print "></i>
-                                                Imprimer
-                                            </button>
-                                        </div>
-
-                                        <div class="absolute left-0 w-48 py-1 mt-2 origin-top-right bg-gray-400 rounded-md shadow-lg ring-1
-                                                        ring-black ring-opacity-5 focus:outline-none"
-                                            role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button"
-                                            tabindex="-1" v-show="print_options">
-                                            <!-- Active: "bg-gray-100", Not Active: "" -->
-                                            <a target="_blank" :href="'/contrat/' + contrat.id + '/print'"
-                                                class="block px-4 py-2 text-sm text-white" role="menuitem"
-                                                tabindex="-1">
-                                                Template Location
-                                            </a>
-                                            <a target="_blank" :href="'/contrat/' + contrat.id + '/print-hotel-A5'"
-                                                class="block px-4 py-2 text-sm text-white" role="menuitem"
-                                                tabindex="-1">
-                                                Template Orisha
-                                            </a>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            </tr>
-
-
-                            </tbody>
-                            {{-- Pagination --}}
-                        </div>
-                        {{-- Actions Mobile --}}
-                        <div class="lg:hidden" v-if="contrat.real_check_out === null">
-                            {{-- <div class="flex px-1 py-3 bg-gray-100 rounded" v-if="contrat.deleted_at === null">
-
-                                @can('créer paiement')
-                                    <button type="button" class="px-1 py-0 mr-2 text-white bg-blue-500 btn"
-                                        @click="displayModal('paiement',contrat)">
-                                        Effectuer Paiement
-                                    </button>
-                                @endcan
-
-                                @can('prolonger contrat')
-                                    <button type="button" class="px-1 py-0 mr-2 btn btn-primary btn-sm"
-                                        @click="displayModal('prolongation', contrat)">
-                                        <i class="fas fa-clock"></i> Prolonger Contrat
-                                    </button>
-                                @endcan
-
-
-                                @can('terminer contrat')
-                                    <button type="button" class="px-1 py-0 mr-2 btn bg-green-400 text-green-50"
-                                        @click="displayModal('terminer', contrat)">
-                                        <i class="fas fa-ban "></i>
-                                        Terminer Contrat
-                                    </button>
-                                @endcan
-                            </div> --}}
+                        <div v-if="!contrats.length"
+                            class="rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center text-gray-500">
+                            Aucun contrat ne correspond à votre recherche.
                         </div>
 
-
-                        <div class="relative mt-3">
-                            <div class="absolute inset-0 flex items-center" aria-hidden="true">
-                                <div class="w-full border-t border-gray-300"></div>
-                            </div>
-                            <div class="relative flex justify-center">
-                                <span class="isolate inline-flex -space-x-px rounded-md shadow-sm lg:hidden"
-                                    v-if="contrat.real_check_out === null">
-
-                                    <button type="button"
-                                        class="relative inline-flex items-center bg-green-300 px-3 py-2 text-gray-800 sm:text-lg ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-                                        @click="displayModal('paiement',contrat)">
-                                        Paiement
-                                    </button>
-                                    <button type="button"
-                                        class="relative inline-flex items-center bg-yellow-300 px-3 py-2 text-gray-800 sm:text-lg ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-                                        @click="displayModal('prolongation', contrat)">
-                                        Prolonger
-                                    </button>
-                                    <button type="button"
-                                        class="relative inline-flex items-center rounded-r-md bg-red-300 px-3 py-2 text-gray-800 sm:text-lg ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-                                        @click="displayModal('terminer', contrat)">
-                                        Terminer
-                                    </button>
-                                </span>
-                                <span class="isolate inline-flex -space-x-px rounded-md shadow-sm" v-else>
-
-                                    <button type="button"
-                                        class="relative inline-flex items-center bg-green-300 px-3 py-2 text-gray-800 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">
-                                        Contrat Terminé
-                                    </button>
-
-                                </span>
-                            </div>
-                        </div>
-
-
-                        <Modal v-if="modal === 'paiement'">
-                            <template v-slot:title>EFFECTUER UN PAIEMENT</template>
-
-                            <div class="mt-2">
-                                <form action="/paiement" method="post" v-if="modalData.contrat">
-                                    @csrf
-
-                                    <div class="flex items-center justify-start ">
-                                        <input type="checkbox" class="mr-4" name="payer_avec_caution"
-                                            v-model="ajouterPaiement.payer_avec_caution">
-                                        <label for="" class="m-0">Payer avec Caution
-
-                                            <span v-if="ajouterPaiement.payer_avec_caution && ajouterPaiement.montant ">
-                                                ( @{{ modalData.contrat.caution - ajouterPaiement.montant | currency }} )
-                                            </span>
-
-                                        </label>
-                                    </div>
-
-                                    <input type="hidden" :value="modalData.contrat.id" name="contrat_id">
-
-                                    <div class="flex flex-col items-start">
-                                        <label for="">Montant</label>
-                                        <input type="number" class="w-full p-2 border border-gray-300 rounded-md"
-                                            name="montant" v-model="ajouterPaiement.montant">
-                                    </div>
-                                    <div class="flex flex-col items-start">
-                                        <label for="">Note</label>
-                                        <textarea type="number" class="w-full px-2 py-6 border border-gray-300 rounded-md" name="note"></textarea>
-                                    </div>
-                                    <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                                        <button type="submit"
-                                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">
-                                            Payer
-                                        </button>
-                                        <button type="button" @click="closeModal()"
-                                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm">
-                                            Cancel
-                                        </button>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                        </Modal>
-
-                        <Modal v-if="modal === 'prolongation'">
-                            <template v-slot:title>PROLONGER UN CONTRAT</template>
-                            <div class="mt-2">
-                                <form v-if="modalData.contrat"
-                                    :action="'/contrats/' + modalData.contrat.id + '/prolonger'" method="POST">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="">Nouvelle Date
-                                                Prolongation</label>
-                                            <input type="date" class="form-control" name="du">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Montant</label>
-                                            <input type="number" step=500 class="form-control" name="prix_journalier"
-                                                :value="modalData.contrat.prix_journalier">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="">Sélectionner
-                                                Voiture</label>
-                                            <select class="custom-select" name="voiture">
-
-                                                <option :value="modalData.contrat.contractable.id" selected
-                                                    v-if="modalData.contrat.contractable">
-                                                    @{{ modalData.contrat.contractable.immatriculation }}
-                                                </option>
-
-                                                @foreach ($voitures as $voiture)
-                                                    @if ($voiture->etat === 'disponible')
-                                                        <option value="{{ $voiture->id }}">
-                                                            {{ $voiture->immatriculation }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                                        <button type="button"
-                                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
-                                            @click="closeModal()">Fermer</button>
-                                        <button type="submit"
-                                            class="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm">Submit</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </Modal>
-
-                        <Modal v-if="modal === 'terminer' ">
-                            <template v-slot:title>TERMINER LE CONTRAT</template>
-                            <div class="mt-2">
-                                <form :action="'/contrat/' + modalData.contrat.id + '/terminer'" method="POST"
-                                    v-if="modalData.contrat">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div>
-                                            <input name="date_fin" type="date" class="form-control">
-                                        </div>
-                                        <div v-if="modalData.contrat.caution" class="mt-3">
-                                            <input class="form-control" placeholder="Remboursement Caution" name="remboursement_caution" type="text">
-                                        </div>
-                                        <p class="text-sm mt-2">
-                                            L'heure et Date de Fin de Contrat seront enregistrées
-                                            et ne pourront plus être modifiées ultérieurement
+                        <div v-else class="space-y-6">
+                            <div v-for="contrat in contrats" :key="contrat.id"
+                                class="rounded-2xl border border-gray-100 bg-white shadow-xl">
+                                <div
+                                    class="flex flex-col gap-4 border-b border-gray-100 px-6 py-4 md:flex-row md:items-center md:justify-between">
+                                    <div>
+                                        <a class="text-xl font-semibold text-indigo-600 hover:text-indigo-700"
+                                            :href="'/contrat/' + contrat.id">
+                                            @{{ contrat.numéro }}
+                                        </a>
+                                        <p class="text-sm text-gray-500">
+                                            @{{ contrat.du | moment('DD MMM YYYY') }} →
+                                            <span v-if="contrat.au">@{{ contrat.au | moment('DD MMM YYYY') }}</span>
+                                            <span v-else>date de fin à confirmer</span>
+                                            · @{{ contrat.nombre_jours }} jours
+                                            <span v-if="contrat.demi_journee">+ 1/2</span>
                                         </p>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            @click="closeModal()">Annuler</button>
-                                        <button type="submit" class="text-white bg-green-500 btn">Terminer</button>
-                                    </div>
-                                </form>
-
-                            </div>
-                        </Modal>
-                        <Modal v-if="modal === 'changer-voiture' ">
-                            <template v-slot:title>TERMINER LE CONTRAT</template>
-                            <div class="mt-2">
-                                <form :action="'/contrats/' + modalData.contrat.id + '/changer-voiture'" method="POST"
-                                    v-if="modalData.contrat">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <label for="">Sélectionner
-                                                Voiture</label>
-                                            <select class="custom-select" name="voiture">
-
-                                                <option :value="modalData.contrat.contractable.id" selected
-                                                    v-if="modalData.contrat.contractable">
-                                                    @{{ modalData.contrat.contractable.immatriculation }}
-                                                </option>
-
-                                                @foreach ($voitures as $voiture)
-                                                    @if ($voiture->etat === 'disponible')
-                                                        <option value="{{ $voiture->id }}">
-                                                            {{ $voiture->immatriculation }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <span
+                                            class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
+                                            :class="{
+                                                'bg-red-100 text-red-600': contrat.deleted_at,
+                                                'bg-green-100 text-green-700': !contrat.deleted_at && contrat
+                                                    .real_check_out !== null,
+                                                'bg-yellow-100 text-yellow-700': !contrat.deleted_at && contrat
+                                                    .real_check_out === null,
+                                            }">
+                                            <template v-if="contrat.deleted_at">Contrat annulé</template>
+                                            <template v-else-if="contrat.real_check_out !== null">Contrat terminé</template>
+                                            <template v-else>Contrat en cours</template>
+                                        </span>
+                                        <div class="relative">
+                                            <button type="button"
+                                                class="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-600 hover:bg-gray-50"
+                                                @click="toggle('print_options')">
+                                                <i class="fas fa-print text-gray-400"></i>
+                                                Imprimer
+                                            </button>
+                                            <div v-show="print_options"
+                                                class="absolute right-0 z-10 mt-2 w-48 rounded-xl border border-gray-100 bg-white shadow-lg">
+                                                <a target="_blank" :href="'/contrat/' + contrat.id + '/print'"
+                                                    class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">Template
+                                                    Location</a>
+                                                <a target="_blank" :href="'/contrat/' + contrat.id + '/print-hotel-A5'"
+                                                    class="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">Template
+                                                    Orisha</a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            @click="closeModal()">Close</button>
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+
+                                <div class="grid gap-6 px-6 py-6 lg:grid-cols-2 xl:grid-cols-4">
+                                    <section class="space-y-3">
+                                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Location</p>
+                                        <div
+                                            class="rounded-2xl border border-gray-100 bg-gray-50 p-4 space-y-3 text-sm text-gray-700">
+                                            <div class="flex items-center justify-between">
+                                                <span class="font-medium">Caution</span>
+                                                <span class="font-semibold" v-if="contrat.caution">@{{ contrat.caution }} F
+                                                    CFA</span>
+                                            </div>
+                                            <div class="flex items-center justify-between" v-if="contrat.type_caution">
+                                                <span class="font-medium">Type</span>
+                                                <span class="font-semibold">@{{ contrat.type_caution }}</span>
+                                            </div>
+                                            <div class="flex items-center justify-between">
+                                                <span>Montant location</span>
+                                                <span class="font-semibold">@{{ contrat.prix_journalier * contrat.nombre_jours }} F CFA</span>
+                                            </div>
+                                            <div class="flex items-center justify-between" v-if="contrat.demi_journee">
+                                                <span>Option 1/2 journée</span>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-semibold">@{{ contrat.demi_journee }} F CFA</span>
+                                                    @can('editer paiements')
+                                                        <button class="text-gray-400 hover:text-indigo-600"
+                                                            data-toggle="modal" data-target="#editer-demi-journee-modal"
+                                                            @click="passDataToModal('contrat', contrat)"><i
+                                                                class="fas fa-edit"></i></button>
+                                                    @endcan
+                                                    @can('supprimer paiements')
+                                                        <button class="text-gray-400 hover:text-red-600"
+                                                            @click="deleteData('/contrat/' + contrat.id + '/delete/demi_journee')"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    @endcan
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center justify-between"
+                                                v-if="contrat.montant_chauffeur">
+                                                <span>Option chauffeur</span>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="font-semibold">@{{ contrat.montant_chauffeur }} F CFA</span>
+                                                    @can('editer paiements')
+                                                        <button class="text-gray-400 hover:text-indigo-600"
+                                                            data-toggle="modal" data-target="#editer-montant-chauffeur-modal"
+                                                            @click="passDataToModal('contrat', contrat)"><i
+                                                                class="fas fa-edit"></i></button>
+                                                    @endcan
+                                                    @can('supprimer paiements')
+                                                        <button class="text-gray-400 hover:text-red-600"
+                                                            @click="deleteData('/contrat/' + contrat.id + '/delete/montant_chauffeur')"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    @endcan
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="flex items-center justify-between border-t border-dashed border-gray-200 pt-3">
+                                                <span class="font-semibold text-gray-900">Montant total</span>
+                                                <span class="font-bold text-gray-900">@{{ total(contrat) }} F CFA</span>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="space-y-3">
+                                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Paiements
+                                        </p>
+                                        <div
+                                            class="rounded-2xl border border-green-100 bg-green-50 p-4 text-sm text-gray-700">
+                                            <template v-if="contrat.paiements.length">
+                                                <div class="space-y-3">
+                                                    <div class="flex items-center justify-between"
+                                                        v-for="paiement in contrat.paiements" :key="paiement.id">
+                                                        <div>
+                                                            <p class="font-semibold text-gray-900">
+                                                                @{{ paiement.montant }} F CFA
+                                                            </p>
+                                                            <p class="text-xs text-gray-500">
+                                                                @{{ paiement.created_at | moment('DD MMM YYYY') }} ·
+                                                                <span
+                                                                    v-if="paiement.type_paiement">@{{ paiement.type_paiement }}</span>
+                                                                <span v-if="paiement.note"> ·
+                                                                    @{{ paiement.note }}</span>
+                                                            </p>
+                                                        </div>
+                                                        <div class="flex items-center gap-2">
+                                                            @can('editer paiements')
+                                                                <button class="text-gray-400 hover:text-indigo-600"
+                                                                    data-toggle="modal" data-target="#editPaiementModal"
+                                                                    @click="passDataToModal('paiement', paiement)"><i
+                                                                        class="fas fa-edit"></i></button>
+                                                            @endcan
+                                                            @can('supprimer paiements')
+                                                                <button class="text-gray-400 hover:text-red-600"
+                                                                    @click="deletePayment(paiement)"><i
+                                                                        class="fas fa-trash"></i></button>
+                                                            @endcan
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="mt-4 border-t border-green-100 pt-3 text-sm font-semibold text-gray-900">
+                                                    Solde : @{{ solde(contrat) }} F CFA
+                                                </div>
+                                            </template>
+                                            <p v-else class="text-sm text-gray-500">Aucun paiement enregistré pour le
+                                                moment.</p>
+                                        </div>
+                                    </section>
+
+                                    <section class="space-y-3" v-if="contrat.client">
+                                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Client</p>
+                                        <div
+                                            class="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm text-gray-700 space-y-3">
+                                            <a class="text-base font-semibold text-indigo-600 hover:text-indigo-700"
+                                                target="_blank" :href="'/clients/' + contrat.client.id">
+                                                @{{ contrat.client['nom'] + ' ' + contrat.client['prenom'] }}
+                                            </a>
+                                            <p class="text-sm">
+                                                <span class="font-medium">Téléphone :</span>
+                                                @{{ contrat.client['phone1'] }}
+                                                <span v-if="contrat.client['phone2']"> / @{{ contrat.client['phone2'] }}</span>
+                                                <span v-if="contrat.client['phone3']"> / @{{ contrat.client['phone3'] }}</span>
+                                            </p>
+                                            <p class="text-sm" v-if="contrat.client.adresse">
+                                                <span class="font-medium">Adresse :</span> @{{ contrat.client['adresse'] }}
+                                            </p>
+                                            <div v-if="contrat.client.derniers_contrats && contrat.client.derniers_contrats.length"
+                                                class="mt-4 space-y-2">
+                                                <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                                                    Derniers contrats</p>
+                                                <div class="space-y-2">
+                                                    <div class="flex items-center justify-between"
+                                                        v-for="ct in contrat.client.derniers_contrats"
+                                                        :key="ct.id">
+                                                        <a class="text-indigo-600 hover:text-indigo-800 text-sm"
+                                                            target="_blank" :href="'/contrat/' + ct.id">
+                                                            @{{ ct.numéro }}
+                                                        </a>
+                                                        <span class="text-xs text-gray-500">Solde :
+                                                            @{{ solde(ct) }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class="space-y-3">
+                                        <p class="text-xs font-semibold uppercase tracking-wide text-gray-500">Parc & suivi
+                                        </p>
+                                        <div
+                                            class="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm text-gray-700 space-y-3">
+                                            <div v-if="contrat.contractable">
+                                                <span class="font-medium text-gray-600">Asset</span>
+                                                <p>
+                                                    <a class="text-indigo-600 hover:text-indigo-800"
+                                                        :href="'/contractables/' + contrat.contractable.id">
+                                                        @{{ contrat.contractable.nom }}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                            <div v-if="contrat.activity">
+                                                <span class="font-medium text-gray-600">Créé par</span>
+                                                <p>@{{ contrat.activity.causer.name }} · @{{ contrat.activity.created_at | moment('DD MMM YYYY') }}</p>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <div class="border-t border-gray-100 px-6 py-4">
+                                    <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                                        <div class="flex flex-wrap gap-2" v-if="!contrat.deleted_at">
+                                            @can('créer paiement')
+                                                <button type="button"
+                                                    class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700"
+                                                    @click.prevent="displayModal('paiement',contrat)">
+                                                    Effectuer un paiement
+                                                </button>
+                                            @endcan
+                                            @can('prolonger contrat')
+                                                <button type="button"
+                                                    class="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                                                    @click.prevent="displayModal('prolongation',contrat)">
+                                                    Prolonger
+                                                </button>
+                                            @endcan
+                                            @can('editer contrat')
+                                                <button type="button"
+                                                    class="rounded-full border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                                                    @click.prevent="displayModal('changer-voiture',contrat)">
+                                                    Changer de véhicule
+                                                </button>
+                                            @endcan
+                                            @can('terminer contrat')
+                                                <button type="button"
+                                                    class="rounded-full border border-green-200 bg-green-50 px-4 py-2 text-sm font-semibold text-green-700 hover:bg-green-100"
+                                                    @click.prevent="displayModal('terminer', contrat)">
+                                                    Terminer
+                                                </button>
+                                            @endcan
+                                        </div>
+                                        <div class="text-sm text-gray-500" v-else>
+                                            Actions indisponibles sur un contrat annulé.
+                                        </div>
                                     </div>
-                                </form>
-
+                                </div>
                             </div>
-                        </Modal>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <Modal v-if="modal === 'paiement'">
+                <template v-slot:title>EFFECTUER UN PAIEMENT</template>
+                <form action="/paiement" method="post" v-if="modalData.contrat" class="space-y-5">
+                    @csrf
+                    <input type="hidden" :value="modalData.contrat.id" name="contrat_id">
+                    <label
+                        class="inline-flex items-start gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                        <input type="checkbox"
+                            class="mt-1 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            name="payer_avec_caution" v-model="ajouterPaiement.payer_avec_caution">
+                        <span>
+                            Payer avec la caution
+                            <span class="block text-xs text-gray-500"
+                                v-if="ajouterPaiement.payer_avec_caution && ajouterPaiement.montant">
+                                Reste estimé :
+                                @{{ modalData.contrat.caution - ajouterPaiement.montant | currency }}
+                            </span>
+                        </span>
+                    </label>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Montant</label>
+                        <input type="number" name="montant" v-model="ajouterPaiement.montant"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Note</label>
+                        <textarea name="note" rows="3"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div class="grid gap-3 sm:grid-cols-2 mt-3">
+                        <button type="button" @click="closeModal()"
+                            class="inline-flex justify-center rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                            class="inline-flex justify-center rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-700">
+                            Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </Modal>
+
+            <Modal v-if="modal === 'prolongation' ">
+                <template v-slot:title>PROLONGER UN CONTRAT</template>
+                <form v-if="modalData.contrat" :action="'/contrats/' + modalData.contrat.id + '/prolonger'"
+                    method="POST" class="space-y-4">
+                    @csrf
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Nouvelle date de fin</label>
+                        <input type="date" name="du"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Montant journalier</label>
+                        <input type="number" step="500" name="prix_journalier"
+                            :value="modalData.contrat.prix_journalier"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Sélectionner un véhicule</label>
+                        <select name="voiture"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option :value="modalData.contrat.contractable.id" selected
+                                v-if="modalData.contrat.contractable">
+                                @{{ modalData.contrat.contractable.immatriculation }}
+                            </option>
+                            @foreach ($voitures as $voiture)
+                                @if ($voiture->etat === 'disponible')
+                                    <option value="{{ $voiture->id }}">
+                                        {{ $voiture->immatriculation }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="grid gap-3 sm:grid-cols-2 mt-3">
+                        <button type="button"
+                            class="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                            @click="closeModal()">Fermer</button>
+                        <button type="submit"
+                            class="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-700">Mettre
+                            à jour</button>
+                    </div>
+                </form>
+            </Modal>
+
+            <Modal v-if="modal === 'terminer' ">
+                <template v-slot:title>TERMINER LE CONTRAT</template>
+                <form :action="'/contrat/' + modalData.contrat.id + '/terminer'" method="POST" v-if="modalData.contrat"
+                    class="space-y-4">
+                    @csrf
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Date de fin effective</label>
+                        <input name="date_fin" type="date"
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    <div class="space-y-2" v-if="modalData.contrat.caution">
+                        <label class="text-sm font-medium text-gray-700">Remboursement caution</label>
+                        <input
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            placeholder="Montant à restituer" name="remboursement_caution" type="number"
+                            step="500">
+                    </div>
+                    <p class="text-sm text-gray-500">L'heure et la date de fin seront enregistrées définitivement.</p>
+                    <div class="grid gap-3 sm:grid-cols-2 mt-3">
+                        <button type="button"
+                            class="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                            @click="closeModal()">Annuler</button>
+                        <button type="submit"
+                            class="rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-green-700">Terminer</button>
+                    </div>
+                </form>
+            </Modal>
+            <Modal v-if="modal === 'changer-voiture' ">
+                <template v-slot:title>Changer de véhicule</template>
+                <form :action="'/contrats/' + modalData.contrat.id + '/changer-voiture'" method="POST"
+                    v-if="modalData.contrat" class="space-y-4">
+                    @csrf
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Sélectionner un véhicule</label>
+                        <select
+                            class="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            name="voiture">
+                            <option :value="modalData.contrat.contractable.id" selected
+                                v-if="modalData.contrat.contractable">
+                                @{{ modalData.contrat.contractable.immatriculation }}
+                            </option>
+                            @foreach ($voitures as $voiture)
+                                @if ($voiture->etat === 'disponible')
+                                    <option value="{{ $voiture->id }}">
+                                        {{ $voiture->immatriculation }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="grid gap-3 sm:grid-cols-2 mt-3">
+                        <button type="button"
+                            class="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                            @click="closeModal()">Fermer</button>
+                        <button type="submit"
+                            class="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow hover:bg-indigo-700">Confirmer</button>
+                    </div>
+                </form>
+            </Modal>
 
 
-                        {{-- MODAL EDIT PAIEMENT --}}
-                        {{-- <div class="modal fade" id="editPaiementModal" tabindex="-1" role="dialog"
+
+
+            {{-- MODAL EDIT PAIEMENT --}}
+            {{-- <div class="modal fade" id="editPaiementModal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -703,55 +551,53 @@
                                 </div>
                             </div>
                         </div> --}}
-                        {{-- COMPAGNIE TYPE V --}}
-                        @if ($compagnie->type === 'véhicules')
-                            {{-- MODAL CHANGER VOITURE  --}}
-                            <div class="modal fade" id="changer-voiture-modal" tabindex="-1" role="dialog">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Changer Véhicule</h5>
-                                            <button type="button" class="close" data-dismiss="modal"
-                                                aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form :action="'/contrats/' + modalData.contrat.id + '/changer-voiture'"
-                                            method="POST" v-if="modalData.contrat">
-                                            @csrf
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="">Sélectionner
-                                                        Voiture</label>
-                                                    <select class="custom-select" name="voiture">
+            {{-- COMPAGNIE TYPE V --}}
+            {{-- MODAL CHANGER VOITURE  --}}
+            {{-- @if ($compagnie->type === 'véhicules')
+                <div class="modal fade" id="changer-voiture-modal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Changer Véhicule</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form :action="'/contrats/' + modalData.contrat.id + '/changer-voiture'" method="POST"
+                                v-if="modalData.contrat">
+                                @csrf
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="">Sélectionner
+                                            Voiture</label>
+                                        <select class="custom-select" name="voiture">
 
-                                                        <option :value="modalData.contrat.contractable.id" selected
-                                                            v-if="modalData.contrat.contractable">
-                                                            @{{ modalData.contrat.contractable.immatriculation }}
-                                                        </option>
+                                            <option :value="modalData.contrat.contractable.id" selected
+                                                v-if="modalData.contrat.contractable">
+                                                @{{ modalData.contrat.contractable.immatriculation }}
+                                            </option>
 
-                                                        @foreach ($voitures as $voiture)
-                                                            @if ($voiture->etat === 'disponible')
-                                                                <option value="{{ $voiture->id }}">
-                                                                    {{ $voiture->immatriculation }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </div>
-                                        </form>
+                                            @foreach ($voitures as $voiture)
+                                                @if ($voiture->etat === 'disponible')
+                                                    <option value="{{ $voiture->id }}">
+                                                        {{ $voiture->immatriculation }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                        <!-- Modal Paiement -->
-                        {{-- <div class="modal fade" id="ajouter-paiement-modal" tabindex="-1" role="dialog"
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif --}}
+            <!-- Modal Paiement -->
+            {{-- <div class="modal fade" id="ajouter-paiement-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -812,8 +658,8 @@
                             </div>
                         </div> --}}
 
-                        <!-- Modal 1/2 Journee -->
-                        {{-- <div class="modal fade" id="demi-journee-modal" tabindex="-1" role="dialog"
+            <!-- Modal 1/2 Journee -->
+            {{-- <div class="modal fade" id="demi-journee-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -844,8 +690,8 @@
                                 </div>
                             </div>
                         </div> --}}
-                        <!-- Modal Editer 1/2 Journee -->
-                        {{-- <div class="modal fade" id="editer-demi-journee-modal" tabindex="-1" role="dialog"
+            <!-- Modal Editer 1/2 Journee -->
+            {{-- <div class="modal fade" id="editer-demi-journee-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -877,8 +723,8 @@
                             </div>
                         </div> --}}
 
-                        <!-- Modal Montant Chauffeur -->
-                        {{-- <div class="modal fade" id="montant-chauffeur-modal" tabindex="-1" role="dialog"
+            <!-- Modal Montant Chauffeur -->
+            {{-- <div class="modal fade" id="montant-chauffeur-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -910,8 +756,8 @@
                             </div>
                         </div> --}}
 
-                        <!-- Modal Editer Montant Chauffeur -->
-                        {{-- <div class="modal fade" id="editer-montant-chauffeur-modal" tabindex="-1" role="dialog"
+            <!-- Modal Editer Montant Chauffeur -->
+            {{-- <div class="modal fade" id="editer-montant-chauffeur-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -943,7 +789,7 @@
                             </div>
                         </div> --}}
 
-                        {{-- <div class="modal fade" id="terminer-contrat-modal" tabindex="-1" role="dialog"
+            {{-- <div class="modal fade" id="terminer-contrat-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -975,8 +821,8 @@
                                 </div>
                             </div>
                         </div> --}}
-                        <!-- Modal Mail -->
-                        {{-- <div class="modal fade" id="mail-contrat-modal" tabindex="-1" role="dialog"
+            <!-- Modal Mail -->
+            {{-- <div class="modal fade" id="mail-contrat-modal" tabindex="-1" role="dialog"
                             aria-labelledby="modelTitleId" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -1014,13 +860,13 @@
                                 </div>
                             </div>
                         </div> --}}
-                    </div>
-                    <div class="flex justify-center pt-10 pb-24">
-                        {{ $contrats->appends(request()->input())->links('vendor.pagination.bootstrap-4') }}
-                    </div>
 
-                    {{-- MODAL PROLONGATION --}}
-                    {{-- <div class="modal" id="prolongation-modal" tabindex="-1" role="dialog">
+            <div class="flex justify-center pt-10 pb-24">
+                {{ $contrats->appends(request()->input())->links('vendor.pagination.bootstrap-4') }}
+            </div>
+
+            {{-- MODAL PROLONGATION --}}
+            {{-- <div class="modal" id="prolongation-modal" tabindex="-1" role="dialog">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -1073,21 +919,26 @@
                         </div>
                     </div> --}}
 
-                    {{-- PLUS BUTTON -- AJOUTER CONTRAT --}}
-                    <div class="sticky flex justify-end px-3 lg:px-40 bottom-4 lg:bottom-16">
+            {{-- PLUS BUTTON -- AJOUTER CONTRAT --}}
+            <div class="sticky flex justify-end px-3 lg:px-40 bottom-4 lg:bottom-16">
 
-                        <a href="/contrats/create">
+                <a href="/contrats/create">
 
-                            <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
-                        </a>
-                    </div>
-                </div>
+                    <i class="text-green-700 cursor-pointer fas fa-plus-circle fa-5x hover:text-green-800"></i>
+                </a>
+            </div>
+        </div>
     </contrats-index>
 @endsection
 
 @section('js')
     <script>
-        document.getElementById('#flash-overlay-modal').modal();
-        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+        const flashModal = document.getElementById('flash-overlay-modal');
+        if (flashModal && typeof window.$ === 'function') {
+            window.$(flashModal).modal();
+        }
+        if (typeof window.$ === 'function') {
+            window.$('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+        }
     </script>
 @endsection
