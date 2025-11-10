@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Voiture;
-use App\Contractable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +16,7 @@ class ContractableController extends Controller
 
     public function getApi()
     {
-        $contractables = Voiture::where('compagnie_id', 1)->get();
+        $contractables = Auth::user()->compagnie->contractables;
         $contractables->loadMissing(['images']);
         $contractables->each(fn($contractable) => $this->appendPhotoUrls($contractable));
 

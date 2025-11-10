@@ -88,8 +88,7 @@
                 <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     <a v-for="image in galleryImages" :key="image.id || image.url" :href="image.url" target="_blank"
                         class="group relative overflow-hidden rounded-xl border border-gray-100 shadow-sm ring-1 ring-gray-50 hover:ring-indigo-200 dark:border-white/5 dark:hover:ring-indigo-500/30">
-                        <img :src="image.url"
-                            :alt="'Photo ' + displayName"
+                        <img :src="image.url" :alt="'Photo ' + displayName"
                             class="h-40 w-full object-cover transition duration-200 group-hover:scale-105">
                     </a>
                 </div>
@@ -438,7 +437,7 @@
                             class="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                             <option value="" disabled>Sélectionner un accessoire</option>
                             <option v-for="accessoire in accessoireOptions" :key="accessoire.id" :value="accessoire.id">
-                                {{ accessoire.nom || accessoire.name }}
+                                {{ accessoire.type }}
                             </option>
                         </select>
                         <p v-if="!form_accessoire.id && !accessoireOptions.length" class="mt-2 text-xs text-gray-500">
