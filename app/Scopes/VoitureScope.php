@@ -11,6 +11,6 @@ class VoitureScope implements Scope
 {
     public function apply(Builder $builder, Model $model)
     {
-        $builder->where($model->getTable() . '.archived', '<>', 1)->where($model->getTable() . '.compagnie_id', Auth::user()->compagnie_id);
+        $builder->where($model->getTable() . '.archived', '<>', 1);
     }
 }

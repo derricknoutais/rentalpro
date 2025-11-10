@@ -35,7 +35,21 @@ class MaintenanceController extends Controller
     }
     public function getApi()
     {
-        $maintenances = Auth::user()->compagnie->maintenances;
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Authentifiez-vous pour accéder aux maintenances.',
+            ], 401);
+        }
+
+        if (!$user->compagnie) {
+            return response()->json([
+                'message' => 'Aucune compagnie n’est associée à votre compte.',
+            ], 422);
+        }
+
+        $maintenances = $user->compagnie->maintenances;
 
         // Charge les relations associes aux maintenances
         if (sizeof($maintenances)) {
