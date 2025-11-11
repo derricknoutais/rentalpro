@@ -152,24 +152,6 @@
                         </div>
 
                         <div class="space-y-6 px-6 py-6">
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Titre (optionnel)</label>
-                                    <input type="text" v-model="form.titre"
-                                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                                        placeholder="Ex. Révision freins" />
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Technicien</label>
-                                    <select v-model="form.technicien_id"
-                                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                        <option value="">-- Choisir --</option>
-                                        <option v-for="t in techniciens" :key="t.id" :value="t.id">
-                                            @{{ t.nom }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div v-if="!isEditing" class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Contractable</label>
@@ -194,8 +176,7 @@
                                         Chargement des pannes...
                                     </div>
                                     <div v-else>
-                                        <div v-if="availablePannes.length"
-                                            class="mt-3 space-y-2 max-h-56 overflow-y-auto">
+                                        <div v-if="availablePannes.length" class="mt-3 space-y-2 max-h-56 overflow-y-auto">
                                             <label v-for="panne in availablePannes" :key="panne.id"
                                                 class="flex gap-3 rounded-lg border border-gray-100 p-3 text-sm text-gray-700 hover:bg-gray-50">
                                                 <input type="checkbox" :value="panne.id" v-model="selectedPanneIds"
@@ -214,6 +195,25 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Titre (optionnel)</label>
+                                    <input type="text" v-model="form.titre"
+                                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                                        placeholder="Ex. Révision freins" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Technicien</label>
+                                    <select v-model="form.technicien_id"
+                                        class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                        <option value="">-- Choisir --</option>
+                                        <option v-for="t in techniciens" :key="t.id" :value="t.id">
+                                            @{{ t.nom }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
 
                             <div v-else class="rounded-xl border border-gray-100 bg-gray-50 p-4">
                                 <p class="text-sm font-medium text-gray-700">Pannes prises en charge</p>

@@ -16,6 +16,7 @@ use App\Maintenance;
 use NumberFormatter;
 use App\Prolongation;
 use App\Mail\ContratCréé;
+use App\Mail\InvoicePdfMail;
 use App\Events\ContratCree;
 use Illuminate\Http\Request;
 use Nexmo\Laravel\Facade\Nexmo;
@@ -371,9 +372,10 @@ class ContratController extends Controller
 
     public function print(Contrat $contrat)
     {
-        $contrat->loadMissing('contractable', 'client');
-        isset($contrat->contractable->documents) ? ($documents = $contrat->contractable->documents) : ($documents = []);
-        isset($contrat->contractable->accessoires) ? ($accessoires = $contrat->contractable->accessoires) : ($accessoires = []);
+        $contrat->loadMissing('contractable.documents', 'contractable.accessoires', 'client', 'compagnie', 'paiements');
+        $documents = $contrat->contractable?->documents ?? collect();
+        $accessoires = $contrat->contractable?->accessoires ?? collect();
+
         return view('contrats.print', compact('contrat', 'documents', 'accessoires'));
     }
 
@@ -614,24 +616,6 @@ class ContratController extends Controller
         return $contrat;
     }
 
-    public function download(Contrat $contrat)
-    {
-        $contrat->loadMissing('contractable', 'client');
-        isset($contrat->contractable->documents) ? ($documents = $contrat->contractable->documents) : ($documents = []);
-        isset($contrat->contractable->accessoires) ? ($accessoires = $contrat->contractable->accessoires) : ($accessoires = []);
-        $pdf = PDF::loadView('contrats.print', compact('contrat', 'documents', 'accessoires'))->setPaper('a4', 'portrait');
-        return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
-        return $contrat->loadMissing('contractable', 'client', 'paiements', 'compagnie');
-        $formatter = new NumberFormatter('fr', NumberFormatter::SPELLOUT);
-        $total_in_words = ucwords($formatter->format($contrat->nombre_jours * $contrat->prix_journalier));
-        if ($contrat->compagnie->type == 'véhicules') {
-            $pdf = PDF::loadView('contrats.véhicules_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-        } elseif ($contrat->compagnie->type == 'hôtel') {
-            $pdf = PDF::loadView('contrats.hotel_contrat', compact('contrat', 'total_in_words'))->setPaper('a4', 'portrait');
-        }
-        return $pdf->download(Auth::user()->compagnie->nom . ' ' . $contrat->numéro . '.pdf');
-    }
-
     public function voirUploads(Contrat $contrat)
     {
         return view('contrats.uploads', compact('contrat'));
@@ -790,17 +774,22 @@ class ContratController extends Controller
 
     public function sendMail(Contrat $contrat, Request $request)
     {
-        if (
-            $request->validate([
-                'mail' => 'required|email',
-            ])
-        ) {
-            Mail::to($request->mail)->send(new ContratCréé($contrat));
+        $data = $request->validate([
+            'mail' => ['required', 'email'],
+        ]);
+
+        $contrat->loadMissing('contractable.documents', 'contractable.accessoires', 'client', 'compagnie', 'paiements');
+        $documents = $contrat->contractable?->documents ?? collect();
+        $accessoires = $contrat->contractable?->accessoires ?? collect();
+        $pdf = PDF::loadView('contrats.print', compact('contrat', 'documents', 'accessoires'))->setPaper('a4', 'portrait');
+
+        Mail::to($data['mail'])->send(new InvoicePdfMail($contrat, $pdf->output()));
+
+        if ($request->boolean('save_mail') && $contrat->client) {
+            $contrat->client->update(['mail' => $data['mail']]);
         }
-        if ($request->has('save_mail') && $request->save_mail) {
-            $contrat->client->update(['mail' => $request->mail]);
-        }
-        return redirect('/contrats');
+
+        return redirect()->back()->with('status', 'Facture envoyée par email.');
     }
 
     public function checkout(Contrat $contrat)

@@ -21,6 +21,36 @@
                         Imprimer
                     </a>
                 </div>
+                @if (session('status'))
+                    <div class="px-4 py-3 mx-4 mt-4 text-sm text-green-800 bg-green-50 border border-green-200 rounded-lg sm:px-6">
+                        {{ session('status') }}
+                    </div>
+                @endif
+                <div class="px-4 py-5 border-t border-gray-100 sm:px-6">
+                    <form action="/contrat/{{ $contrat->id }}/send-mail" method="POST" class="flex flex-col gap-3 lg:flex-row lg:items-end">
+                        @csrf
+                        <div class="flex-1">
+                            <label for="mail" class="text-sm font-medium text-gray-700">Envoyer la facture par mail</label>
+                            <input type="email" name="mail" id="mail"
+                                value="{{ old('mail', optional($contrat->client)->mail) }}"
+                                placeholder="client@email.com"
+                                class="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            @error('mail')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <label class="flex items-center text-sm font-medium text-gray-600">
+                            <input type="checkbox" name="save_mail" value="1"
+                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                {{ old('save_mail') ? 'checked' : '' }}>
+                            <span class="ml-2">Enregistrer sur la fiche client</span>
+                        </label>
+                        <button type="submit"
+                            class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500">
+                            Envoyer le PDF
+                        </button>
+                    </form>
+                </div>
                 <div class="px-4 sm:px-6 md:block hidden">
                     {{ $checkout_qrcode }}
 

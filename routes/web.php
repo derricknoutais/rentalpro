@@ -190,7 +190,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/contrat/{contrat}/send-mail', 'ContratController@sendMail');
 
-    Route::get('/contrat/{contrat}/download', 'ContratController@download');
     Route::post('/contrat/{contrat}/terminer', 'ContratController@terminer');
     Route::get('/contrat/{contrat}/voir-uploads', 'ContratController@voirUploads');
     Route::get('/contrat/{contrat}/edit', 'ContratController@edit');
@@ -289,6 +288,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/reservations', 'ReservationController@index');
     Route::get('/reservations/create', 'ReservationController@create');
     Route::post('/reservations/store', 'ReservationController@store');
+    Route::get('/reservations/{reservation}', 'ReservationController@show')->name('reservations.show')->whereNumber('reservation');
 
     // Paramètres
     Route::prefix('parametres')->group(function () {

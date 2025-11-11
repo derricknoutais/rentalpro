@@ -72,7 +72,13 @@ class ReservationController extends Controller
      */
     public function show(Reservation $reservation)
     {
-        //
+        abort_unless($reservation->compagnie_id === Auth::user()->compagnie_id, 403);
+        $reservation->loadMissing('client', 'contractable', 'compagnie');
+
+        return view('reservations.show', [
+            'reservation' => $reservation,
+            'statusOptions' => Reservation::statusOptions(),
+        ]);
     }
 
     /**

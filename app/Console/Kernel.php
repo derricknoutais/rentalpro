@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SendContractExpiryAlerts::class,
+        Commands\SendDocumentExpirationAlerts::class,
+        Commands\SendReservationReminderEmails::class,
     ];
 
     /**
@@ -28,6 +30,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->job(new CreateMetricEntries)->everyMinute();
         $schedule->job(new EnvoieRapportJournalierVente())->dailyAt('18:00')->timezone('Africa/Libreville');
+        $schedule->command('documents:alert-expiring')->dailyAt('08:00')->timezone('Africa/Libreville');
+        $schedule->command('reservations:remind-upcoming')->dailyAt('08:05')->timezone('Africa/Libreville');
         $schedule->command('contracts:alert-expiring')->hourly();
     }
 

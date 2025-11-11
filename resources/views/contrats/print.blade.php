@@ -1,268 +1,292 @@
 @extends('layouts.printA4')
 
+@php
+    use Illuminate\Support\Str;
+@endphp
 
-@section('sheet1')
-    <header class="flex justify-center">
-        <img src="/img/logosta.png" alt="" class="w-1/2">
-    </header>
-    <main x-data="print({{ $contrat->total() }})">
-        <h1 class="mt-6 text-3xl font-semibold text-center">Contrat Location Nº {{ $contrat->numéro }}</h1>
+@section('print-toolbar')
+    <div class="flex justify-end w-full">
+        <pdf-download-button target="#printable-area"
+            filename="facture-{{ Str::slug($contrat->numéro) }}"></pdf-download-button>
+    </div>
+@endsection
+
+@section('print-content')
+    @php
+        $formatter = new \NumberFormatter('fr', \NumberFormatter::SPELLOUT);
+        $total = (float) $contrat->total();
+        $paid = (float) $contrat->payé();
+        $balance = (float) $contrat->solde();
+        $totalInWords = ucfirst($formatter->format(max(0, (int) round($total))));
+        $contractable = optional($contrat->contractable);
+        $client = optional($contrat->client);
+        $compagnie = optional($contrat->compagnie);
+        $logoInitials = Str::of($compagnie->nom ?? 'RP')
+            ->trim()
+            ->replaceMatches('/[^A-Z]/i', '')
+            ->upper()
+            ->substr(0, 2);
+
+        $items = [
+            [
+                'label' => $contrat->compagnie->isVehicules()
+                    ? 'Location ' . ($contractable->immatriculation ?? 'véhicule')
+                    : 'Location ' . ($contractable->nom ?? 'hébergement'),
+                'description' =>
+                    $contrat->du && $contrat->au
+                        ? 'Du ' . $contrat->du->format('d/m/Y H:i') . ' au ' . $contrat->au->format('d/m/Y H:i')
+                        : 'Durée de ' . $contrat->nombre_jours . ' jour(s)',
+                'unit' => $contrat->prix_journalier ?? 0,
+                'quantity' => $contrat->nombre_jours,
+                'total' => ($contrat->prix_journalier ?? 0) * $contrat->nombre_jours,
+            ],
+        ];
+
+        if ($contrat->demi_journee) {
+            $items[] = [
+                'label' => 'Option demi-journée',
+                'description' => 'Temps supplémentaire facturé en forfait',
+                'unit' => $contrat->demi_journee,
+                'quantity' => 1,
+                'total' => $contrat->demi_journee,
+            ];
+        }
+
+        if ($contrat->montant_chauffeur) {
+            $items[] = [
+                'label' => 'Service chauffeur',
+                'description' => 'Assistance conducteur',
+                'unit' => $contrat->montant_chauffeur,
+                'quantity' => 1,
+                'total' => $contrat->montant_chauffeur,
+            ];
+        }
+
+        $vatRate = data_get($compagnie, 'vat_rate', 0);
+        if (!is_numeric($vatRate)) {
+            $vatRate = 0;
+        }
+        $pretaxTotal = $vatRate ? round($total / (1 + $vatRate), 2) : $total;
+        $vatAmount = $total - $pretaxTotal;
+    @endphp
 
 
-        {{-- CLIENT --}}
-        <div class="flex justify-between mt-6">
-            <div class="w-2/3 mr-3">
-                <p class="mt-6 text-xl">
-                    <span class="font-medium underline">Objet:</span>
-                    <span>Location </span>
-                    <span>{{ $contrat->contractable->immatriculation }} </span>
-                </p>
-                <p class="mt-6 text-lg underline">Termes Contrat </p>
-                <p>Date du : {{ $contrat->du->format('d/m/Y') }} au: {{ $contrat->au->format('d/m/Y') }}</p>
-                <p>Caution : {{ $contrat->caution }} F CFA</p>
 
+    <section class="sheet">
+        <div class="facture">
+        <header class="facture__header avoid-page-break">
+            <div class="facture__brand">
+                <div class="facture__logo">{{ $logoInitials ?: 'RP' }}</div>
+                <div>
+                    <h1>{{ $compagnie->nom ?? config('app.name') }}</h1>
+                    <p class="text-sm text-gray-500">{{ $compagnie->type ?? 'Entreprise' }}</p>
+                </div>
             </div>
-            <div class="flex justify-end w-1/3 px-4 pt-4 mt-2 border border-gray-800">
-                <p class="flex flex-col text-lg">
-                    <span class="text-xl font-medium underline">Client:</span>
-                    <span class="">{{ $contrat->client->nom . ' ' . $contrat->client->prenom }} </span>
-                    <span>{{ $contrat->client->phone1 }}</span>
-                </p>
+            <div class="facture__meta">
+                <div class="facture__meta-title">FACTURE</div>
+                <dl>
+                    <div>
+                        <dt>Référence</dt>
+                        <dd>{{ $contrat->numéro }}</dd>
+                    </div>
+                    <div>
+                        <dt>Date de facturation</dt>
+                        <dd>{{ $contrat->created_at->format('d/m/Y') }}</dd>
+                    </div>
+                    <div>
+                        <dt>Référence client</dt>
+                        <dd>{{ 'C-' . str_pad((string) $contrat->client_id, 5, '0', STR_PAD_LEFT) }}</dd>
+                    </div>
+                </dl>
             </div>
+        </header>
+
+        <div class="facture__info-grid avoid-page-break">
+            <section class="facture__info-card">
+                <h3>{{ $compagnie->nom ?? 'Nom de votre entreprise' }}</h3>
+                <div class="facture__contact">
+                    <span>{{ $compagnie->adresse ?? 'Adresse non renseignée' }}</span>
+                    <span>{{ $compagnie->ville ?? '' }} {{ $compagnie->pays ?? '' }}</span>
+                    <span>Tél. : {{ $compagnie->phone ?? '—' }}</span>
+                    <span>{{ $compagnie->email ?? '' }}</span>
+                    @if (!empty($compagnie->site_web))
+                        <span>{{ $compagnie->site_web }}</span>
+                    @endif
+                </div>
+            </section>
+            <section class="facture__info-card facture__info-card--highlight">
+                <h3>Client</h3>
+                <div class="facture__contact">
+                    <span>{{ trim(($client->nom ?? '') . ' ' . ($client->prenom ?? '')) ?: 'Client' }}</span>
+                    <span>{{ $client->adresse ?? 'Adresse non renseignée' }}</span>
+                    <span>{{ $client->ville ?? '' }} {{ $client->pays ?? '' }}</span>
+                    <span>Tél. : {{ $client->phone1 ?? '—' }}</span>
+                    <span>{{ $client->mail ?? '' }}</span>
+                </div>
+            </section>
         </div>
 
-        {{-- TABLEAU --}}
-        <div class="flex flex-col mt-6">
-            <div class="-my-2 sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                    <div class="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-blue-800">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-6 py-3 font-medium tracking-wider text-left text-gray-100 uppercase text-md">
-                                        Nbre Jours</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 font-medium tracking-wider text-left text-gray-100 uppercase text-md">
-                                        Montant Journalier</th>
-                                    <th scope="col"
-                                        class="px-6 py-3 font-medium tracking-wider text-left text-gray-100 uppercase text-md">
-                                        Total</th>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="bg-white">
-                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap">
-                                        {{ number_format($contrat->nombre_jours, 0, ',', '.') }}</td>
-                                    <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">
-                                        {{ number_format($contrat->prix_journalier, 0, ',', '.') }} F CFA</td>
-                                    <td class="px-6 py-4 text-gray-500 text-md whitespace-nowrap">
-                                        {{ number_format($contrat->total(), 0, ',', '.') }} F CFA</td>
-                                </tr>
+        <section class="facture__table-wrapper avoid-page-break">
+            <table class="facture__table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Prix unit.</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($items as $item)
+                        <tr>
+                            <td>
+                                <p class="facture__desc">
+                                    {{ $item['label'] }}
+                                    @if ($item['description'])
+                                        <small>{{ $item['description'] }}</small>
+                                    @endif
+                                </p>
+                            </td>
+                            <td>{{ number_format($item['unit'], 0, ',', ' ') }} FCFA</td>
+                            <td>{{ $item['quantity'] }}</td>
+                            <td>{{ number_format($item['total'], 0, ',', ' ') }} FCFA</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </section>
 
-                                <!-- 1/2 Journee -->
-                                @if ($contrat->demi_journee)
-                                    <tr class="border border-gray-200 bg-white">
-                                        <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                        <td
-                                            class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
-                                            Option 1/2 Journee</td>
-                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
-                                            {{ $contrat->demi_journee }} F CFA</td>
-                                    </tr>
-                                @endif
-
-                                <!-- 1/2 Journee -->
-                                @if ($contrat->montant_chauffeur)
-                                    <tr class="border border-gray-200 bg-white">
-                                        <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                        <td
-                                            class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
-                                            Option Chauffeur</td>
-                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
-                                            {{ $contrat->montant_chauffeur }} F CFA</td>
-                                    </tr>
-                                @endif
-
-                                @if ($contrat->montant_chauffeur || $contrat->demi_journee)
-                                    <tr class="border border-gray-200 bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                        <td
-                                            class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
-                                            Montant Total</td>
-                                        <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
-                                            {{ $contrat->total() }} F CFA
-                                        </td>
-                                    </tr>
-                                @endif
-
-
-
-                                <!-- Paiements -->
-                                <tr class="border border-gray-200 bg-gray-50">
-                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
-                                        Paiements Perçus
-                                    </td>
-                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
-                                        {{ $contrat->payé() }} F CFA</td>
-                                </tr>
-                                <!-- Even row -->
-                                <tr class="bg-gray-50">
-                                    <td class="px-6 py-4 font-medium text-gray-900 text-md whitespace-nowrap"></td>
-                                    <td class="px-6 py-4 font-medium text-right text-gray-500 text-md whitespace-nowrap">
-                                        Solde
-                                    </td>
-                                    <td class="px-6 py-4 font-medium text-gray-500 text-md whitespace-nowrap">
-                                        {{ $contrat->solde() }} F CFA</td>
-                                </tr>
-
-                                <!-- More people... -->
-                            </tbody>
-                        </table>
+        <div class="facture__summary-grid avoid-page-break">
+            <section class="facture__panel">
+                <h4>Informations bancaires</h4>
+                <dl>
+                    <div>
+                        <dt>Banque</dt>
+                        <dd>{{ $compagnie->banque ?? '—' }}</dd>
+                    </div>
+                    <div>
+                        <dt>RIB</dt>
+                        <dd>{{ $compagnie->rib ?? '—' }}</dd>
+                    </div>
+                    <div>
+                        <dt>IBAN</dt>
+                        <dd>{{ $compagnie->iban ?? '—' }}</dd>
+                    </div>
+                    <div>
+                        <dt>BIC</dt>
+                        <dd>{{ $compagnie->bic ?? '—' }}</dd>
+                    </div>
+                </dl>
+            </section>
+            <section class="facture__panel">
+                <h4>Projet global</h4>
+                <div class="facture__totals">
+                    <div class="facture__totals-row">
+                        <span>Total HT</span>
+                        <span>{{ number_format($pretaxTotal, 0, ',', ' ') }} FCFA</span>
+                    </div>
+                    <div class="facture__totals-row">
+                        <span>TVA {{ $vatRate ? (int) ($vatRate * 100) . '%' : '' }}</span>
+                        <span>{{ number_format($vatAmount, 0, ',', ' ') }} FCFA</span>
+                    </div>
+                    <div class="facture__totals-row facture__totals-row--em">
+                        <span>Total TTC</span>
+                        <span>{{ number_format($total, 0, ',', ' ') }} FCFA</span>
+                    </div>
+                    <div class="facture__totals-row">
+                        <span>Déjà réglé</span>
+                        <span>{{ number_format($paid, 0, ',', ' ') }} FCFA</span>
+                    </div>
+                    <div class="facture__totals-row facture__totals-row--em">
+                        <span>Net à payer</span>
+                        <span>{{ number_format($balance, 0, ',', ' ') }} FCFA</span>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        {{-- Arrêté la facture --}}
-        <p class="mt-6 text-xl underline">Arrêté la présente facture à la somme de:</p>
-        <p class="mt-2 text-lg">
-            <span x-text="wn" class="capitalize"></span>
-            <span class="">Francs CFA</span>
-        </p>
-
-
-        <div class="flex flex-col items-end mt-2 mr-12">
-            <p class="mr-24">Le Responsable</p>
-            @if ($contrat->checkout && $contrat->checkout->userSignature)
-                <div
-                    class="mt-6 w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-
-                    <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->userSignature }}"
-                        alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+                <div class="mt-4 space-y-1 text-sm text-gray-500">
+                    <p>Date d'échéance : {{ optional($contrat->au)->format('d/m/Y') ?? '—' }}</p>
+                    <p>Mode de paiement : {{ $contrat->mode_paiement ?? 'Non précisé' }}</p>
+                    <span class="facture__badge-soft">Prestation de service</span>
                 </div>
-            @endif
+            </section>
+        </div>
+        </div>
+    </section>
+
+    <section class="sheet sheet--last">
+        <div class="facture facture--secondary">
+        <div class="facture__summary-grid avoid-page-break">
+            <section class="facture__panel">
+                <h4>Documents du véhicule</h4>
+                @if ($documents->count())
+                    <ul class="invoice__list">
+                        @foreach ($documents as $document)
+                            <li>
+                                <span>{{ $document->type }}</span>
+                                <span class="invoice__pill">
+                                    {{ $document->pivot->date_expiration ? \Carbon\Carbon::parse($document->pivot->date_expiration)->format('d/m/Y') : '—' }}
+                                </span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="invoice__hint">Aucun document rattaché.</p>
+                @endif
+            </section>
+            <section class="facture__panel">
+                <h4>Accessoires</h4>
+                @if ($accessoires->count())
+                    <ul class="invoice__list">
+                        @foreach ($accessoires as $accessoire)
+                            <li>
+                                <span>{{ $accessoire->type }}</span>
+                                <span class="invoice__pill">{{ $accessoire->pivot->quantité }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="invoice__hint">Aucun accessoire renseigné.</p>
+                @endif
+            </section>
         </div>
 
+        <section class="facture__panel avoid-page-break">
+            <h4>Conditions et mentions</h4>
+            <ol class="invoice__terms">
+                <li>Le véhicule doit être restitué à l'heure indiquée au contrat.</li>
+                <li>Tout dommage non signalé sera facturé au locataire.</li>
+                <li>Les photos jointes font office de référence pour l'état du véhicule.</li>
+                <li>Retard de paiement : pénalité forfaitaire conformément au contrat.</li>
+                <li>Conduite par un tiers non autorisé = résiliation immédiate.</li>
+                <li>Prolongation à notifier 24h avant l'échéance.</li>
+            </ol>
+        </section>
 
-
-
-    </main>
-@endsection
-
-@section('sheet2')
-    <header class="flex justify-center">
-        <img src="/img/logosta.png" alt="" class="w-1/2">
-    </header>
-    {{-- CONTRAT --}}
-    <div class="mt-2 ">
-        <p class="text-2xl font-medium underline">Terme du contrat</p>
-        <ol class="mt-1">
-            <li class="ml-6 text-sm">Le véhicule sera restitué à l'heure indiquée sur le contrat.</li>
-            <li class="ml-6 text-sm">Le véhicule devra être restitué dans le même état qu'il a été pris; faute de quoi le
-                locataire
-                endossera les
-                charges afférentes aux dommages éventuels.</li>
-            <li class="ml-6 text-sm">Des images seront enregistrées feront office de réference de l'état du véhicule.</li>
-            <li class="ml-6 text-sm">S.T.A se réserve le droit de récuperer le véhicule loué pour tout retard de paiement.
-            </li>
-            <li class="ml-6 text-sm">S.T.A se réserve le droit de récuperer le véhicule loué au cas où une personne autre
-                que le client est
-                aperçu entrain de conduire ce véhicule.</li>
-            <li class="ml-6 text-sm">Toute prolongation devra être notifiée 24 heures avant échéance du contrat actuel</li>
-        </ol>
-    </div>
-    <p class="text-xl font-medium underline">Niveau de Carburant</p>
-    <ul class="flex justify-between mt-3">
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">1/8</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">1/4</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">3/8</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">1/2</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">5/8</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">3/4</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">7/8</label>
-        </li>
-        <li class="flex text-2xl ">
-            <div class="px-2 py-2 my-2 border border-black rounded-full"></div>
-            <label for="" class="ml-1">Full</label>
-        </li>
-    </ul>
-
-    <div class="flex">
-        <div class="w-2/3">
-            <p class="mt-2 text-2xl font-semibold underline">Documents Vehicule</p>
-            <ul class="mt-2 text-2xl w-full pr-12">
-                @forelse ($documents as $document)
-                    <li class="w-full flex justify-between items-end mt-3">
-                        <span class="w-1/2">{{ $document->type }} </span>
-                        <span
-                            class="w-1/2 text-right">{{ \Carbon\Carbon::parse($document->pivot->date_expiration)->format('d-M-Y') }}</span>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-        <div class="w-1/3">
-            <p class="mt-2 text-2xl font-semibold underline">État des Accessoires</p>
-            <ul class="mt-2 text-2xl">
-                @foreach ($accessoires as $acc)
-                    <li> {{ $acc->pivot->quantité }} {{ $acc->type }}</li>
-                @endforeach
-            </ul>
-        </div>
-
-    </div>
-    <div class="flex justify-between mx-24">
-        <p>Le Client</p>
-        <p>Le Responsable</p>
-    </div>
-    <div class="flex justify-between">
-        @if ($contrat->checkout && $contrat->checkout->signature)
-            <div
-                class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-                <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->signature }}"
-                    alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
-
+        <div class="invoice__signature-grid avoid-page-break">
+            <div class="invoice__signature">
+                <p class="facture__panel-title" style="margin-bottom:0;">Signature client</p>
+                @if ($contrat->checkout && $contrat->checkout->signature)
+                    <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->signature }}"
+                        alt="Signature client">
+                @else
+                    <p class="invoice__hint">Signature à compléter</p>
+                @endif
             </div>
-        @endif
-        @if ($contrat->checkout && $contrat->checkout->userSignature)
-            <div
-                class="w-1/2 group overflow-hidden rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 focus-within:ring-offset-gray-100">
-
-                <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->userSignature }}"
-                    alt="" class="pointer-events-none aspect-[10/7] object-cover group-hover:opacity-75">
+            <div class="invoice__signature">
+                <p class="facture__panel-title" style="margin-bottom:0;">Signature responsable</p>
+                @if ($contrat->checkout && $contrat->checkout->userSignature)
+                    <img src="https://rentalpro.fra1.digitaloceanspaces.com/{{ $contrat->checkout->userSignature }}"
+                        alt="Signature responsable">
+                @else
+                    <p class="invoice__hint">Signature à compléter</p>
+                @endif
             </div>
-        @endif
-    </div>
-@endsection
+        </div>
 
-{{-- @push('script-print') --}}
-<script>
-    function print(total) {
-        return {
-            wn: writtenNumber(total)
-        }
-    }
-</script>
-{{-- @endpush --}}
+        <footer class="invoice__footnote">
+            Société {{ $compagnie->nom ?? config('app.name') }} — {{ $compagnie->forme_juridique ?? '' }} — SIRET
+            {{ $compagnie->siret ?? 'N/A' }}<br>
+            En cas de retard de paiement, des pénalités pourront être appliquées (Article L441-10 du Code de Commerce).
+        </footer>
+        </div>
+    </section>
+@endsection
