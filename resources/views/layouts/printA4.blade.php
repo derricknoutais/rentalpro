@@ -44,7 +44,7 @@
             box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
         }
 
-        .sheet + .sheet {
+        .sheet+.sheet {
             margin-top: 12px;
         }
 
@@ -53,7 +53,7 @@
             page-break-after: auto !important;
         }
 
-        #printable-area > .sheet:last-child {
+        #printable-area>.sheet:last-child {
             break-after: auto !important;
             page-break-after: auto !important;
         }
@@ -90,7 +90,7 @@
                 page-break-after: auto !important;
             }
 
-            #printable-area > .sheet:last-child {
+            #printable-area>.sheet:last-child {
                 page-break-after: auto !important;
             }
         }
