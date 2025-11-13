@@ -44,10 +44,10 @@ class SendDocumentExpirationAlerts extends Command
                 // In non-production environments, send alerts only to specific emails
                 $emails = collect(['derricknoutais@gmail.com']);
             } else {
-                $emails = ['derricknoutais@gmail.com', 'noutaiaugustin@gmail.com'];
+                $emails = collect(['derricknoutais@gmail.com', 'noutaiaugustin@gmail.com']);
             }
 
-            if ($emails->isEmpty()) {
+            if (sizeof($emails) == 0) {
                 return;
             }
 
