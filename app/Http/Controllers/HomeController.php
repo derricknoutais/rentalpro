@@ -30,7 +30,10 @@ class HomeController extends Controller
             $voitures = Voiture::with('contrats')->get();
             $contrats = Contrat::with('contractable', 'client')->get();
             $contrats_en_cours = Contrat::where('du', '>' ,now())->get()->sortBy('du');
-            $contrats_en_retard = Contrat::where('du', '<', now())->whereNull('real_check_out')->get()->sortBy('du');
+            $contrats_en_retard = Contrat::where('du', '<', now())
+                ->where('statut', Contrat::STATUS_EN_COURS)
+                ->get()
+                ->sortBy('du');
             $compacted = compact('voitures', 'contrats_en_cours', 'contrats_en_retard', 'contrats', 'clients');
             if(sizeof($contrats) === 0){
                 return view('welcome_no_contrats');

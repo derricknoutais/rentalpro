@@ -21,7 +21,7 @@ class SendContractExpiryAlerts extends Command
         $limit = now()->addHours($hours);
 
         Contrat::with(['client', 'contractable'])
-            ->whereNull('real_check_out')
+            ->where('statut', Contrat::STATUS_EN_COURS)
             ->whereNull('expiration_alert_sent_at')
             ->whereBetween('au', [$now, $limit])
             ->orderBy('compagnie_id')

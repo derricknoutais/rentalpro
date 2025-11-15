@@ -231,9 +231,9 @@ Route::group(['middleware' => ['auth']], function () {
             }
             // Etat
             if ($request->etat === 'en-cours') {
-                $query->whereNull('real_check_out');
+                $query->where('statut', Contrat::STATUS_EN_COURS);
             } elseif ($request->etat === 'terminé') {
-                $query->whereNotNull('real_check_out');
+                $query->where('statut', Contrat::STATUS_TERMINE);
             }
             return $query;
         })

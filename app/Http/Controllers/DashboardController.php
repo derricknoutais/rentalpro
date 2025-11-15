@@ -49,7 +49,8 @@ class DashboardController extends Controller
             $dashboard['last_year_payment_rate'] = ($dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1)->sum('total')) * 100;
         }
         // return Paiement::all()->sum('montant');
-        $columnChartModel = new LineChartModel()->setTitle('Paiements');
+        $columnChartModel = new LineChartModel();
+        $columnChartModel->setTitle('Paiements');
 
         foreach ($paiements_by_months as $pay) {
             $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
@@ -74,11 +75,8 @@ class DashboardController extends Controller
         $reservations = Reservation::all();
 
         $today = now();
-        $activeContracts = $contrats->filter(function (Contrat $contrat) use ($today) {
-            if (is_null($contrat->du) || is_null($contrat->au)) {
-                return false;
-            }
-            return $contrat->du->lte($today) && $contrat->au->gte($today);
+        $activeContracts = $contrats->filter(function (Contrat $contrat) {
+            return $contrat->statut === Contrat::STATUS_EN_COURS;
         });
 
         $upcomingReservations = $reservations->filter(fn($reservation) => in_array($reservation->statut, [Reservation::STATUS_EN_ATTENTE, Reservation::STATUS_CONFIRME, Reservation::STATUS_EN_COURS]))->sortBy('du')->take(5);

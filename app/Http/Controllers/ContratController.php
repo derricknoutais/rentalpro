@@ -63,10 +63,10 @@ class ContratController extends Controller
             if ($request->has('etat') && $request->etat !== null) {
                 switch ($request->etat) {
                     case 'En cours':
-                        $query->whereDate('du', '<=', today())->whereDate('au', '>=', today())->whereNull('real_check_out');
+                        $query->where('statut', Contrat::STATUS_EN_COURS);
                         break;
                     case 'Terminé':
-                        $query->whereNotNull('real_check_out');
+                        $query->where('statut', Contrat::STATUS_TERMINE);
                         break;
                     case 'Annulé':
                         $query->whereNotNull('deleted_at');
@@ -239,6 +239,7 @@ class ContratController extends Controller
                 'du' => $request['du'],
                 'au' => $request['au'],
                 'real_check_out' => null,
+                'statut' => Contrat::STATUS_EN_COURS,
                 'prix_journalier' => $request['prix_journalier'],
                 'caution' => $request['caution'],
                 'demi_journee' => $request['demi_journee'],
@@ -432,6 +433,7 @@ class ContratController extends Controller
                     'au' => $au,
                     'du' => $request['du'] . date('H:i:s'),
                     'real_check_out' => null,
+                    'statut' => Contrat::STATUS_EN_COURS,
                     'prix_journalier' => $request['prix_journalier'],
                     'caution' => null,
                     'nombre_jours' => $request['nombre_jours'],
@@ -450,6 +452,7 @@ class ContratController extends Controller
                     'au' => $au,
                     'du' => $request['du'] . date('H:i:s'),
                     'real_check_out' => null,
+                    'statut' => Contrat::STATUS_EN_COURS,
                     'prix_journalier' => $request['prix_journalier'],
                     'caution' => null,
                     'nombre_jours' => $request['nombre_jours'],
@@ -662,6 +665,7 @@ class ContratController extends Controller
                 'real_check_out' => $request->date_fin,
                 'au' => $request->date_fin,
                 'nombre_jours' => $nb_jours,
+                'statut' => Contrat::STATUS_TERMINE,
             ]);
             $contrat->contractable->update([
                 'etat' => 'disponible',

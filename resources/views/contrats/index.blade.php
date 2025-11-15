@@ -121,13 +121,11 @@
                                             class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
                                             :class="{
                                                 'bg-red-100 text-red-600': contrat.deleted_at,
-                                                'bg-green-100 text-green-700': !contrat.deleted_at && contrat
-                                                    .real_check_out !== null,
-                                                'bg-yellow-100 text-yellow-700': !contrat.deleted_at && contrat
-                                                    .real_check_out === null,
+                                                'bg-green-100 text-green-700': !contrat.deleted_at && contrat.statut === 'terminé',
+                                                'bg-yellow-100 text-yellow-700': !contrat.deleted_at && contrat.statut === 'en cours',
                                             }">
                                             <template v-if="contrat.deleted_at">Contrat annulé</template>
-                                            <template v-else-if="contrat.real_check_out !== null">Contrat terminé</template>
+                                            <template v-else-if="contrat.statut === 'terminé'">Contrat terminé</template>
                                             <template v-else>Contrat en cours</template>
                                         </span>
                                         <div class="relative">

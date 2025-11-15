@@ -17,7 +17,13 @@ class Contrat extends Model
 {
     use SoftDeletes, LogsActivity, HasFactory;
 
+    public const STATUS_EN_COURS = 'en cours';
+    public const STATUS_TERMINE = 'terminé';
+
     protected $guarded = [];
+    protected $attributes = [
+        'statut' => self::STATUS_EN_COURS,
+    ];
     protected static $logUnguarded = true;
     protected static $logOnlyDirty = true;
     protected $dates = ['au', 'du'];
@@ -27,6 +33,7 @@ class Contrat extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
+        'statut' => 'string',
     ];
 
     public function getCheckoutAttribute($checkout)
