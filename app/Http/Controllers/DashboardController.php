@@ -25,25 +25,16 @@ class DashboardController extends Controller
 
         // $reporting = array_combine(['mois', 'semaine', 'jour' ], $reporting->toArray());
 
-        $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(
-            DB::raw('sum(montant) as sums'),
-            DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"),
-        )->orderBy('months')->groupBy('months')->get();
+        $paiements_by_months = Paiement::whereYear('created_at', '2021')->select(DB::raw('sum(montant) as sums'), DB::raw("DATE_FORMAT(created_at,'%m/%Y') as months"))->orderBy('months')->groupBy('months')->get();
         // Ids des Contrats de l'Annee
         $contrats_in_year_ids = Contrat::whereYear('du', now()->format('Y'))->pluck('id');
         // Ids des Contrats de l'Annee Derniere
         $last_year_contrats_ids = Contrat::whereYear('du', now()->format('Y') - 1)->pluck('id');
 
         // 1st Card ()
-        $dashboard['paiements_annuels'] =
-            Paiement::where('payable_type', 'App\\Contrat')
-            ->whereIn('payable_id', $contrats_in_year_ids)
-            ->sum('montant');
+        $dashboard['paiements_annuels'] = Paiement::where('payable_type', 'App\\Contrat')->whereIn('payable_id', $contrats_in_year_ids)->sum('montant');
 
-        $dashboard['last_year_payments'] =
-            Paiement::where('payable_type', 'App\\Contrat')
-            ->whereIn('payable_id', $last_year_contrats_ids)
-            ->sum('montant');
+        $dashboard['last_year_payments'] = Paiement::where('payable_type', 'App\\Contrat')->whereIn('payable_id', $last_year_contrats_ids)->sum('montant');
 
         // 2nd Card ()
         $dashboard['nb_locations'] = Contrat::whereYear('du', now()->format('Y'))->sum('nombre_jours');
@@ -55,10 +46,10 @@ class DashboardController extends Controller
         }
         $dashboard['last_year_payment_rate'] = null;
         if (Contrat::whereYear('du', now()->format('Y') - 1)->sum('total')) {
-            $dashboard['last_year_payment_rate'] = $dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1)->sum('total') * 100;
+            $dashboard['last_year_payment_rate'] = ($dashboard['last_year_payments'] / Contrat::whereYear('du', now()->format('Y') - 1)->sum('total')) * 100;
         }
         // return Paiement::all()->sum('montant');
-        $columnChartModel = (new LineChartModel())->setTitle('Paiements');
+        $columnChartModel = new LineChartModel()->setTitle('Paiements');
 
         foreach ($paiements_by_months as $pay) {
             $columnChartModel->addPoint($pay->months, $pay->sums, '#f6ad55');
@@ -70,16 +61,13 @@ class DashboardController extends Controller
         $offres = collect();
         $contractables = collect();
 
-
         if (isset($compagnie)) {
             $contrats = $compagnie->contrats;
             $offres = $compagnie->offres;
             $contractables = $compagnie->contractables;
         } else {
-            return "Veuillez contacter le +24174229633 pour ouvir une compte Compagnie";
+            return 'Veuillez contacter le +24174229633 pour ouvir une compte Compagnie';
         }
-
-
 
         // $contractables = Contractable::query()->get();
 
@@ -93,14 +81,7 @@ class DashboardController extends Controller
             return $contrat->du->lte($today) && $contrat->au->gte($today);
         });
 
-        $upcomingReservations = $reservations
-            ->filter(fn ($reservation) => in_array($reservation->statut, [
-                Reservation::STATUS_EN_ATTENTE,
-                Reservation::STATUS_CONFIRME,
-                Reservation::STATUS_EN_COURS,
-            ]))
-            ->sortBy('du')
-            ->take(5);
+        $upcomingReservations = $reservations->filter(fn($reservation) => in_array($reservation->statut, [Reservation::STATUS_EN_ATTENTE, Reservation::STATUS_CONFIRME, Reservation::STATUS_EN_COURS]))->sortBy('du')->take(5);
 
         $recentPayments = Paiement::latest()->take(5)->get();
 
@@ -124,19 +105,7 @@ class DashboardController extends Controller
         $upcomingDocumentExpirations = collect();
 
         if ($compagnie->isVehicules()) {
-            $upcomingDocumentExpirations = DB::table('voiture_documents as vd')
-                ->join('voitures as v', 'v.id', '=', 'vd.voiture_id')
-                ->select(
-                    'v.id as voiture_id',
-                    'v.immatriculation',
-                    DB::raw('MIN(vd.date_expiration) as next_expiration')
-                )
-                ->where('v.compagnie_id', $compagnie->id)
-                ->whereNotNull('vd.date_expiration')
-                ->whereDate('vd.date_expiration', '>=', $todayDateString)
-                ->groupBy('v.id', 'v.immatriculation')
-                ->orderBy('next_expiration')
-                ->get();
+            $upcomingDocumentExpirations = DB::table('voiture_documents as vd')->join('voitures as v', 'v.id', '=', 'vd.voiture_id')->select('v.id as voiture_id', 'v.immatriculation', DB::raw('MIN(vd.date_expiration) as next_expiration'))->where('v.compagnie_id', $compagnie->id)->whereNotNull('vd.date_expiration')->whereDate('vd.date_expiration', '>=', $todayDateString)->groupBy('v.id', 'v.immatriculation')->orderBy('next_expiration')->get();
 
             if ($upcomingDocumentExpirations->isNotEmpty()) {
                 $activeContractsByVoiture = Contrat::query()
@@ -145,10 +114,9 @@ class DashboardController extends Controller
                     ->whereNotNull('du')
                     ->whereDate('du', '<=', $todayDateString)
                     ->where(function ($query) use ($todayDateString) {
-                        $query->whereNull('au')
-                            ->orWhereDate('au', '>=', $todayDateString);
+                        $query->whereNull('au')->orWhereDate('au', '>=', $todayDateString);
                     })
-                    ->with('client:id,nom,prenom,telephone')
+                    ->with('client:id,nom,prenom,phone1,phone2')
                     ->get()
                     ->keyBy('contractable_id');
 
@@ -164,21 +132,6 @@ class DashboardController extends Controller
             }
         }
 
-        return view('dashboard.index', compact(
-            'dashboard',
-            'dashboardSummary',
-            'columnChartModel',
-            'contractables',
-            'compagnie',
-            'reservations',
-            'offres',
-            'contrats',
-            'clients',
-            'activeContracts',
-            'upcomingReservations',
-            'recentPayments',
-            'latestContracts',
-            'upcomingDocumentExpirations'
-        ));
+        return view('dashboard.index', compact('dashboard', 'dashboardSummary', 'columnChartModel', 'contractables', 'compagnie', 'reservations', 'offres', 'contrats', 'clients', 'activeContracts', 'upcomingReservations', 'recentPayments', 'latestContracts', 'upcomingDocumentExpirations'));
     }
 }
