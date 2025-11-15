@@ -13,25 +13,12 @@ class ClientController extends Controller
 {
     public function index(Request $request)
     {
-        // return Auth::user();
-
-        if (isset(Auth::user()->compagnie)) {
-            $clients = Auth::user()->compagnie->clients;
-            if ($request->has('client')) {
-                $clients = Client::where('compagnie_id', Auth::user()->compagnie_id)->where(
-                    'nom',
-                    'like',
-                    '%' . $request->client . '%'
-                )->orWhere('prenom', 'like', '%' . $request->client . '%')
-                    ->orWhere('phone1', 'like', '%' . $request->client . '%')
-                    ->orWhere('phone2', 'like', '%' . $request->client . '%')->get();
-            }
-
-
-            return view('clients.index', compact('clients'));
-        } else {
+        if (!isset(Auth::user()->compagnie)) {
             return redirect('/compagnies/create');
         }
+
+        $clients = Auth::user()->compagnie->clients()->orderBy('nom')->get();
+        return view('clients.index', compact('clients'));
     }
     public function show(Client $client)
     {
@@ -114,6 +101,10 @@ class ClientController extends Controller
     }
     public function delete(Client $client)
     {
-        return $client->delete();
+        $client->delete();
+        if (request()->wantsJson()) {
+            return response()->json(['deleted' => true]);
+        }
+        return redirect('/clients');
     }
 }

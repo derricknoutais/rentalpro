@@ -378,13 +378,20 @@
                 <form class="mt-6 space-y-4" @submit.prevent="submitDocument">
                     <div>
                         <label class="text-sm font-medium text-gray-700">Document</label>
-                        <select v-model="form_document.document_id" :disabled="!!form_document.id"
-                            class="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                            <option value="" disabled>Sélectionner un document</option>
-                            <option v-for="document in documentOptions" :key="document.id" :value="document.id">
-                                {{ document.type || document.nom }}
-                            </option>
-                        </select>
+                        <div class="mt-2">
+                            <multiselect
+                                v-model="documentSelection"
+                                :options="documentOptions"
+                                track-by="id"
+                                label="type"
+                                :custom-label="documentLabel"
+                                placeholder="Sélectionner un document"
+                                :show-labels="false"
+                                :allow-empty="false"
+                                :disabled="!!form_document.id"
+                                class="w-full"
+                            />
+                        </div>
                         <p v-if="!form_document.id && !documentOptions.length" class="mt-2 text-xs text-gray-500">
                             Tous les documents disponibles sont déjà rattachés.
                         </p>
@@ -433,13 +440,20 @@
                 <form class="mt-6 space-y-4" @submit.prevent="submitAccessoire">
                     <div>
                         <label class="text-sm font-medium text-gray-700">Accessoire</label>
-                        <select v-model="form_accessoire.accessoire_id" :disabled="!!form_accessoire.id"
-                            class="mt-2 w-full rounded-xl border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                            <option value="" disabled>Sélectionner un accessoire</option>
-                            <option v-for="accessoire in accessoireOptions" :key="accessoire.id" :value="accessoire.id">
-                                {{ accessoire.type }}
-                            </option>
-                        </select>
+                        <div class="mt-2">
+                            <multiselect
+                                v-model="accessoireSelection"
+                                :options="accessoireOptions"
+                                track-by="id"
+                                label="type"
+                                :custom-label="accessoireLabel"
+                                placeholder="Sélectionner un accessoire"
+                                :show-labels="false"
+                                :allow-empty="false"
+                                :disabled="!!form_accessoire.id"
+                                class="w-full"
+                            />
+                        </div>
                         <p v-if="!form_accessoire.id && !accessoireOptions.length" class="mt-2 text-xs text-gray-500">
                             Tous les accessoires disponibles sont déjà rattachés.
                         </p>
@@ -509,12 +523,12 @@ export default {
             },
             form_document: {
                 id: null,
-                document_id: '',
+                document_id: null,
                 date_expiration: '',
             },
             form_accessoire: {
                 id: null,
-                accessoire_id: '',
+                accessoire_id: null,
                 quantite: 1,
             },
         };
@@ -616,6 +630,28 @@ export default {
             const attachedIds = this.accessoires.map(accessoire => accessoire.id);
             return this.accessoiresAvailable.filter(accessoire => !attachedIds.includes(accessoire.id));
         },
+        documentSelection: {
+            get() {
+                if (!this.form_document.document_id) {
+                    return null;
+                }
+                return this.documentOptions.find(option => option.id === this.form_document.document_id) || null;
+            },
+            set(option) {
+                this.form_document.document_id = option ? option.id : null;
+            },
+        },
+        accessoireSelection: {
+            get() {
+                if (!this.form_accessoire.accessoire_id) {
+                    return null;
+                }
+                return this.accessoireOptions.find(option => option.id === this.form_accessoire.accessoire_id) || null;
+            },
+            set(option) {
+                this.form_accessoire.accessoire_id = option ? option.id : null;
+            },
+        },
     },
     watch: {
         contractable_prop: {
@@ -653,6 +689,18 @@ export default {
         },
     },
     methods: {
+        documentLabel(option) {
+            if (!option) {
+                return '';
+            }
+            return option.type || option.nom || `Document #${option.id}`;
+        },
+        accessoireLabel(option) {
+            if (!option) {
+                return '';
+            }
+            return option.type || option.nom || `Accessoire #${option.id}`;
+        },
         buildPhotoUrl(image = {}) {
             const base = (typeof window !== 'undefined' && window.DO_SPACES_URL)
                 ? window.DO_SPACES_URL
@@ -781,7 +829,7 @@ export default {
         resetDocumentForm() {
             this.form_document = {
                 id: null,
-                document_id: '',
+                document_id: null,
                 date_expiration: '',
             };
         },
@@ -861,7 +909,7 @@ export default {
         resetAccessoireForm() {
             this.form_accessoire = {
                 id: null,
-                accessoire_id: '',
+                accessoire_id: null,
                 quantite: 1,
             };
         },

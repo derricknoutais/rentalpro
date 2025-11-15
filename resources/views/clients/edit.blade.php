@@ -1,111 +1,115 @@
 @extends('layouts.app')
 
-
 @section('content')
-<client-edit inline-template :prop_client="{{ $client }}">
-
-    <form action="/clients/{{ $client->id }}/update" method="POST"
-        enctype="multipart/form-data" id="clientUpdateForm"
-        {{-- @submit.prevent="updateClient()"  --}}
-    >
-        <div class="container-fluid">
-                @csrf
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Nom <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="nom" v-model="client.nom">
-                            <input type="hidden" class="form-control" name="image_id" v-model="client.image_id">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Prénom <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="prenom" v-model="client.prenom">
-                        </div>
-                    </div>
+    <client-edit inline-template :prop_client="{{ $client }}">
+        <div class="px-4 py-6 sm:px-6 lg:px-8">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p class="text-sm text-gray-500">Clients</p>
+                    <h1 class="text-3xl font-semibold text-gray-900">Modifier {{ $client->nom }} {{ $client->prenom }}</h1>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Numéro Télephone <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="numero_telephone" v-model="client.numero_telephone">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Numéro Télephone 2</label>
-                            <input type="text" class="form-control" name="numero_telephone2" v-model="client.numero_telephone2">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Numéro Télephone 3</label>
-                            <input type="text" class="form-control" name="numero_telephone3" v-model="client.numero_telephone3">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Numéro Permis</label>
-                            <input type="text" class="form-control" name="numero_permis" v-model="client.numero_permis">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">E-mail</label>
-                            <input type="text" class="form-control" name="mail" v-model="client.mail">
-                            <input type="hidden" class="form-control" id="cashier_id" name="cashier_id" v-model="client.cashier_id">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Ville</label>
-                            <select class="form-control" name="ville" v-model="client.ville">
-                                <option>Libreville</option>
-                                <option>Port-Gentil</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="">Addresse</label>
-                            <textarea class="form-control" name="addresse" v-model="client.addresse"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        @if ($client->image)
-                            <img src="{{ $client->image->url }}" class="w-1/3">
-                            <div class="w-full">
-
-                                <button type="button" class="btn btn-danger block w-1/3" @click="deleteImage">Supprimer Image</button>
-                            </div>
-                        @else
-                            <permis-pond @file-processed="attributeImage"></permis-pond>
-                        @endif
-                    </div>
-                    <div class="col">
-                        
-                        
-                    </div>
-                </div>
-
-        </div>
-        <div class="container">
-            <div class="row mt-5">
-                <div class="col-12">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Edit</button>
+                <div class="flex gap-3">
+                    <a href="/clients/{{ $client->id }}" class="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">
+                        <i class="fas fa-arrow-left text-sm"></i>
+                        Retour
+                    </a>
                 </div>
             </div>
-
+            <form action="/clients/{{ $client->id }}/update" method="POST" enctype="multipart/form-data" id="clientUpdateForm">
+                @csrf
+                <div class="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm space-y-6">
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Nom *</label>
+                            <input type="text" name="nom" v-model="client.nom"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Prénom *</label>
+                            <input type="text" name="prenom" v-model="client.prenom"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Téléphone principal *</label>
+                            <input type="text" name="numero_telephone" v-model="client.numero_telephone"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Téléphone 2</label>
+                            <input type="text" name="numero_telephone2" v-model="client.numero_telephone2"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Téléphone 3</label>
+                            <input type="text" name="numero_telephone3" v-model="client.numero_telephone3"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-3">
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" name="mail" v-model="client.mail"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Ville</label>
+                            <input type="text" name="ville" v-model="client.ville"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-700">Numéro de permis</label>
+                            <input type="text" name="numero_permis" v-model="client.numero_permis"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Adresse</label>
+                        <textarea name="addresse" v-model="client.addresse" rows="3"
+                            class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-medium text-gray-700">Permis (optionnel)</label>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div>
+                                <permis-pond
+                                    folder="permis"
+                                    @file-processed="attributeImage"
+                                    @file-removed="clearAttributeImage"
+                                    label="Importer le permis"
+                                ></permis-pond>
+                            </div>
+                            <div class="space-y-2">
+                                @if ($client->image)
+                                    <img src="{{ $client->image->url }}" alt="Permis"
+                                        class="h-40 w-full rounded-xl border border-gray-100 object-contain" />
+                                    <button type="button" class="rounded-lg border border-rose-300 px-4 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50"
+                                        @click="deleteImage">
+                                        Supprimer le permis actuel
+                                    </button>
+                                @else
+                                    <div class="rounded-xl border border-dashed border-gray-200 p-4 text-center text-xs text-gray-500">
+                                        Aucun permis n’est encore enregistré.
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="image_id" :value="client.image_id">
+                    <div class="flex flex-wrap items-center justify-end gap-3 border-t border-gray-100 pt-4">
+                        <button type="button" class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                            onclick="window.history.back();">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500">
+                            <i class="fas fa-save"></i>
+                            Enregistrer
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
-    </form>
-</client-edit>
-
+    </client-edit>
 @endsection

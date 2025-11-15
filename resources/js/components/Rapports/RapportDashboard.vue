@@ -11,18 +11,28 @@
             </div>
             <div class="flex flex-col lg:flex-row gap-3">
                 <div class="flex gap-2">
-                    <select v-model="selectedPreset" @change="applyPreset" class="form-select w-full sm:w-48">
-                        <option disabled value="">Sélectionner une période</option>
-                        <option v-for="(label, key) in presets" :key="key" :value="key">
-                            {{ label }}
-                        </option>
-                    </select>
-                    <select v-model="selectedCar" @change="applyCarFilter" class="form-select w-full sm:w-56">
-                        <option value="">Toutes les voitures</option>
-                        <option v-for="voiture in voitures" :key="voiture.id" :value="voiture.id">
-                            {{ voiture.label }}
-                        </option>
-                    </select>
+                    <multiselect
+                        v-model="selectedPresetOption"
+                        :options="presetOptions"
+                        label="label"
+                        track-by="value"
+                        placeholder="Sélectionner une période"
+                        :allow-empty="true"
+                        :show-labels="false"
+                        class="w-full sm:w-48"
+                        @input="applyPreset"
+                    />
+                    <multiselect
+                        v-model="selectedCarOption"
+                        :options="voitureOptions"
+                        label="label"
+                        track-by="value"
+                        placeholder="Toutes les voitures"
+                        :allow-empty="true"
+                        :show-labels="false"
+                        class="w-full sm:w-56"
+                        @input="applyCarFilter"
+                    />
                 </div>
                 <div class="flex items-center gap-2">
                     <input type="date" v-model="customStart" class="form-input" />
@@ -139,6 +149,40 @@ export default {
     computed: {
         rangeLabel() {
             return this.stats ? this.stats.range.label : '—'
+        },
+        presetOptions() {
+            return Object.entries(this.presets || {}).map(([value, label]) => ({
+                value,
+                label,
+            }))
+        },
+        voitureOptions() {
+            return (this.voitures || []).map(voiture => ({
+                value: voiture.id,
+                label: voiture.label || voiture.immatriculation || `#${voiture.id}`,
+            }))
+        },
+        selectedPresetOption: {
+            get() {
+                if (!this.selectedPreset) {
+                    return null
+                }
+                return this.presetOptions.find(option => option.value === this.selectedPreset) || null
+            },
+            set(option) {
+                this.selectedPreset = option ? option.value : ''
+            },
+        },
+        selectedCarOption: {
+            get() {
+                if (!this.selectedCar) {
+                    return null
+                }
+                return this.voitureOptions.find(option => option.value == this.selectedCar) || null
+            },
+            set(option) {
+                this.selectedCar = option ? option.value : ''
+            },
         },
     },
     components: {

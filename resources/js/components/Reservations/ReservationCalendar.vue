@@ -7,21 +7,17 @@
                     demande en contrat en un clic.</p>
             </div>
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <div class="flex gap-2">
-                    <select v-model="filters.contractable_id"
-                        class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="">Tous les contractables</option>
-                        <option v-for="contractable in contractables" :key="contractable.id" :value="contractable.id">
-                            {{ formatContractable(contractable) }}
-                        </option>
-                    </select>
-                    <select v-model="filters.statut"
-                        class="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="">Tous les statuts</option>
-                        <option v-for="(label, key) in statuses" :key="key" :value="key">
-                            {{ label }}
-                        </option>
-                    </select>
+                <div class="flex gap-2 flex-wrap sm:flex-nowrap">
+                    <div class="w-full sm:w-56">
+                        <multiselect v-model="filterContractableOption" :options="contractableSelectOptions"
+                            label="label" track-by="value" placeholder="Tous les contractables" :allow-empty="true"
+                            :show-labels="false" class="w-full" />
+                    </div>
+                    <div class="w-full sm:w-48">
+                        <multiselect v-model="filterStatusOption" :options="statusSelectOptions" label="label"
+                            track-by="value" placeholder="Tous les statuts" :allow-empty="true" :show-labels="false"
+                            :searchable="false" class="w-full" />
+                    </div>
                 </div>
                 <button type="button" @click="openForm()"
                     class="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-500">
@@ -110,16 +106,6 @@
                     </button>
                 </div>
             </section>
-
-            <section class="rounded-2xl bg-white p-6 shadow ring-1 ring-gray-200">
-                <h3 class="text-sm font-semibold uppercase tracking-wide text-gray-500">Statuts</h3>
-                <ul class="mt-4 space-y-3 text-sm text-gray-700">
-                    <li v-for="(label, key) in statuses" :key="key" class="flex items-center justify-between">
-                        <span>{{ label }}</span>
-                        <span :class="['h-2 w-10 rounded-full', statusSwatch(key)]"></span>
-                    </li>
-                </ul>
-            </section>
         </div>
 
         <!-- Form modal -->
@@ -138,25 +124,27 @@
                 <div class="px-6 py-6 space-y-4">
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <label class="text-sm font-medium text-gray-600">Client</label>
-                            <select v-model="form.client_id"
-                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                <option value="">—</option>
-                                <option v-for="client in clients" :key="client.id" :value="client.id">
-                                    {{ client.nom }} {{ client.prenom }}
-                                </option>
-                            </select>
+                            <div class="flex items-center justify-between text-sm font-medium text-gray-600">
+                                <span>Client</span>
+                                <button type="button"
+                                    class="text-xs font-semibold text-indigo-600 hover:text-indigo-500"
+                                    @click="openClientModal">
+                                    Nouveau client
+                                </button>
+                            </div>
+                            <div class="mt-1">
+                                <multiselect v-model="formClientOption" :options="clientSelectOptions" label="label"
+                                    track-by="value" placeholder="Sélectionner un client" :allow-empty="true"
+                                    :show-labels="false" class="w-full" />
+                            </div>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-600">Contractable</label>
-                            <select v-model="form.contractable_id"
-                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                <option value="" disabled>Choisir…</option>
-                                <option v-for="contractable in contractables" :key="contractable.id"
-                                    :value="contractable.id">
-                                    {{ formatContractable(contractable) }}
-                                </option>
-                            </select>
+                            <div class="mt-1">
+                                <multiselect v-model="formContractableOption" :options="contractableSelectOptions"
+                                    label="label" track-by="value" placeholder="Choisir…" :allow-empty="false"
+                                    :show-labels="false" class="w-full" />
+                            </div>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-600">Début</label>
@@ -186,12 +174,11 @@
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-600">Statut</label>
-                            <select v-model="form.statut"
-                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                <option v-for="(label, key) in statuses" :key="key" :value="key">
-                                    {{ label }}
-                                </option>
-                            </select>
+                            <div class="mt-1">
+                                <multiselect v-model="formStatusOption" :options="statusSelectOptions" label="label"
+                                    track-by="value" placeholder="Choisir un statut" :allow-empty="false"
+                                    :show-labels="false" :searchable="false" class="w-full" />
+                            </div>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-600">Caution</label>
@@ -227,6 +214,101 @@
                 </div>
             </div>
         </div>
+
+        <div v-if="showClientModal" class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 py-10">
+            <div class="relative w-full max-w-xl rounded-2xl bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Créer un client</h3>
+                        <p class="text-xs text-gray-500">Ajoutez un client sans quitter cette page.</p>
+                    </div>
+                    <button type="button" class="text-gray-400 hover:text-gray-600" @click="closeClientModal">✕</button>
+                </div>
+                <form class="px-6 py-6 space-y-4" @submit.prevent="submitNewClient">
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Nom *</label>
+                            <input type="text" v-model="newClient.nom"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <p v-if="clientErrors.nom" class="mt-1 text-xs text-rose-600">@{{ clientErrors.nom[0] }}</p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Prénom</label>
+                            <input type="text" v-model="newClient.prenom"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Téléphone *</label>
+                            <input type="text" v-model="newClient.numero_telephone"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <p v-if="clientErrors.numero_telephone" class="mt-1 text-xs text-rose-600">
+                                @{{ clientErrors.numero_telephone[0] }}
+                            </p>
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Téléphone 2</label>
+                            <input type="text" v-model="newClient.numero_telephone2"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Email</label>
+                            <input type="email" v-model="newClient.mail"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Ville</label>
+                            <input type="text" v-model="newClient.ville"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Numéro de permis</label>
+                            <input type="text" v-model="newClient.numero_permis"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Téléphone 3</label>
+                            <input type="text" v-model="newClient.numero_telephone3"
+                                class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Adresse</label>
+                        <textarea v-model="newClient.addresse" rows="3"
+                            class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-600">Permis (optionnel)</label>
+                        <permis-pond folder="permis" @file-processed="setNewClientImage"
+                            @file-removed="clearNewClientImage" label="Téléverser le permis"></permis-pond>
+                    </div>
+                    <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
+                        <button type="button"
+                            class="rounded-lg border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                            @click="closeClientModal">
+                            Annuler
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 disabled:opacity-60"
+                            :disabled="creatingClient">
+                            <svg v-if="creatingClient" class="mr-2 h-4 w-4 animate-spin"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                                </path>
+                            </svg>
+                            Créer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -255,9 +337,10 @@ export default {
     data() {
         return {
             calendarEvents: [],
+            clientItems: Array.isArray(this.clients) ? [...this.clients] : [],
             filters: {
-                contractable_id: '',
-                statut: ''
+                contractable_id: null,
+                statut: null
             },
             calendarRange: {
                 start: null,
@@ -269,6 +352,21 @@ export default {
             saving: false,
             loading: false,
             rawReservations: [],
+            showClientModal: false,
+            creatingClient: false,
+            clientErrors: {},
+            newClient: {
+                nom: '',
+                prenom: '',
+                numero_telephone: '',
+                numero_telephone2: '',
+                numero_telephone3: '',
+                mail: '',
+                ville: '',
+                addresse: '',
+                numero_permis: '',
+                image_id: null,
+            },
         };
     },
     mounted() {
@@ -307,9 +405,88 @@ export default {
                 return '—';
             }
             return Number(this.formEstimatedTotal).toLocaleString('fr-FR') + ' FCFA';
+        },
+        contractableSelectOptions() {
+            return (this.contractables || []).map(contractable => ({
+                value: contractable.id,
+                label: this.formatContractable(contractable),
+            }));
+        },
+        clientSelectOptions() {
+            return (this.clientItems || []).map(client => ({
+                value: client.id,
+                label: [client.nom, client.prenom].filter(Boolean).join(' ').trim() || `Client #${client.id}`,
+            }));
+        },
+        statusSelectOptions() {
+            return Object.entries(this.statuses || {}).map(([value, label]) => ({
+                value,
+                label,
+            }));
+        },
+        filterContractableOption: {
+            get() {
+                if (!this.filters.contractable_id) {
+                    return null;
+                }
+                return this.contractableSelectOptions.find(option => option.value === this.filters.contractable_id) || null;
+            },
+            set(option) {
+                this.filters.contractable_id = option ? option.value : null;
+            },
+        },
+        filterStatusOption: {
+            get() {
+                if (!this.filters.statut) {
+                    return null;
+                }
+                return this.statusSelectOptions.find(option => option.value === this.filters.statut) || null;
+            },
+            set(option) {
+                this.filters.statut = option ? option.value : null;
+            },
+        },
+        formClientOption: {
+            get() {
+                if (!this.form.client_id) {
+                    return null;
+                }
+                return this.clientSelectOptions.find(option => option.value === this.form.client_id) || null;
+            },
+            set(option) {
+                this.form.client_id = option ? option.value : null;
+            },
+        },
+        formContractableOption: {
+            get() {
+                if (!this.form.contractable_id) {
+                    return null;
+                }
+                return this.contractableSelectOptions.find(option => option.value === this.form.contractable_id) || null;
+            },
+            set(option) {
+                this.form.contractable_id = option ? option.value : null;
+            },
+        },
+        formStatusOption: {
+            get() {
+                if (!this.form.statut) {
+                    return null;
+                }
+                return this.statusSelectOptions.find(option => option.value === this.form.statut) || null;
+            },
+            set(option) {
+                this.form.statut = option ? option.value : (Object.keys(this.statuses)[0] || 'en_attente');
+            },
         }
     },
     watch: {
+        clients: {
+            immediate: true,
+            handler(value) {
+                this.clientItems = Array.isArray(value) ? [...value] : [];
+            }
+        },
         'filters.contractable_id'() {
             this.fetchReservations();
         },
@@ -321,8 +498,8 @@ export default {
         blankForm() {
             return {
                 id: null,
-                client_id: '',
-                contractable_id: '',
+                client_id: null,
+                contractable_id: null,
                 du: '',
                 au: '',
                 montant_journalier: '',
@@ -524,6 +701,57 @@ export default {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
+        },
+        openClientModal() {
+            this.resetNewClient();
+            this.clientErrors = {};
+            this.showClientModal = true;
+        },
+        closeClientModal() {
+            this.showClientModal = false;
+            this.clientErrors = {};
+        },
+        resetNewClient() {
+            this.newClient = {
+                nom: '',
+                prenom: '',
+                numero_telephone: '',
+                numero_telephone2: '',
+                numero_telephone3: '',
+                mail: '',
+                ville: '',
+                addresse: '',
+                numero_permis: '',
+            };
+        },
+        setNewClientImage(id) {
+            this.newClient.image_id = id;
+        },
+        clearNewClientImage() {
+            this.newClient.image_id = null;
+        },
+        submitNewClient() {
+            this.creatingClient = true;
+            this.clientErrors = {};
+            axios.post('/api/clients', this.newClient)
+                .then(({ data }) => {
+                    this.clientItems.unshift(data);
+                    this.form.client_id = data.id;
+                    this.closeClientModal();
+                    if (this.$swal) {
+                        this.$swal('Client créé', 'Le client a été ajouté.', 'success');
+                    }
+                })
+                .catch((error) => {
+                    if (error.response && error.response.data && error.response.data.errors) {
+                        this.clientErrors = error.response.data.errors;
+                    } else if (this.$swal) {
+                        this.$swal('Erreur', "Impossible de créer le client.", 'error');
+                    }
+                })
+                .finally(() => {
+                    this.creatingClient = false;
+                });
         }
     }
 };

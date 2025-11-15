@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Client;
 use App\Metric;
-use App\Contrat;
 use App\Paiement;
+use App\Contrat;
+use App\Voiture;
 use App\Reservation;
 use App\Contractable;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -117,6 +119,51 @@ class DashboardController extends Controller
             'fleet_utilization' => $fleetUtilization,
         ];
 
+        $todayStart = $today->copy()->startOfDay();
+        $todayDateString = $todayStart->toDateString();
+        $upcomingDocumentExpirations = collect();
+
+        if ($compagnie->isVehicules()) {
+            $upcomingDocumentExpirations = DB::table('voiture_documents as vd')
+                ->join('voitures as v', 'v.id', '=', 'vd.voiture_id')
+                ->select(
+                    'v.id as voiture_id',
+                    'v.immatriculation',
+                    DB::raw('MIN(vd.date_expiration) as next_expiration')
+                )
+                ->where('v.compagnie_id', $compagnie->id)
+                ->whereNotNull('vd.date_expiration')
+                ->whereDate('vd.date_expiration', '>=', $todayDateString)
+                ->groupBy('v.id', 'v.immatriculation')
+                ->orderBy('next_expiration')
+                ->get();
+
+            if ($upcomingDocumentExpirations->isNotEmpty()) {
+                $activeContractsByVoiture = Contrat::query()
+                    ->where('contractable_type', Voiture::class)
+                    ->whereIn('contractable_id', $upcomingDocumentExpirations->pluck('voiture_id'))
+                    ->whereNotNull('du')
+                    ->whereDate('du', '<=', $todayDateString)
+                    ->where(function ($query) use ($todayDateString) {
+                        $query->whereNull('au')
+                            ->orWhereDate('au', '>=', $todayDateString);
+                    })
+                    ->with('client:id,nom,prenom,telephone')
+                    ->get()
+                    ->keyBy('contractable_id');
+
+                $upcomingDocumentExpirations = $upcomingDocumentExpirations->map(function ($expiration) use ($activeContractsByVoiture, $todayStart) {
+                    $expirationDate = Carbon::parse($expiration->next_expiration)->startOfDay();
+                    $expiration->next_expiration = $expirationDate;
+                    $expiration->days_remaining = $todayStart->diffInDays($expirationDate);
+                    $activeContract = $activeContractsByVoiture->get($expiration->voiture_id);
+                    $expiration->client = $activeContract ? $activeContract->client : null;
+
+                    return $expiration;
+                });
+            }
+        }
+
         return view('dashboard.index', compact(
             'dashboard',
             'dashboardSummary',
@@ -130,7 +177,8 @@ class DashboardController extends Controller
             'activeContracts',
             'upcomingReservations',
             'recentPayments',
-            'latestContracts'
+            'latestContracts',
+            'upcomingDocumentExpirations'
         ));
     }
 }

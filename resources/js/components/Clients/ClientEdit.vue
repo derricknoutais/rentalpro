@@ -26,6 +26,9 @@ export default {
             this.client.image_id = id
             this.$forceUpdate()
         },
+        clearAttributeImage() {
+            this.client.image_id = ''
+        },
         updateClient() {
             axios.post('https://cashier.azimuts.ga/api/client/' + this.prop_client.cashier_id + '/update', this.client).then(response => {
                 console.log(response.data);
@@ -71,7 +74,7 @@ export default {
         this.client.ville = this.prop_client.ville
         this.client.addresse = this.prop_client.addresse
         this.client.cashier_id = this.prop_client.cashier_id
-        this.client.image_id = ''
+        this.client.image_id = this.prop_client.image_id || ''
 
     }
 }

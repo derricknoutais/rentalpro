@@ -165,6 +165,46 @@
             <div class="space-y-6">
                 <div class="rounded-xl border border-gray-100 bg-white shadow-sm">
                     <div class="border-b border-gray-100 px-5 py-4">
+                        <h3 class="text-base font-semibold text-gray-900">Documents à expirer</h3>
+                        <p class="text-sm text-gray-500">Classement des prochaines échéances véhicules</p>
+                    </div>
+                    <ul class="divide-y divide-gray-100">
+                        @forelse ($upcomingDocumentExpirations as $expiration)
+                            <li class="px-5 py-4 space-y-1">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-900">
+                                            #{{ $expiration->voiture_id }} · {{ $expiration->immatriculation }}
+                                        </p>
+                                        <p class="text-xs text-gray-500">
+                                            Expire le {{ optional($expiration->next_expiration)->format('d M Y') }}
+                                        </p>
+                                    </div>
+                                    <span class="text-xs font-semibold text-indigo-600">
+                                        {{ $expiration->days_remaining }} jour{{ $expiration->days_remaining > 1 ? 's' : '' }}
+                                        restant{{ $expiration->days_remaining > 1 ? 's' : '' }}
+                                    </span>
+                                </div>
+                                @if ($expiration->client)
+                                    <p class="text-xs text-gray-500">
+                                        Client :
+                                        {{ trim(($expiration->client->nom ?? '') . ' ' . ($expiration->client->prenom ?? '')) ?: '—' }}
+                                        · {{ $expiration->client->telephone ?? '—' }}
+                                    </p>
+                                @else
+                                    <p class="text-xs text-gray-400">Aucun contrat en cours</p>
+                                @endif
+                            </li>
+                        @empty
+                            <li class="px-5 py-6 text-center text-sm text-gray-500">
+                                Aucune échéance à venir.
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+
+                <div class="rounded-xl border border-gray-100 bg-white shadow-sm">
+                    <div class="border-b border-gray-100 px-5 py-4">
                         <h3 class="text-base font-semibold text-gray-900">Réservations à suivre</h3>
                         <p class="text-sm text-gray-500">Les 5 prochaines échéances</p>
                     </div>

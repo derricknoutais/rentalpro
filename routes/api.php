@@ -50,6 +50,9 @@ Route::post('/reservations/{reservation}/convert', 'ReservationApiController@con
 
 Route::get('/techniciens', 'TechnicienController@getApi');
 
+Route::get('/clients', 'ClientApiController@index');
+Route::post('/clients', 'ClientApiController@store');
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {

@@ -40,11 +40,11 @@ class SendDocumentExpirationAlerts extends Command
         }
 
         $alerts->each(function (Collection $documents, $compagnieId) use ($start) {
-            if (env('APP_ENV') !== 'production') {
+            if (env('APP_ENV') === 'local') {
                 // In non-production environments, send alerts only to specific emails
                 $emails = collect(['derricknoutais@gmail.com']);
             } else {
-                $emails = collect(['derricknoutais@gmail.com', 'noutaiaugustin@gmail.com']);
+                $emails = collect(['derricknoutais@gmail.com', 'noutaiaugustin@gmail.com', 'dufal200.2@gmail.com']);
             }
 
             if (sizeof($emails) == 0) {

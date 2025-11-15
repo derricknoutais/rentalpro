@@ -16,9 +16,9 @@ export default {
                 { value: 'terminé', label: 'Terminé' },
             ],
             filters: {
-                contractable_id: '',
-                technicien_id: '',
-                statut: '',
+                contractable_id: null,
+                technicien_id: null,
+                statut: null,
                 start: '',
                 end: ''
             },
@@ -31,7 +31,7 @@ export default {
             completionSelection: [],
             form: {
                 id: null,
-                contractable_id: '',
+                contractable_id: null,
                 titre: '',
                 technicien_id: null,
                 cout: null,
@@ -74,12 +74,100 @@ export default {
             }
 
             return list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        },
+        contractableOptions() {
+            return (this.contractables || []).map(contractable => ({
+                value: contractable.id,
+                label: contractable.immatriculation || contractable.nom || `Contractable #${contractable.id}`
+            }));
+        },
+        technicienOptions() {
+            return (this.techniciens || []).map(technicien => ({
+                value: technicien.id,
+                label: technicien.nom || `Technicien #${technicien.id}`
+            }));
+        },
+        filterContractableOption: {
+            get() {
+                if (!this.filters.contractable_id) {
+                    return null;
+                }
+                return this.contractableOptions.find(option => option.value === this.filters.contractable_id) || null;
+            },
+            set(option) {
+                this.filters.contractable_id = option ? option.value : null;
+            },
+        },
+        filterTechnicienOption: {
+            get() {
+                if (!this.filters.technicien_id) {
+                    return null;
+                }
+                return this.technicienOptions.find(option => option.value === this.filters.technicien_id) || null;
+            },
+            set(option) {
+                this.filters.technicien_id = option ? option.value : null;
+            },
+        },
+        filterStatusOption: {
+            get() {
+                if (!this.filters.statut) {
+                    return null;
+                }
+                return this.statusOptions.find(option => option.value === this.filters.statut) || null;
+            },
+            set(option) {
+                this.filters.statut = option ? option.value : null;
+            },
+        },
+        formContractableOption: {
+            get() {
+                if (!this.form.contractable_id) {
+                    return null;
+                }
+                return this.contractableOptions.find(option => option.value === this.form.contractable_id) || null;
+            },
+            set(option) {
+                const previous = this.form.contractable_id;
+                this.form.contractable_id = option ? option.value : null;
+                if (previous !== this.form.contractable_id) {
+                    this.handleContractableChange();
+                }
+            },
+        },
+        formTechnicienOption: {
+            get() {
+                if (!this.form.technicien_id) {
+                    return null;
+                }
+                return this.technicienOptions.find(option => option.value === this.form.technicien_id) || null;
+            },
+            set(option) {
+                this.form.technicien_id = option ? option.value : null;
+            },
+        },
+        formStatusOption: {
+            get() {
+                if (!this.form.statut) {
+                    return null;
+                }
+                return this.statusOptions.find(option => option.value === this.form.statut) || null;
+            },
+            set(option) {
+                this.form.statut = option ? option.value : 'en cours';
+            },
         }
     },
     mounted() {
         this.fetchAll();
     },
     methods: {
+        statusDisabled(option) {
+            if (!option) {
+                return false;
+            }
+            return option.value === 'terminé' && this.form.statut !== 'terminé';
+        },
         fetchAll() {
             this.fetchMaintenances();
             this.fetchTechniciens();
@@ -130,7 +218,7 @@ export default {
 
             this.form = {
                 id: maintenance.id,
-                contractable_id: maintenance.contractable_id || (maintenance.contractable ? maintenance.contractable.id : ''),
+                contractable_id: maintenance.contractable_id || (maintenance.contractable ? maintenance.contractable.id : null),
                 titre: maintenance.titre || '',
                 technicien_id: maintenance.technicien_id || null,
                 cout: maintenance['coût'] ?? null,
@@ -149,7 +237,7 @@ export default {
         resetForm() {
             this.form = {
                 id: null,
-                contractable_id: '',
+                contractable_id: null,
                 titre: '',
                 technicien_id: null,
                 cout: null,
